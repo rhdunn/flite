@@ -1,8 +1,8 @@
-###########################################################################
+#!/usr/bin/perl
+###########################################################-*-mode:cperl-*-
 ##                                                                       ##
-##                  Language Technologies Institute                      ##
-##                     Carnegie Mellon University                        ##
-##                        Copyright (c) 1999                             ##
+##                           Cepstral, LLC                               ##
+##                        Copyright (c) 2001                             ##
 ##                        All Rights Reserved.                           ##
 ##                                                                       ##
 ##  Permission is hereby granted, free of charge, to use and distribute  ##
@@ -19,38 +19,38 @@
 ##      derived from this software without specific prior written        ##
 ##      permission.                                                      ##
 ##                                                                       ##
-##  CARNEGIE MELLON UNIVERSITY AND THE CONTRIBUTORS TO THIS WORK         ##
-##  DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING      ##
-##  ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT   ##
-##  SHALL CARNEGIE MELLON UNIVERSITY NOR THE CONTRIBUTORS BE LIABLE      ##
-##  FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    ##
-##  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN   ##
-##  AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,          ##
-##  ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF       ##
-##  THIS SOFTWARE.                                                       ##
+##  CEPSTRAL, LLC AND THE CONTRIBUTORS TO THIS WORK DISCLAIM ALL         ##
+##  WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED       ##
+##  WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL         ##
+##  CEPSTRAL, LLC NOR THE CONTRIBUTORS BE LIABLE FOR ANY SPECIAL,        ##
+##  INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER          ##
+##  RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION    ##
+##  OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  ##
+##  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.          ##
 ##                                                                       ##
 ###########################################################################
 ##                                                                       ##
-##  Audio support for talking to local audio devices                     ##
+##  Output compiled regexes for us_text.c                                ##
 ##                                                                       ##
 ###########################################################################
-TOP=../..
-DIRNAME=src/audio
-BUILD_DIRS = 
-ALL_DIRS= 
-H = native_audio.h
-include $(TOP)/config/config
 
-BASESRCS = auclient.c auserver.c audio.c 
-SRCS = $(BASESRCS) $(AUDIODRIVER:%=au_%.c)
-OBJS = $(SRCS:.c=.o)
-FILES = Makefile $(H) $(BASESRCS) au_alsa.c au_command.c au_none.c \
-	au_oss.c au_sun.c au_wince.c
-LIBNAME = flite
+%RXS = (
+	ordinal_number => "[0-9][0-9,]*\\(th\\|TH\\|st\\|ST\\|nd\\|ND\\|rd\\|RD\\)",
+	hasvowel => ".*[aeiouAEIOU].*",
+	usmoney => "\\\$[0-9,]+\\(\\.[0-9]+\\)?",
+	illion => ".*illion",
+	romannums => "\\(II?I?\\|IV\\|VI?I?I?\\|IX\\|X[VIX]*\\)",
+	drst => "\\([dD][Rr]\\|[Ss][tT]\\)",
+	numess => "[0-9]+s",
+	sevenphonenumber => "[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]",
+	fourdigits => "[0-9][0-9][0-9][0-9]",
+	threedigits => "[0-9][0-9][0-9]",
+       );
 
-LOCAL_INCLUDES = -I. $(AUDIODEFS)
+while (my ($n, $r) = each %RXS) {
+    system './regexcomp', $n, $r;
+}
 
-ALL = .build_lib
-
-include $(TOP)/config/common_make_rules
-
+foreach my $n (keys %RXS) {
+    print "const cst_regex *$n = &${n}_rx;\n";
+}

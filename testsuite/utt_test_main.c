@@ -88,7 +88,6 @@ static int WordSylSeg(cst_utterance *u)
 {
     cst_item *word;
     cst_relation *sylstructure,*seg,*syl;
-    cst_lexicon *cmu_lex;
     cst_val *phones;
     const cst_val *p;
     cst_item *ssword,*segitem;

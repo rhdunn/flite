@@ -5,9 +5,9 @@ amount of the coding was done over 30,000ft).  During most of that
 time awb was funded by the Language Technonologies Institute at
 Carnegie Mellon University.
 
-Kevin A. Lenzo was involved in the conversion techniques and
-representions for the voice distributed with flite (as well
-as being the actual voice itself).
+Kevin A. Lenzo was involved in the design, conversion techniques and
+representions for the voice distributed with flite (as well as being
+the actual voice itself).
 
 Other contributions are:
 
@@ -16,7 +16,7 @@ David Huggins-Daines (dhd@cepstral.com)
    code tidy up and configure/autoconf guidance.
 Cepstral, LLC (http://cepstral.com)
    For supporting DHD to spend time on flite and passing back the important
-   fixes and enhancements
+   fixes and enhancements including SAPI support
 Willie Walker <william.walker@sun.com> and the rest of the Sun Speech Group
    lots of low level bugs (and fixes).
 Portuguese Foundation for Science and Technology (FCT) Praxis XXI program
@@ -33,7 +33,7 @@ University of Edinburgh
    derived from the models in the Festival distribution. which in turn
    were trained from the Boston University FM Radio Data Corpus.
 Carnegie Mellon University
-   The included lexicon is derived from CMULEX and the letter to
+   The included lexicon is derived from CMULEX and the letter to sound
    rules are constructed using the Lenzo and Black techniques for
    building LTS decision graphs.
 Craig Reese: IDA/Supercomputing Research Center

@@ -56,6 +56,15 @@ typedef struct  cst_wave_struct {
     short *samples;
 } cst_wave;
 
+typedef struct  cst_wave_header_struct {
+    const char *type;
+    int hsize;
+    int num_bytes;
+    int sample_rate;
+    int num_samples;
+    int num_channels;
+} cst_wave_header;
+
 cst_wave *new_wave();
 cst_wave *copy_wave(const cst_wave *w);
 void delete_wave(cst_wave *val);
@@ -73,6 +82,7 @@ cst_wave *concat_wave(cst_wave *dest, const cst_wave *src);
 int cst_wave_save(cst_wave *w, const char *filename, const char *type);
 int cst_wave_save_riff(cst_wave *w, const char *filename);
 int cst_wave_save_raw(cst_wave *w, const char *filename);
+int cst_wave_append_riff(cst_wave *w,const char *filename);
 
 int cst_wave_save_riff_fd(cst_wave *w, cst_file fd);
 int cst_wave_save_raw_fd(cst_wave *w, cst_file fd);
@@ -82,6 +92,7 @@ int cst_wave_load_riff(cst_wave *w, const char *filename);
 int cst_wave_load_raw(cst_wave *w, const char *filename,
 				const char *bo, int sample_rate);
 
+int cst_wave_load_riff_header(cst_wave_header *header,cst_file fd);
 int cst_wave_load_riff_fd(cst_wave *w, cst_file fd);
 int cst_wave_load_raw_fd (cst_wave *w, cst_file fd,
 				    const char *bo, int sample_rate);

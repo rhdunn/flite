@@ -251,7 +251,22 @@ cst_val *en_exp_id(const char *numstring)
     /* Expand numstring as pairs as in years or ids */
     char aaa[3];
 
-    if ((strlen(numstring) == 2) && (numstring[0] == '0'))
+    if ((strlen(numstring) == 4) && 
+	(numstring[2] == '0') &&
+	(numstring[3] == '0'))
+    {
+	if (numstring[1] == '0')
+	    return en_exp_number(numstring); /* 2000, 3000 */
+	else
+	{
+	    aaa[0] = numstring[0];
+	    aaa[1] = numstring[1];
+	    aaa[2] = '\0';
+	    return val_append(en_exp_number(aaa),
+			      cons_val(string_val("hundred"),0));
+	}
+    }
+    else if ((strlen(numstring) == 2) && (numstring[0] == '0'))
 	return cons_val(string_val("oh"),
 			en_exp_digits(&numstring[1]));
     else if (((strlen(numstring) == 4) && 

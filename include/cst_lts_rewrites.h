@@ -2,7 +2,7 @@
 /*                                                                       */
 /*                  Language Technologies Institute                      */
 /*                     Carnegie Mellon University                        */
-/*                        Copyright (c) 1999                             */
+/*                        Copyright (c) 2002                             */
 /*                        All Rights Reserved.                           */
 /*                                                                       */
 /*  Permission is hereby granted, free of charge, to use and distribute  */
@@ -31,51 +31,25 @@
 /*                                                                       */
 /*************************************************************************/
 /*             Author:  Alan W Black (awb@cs.cmu.edu)                    */
-/*               Date:  December 1999                                    */
+/*               Date:  August 2002                                      */
 /*************************************************************************/
 /*                                                                       */
-/*  Lexicon related functions                                            */
+/*  Letter to sound rewrite rules                                        */
 /*                                                                       */
 /*************************************************************************/
-#ifndef _CST_LEXICON_H__
-#define _CST_LEXICON_H__
+#ifndef _CST_LTS_REWRITES_H__
+#define _CST_LTS_REWRITES_H__
 
-#include <stdio.h>
+#include "cst_val.h"
 
-#include "cst_item.h"
-#include "cst_lts.h"
-
-typedef struct lexicon_entry_struct {
-    char *word_pos;
-    int phone_index;
-} lexicon_entry;
-
-typedef struct lexicon_struct {
+typedef struct cst_lts_rewrites_struct {
     char *name;
-    int num_entries;
-    lexicon_entry *entry_index;
-    unsigned char *phones;
-    char **phone_table;
+    const cst_val *sets;
+    const cst_val *rules;
+} cst_lts_rewrites;
 
-    cst_lts_rules *lts_rule_set;
-
-    int (*syl_boundary)(const cst_item *i,const cst_val *p);
-    
-    cst_val *(*lts_function)(const struct lexicon_struct *l, const char *word, const char *pos);
-
-    char ***addenda;
-} cst_lexicon;
-
-cst_lexicon *new_lexicon();
-void delete_lexicon(cst_lexicon *lex);
-
-lexicon_entry *lex_add_entry(cst_lexicon *l, const char *word, const char *pos,
-			     const unsigned char *phones);
-int lex_delete_entry(cst_lexicon *l, const char *word, const char *pos);
-
-cst_val *lex_lookup(const cst_lexicon *l, const char *word, const char *pos);
-int in_lex(const cst_lexicon *l, const char *word, const char *pos);
-
-CST_VAL_USER_TYPE_DCLS(lexicon,cst_lexicon)
+cst_val *lts_rewrites(const cst_val *itape, const cst_lts_rewrites *r);
+cst_val *lts_rewrites_word(const char *word, const cst_lts_rewrites *r);
 
 #endif
+

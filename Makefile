@@ -2,7 +2,7 @@
 ##                                                                       ##
 ##                  Language Technologies Institute                      ##
 ##                     Carnegie Mellon University                        ##
-##                      Copyright (c) 1999-2001                          ##
+##                      Copyright (c) 1999-2003                          ##
 ##                        All Rights Reserved.                           ##
 ##                                                                       ##
 ##  Permission is hereby granted, free of charge, to use and distribute  ##
@@ -35,14 +35,14 @@
 ##                                                                       ##
 ##       Authors:  Alan W Black (awb@cs.cmu.edu)                         ##
 ##                 Kevin A. Lenzo (lenzo@cs.cmu.edu)                     ##
-##          Date:  December 2001                                         ##
-##       Version:  1.1-release                                           ## 
+##          Date:  February 2003                                         ##
+##       Version:  1.2-release                                           ## 
 ##                                                                       ## 
 ###########################################################################
 TOP=.
 DIRNAME=.
-BUILD_DIRS = include src doc lang main
-ALL_DIRS=config lib tools $(BUILD_DIRS) testsuite sapi
+BUILD_DIRS = include src lang lib tools doc main
+ALL_DIRS=config $(BUILD_DIRS) testsuite sapi
 CONFIG=configure configure.in config.sub config.guess \
        missing install-sh mkinstalldirs
 FILES = Makefile README ACKNOWLEDGEMENTS COPYING $(CONFIG)
@@ -76,6 +76,16 @@ tags:
 	@ $(RM) -f $(TOP)/FileList
 	@ $(MAKE) file-list
 	etags `cat FileList | grep "\.[ch]$$"`
+
+install:
+	@echo Installing 
+	mkdir -p $(INSTALLBINDIR)
+	mkdir -p $(INSTALLLIBDIR)
+	mkdir -p $(INSTALLINCDIR)
+	$(INSTALL) -m 644 include/*.h $(INSTALLINCDIR)
+	@ $(MAKE) -C lib --no-print-directory install
+	$(INSTALL) -m 755 bin/flite $(INSTALLBINDIR)
+	$(INSTALL) -m 755 bin/flite_time $(INSTALLBINDIR)
 
 time-stamp :
 	@ echo $(PROJECT_NAME) >.time-stamp

@@ -75,7 +75,6 @@ cst_sts *find_sts(cst_wave *sig, cst_track *lpc)
     double *resd;
     int size,start,end;
     short *sigplus;
-    short *sigpp;
 
     sts = cst_alloc(cst_sts,lpc->num_frames);
     start = 0;
@@ -86,6 +85,8 @@ cst_sts *find_sts(cst_wave *sig, cst_track *lpc)
     {
 	end = (int)((float)sig->sample_rate * lpc->times[i]);
 	size = end - start;
+	if (size == 0)
+	    printf("frame size at %f is 0\n",lpc->times[i]);
 	resd = cst_alloc(double,size);
 	
 	inv_lpc_filterd(&sigplus[start+lpc->num_channels],
@@ -107,35 +108,13 @@ cst_sts *find_sts(cst_wave *sig, cst_track *lpc)
     return sts;
 }
 
-void lpc_filterd(short *res, float *a, int order, double *sig, int size)
-{
-    int i, j;
-    double r;
-    for (i = 0; i < order; i++)
-    {
-	r = res[i];
-	for (j = 1; j < order; j++)
-/*	    if (i-j >= 0) */
-		r += a[j] * (double)sig[i - j];
-	sig[i] = r;
-    }
-    for (i = order; i < size; i++)
-    {
-	r = res[i];
-	for (j = 1; j < order; j++)
-	    r += a[j] * (double)sig[i - j];
-	sig[i] = r;
-    }
-}
-
 cst_wave *reconstruct_wave(cst_wave *sig, cst_sts *sts, cst_track *lpc)
 {
     cst_lpcres *lpcres;
     int i,j,r;
     int start, end;
     int num_samples;
-    FILE *ofd;
-    int s;
+/*    FILE *ofd; */
 
     for (num_samples = 0, i=0; i < lpc->num_frames; i++)
 	num_samples += sts[i].size;
@@ -160,6 +139,7 @@ cst_wave *reconstruct_wave(cst_wave *sig, cst_sts *sts, cst_track *lpc)
 	for (j=0; j<sts[i].size; j++,r++)
 	    lpcres->residual[r] = sts[i].residual[j];
 
+#if 0
     ofd = fopen("lpc_resid.lpc","w");
     for (s=0,i=0; i<lpcres->num_frames; i++)
     {
@@ -176,7 +156,7 @@ cst_wave *reconstruct_wave(cst_wave *sig, cst_sts *sts, cst_track *lpc)
     for (i=0; i < r; i++)
 	fprintf(ofd,"%d\n",cst_ulaw_to_short(lpcres->residual[i]));
     fclose(ofd);
-
+#endif
     return lpc_resynth(lpcres);
 }
 
@@ -187,8 +167,8 @@ void compare_waves(cst_wave *a, cst_wave *b)
 
     if (a->num_samples != b->num_samples)
     {
-	printf("different length a %d b %d\n",
-	       a->num_samples, b->num_samples);
+/*	printf("different length a %d b %d\n",
+	a->num_samples, b->num_samples); */
 	if (a->num_samples > b->num_samples)
 	{
 	    compare_waves(b,a);
@@ -265,7 +245,13 @@ int main(int argc, char **argv)
     lpc = new_track();
     cst_track_load_est(lpc,argv[3]);
     sig = new_wave();
-    cst_wave_load_riff(sig,argv[4]);
+    if (cst_wave_load_riff(sig,argv[4]) == CST_WRONG_FORMAT)
+    {
+	fprintf(stderr,
+		"cannot load waveform, format unrecognized, from \"%s\"\n",
+		argv[4]);
+	exit(-1);
+    }
 
     sts = find_sts(sig,lpc);
 
@@ -273,7 +259,7 @@ int main(int argc, char **argv)
     sig2 = reconstruct_wave(sig,sts,lpc);
 
     compare_waves(sig,sig2);
-    cst_wave_save_riff(sig2,"sig2.wav");
+/*    cst_wave_save_riff(sig2,"sig2.wav"); */
 
     save_sts(sts,lpc,sig,argv[5]);
 

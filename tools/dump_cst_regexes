@@ -1,8 +1,8 @@
-###########################################################################
+#!/usr/bin/perl
+###########################################################-*-mode:cperl-*-
 ##                                                                       ##
-##                  Language Technologies Institute                      ##
-##                     Carnegie Mellon University                        ##
-##                        Copyright (c) 2000                             ##
+##                           Cepstral, LLC                               ##
+##                        Copyright (c) 2001                             ##
 ##                        All Rights Reserved.                           ##
 ##                                                                       ##
 ##  Permission is hereby granted, free of charge, to use and distribute  ##
@@ -19,33 +19,39 @@
 ##      derived from this software without specific prior written        ##
 ##      permission.                                                      ##
 ##                                                                       ##
-##  CARNEGIE MELLON UNIVERSITY AND THE CONTRIBUTORS TO THIS WORK         ##
-##  DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING      ##
-##  ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT   ##
-##  SHALL CARNEGIE MELLON UNIVERSITY NOR THE CONTRIBUTORS BE LIABLE      ##
-##  FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    ##
-##  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN   ##
-##  AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,          ##
-##  ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF       ##
-##  THIS SOFTWARE.                                                       ##
+##  CEPSTRAL, LLC AND THE CONTRIBUTORS TO THIS WORK DISCLAIM ALL         ##
+##  WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED       ##
+##  WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL         ##
+##  CEPSTRAL, LLC NOR THE CONTRIBUTORS BE LIABLE FOR ANY SPECIAL,        ##
+##  INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER          ##
+##  RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION    ##
+##  OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  ##
+##  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.          ##
 ##                                                                       ##
 ###########################################################################
 ##                                                                       ##
-##  Tools for converting a festvox voice to Flite code                   ##
+##  Output compiled regexes for cst_regex.c                              ##
 ##                                                                       ##
 ###########################################################################
-TOP=../..
-DIRNAME=tools/festvox
-BUILD_DIRS = 
-ALL_DIRS= 
-SRCS = 
-MAKES = Makefile.top Makefile.wav Makefile.mcep Makefile.festvox \
-        Makefile.trees Makefile.lpc
-FILES = Makefile $(SCM) $(SRCS) VOICE.c make_diphone_db
-LIBNAME = flite
-LOCAL_INCLUDES = 
 
-ALL = .build_lib
+%RXS = (
+	cst_rx_white => "[ \n\t\r]+",
+	cst_rx_alpha => "[A-Za-z]+",
+	cst_rx_uppercase => "[A-Z]+",
+	cst_rx_lowercase => "[a-z]+",
+	cst_rx_alphanum => "[0-9A-Za-z]+",
+	cst_rx_identifier => "[A-Za-z_][0-9A-Za-z_]+",
+	cst_rx_int => "-?[0-9]+",
+	cst_rx_double => "-?\\(\\([0-9]+\\.[0-9]*\\)\\|\\([0-9]+\\)\\|\\(\\.[0-9]+\\)\\)\\([eE][---+]?[0-9]+\\)?",
+	cst_rx_commaint => "[0-9][0-9]?[0-9]?,\\([0-9][0-9][0-9],\\)*[0-9][0-9][0-9]\\(\\.[0-9]+\\)?",
+	cst_rx_digits => "[0-9][0-9]*",
+	cst_rx_dotted_abbrev => "\\([A-Za-z]\\.\\)*[A-Za-z]",
+       );
 
-include $(TOP)/config/common_make_rules
+while (my ($n, $r) = each %RXS) {
+    system './regexcomp', $n, $r;
+}
 
+foreach my $n (keys %RXS) {
+    print "const cst_regex *$n = &${n}_rx;\n";
+}

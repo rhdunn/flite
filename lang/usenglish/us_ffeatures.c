@@ -166,7 +166,9 @@ static const cst_val *ssyl_in(const cst_item *syl)
 
     /* This should actually include the first syllable, but Festival's
        doesn't. */
-    for (c=0, p=item_prev(ss); p && !item_equal(p,fs); p=item_prev(p))
+    for (c=0, p=item_prev(ss); 
+	 p && (!item_equal(p,fs)) && (c < CST_CONST_INT_MAX);
+	 p=item_prev(p))
     {
 	if (cst_streq("1",item_feat_string(p,"stress")))
 	    c++;
@@ -185,7 +187,9 @@ static const cst_val *ssyl_out(const cst_item *syl)
 
     fs = path_to_item(syl,"R:SylStructure.parent.R:Phrase.parent.daughtern.R:SylStructure.daughter");
 
-    for (c=0, p=item_next(ss); p; p=item_next(p))
+    for (c=0, p=item_next(ss); 
+	 p && (c < CST_CONST_INT_MAX); 
+	 p=item_next(p))
     {
 	if (cst_streq("1",item_feat_string(p,"stress")))
 	    c++;
@@ -206,7 +210,9 @@ static const cst_val *syl_in(const cst_item *syl)
 
     fs = path_to_item(syl,"R:SylStructure.parent.R:Phrase.parent.daughter.R:SylStructure.daughter");
 
-    for (c=0, p=ss; p; p=item_prev(p),c++)
+    for (c=0, p=ss; 
+	 p && (c < CST_CONST_INT_MAX); 
+	 p=item_prev(p),c++)
 	if (item_equal(p,fs))
 	    break;
     return val_string_n(c);
@@ -223,7 +229,9 @@ static const cst_val *syl_out(const cst_item *syl)
 
     fs = path_to_item(syl,"R:SylStructure.parent.R:Phrase.parent.daughtern.R:SylStructure.daughtern");
 
-    for (c=0, p=ss; p; p=item_next(p),c++)
+    for (c=0, p=ss; 
+	 p && (c < CST_CONST_INT_MAX); 
+	 p=item_next(p),c++)
 	if (item_equal(p,fs))
 	    break;
     return val_string_n(c);
@@ -330,7 +338,9 @@ static const cst_val *asyl_in(const cst_item *syl)
 
     fs = path_to_item(syl,"R:SylStructure.parent.R:Phrase.parent.daughter.R:SylStructure.daughter");
 
-    for (c=0, p=ss; p; p=item_prev(p))
+    for (c=0, p=ss; 
+	 p && (c < CST_CONST_INT_MAX); 
+	 p=item_prev(p))
     {
 	if (val_int(accented(p)) == 1)
 	    c++;
@@ -494,7 +504,7 @@ static const cst_val *sub_phrases(const cst_item *syl)
     int c;
     
     for (c=0,s=path_to_item(syl,"R:SylStructure.parent.R:Phrase.parent.p");
-	 s;
+	 s && (c < CST_CONST_INT_MAX); 
 	 s=item_prev(s),c++);
 
     return val_string_n(c);
@@ -506,7 +516,7 @@ static const cst_val *last_accent(const cst_item *syl)
     int c;
     
     for (c=0,s=item_as(syl,"Syllable");
-	 s;
+	 s && (c < CST_CONST_INT_MAX); 
 	 s=item_prev(s),c++)
     {
 	if (accented(s))

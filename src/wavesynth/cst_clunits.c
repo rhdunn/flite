@@ -182,6 +182,14 @@ static cst_utterance *clunits_select(cst_utterance *utt)
 	else
 	    item_set_int(u,"unit_end",clunit_db->units[unit_entry].end);
 
+	if (item_feat_int(u,"unit_start") > item_feat_int(u, "unit_end"))
+	{
+	    feat_print(stdout,s->contents->features);
+	    fprintf(stdout,"start %d end %d\n",
+		    item_feat_int(u,"unit_start"), item_feat_int(u, "unit_end"));
+	    feat_print(stdout,u->contents->features);
+	}
+
 	DPRINTF(0, ("selected %d=%s_%d %d/%d\n",
 		    unit_entry, 
 		    UNIT_TYPE(clunit_db,unit_entry),
@@ -313,10 +321,12 @@ static int optimal_couple_frame(cst_clunit_db *cludb, int u0, int u1,
     int a,b;
 
     if (cludb->units[u1].prev == u0)
-	return 0; /* Consecutive units win - FATALITY */
+	return 0; /* Consecutive units win */
 
-    /* Still not correct as this might go past end of unit */
-    a = cludb->units[u0].end;
+    if (cludb->units[u0].next != CLUNIT_NONE)
+	a = cludb->units[u0].end;
+    else    /* don't want to do this but its all that is left to do */
+	a = cludb->units[u0].end-1;  /* if num frames < 1 this is bad */
     b = cludb->units[u1].start;
 
     return (*dfunc)(cludb, a, b,
@@ -502,16 +512,17 @@ static int clunit_get_unit_type_index(cst_clunit_db *cludb, const char *name)
     start = 0;
     end = cludb->num_types;
 
-    while (start < end) {
-	    mid = (start+end)/2;
-	    c = strcmp(cludb->types[mid].name,name);
+    while (start < end) 
+    {
+	mid = (start+end)/2;
+	c = strcmp(cludb->types[mid].name,name);
 
-	    if (c == 0)
-		    return mid;
-	    else if (c > 0)
-		    end = mid;
-	    else
-		    start = mid + 1;
+	if (c == 0)
+	    return mid;
+	else if (c > 0)
+	    end = mid;
+	else
+	    start = mid + 1;
     }
 
     cst_errmsg("clunits: unit type \"%s\" not found\n",name);

@@ -79,12 +79,14 @@ cst_wave *lpc_resynth_fixedpoint(cst_lpcres *lpcres)
 	for (j=0; j < pm_size_samps; j++,r++)
 	{
 	    outbuf[o] = (int)cst_ulaw_to_short(lpcres->residual[r / lpcres->residual_fold]);
+	    outbuf[o] *= 16384;
 	    cr = (o == 0 ? lpcres->num_channels : o-1);
 	    for (ci=0; ci < lpcres->num_channels; ci++)
 	    {
-		outbuf[o] += (lpccoefs[ci]*outbuf[cr])/16384;
+		outbuf[o] += lpccoefs[ci]*outbuf[cr];
 		cr = (cr == 0 ? lpcres->num_channels : cr-1);
 	    }
+	    outbuf[o] /= 16384;
 	    w->samples[r] = (short)outbuf[o]
 		/* I'll have to re-think this for FP case */
 		/* + (pp*lpcres->post_emphasis)/32768 */

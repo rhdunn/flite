@@ -2,7 +2,7 @@
 /*                                                                       */
 /*                  Language Technologies Institute                      */
 /*                     Carnegie Mellon University                        */
-/*                        Copyright (c) 1999                             */
+/*                      Copyright (c) 1999-2000                          */
 /*                        All Rights Reserved.                           */
 /*                                                                       */
 /*  Permission is hereby granted, free of charge, to use and distribute  */
@@ -31,51 +31,69 @@
 /*                                                                       */
 /*************************************************************************/
 /*             Author:  Alan W Black (awb@cs.cmu.edu)                    */
-/*               Date:  December 1999                                    */
+/*               Date:  April 2001                                       */
 /*************************************************************************/
 /*                                                                       */
-/*  Lexicon related functions                                            */
+/*  A simple diphone voice defintion			                 */
 /*                                                                       */
 /*************************************************************************/
-#ifndef _CST_LEXICON_H__
-#define _CST_LEXICON_H__
 
-#include <stdio.h>
+#include <string.h>
+#include "flite.h"
+#include "cst_diphone.h"
+#include "usenglish.h"
+#include "cmulex.h"
 
-#include "cst_item.h"
-#include "cst_lts.h"
+static cst_utterance *__VOICENAME___postlex(cst_utterance *u);
 
-typedef struct lexicon_entry_struct {
-    char *word_pos;
-    int phone_index;
-} lexicon_entry;
+extern cst_diphone_db __VOICENAME___db;
 
-typedef struct lexicon_struct {
-    char *name;
-    int num_entries;
-    lexicon_entry *entry_index;
-    unsigned char *phones;
-    char **phone_table;
+cst_voice *__VOICENAME___diphone = NULL;
 
-    cst_lts_rules *lts_rule_set;
+cst_voice *register___VOICENAME__(const char *voxdir)
+{
+    cst_voice *v = new_voice();
 
-    int (*syl_boundary)(const cst_item *i,const cst_val *p);
-    
-    cst_val *(*lts_function)(const struct lexicon_struct *l, const char *word, const char *pos);
+    /* Sets up language specific parameters in the __VOICENAME__. */
+    usenglish_init(v);
 
-    char ***addenda;
-} cst_lexicon;
+    feat_set_string(v->features,"name","__VOICENAME__");
 
-cst_lexicon *new_lexicon();
-void delete_lexicon(cst_lexicon *lex);
+    feat_set_float(v->features,"int_f0_target_mean",110.0);
+    feat_set_float(v->features,"int_f0_target_stddev",15.0);
 
-lexicon_entry *lex_add_entry(cst_lexicon *l, const char *word, const char *pos,
-			     const unsigned char *phones);
-int lex_delete_entry(cst_lexicon *l, const char *word, const char *pos);
+    feat_set_float(v->features,"duration_stretch",1.0); 
 
-cst_val *lex_lookup(const cst_lexicon *l, const char *word, const char *pos);
-int in_lex(const cst_lexicon *l, const char *word, const char *pos);
+    /* Lexicon */
+    cmu_lex_init();
+    feat_set(v->features,"lexicon",lexicon_val(&cmu_lex));
+    feat_set(v->features,"postlex_func",uttfunc_val(&__VOICENAME___postlex));
 
-CST_VAL_USER_TYPE_DCLS(lexicon,cst_lexicon)
+    /* Waveform synthesis */
+    feat_set(v->features,"wave_synth_func",uttfunc_val(&diphone_synth));
+    feat_set(v->features,"diphone_db",diphone_db_val(&__VOICENAME___db));
+    feat_set_int(v->features,"sample_rate",__VOICENAME___db.sts->sample_rate);
+/*    feat_set_string(v->features,"join_type","simple_join"); */
+    feat_set_string(v->features,"join_type","modified_lpc");
+    feat_set_string(v->features,"resynth_type","fixed");
 
-#endif
+    __VOICENAME___diphone = v;
+
+    return __VOICENAME___diphone;
+}
+
+void unregister___VOICENAME__(cst_voice *vox)
+{
+    if (vox != __VOICENAME___diphone)
+	return;
+    delete_voice(vox);
+    __VOICENAME___diphone = NULL;
+}
+
+
+static cst_utterance *__VOICENAME___postlex(cst_utterance *u)
+{
+    /* Post lexical rules */
+
+    return u;
+}

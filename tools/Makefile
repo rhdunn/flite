@@ -37,19 +37,25 @@
 TOP=..
 DIRNAME=tools
 BUILD_DIRS = 
-ALL_DIRS= $(BUILD_DIRS) festvox
-SRCS = 
+ALL_DIRS=
+SRCS = find_sts_main.c flite_sort_main.c
 OBJS = $(SRCS:.c=.o)
+TMPLTS = VOICE_ldom.c VOICE_clunits.c VOICE_diphone.c Makefile.flite 
+SCRIPTS = dump_us_regexes dump_cst_regexes build_flite \
+          setup_flite
 SCM=make_lex.scm make_lts.scm make_cart.scm play_sync.scm \
-    make_phoneset.scm make_vallist.scm \
-    make_didb.scm make_f0lr.scm 
+    make_phoneset.scm make_vallist.scm make_clunits.scm \
+    make_didb.scm make_f0lr.scm make_lts_wfst.scm \
+    make_lts_rewrite.scm
 
-FILES = Makefile $(SCM) $(SRCS) find_cmimax
-LIBNAME = flite
+FILES = Makefile $(SCM) $(SRCS) $(SCRIPTS) $(TMPLTS) find_cmimax \
+        regexcomp_main.c
 LOCAL_INCLUDES = 
 
-ALL = regexcomp$(EXEEXT)
-LOCAL_CLEAN = regexcomp$(EXEEXT)
+MAIN_EXECS = $(SRCS:_main.c=$(EXEEXT))
+
+ALL = regexcomp$(EXEEXT) find_sts flite_sort 
+LOCAL_CLEAN = regexcomp$(EXEEXT) find_sts flite_sort
 
 include $(TOP)/config/common_make_rules
 

@@ -138,7 +138,8 @@ cst_utterance *asis_to_pm(cst_utterance *utt)
 
     sts_list = val_sts_list(utt_feat_val(utt,"sts_list"));
     target_lpcres = new_lpcres();
-    
+
+    /* Pass one to find the size */
     utt_pms = utt_size = 0;
     for (u=relation_head(utt_relation(utt,"Unit"));
 	 u; 
@@ -153,6 +154,7 @@ cst_utterance *asis_to_pm(cst_utterance *utt)
     }
     lpcres_resize_frames(target_lpcres,utt_pms);
 
+    /* Pass two to fill in the values */
     utt_pms = utt_size = 0;
     for (u=relation_head(utt_relation(utt,"Unit"));
 	 u; 

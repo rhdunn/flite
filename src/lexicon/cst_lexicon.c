@@ -264,6 +264,8 @@ cst_val *lex_lookup(const cst_lexicon *l, const char *word, const char *pos)
 	    phones = lts_apply(word,
 			       "",  /* more features if we had them */
 			       l->lts_rule_set);
+	else if (l->lts_function)
+	    phones = (l->lts_function)(l,word,"");
     }
 
     cst_free(wp);

@@ -1,7 +1,7 @@
 
          Flite: a small run-time speech synthesis engine
-                          version 1.1
-          Copyright Carnegie Mellon University 1999-2001
+                          version 1.2-release
+          Copyright Carnegie Mellon University 1999-2003
                       All rights reserved
                       http://cmuflite.org
 
@@ -87,9 +87,11 @@ Supported platforms:
 
 We have successfully compiled and run on 
 
-o Various Intel Linux systems (and iPaq Linux)
+o Various Intel Linux systems (and iPaq Linux), under various versions
+  of GCC (2.7.2 to 3.2.1)
 o FreeBSD 3.x and 4.x
-o Solaris 5.7
+o Solaris 5.7, and Solaris 9
+o Initial support for Mac OS X
 o OSF1 V4.0 (gives an unimportant warning about sizes when compiled cst_val.c)
 o Windows 2000 under Cygwin 1.3.5
 o Some support for WinCE (2.11 and 3.0) is included but is not complete
@@ -101,19 +103,31 @@ byte order constraints in some structures.  These are portable but may
 require reordering of some fields, contact us if you are moving to
 a new archiecture.
 
+News
+----
+
+New in 1.2-release
+    o A build process for diphone and clunit/ldom voices
+      FestVox voices can be converted (sometimes) automatically
+    o Various bug fixes
+    o Initial support for Mac OS X (not talking to audio device yet)
+      but compiles and runs
+    o Files can be converted to a single audio file
+    o optional shared library support (Linux)
+
 Compilation
 -----------
 
 In general
 
-    tar zxvf flite-1.1-release.tar.gz
-    cd flite
+    tar zxvf flite-1.2-release.tar.gz
+    cd flite-1.2-release
     ./configure
     make
 
 Where tar is gnu tar (gtar), and make is gnu make (gmake).
 
-Configuration should be automatic, but mayeb doesn't work in all cases
+Configuration should be automatic, but maybe doesn't work in all cases
 especially if you have some new compiler.  You can explicitly set to
 compiler in config/config and add any options you see fit.   Configure
 tries to guess these but it might be able for cross compilation cases
@@ -135,7 +149,7 @@ edit config/config.
 
 The copy bin/flite to the ipaq.  This binary is also
 available from 
-   http://cmuflite.org/packed/flite-1.1/flite-1.1_bin16KHz_arm-linux.tar.gz
+   http://cmuflite.org/packed/flite-1.2/flite-1.2_bin16KHz_arm-linux.tar.gz
 Because the Linux ipaq audio driver only supports 16KHz (and more) 
 we include this larger voice.  
 
@@ -143,7 +157,7 @@ The Sharp Zaurus SL-5000D is a very similar machine, however it
 does support 8KHz sampling and a smaller binary is provided.  The
 Zaurus typicall has less free memory so there is an advantage to
 this
-   http://cmuflite.org/packed/flite-1.1/flite-1.1_bin8KHz_arm-linux.tar.gz
+   http://cmuflite.org/packed/flite-1.2/flite-1.2_bin8KHz_arm-linux.tar.gz
 
 This voice also used fixed point rather floating point as the
 StrongARM doesn't have floating point instructions.  We are working on
@@ -173,8 +187,14 @@ Explicit options are also available.
 
    ./bin/flite -v doc/alice none
 
-Will synthesize the file without playig the audio and give a summary
+Will synthesize the file without playing the audio and give a summary
 of the speed.
+
+   ./bin/flite doc/alice alice.wav
+
+will synthesize the whole of alice into a single file (previoous
+versions would only give the last utterance in the file, but
+that is fixed now).
 
 An additional set of feature setting options are available, these are
 *debug* options, Voices are represented as sets of feature values (see
@@ -234,7 +254,6 @@ be a lot faster and smaller.  We have already seriously considered some
 of the following but they didn't make this release.  In near
 future versions we will add
 
-o A (default) compilation method from a FestVox built voice.
 o Streaming synthesis so no large buffers of waveforms need be held
   (we've got an initial pass at that in Cepstral but not read for this
   release)

@@ -1,8 +1,8 @@
-###########################################################################
+########################################################-*-mode:Makefile-*-
 ##                                                                       ##
 ##                  Language Technologies Institute                      ##
 ##                     Carnegie Mellon University                        ##
-##                        Copyright (c) 1999                             ##
+##                        Copyright (c) 2000                             ##
 ##                        All Rights Reserved.                           ##
 ##                                                                       ##
 ##  Permission is hereby granted, free of charge, to use and distribute  ##
@@ -30,27 +30,49 @@
 ##  THIS SOFTWARE.                                                       ##
 ##                                                                       ##
 ###########################################################################
-##                                                                       ##
-##  Audio support for talking to local audio devices                     ##
-##                                                                       ##
-###########################################################################
-TOP=../..
-DIRNAME=src/audio
-BUILD_DIRS = 
-ALL_DIRS= 
-H = native_audio.h
-include $(TOP)/config/config
+FLITEDIR=__FLITEDIR__
+TOP=$(FLITEDIR)
+DIRNAME=flite
+VOICENAME=__VOICENAME__
+VOICETYPE=__VOICETYPE__
 
-BASESRCS = auclient.c auserver.c audio.c 
-SRCS = $(BASESRCS) $(AUDIODRIVER:%=au_%.c)
-OBJS = $(SRCS:.c=.o)
-FILES = Makefile $(H) $(BASESRCS) au_alsa.c au_command.c au_none.c \
-	au_oss.c au_sun.c au_wince.c
-LIBNAME = flite
+LIBNAME = $(VOICENAME)
+LOCAL_INCLUDES = -I$(TOP)/lang/usenglish -I$(TOP)/lang/cmulex
+LOCAL_LIBS = -L . -l$(VOICENAME) -lflite_usenglish -lflite_cmulex
+H = 
 
-LOCAL_INCLUDES = -I. $(AUDIODEFS)
+CSRCS = $(VOICENAME).c 
 
-ALL = .build_lib
+ifeq ($(VOICETYPE),diphone)
+CSRCS +=$(VOICENAME)_$(VOICETYPE).c
+else
+CSRCS += $(VOICENAME)_clunits.c
+CSRCS += $(VOICENAME)_cltrees.c $(VOICENAME)_lpc.c $(VOICENAME)_mcep.c
+MCEPSRCS = $(shell ls $(VOICENAME)_mcep_*.c)
+MCEPOBJS = $(MCEPSRCS:.c=.o)
+LPCSRCS= $(shell ls $(VOICENAME)_lpc_*.c)
+LPCOBJS = $(LPCSRCS:.c=.o)
+endif
 
-include $(TOP)/config/common_make_rules
+OBJS = $(CSRCS:.c=.o) $(LPCOBJS) $(MCEPOBJS)
+
+ALL = .build_lib flite
+
+include $(FLITEDIR)/config/common_make_rules
+
+LIBDIR=.
+ifdef SHFLAGS
+ALL += lib$(VOICENAME).so
+endif
+
+
+$(VOICENAME)_lpc.o: $(VOICENAME)_lpc.c
+	$(CC) -I. -I$(FLITEDIR)/include -c -o $@ $<
+
+$(VOICENAME)_mcep.o: $(VOICENAME)_mcep.c
+	$(CC) -I. -I$(FLITEDIR)/include -c -o $@ $<
+
+flite: flite_main.o $(FLITELIBS) lib$(VOICENAME).a
+	$(CC) $(CFLAGS) -o $@ flite_main.o $(LOCAL_LIBS) $(LDFLAGS)
+
 

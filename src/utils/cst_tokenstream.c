@@ -52,10 +52,13 @@ static const char ts_getc(cst_tokenstream *ts);
 static void extend_buffer(char **buffer,int *buffer_max)
 {
     int new_max;
+    char *new_buffer;
 
     new_max = (*buffer_max)+(*buffer_max)/5;
+    new_buffer = cst_alloc(char,new_max);
+    memmove(new_buffer,*buffer,*buffer_max);
     cst_free(*buffer);
-    *buffer = cst_alloc(char,new_max);
+    *buffer = new_buffer;
     *buffer_max = new_max;
 }			  
 

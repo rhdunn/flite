@@ -57,7 +57,7 @@ static void flite_version()
 	   FLITE_PROJECT_VERSION,
 	   FLITE_PROJECT_STATE,
 	   FLITE_PROJECT_DATE);
-    printf("  CMU Copyright 1999-2001, all rights reserved\n");
+    printf("  CMU Copyright 1999-2003, all rights reserved\n");
 }
 
 static void flite_usage()

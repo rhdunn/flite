@@ -3,14 +3,16 @@
 /**  from .    */
 /*******************************************************/
 
-DEF_STATIC_CONST_VAL_STRING(val_0000,"0");
-DEF_STATIC_CONST_VAL_STRING(val_0001,"");
-DEF_STATIC_CONST_VAL_STRING(val_0002,"1");
-DEF_STATIC_CONST_VAL_STRING(val_0003,"BB");
-#define CTNODE_us_phrasing_NO_0002 4
+DEF_STATIC_CONST_VAL_STRING(val_0000,"--");
+DEF_STATIC_CONST_VAL_STRING(val_0001,"BB");
+#define CTNODE_us_phrasing_NO_0000 2
+DEF_STATIC_CONST_VAL_STRING(val_0002,"0");
+DEF_STATIC_CONST_VAL_STRING(val_0003,"");
+DEF_STATIC_CONST_VAL_STRING(val_0004,"1");
 #define CTNODE_us_phrasing_NO_0004 6
-DEF_STATIC_CONST_VAL_STRING(val_0004,"NB");
-#define CTNODE_us_phrasing_NO_0001 7
-#define CTNODE_us_phrasing_NO_0000 8
-#define CTNODE_us_phrasing_NO_0008 10
+#define CTNODE_us_phrasing_NO_0006 8
+DEF_STATIC_CONST_VAL_STRING(val_0005,"NB");
+#define CTNODE_us_phrasing_NO_0003 9
+#define CTNODE_us_phrasing_NO_0002 10
 #define CTNODE_us_phrasing_NO_0010 12
+#define CTNODE_us_phrasing_NO_0012 14
