@@ -60,8 +60,12 @@ CST_VAL_REG_TD_TYPE_NODEL(diphone_db,cst_diphone_db,31)
 CST_VAL_REG_TD_TYPE_NODEL(clunit_db,cst_clunit_db,33)
 CST_VAL_REG_TD_TYPE_NODEL(vit_cand,cst_vit_cand,35)
 CST_VAL_REG_TD_TYPE_NODEL(sts_list,cst_sts_list,37)
+CST_VAL_REG_TD_TYPE_NODEL(userdata,cst_userdata,41)
+CST_VAL_REGISTER_TYPE_NODEL(userdata,cst_userdata)
+CST_VAL_REG_TD_FUNCPTR(itemfunc,cst_itemfunc,43)
+CST_VAL_REG_TD_TYPE(features,cst_features,45)
 
-const cst_val_def cst_val_defs[19] = {
+const cst_val_def cst_val_defs[] = {
     /* These ones are never called */
     { "int"  , NULL },                      /* 1 INT */
     { "float", NULL },                      /* 3 FLOAT */
@@ -82,8 +86,9 @@ const cst_val_def cst_val_defs[19] = {
     { "diphone_db", val_delete_diphone_db }, /* 31 diphone_db */
     { "clunit_db", val_delete_clunit_db }, /* 33 clunit_db */
     { "vit_cand", val_delete_vit_cand },   /* 35 vit_cand */
-    { "sts_list", val_delete_sts_list }    /* 37 sts_list */
+    { "sts_list", val_delete_sts_list },   /* 37 sts_list */
+    { NULL, NULL }, /* 39 (reserved) */
+    { "userdata", val_delete_userdata },   /* 41 userdata */
+    { "itemfunc", val_delete_itemfunc },   /* 43 itemfunc */
+    { "features", val_delete_features }    /* 45 itemfunc */
 };
-
-
-

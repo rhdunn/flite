@@ -54,26 +54,46 @@
 
 #define CLUNITS_DEBUG 0
 
+#ifndef CLUNITS_DEBUG
+#define CLUNITS_DEBUG 0
+#endif
+
+#if CLUNITS_DEBUG > 0
+# define DPRINTF(l,x) if (CLUNITS_DEBUG > (l)) cst_dbgmsg x
+#else
+# define DPRINTF(l,x)
+#endif
+
+#define BIG_BAD_NUMBER 50000 /* big enough to be bad, not big enough
+                                to cause overflows */
+
 CST_VAL_REGISTER_TYPE_NODEL(clunit_db,cst_clunit_db)
 CST_VAL_REGISTER_TYPE_NODEL(vit_cand,cst_vit_cand)
 
+static cst_utterance *clunits_select(cst_utterance *utt);
 static cst_vit_cand *cl_cand(cst_item *i,
 			     struct cst_viterbi_struct *vd);
 static cst_vit_path *cl_path(cst_vit_path *p,
 			     cst_vit_cand *c,
 			     cst_viterbi *vd);
 static const cst_cart *clunit_get_tree(cst_clunit_db *cludb, const char *name);
-static int optimal_couple_frame(cst_clunit_db *cludb, int u0, int u1);
+static void clunit_set_unit_name(cst_item *s,cst_clunit_db *clunit_db);
+
+typedef int (*cst_distfunc)(const cst_clunit_db *, int, int, const int *, int);
+static int optimal_couple_frame(cst_clunit_db *cludb, int u0, int u1,
+				cst_distfunc dfunc);
 static int optimal_couple(cst_clunit_db *cludb,
 			  int u0, int u1,
-			  int *u0_move, int *u1_move);
-static void clunit_set_unit_name(cst_item *s,cst_clunit_db *clunit_db);
-static int unit_type_eq(cst_clunit_db *cludb, int ua, int ub);
-
+			  int *u0_move, int *u1_move,
+			  cst_distfunc dfunc);
 static int frame_distance(const cst_clunit_db *cludb,
 			  int a, int b,
 			  const int *join_weights,
-			  const int order);
+			  int order);
+static int frame_distanceb(const cst_clunit_db *cludb,
+			   int a, int b,
+			   const int *join_weights,
+			   int order);
 
 
 cst_utterance *clunits_synth(cst_utterance *utt)
@@ -85,7 +105,30 @@ cst_utterance *clunits_synth(cst_utterance *utt)
     return utt;
 }
 
-cst_utterance *clunits_select(cst_utterance *utt)
+cst_utterance *clunits_dump_units(cst_utterance *utt)
+{
+    cst_clunit_db *clunit_db;
+    cst_item *s, *u;
+    int unit_entry;
+
+    clunit_db = val_clunit_db(feat_val(utt->features,"clunit_db"));
+    for (s = relation_head(utt_relation(utt,"Segment")); s; s = item_next(s))
+    {
+	u = item_daughter(s);
+	unit_entry = item_feat_int(u,"unit_entry");
+	cst_dbgmsg("for %s end %f selected %d %s start move %d end move %d\n",
+		   item_name(s),
+		   item_feat_float(s,"end"),
+		   unit_entry,
+		   item_name(u),
+		   item_feat_int(u,"unit_start") - clunit_db->units[unit_entry].start,
+		   item_feat_int(u,"unit_end") - clunit_db->units[unit_entry].end);
+    }
+
+    return utt;
+}
+
+static cst_utterance *clunits_select(cst_utterance *utt)
 {
     cst_viterbi *vd;
     cst_relation *units,*segs;
@@ -123,10 +166,6 @@ cst_utterance *clunits_select(cst_utterance *utt)
 	item_set_string(u,"name",item_name(s));
 
 	unit_entry = item_feat_int(s,"selected_unit");
-#if CLUNITS_DEBUG
-	printf("selected %d %s\n", unit_entry,
-	       clunit_db->units[unit_entry].name);
-#endif
 
 	/* Get stuff from unit_db */
 	item_set(u,"unit_entry",item_feat(s,"selected_unit"));
@@ -143,6 +182,12 @@ cst_utterance *clunits_select(cst_utterance *utt)
 	else
 	    item_set_int(u,"unit_end",clunit_db->units[unit_entry].end);
 
+	DPRINTF(0, ("selected %d=%s_%d %d/%d\n",
+		    unit_entry, 
+		    UNIT_TYPE(clunit_db,unit_entry),
+		    UNIT_INDEX(clunit_db,unit_entry),
+		    item_feat_int(u,"unit_start"), item_feat_int(u, "unit_end")));
+
 	item_set_int(u,"target_end",
 		     (int)(item_feat_float(s,"end")*clunit_db->sts->sample_rate));
     }
@@ -153,7 +198,7 @@ cst_utterance *clunits_select(cst_utterance *utt)
 static cst_vit_cand *cl_cand(cst_item *i,cst_viterbi *vd)
 {
     const char *unit_type;
-    int nu;
+    int nu, idx;
     int e;
     const cst_val *clist,*c;
     cst_vit_cand *p,*all,*gt,*lc;
@@ -168,13 +213,12 @@ static cst_vit_cand *cl_cand(cst_item *i,cst_viterbi *vd)
     all = 0;
     for (c=clist; c; c=val_cdr(c))
     {
+	idx = clunit_get_unit_index(clunit_db, unit_type, val_int(val_car(c)));
 	p = new_vit_cand();
 	p->next = all;
 	p->item = i;
 	p->score = 0;
-	vit_cand_set_int(p, clunit_get_unit_index(clunit_db,
-						  unit_type,
-						  val_int(val_car(c))));
+	vit_cand_set_int(p,idx);
 	all = p;
     }
 
@@ -189,7 +233,9 @@ static cst_vit_cand *cl_cand(cst_item *i,cst_viterbi *vd)
 	    for (gt=all; gt; gt=gt->next)
 		if (nu == gt->ival)
 		    break;  /* we've got this one already */
-	    if ((gt == 0) && unit_type_eq(clunit_db, nu, all->ival))
+	    if ((gt == 0)
+		&& (clunit_db->units[nu].type
+		    == clunit_db->units[all->ival].type))
 	    {
 		p = new_vit_cand();
 		p->next = all;
@@ -203,14 +249,6 @@ static cst_vit_cand *cl_cand(cst_item *i,cst_viterbi *vd)
     }
     item_set(i,"clunit_cands",vit_cand_val(all));
 
-#if CLUNITS_DEBUG
-    printf("search candidates for %s:\n", unit_type);
-    for (p = all; p; p = p->next) {
-	printf("%d(%s) ", p->ival, clunit_db->units[p->ival].name);
-    }
-    printf("\n");
-#endif
-
     return all;
 }
 
@@ -221,12 +259,20 @@ static cst_vit_path *cl_path(cst_vit_path *p,
     int cost;
     cst_vit_path *np;
     cst_clunit_db *cludb;
+    cst_distfunc dfunc;
     int u0,u1;
-    int u0_move, u1_move;
+    int u0_move = -1, u1_move = -1;
 
-    np = new_vit_path();
+    np = new_vit_path(vd);
+    cludb = val_clunit_db(feat_val(vd->f,"clunit_db"));	
+    if ((cludb->mcep->sts == NULL
+	 && cludb->mcep->frames == NULL)
+	|| (cludb->mcep->sts
+	    && cludb->mcep->sts[0].frame == NULL))
+	dfunc = frame_distanceb;
+    else
+	dfunc = frame_distance;
 
-    cludb = val_clunit_db(feat_val(vd->f,"clunit_db"));
 
     np->cand = c;
     np->from = p;
@@ -240,122 +286,110 @@ static cst_vit_path *cl_path(cst_vit_path *p,
 	if (cludb->optimal_coupling == 1) {
 	    if (np->f == NULL)
 		np->f = new_features();
-	    cost = optimal_couple(cludb, u0, u1, &u0_move, &u1_move);
-	    feat_set(np->f, "unit_prev_move", int_val(u0_move));
-	    feat_set(np->f, "unit_this_move", int_val(u1_move));
+	    cost = optimal_couple(cludb, u0, u1, &u0_move, &u1_move, dfunc);
+	    if (u0_move != -1)
+		    feat_set(np->f, "unit_prev_move", int_val(u0_move));
+	    if (u1_move != -1)
+		    feat_set(np->f, "unit_this_move", int_val(u1_move));
 	} else if (cludb->optimal_coupling == 2)
-	    cost = optimal_couple_frame(cludb,u0,u1);
+	    cost = optimal_couple_frame(cludb, u0, u1, dfunc);
 	else
 	    cost = 0;
     }
 
-    cost *= cludb->continuity_weight;
+    cost *= 5; /* magic number ("continuity weight") */
     np->state = c->pos;
     if (p==0)
 	np->score = cost + c->score;
     else
 	np->score = cost + c->score + p->score;
 
-#if CLUNITS_DEBUG
-    printf("joined %s %s score %d cscore %d\n",
-	   (p ? cludb->units[p->cand->ival].name : "none"),
-	   cludb->units[c->ival].name,
-	   cost,np->score);
-#endif
-	   
     return np;
 }
 
-static int optimal_couple_frame(cst_clunit_db *cludb, int u0, int u1)
+static int optimal_couple_frame(cst_clunit_db *cludb, int u0, int u1,
+				cst_distfunc dfunc)
 {
     int a,b;
-    int u1_p;
 
-    u1_p = cludb->units[u1].prev;
-
-    if (u1_p == u0)
+    if (cludb->units[u1].prev == u0)
 	return 0; /* Consecutive units win - FATALITY */
 
-    if (u1_p == CLUNIT_NONE) /* No previous, so we can't score overlapping frames */
-	a = cludb->units[u1].start;
-    else 
-	a = cludb->units[u1_p].end-1;
+    /* Still not correct as this might go past end of unit */
+    a = cludb->units[u0].end;
+    b = cludb->units[u1].start;
 
-    b = cludb->units[u0].end-1;
- 
-    return 50000 + frame_distance(cludb, a, b,
-				  cludb->join_weights,
-				  cludb->mcep->num_channels);
+    return (*dfunc)(cludb, a, b,
+		    cludb->join_weights,
+		    cludb->mcep->num_channels)
+	    + abs(get_frame_size(cludb->sts, a)
+		  - get_frame_size(cludb->sts,b)) * cludb->f0_weight;
 }
 
 static int optimal_couple(cst_clunit_db *cludb,
 			  int u0, int u1,
-			  int *u0_move, int *u1_move)
+			  int *u0_move, int *u1_move,
+			  cst_distfunc dfunc)
 {
     int a,b;
     int u1_p;
     int i, fcount;
     int u0_st, u1_p_st, u0_end, u1_p_end;
-    int u0_size, u1_p_size;
     int best_u0, best_u1_p;
-    int dist, best_val, different_prev_factor;
+    int dist, best_val;
 
     u1_p = cludb->units[u1].prev;
 
-#if CLUNITS_DEBUG
-    printf("optimal_coupling %s (%d,%d) %s (%d,%d)\n",
-	   cludb->units[u0].name, cludb->units[u0].start, cludb->units[u0].end,
-	   cludb->units[u1].name, cludb->units[u1].start, cludb->units[u1].end);
-#endif
-    /* u0_move is the new end for u0
-       u1_move is the new start for u1
-
-       This works based on the assumption that the STS frames for
-       consecutive units in the recordings will also be consecutive.
-       The voice compiler MUST preserve this assumption! */
-    *u0_move = cludb->units[u0].end;
-    *u1_move = cludb->units[u1].start; /* i.e. u1_p.end + 1 */
-
     if (u1_p == u0)
-	return 0.0;
-    if (u1_p == CLUNIT_NONE)
-	return optimal_couple_frame(cludb, u0, u1); /* laziness */
+	return 0;
+    if (u1_p == CLUNIT_NONE || cludb->units[u0].phone != cludb->units[u1_p].phone)
+	return 10 * optimal_couple_frame(cludb, u0, u1, dfunc); /* laziness */
 
-    u0_size = cludb->units[u0].end - cludb->units[u0].start;
-    u1_p_size = cludb->units[u1_p].end - cludb->units[u1_p].start;
+    DPRINTF(1,("optimal_coupling %s_%d (%d,%d) %s_%d (%d,%d)\n",
+	       UNIT_TYPE(cludb,u0),
+	       UNIT_INDEX(cludb,u0),
+	       cludb->units[u0].start, cludb->units[u0].end,
+	       UNIT_TYPE(cludb,u1),
+	       UNIT_INDEX(cludb,u1),
+	       cludb->units[u1].start, cludb->units[u1].end));
 
-    u0_end = u0_size;
-    u1_p_end = u1_p_size;
+    u0_end = cludb->units[u0].end - cludb->units[u0].start;
+    u1_p_end = cludb->units[u1_p].end - cludb->units[u1_p].start;
 
-    if (unit_type_eq(cludb, u0, u1_p)) {
-	u0_st = u0_size / 3;
-	u1_p_st = u1_p_size / 3;
-	different_prev_factor = 1;
-#if CLUNITS_DEBUG
-	printf("%s == %s, sliding u0:(%d,%d) u1:(%d,%d)\n",
-	       cludb->units[u0].name,
-	       cludb->units[u1_p].name,
-	       u0_st, u0_end, u1_p_st, u1_p_end);
-#endif
-    } else {
-	/* Different phone, don't slide and just look at the last frame */
-	u0_st = u0_end - 1;
-	u1_p_st = u1_p_end - 1;
-	different_prev_factor = 1000; /* FIXME: is this really needed? */
+    u0_st = u0_end / 3;
+    u1_p_st = u1_p_end / 3;
+
+    if ((u0_end - u0_st) < (u1_p_end - u1_p_st))
+    {
+	fcount = u0_end - u0_st;
+	/* u1_p_st = u1_p_end - fcount; */
     }
+    else
+    {
+	fcount = u1_p_end - u1_p_st;
+	/* u0_st = u0_end - fcount; */
+    }
+
+    DPRINTF(1,("%s == %s, sliding u0:(%d,%d) u1:(%d,%d)\n",
+	       UNIT_TYPE(cludb,u0),
+	       UNIT_TYPE(cludb,u1_p),
+	       u0_st, u0_end, u1_p_st, u1_p_end));
 
     best_u0 = u0_end;
     best_u1_p = u1_p_end;
     best_val = INT_MAX;
 
-    fcount = ((u0_end - u0_st) < (u1_p_end - u1_p_st)
-	      ? (u0_end - u0_st)  : (u1_p_end - u1_p_st));
     for (i = 0; i < fcount; ++i) {
-	a = cludb->units[u1_p].start + u1_p_st + i;
-	b = cludb->units[u0].start + u0_st + i;
-	dist = frame_distance(cludb, a, b,
-			      cludb->join_weights,
-			      cludb->mcep->num_channels);
+	a = cludb->units[u0].start + u0_st + i;
+	b = cludb->units[u1_p].start + u1_p_st + i;
+
+	dist = 
+	    (*dfunc)(cludb, a, b,
+		     cludb->join_weights,
+		     cludb->mcep->num_channels)
+	    + abs(get_frame_size(cludb->sts, a)
+		  - get_frame_size(cludb->sts,b)) * cludb->f0_weight;
+
 	if (dist < best_val) {
 	    best_val = dist;
 	    best_u0 = u0_st + i;
@@ -363,75 +397,138 @@ static int optimal_couple(cst_clunit_db *cludb,
 	}
     }
 
-    *u0_move = cludb->units[u0].start + best_u0 + 1;
-    *u1_move = cludb->units[u1_p].start + best_u1_p + 1;
-#if CLUNITS_DEBUG
-    printf("best_u0 %d = %d best_u1 %d = %d\n",
-	   best_u0, *u0_move, best_u1_p, *u1_move);
-#endif
+    if (best_val == INT_MAX)
+	best_val = BIG_BAD_NUMBER; /* prevent overflows for zero-length units */
 
-    return 50000 + best_val * different_prev_factor;
+    /* u0_move is the new end for u0
+       u1_move is the new start for u1
+
+       This works based on the assumption that the STS frames for
+       consecutive units in the recordings will also be consecutive.
+       The voice compiler MUST preserve this assumption! */
+
+    *u0_move = cludb->units[u0].start + best_u0;
+    *u1_move = cludb->units[u1_p].start + best_u1_p;
+    DPRINTF(1,("best_u0 %d = %d best_u1 %d = %d best_val %d\n",
+	       best_u0, *u0_move, best_u1_p, *u1_move, best_val));
+
+    return 30000 + best_val;
 }
 
 static int frame_distance(const cst_clunit_db *cludb,
 			  int a, int b,
 			  const int *join_weights,
-			  const int order)
+			  int order)
 {
-    const unsigned short *av, *bv;
     int r,diff;
     int i;
+    const unsigned short *av, *bv;
 
     bv = get_sts_frame(cludb->mcep, b);
     av = get_sts_frame(cludb->mcep, a);
 
-    /* This is the sum of the deltas in each dimension, which is of
-       course not actually the distance, but works well enough for our
-       purposes. */
+#if CLUNITS_DEBUG > 2
+    cst_dbgmsg("a(%d): ",a);
+    for (i = 0; i < order; ++i)
+	cst_dbgmsg("%.2f ",
+		   (double) av[i] * cludb->mcep->coeff_range / 65536
+		   + cludb->mcep->coeff_min);
+    cst_dbgmsg("\n");
+    cst_dbgmsg("b(%d): ",b);
+    for (i = 0; i < order; ++i)
+	cst_dbgmsg("%.2f ",
+		   (double) bv[i] * cludb->mcep->coeff_range / 65536
+		   + cludb->mcep->coeff_min);
+    cst_dbgmsg("\n");
+#endif
+
+    /* Weighted Manhattan distance */
     for (r = 0, i = 0; i < order; i++)
     {
 	diff = av[i]-bv[i];
 	r += abs(diff) * join_weights[i] / 65536;
     }
 
+    release_sts_frame(cludb->mcep, a, av);
+    release_sts_frame(cludb->mcep, b, bv);
+
     return r;
+}
+
+static int frame_distanceb(const cst_clunit_db *cludb,
+			   int a, int b,
+			   const int *join_weights,
+			   int order)
+{
+    int r,diff;
+    int i;
+    const unsigned char *av, *bv;
+
+    bv = get_sts_residual_fixed(cludb->mcep, b);
+    av = get_sts_residual_fixed(cludb->mcep, a);
+
+#if CLUNITS_DEBUG > 2
+    cst_dbgmsg("a(%d): ",a);
+    for (i = 0; i < order; ++i)
+	cst_dbgmsg("%.2f ",
+		   (double) av[i] * cludb->mcep->coeff_range / 256
+		   + cludb->mcep->coeff_min);
+    cst_dbgmsg("\n");
+    cst_dbgmsg("b(%d): ",b);
+    for (i = 0; i < order; ++i)
+	cst_dbgmsg("%.2f ",
+		   (double) bv[i] * cludb->mcep->coeff_range / 256
+		   + cludb->mcep->coeff_min);
+    cst_dbgmsg("\n");
+#endif
+
+    /* Weighted Manhattan distance */
+    for (r = 0, i = 0; i < order; i++)
+    {
+	diff = (av[i]-bv[i]) * 256;
+	r += abs(diff) * join_weights[i] / 65536;
+    }
+
+    release_sts_residual(cludb->mcep, a, av);
+    release_sts_residual(cludb->mcep, b, bv);
+
+    return r;
+}
+
+static int clunit_get_unit_type_index(cst_clunit_db *cludb, const char *name)
+{
+    int start,end,mid,c;
+
+    start = 0;
+    end = cludb->num_types;
+
+    while (start < end) {
+	    mid = (start+end)/2;
+	    c = strcmp(cludb->types[mid].name,name);
+
+	    if (c == 0)
+		    return mid;
+	    else if (c > 0)
+		    end = mid;
+	    else
+		    start = mid + 1;
+    }
+
+    cst_errmsg("clunits: unit type \"%s\" not found\n",name);
+    return -1;
 }
 
 static const cst_cart *clunit_get_tree(cst_clunit_db *cludb, const char *name)
 {
     int i;
 
-    /* Binary search is not worth it, because cludb->num_types is
-       always pretty small. */
-    for (i = 0; i < cludb->num_types; ++i)
-	if (cst_streq(cludb->types[i], name))
-	    break;
-
-    if (i == cludb->num_types)
+    i = clunit_get_unit_type_index(cludb, name);
+    if (i == -1)
     {
 	cst_errmsg("clunits: can't find tree for %s\n",name);
 	i = 0; /* "graceful" failure */
     }
     return cludb->trees[i];
-}
-
-static int unit_type_eq(cst_clunit_db *cludb, int ua, int ub)
-{
-	char const *na, *nb;
-	char const *ca, *cb;
-
-	na = cludb->units[ua].name;
-	nb = cludb->units[ub].name;
-
-	/* Find the last underscore */
-	ca = cst_strrchr(na, '_');
-	cb = cst_strrchr(nb, '_');
-
-	if (ca - na != cb - nb)
-	    return 0;
-
-	/* Compare before it */
-	return !strncmp(na, nb, ca - na);
 }
 
 static void clunit_set_unit_name(cst_item *s,cst_clunit_db *clunit_db)
@@ -456,15 +553,17 @@ char *clunits_ldom_phone_word(cst_item *s)
     const char *name;
     const char *pname;
     const char *wname;
+    const char *silence;
     char *clname;
     char *dname, *p, *q;
 
+    silence = val_string(feat_val(item_utt(s)->features,"silence"));
     name = item_name(s);
-    if (cst_streq(name,"pau"))  /* thats US English specific */
+    if (cst_streq(name,silence))
     {
 	pname = ffeature_string(s,"p.name");
-	clname = cst_alloc(char, 5+strlen(pname));
-	sprintf(clname,"pau_%s",pname);
+	clname = cst_alloc(char, strlen(silence)+1+strlen(pname)+1);
+	sprintf(clname,"%s_%s",silence,pname);
     }
     else
     {
@@ -474,52 +573,54 @@ char *clunits_ldom_phone_word(cst_item *s)
 	for (q=p=dname; *p != '\0'; p++)
 	    if (*p != '\'') *p = *q++;
 	*q = '\0';
-	clname = cst_alloc(char, strlen(dname)+2+strlen(dname));
+	clname = cst_alloc(char, strlen(name)+1+strlen(dname)+1);
 	sprintf(clname,"%s_%s",name,dname);
 	cst_free(dname);
     }
     return clname;
 }
 
-int clunit_get_unit_index(cst_clunit_db *clunit_db, 
+int clunit_get_unit_index(cst_clunit_db *cludb,
 			  const char *unit_type,
 			  int instance)
 {
-    char *unit_name;
-    int r;
+    int i;
 
-    unit_name = cst_alloc(char,strlen(unit_type)+21);
-    
-    sprintf(unit_name,"%s_%d",unit_type,instance);
-
-    r = clunit_get_unit_index_name(clunit_db,unit_name);
-
-    cst_free(unit_name);
-
-    return r;
-}
-
-int clunit_get_unit_index_name(cst_clunit_db *clunit_db,
-			       const char *name)
-{
-    int start,end,mid,c;
-
-    start = 0;
-    end = clunit_db->num_units;
-
-    while (start < end) {
-	    mid = (start+end)/2;
-	    c = strcmp(clunit_db->units[mid].name,name);
-
-	    if (c == 0)
-		    return mid;
-	    else if (c > 0)
-		    end = mid;
-	    else
-		    start = mid + 1;
+    i = clunit_get_unit_type_index(cludb, unit_type);
+    if (i == -1)
+    {
+	/* TODO: fall back to closest possible match */
+	cst_errmsg("clunit_get_unit_index: can't find unit type %s, using 0\n",
+		   unit_type);
+	i = 0;
+    }
+    if (instance >= cludb->types[i].count)
+    {
+	cst_errmsg("clunit_get_unit_index: can't find instance %d of %s, using 0\n",
+		   instance, unit_type);
+	instance = 0;
     }
 
-    cst_errmsg("clunits: unit \"%s\" not found\n",name);
-    return 0;
+    return cludb->types[i].start + instance;
 }
 
+int clunit_get_unit_index_name(cst_clunit_db *cludb,
+			       const char *name)
+{
+    const char *c;
+    char *type;
+    int idx, i;
+
+    c = cst_strrchr(name, '_');
+    if (c == NULL)
+    {
+	cst_errmsg("clunit_get_unit_index_name: invalid unit name %s\n", name);
+	return -1;
+    }
+    idx = atoi(c+1);
+    type = cst_substr(name, 0, c - name);
+    i = clunit_get_unit_index(cludb, type, idx);
+    cst_free(type);
+
+    return i;
+}

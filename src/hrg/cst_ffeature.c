@@ -50,8 +50,6 @@ CST_VAL_REGISTER_FUNCPTR(ffunc,cst_ffunction)
 
 DEF_STATIC_CONST_VAL_STRING(ffeature_default_val,"0");
 
-static cst_features ffunctions;
-
 static const void *internal_ff(const cst_item *item,
 			       const char *featpath,int type);
 
@@ -83,6 +81,7 @@ static const void *internal_ff(const cst_item *item,
 {
     const char *tk, *relation;
     cst_tokenstream *ts;
+    cst_utterance *utt;
     const cst_item *pitem;
     void *void_v;
     const cst_val *ff;
@@ -104,6 +103,20 @@ static const void *internal_ff(const cst_item *item,
 	    pitem = item_next(pitem);
 	else if (cst_streq(tk,"p"))
 	    pitem = item_prev(pitem);
+	else if (cst_streq(tk,"pp"))
+	{
+	    if (item_prev(pitem))
+		pitem = item_prev(item_prev(pitem));
+	    else
+		pitem = NULL;
+	}
+	else if (cst_streq(tk,"nn"))
+	{
+	    if (item_next(pitem))
+		pitem = item_next(item_next(pitem));
+	    else
+		pitem = NULL;
+	}
 	else if (cst_streq(tk,"parent"))
 	    pitem = item_parent(pitem);
 	else if (cst_streq(tk,"daughter"))
@@ -122,7 +135,10 @@ static const void *internal_ff(const cst_item *item,
 
     if (type == 0)
     {
-	ff = feat_val(&ffunctions,tk);
+	if (pitem && (utt = item_utt(pitem)))
+	    ff = feat_val(utt->ffunctions,tk);
+	else
+	    ff = NULL;
 	void_v = NULL;
 	if (!ff)
 	    void_v = (void *)item_feat(pitem,tk);
@@ -142,9 +158,16 @@ static const void *internal_ff(const cst_item *item,
     return void_v;
 }
 
-void ff_register(const char *name, cst_ffunction f)
+void ff_register(cst_features *ffunctions, const char *name, cst_ffunction f)
 {
     /* Register features functions */
 
-    feat_set(&ffunctions, name, ffunc_val(f));
+    if (feat_present(ffunctions, name))
+	cst_errmsg("warning: ffunction %s redefined\n", name);
+    feat_set(ffunctions, name, ffunc_val(f));
+}
+
+void ff_unregister(cst_features *ffunctions, const char *name)
+{
+    feat_remove(ffunctions, name);
 }

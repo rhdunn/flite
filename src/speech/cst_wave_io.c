@@ -59,13 +59,10 @@ int cst_wave_save(cst_wave *w,const char *filename,const char *type)
     }
 }
 
-int cst_wave_save_riff(cst_wave *w,const char *filename)
+int cst_wave_save_raw(cst_wave *w, const char *filename)
 {
-    cst_file_t fd;
-    char *info;
-    short d_short;
-    int d_int, n;
-    int num_bytes;
+    cst_file fd;
+    int rv;
 
     if ((fd = cst_fopen(filename,CST_OPEN_WRITE|CST_OPEN_BINARY)) == NULL)
     {
@@ -74,41 +71,89 @@ int cst_wave_save_riff(cst_wave *w,const char *filename)
 	return -1;
     }
 
+    rv = cst_wave_save_riff_fd(w, fd);
+    cst_fclose(fd);
+
+    return rv;
+}
+
+int cst_wave_save_raw_fd(cst_wave *w, cst_file fd)
+{
+    if (cst_fwrite(fd, cst_wave_samples(w),
+		   sizeof(short), cst_wave_num_samples(w)) == cst_wave_num_samples(w))
+	return 0;
+    else
+	return -1;
+}
+
+
+int cst_wave_save_riff(cst_wave *w,const char *filename)
+{
+    cst_file fd;
+    int rv;
+
+    if ((fd = cst_fopen(filename,CST_OPEN_WRITE|CST_OPEN_BINARY)) == NULL)
+    {
+	cst_errmsg("cst_wave_save: can't open file \"%s\"\n",
+		   filename);
+	return -1;
+    }
+
+    rv = cst_wave_save_riff_fd(w, fd);
+    cst_fclose(fd);
+
+    return rv;
+}
+
+int cst_wave_save_riff_fd(cst_wave *w, cst_file fd)
+{
+    char *info;
+    short d_short;
+    int d_int, n;
+    int num_bytes;
+
     info = "RIFF";
     cst_fwrite(fd,info,4,1);
-    num_bytes = (cst_wave_num_samples(w)*2)+8+16+12;
+    num_bytes = (cst_wave_num_samples(w)
+		 * cst_wave_num_channels(w)
+		 * sizeof(short)) + 8 + 16 + 12;
     if (CST_BIG_ENDIAN) num_bytes = SWAPINT(num_bytes);
-    cst_fwrite(fd,&num_bytes,1,4);        /* num bytes in whole file */
+    cst_fwrite(fd,&num_bytes,4,1); /* num bytes in whole file */
     info = "WAVE";
-    cst_fwrite(fd,info,4,1);
+    cst_fwrite(fd,info,1,4);
     info = "fmt ";
-    cst_fwrite(fd,info,4,1);
+    cst_fwrite(fd,info,1,4);
     num_bytes = 16;                   /* size of header */
     if (CST_BIG_ENDIAN) num_bytes = SWAPINT(num_bytes);
-    cst_fwrite(fd,&num_bytes,1,4);        
+    cst_fwrite(fd,&num_bytes,4,1);        
     d_short = RIFF_FORMAT_PCM;        /* sample type */
     if (CST_BIG_ENDIAN) d_short = SWAPSHORT(d_short);
-    cst_fwrite(fd,&d_short,1,2);          
-    d_short = 1;                      /* number of channels */
+    cst_fwrite(fd,&d_short,2,1);          
+    d_short = cst_wave_num_channels(w); /* number of channels */
     if (CST_BIG_ENDIAN) d_short = SWAPSHORT(d_short);
-    cst_fwrite(fd,&d_short,1,2);          
+    cst_fwrite(fd,&d_short,2,1);          
     d_int = cst_wave_sample_rate(w);  /* sample rate */
     if (CST_BIG_ENDIAN) d_int = SWAPINT(d_int);
-    cst_fwrite(fd,&d_int,1,4);  
-    d_int = cst_wave_sample_rate(w)*1*2;  /* average bytes per second */
+    cst_fwrite(fd,&d_int,4,1);  
+    d_int = (cst_wave_sample_rate(w)
+	     * cst_wave_num_channels(w)
+	     * sizeof(short));        /* average bytes per second */
     if (CST_BIG_ENDIAN) d_int = SWAPINT(d_int);
-    cst_fwrite(fd,&d_int,1,4);  
-    d_short = 1 * 2;                  /* block align */
+    cst_fwrite(fd,&d_int,4,1);
+    d_short = (cst_wave_num_channels(w)
+	       * sizeof(short));      /* block align */
     if (CST_BIG_ENDIAN) d_short = SWAPSHORT(d_short);
-    cst_fwrite(fd,&d_short,1,2);          
+    cst_fwrite(fd,&d_short,2,1);          
     d_short = 2 * 8;                  /* bits per sample */
     if (CST_BIG_ENDIAN) d_short = SWAPSHORT(d_short);
-    cst_fwrite(fd,&d_short,1,2);          
+    cst_fwrite(fd,&d_short,2,1);          
     info = "data";
-    cst_fwrite(fd,info,4,1);
-    d_int = 1*cst_wave_num_samples(w)*2;  /* bytes in data */
+    cst_fwrite(fd,info,1,4);
+    d_int = (cst_wave_num_channels(w)
+	     * cst_wave_num_samples(w)
+	     * sizeof(short));	      /* bytes in data */
     if (CST_BIG_ENDIAN) d_int = SWAPINT(d_int);
-    cst_fwrite(fd,&d_int,1,4);  
+    cst_fwrite(fd,&d_int,4,1);  
 
     if (CST_BIG_ENDIAN)
     {
@@ -127,11 +172,9 @@ int cst_wave_save_riff(cst_wave *w,const char *filename)
     else
     {
 	n = cst_fwrite(fd,cst_wave_samples(w),sizeof(short),
-		       1*cst_wave_num_samples(w));
+		       cst_wave_num_channels(w)*cst_wave_num_samples(w));
     }
 
-    cst_fclose(fd);
-    
     if (n != cst_wave_num_channels(w)*cst_wave_num_samples(w))
 	return -1;
     else
@@ -139,9 +182,49 @@ int cst_wave_save_riff(cst_wave *w,const char *filename)
 	
 }
 
+int cst_wave_load_raw(cst_wave *w,const char *filename,
+		      const char *bo, int sample_rate)
+{
+    cst_file fd;
+    int r;
+
+    if ((fd = cst_fopen(filename,CST_OPEN_READ|CST_OPEN_BINARY)) == NULL)
+    {
+	cst_errmsg("cst_wave_load: can't open file \"%s\"\n",
+		   filename);
+	return -1;
+    }
+
+    r = cst_wave_load_raw_fd(w, fd, bo, sample_rate);
+    
+    cst_fclose(fd);
+    
+    return r;
+}
+
+int cst_wave_load_raw_fd(cst_wave *w, cst_file fd,
+			 const char *bo, int sample_rate)
+{
+    long size;
+
+    /* Won't work on pipes, tough luck... */
+    size = cst_filesize(fd) / sizeof(short);
+    cst_wave_resize(w, size, 1);
+    if (cst_fread(fd, w->samples, sizeof(short), size) != size)
+	return -1;
+
+    w->sample_rate = sample_rate;
+    if (bo) /* if it's NULL we don't care */
+	if ((CST_LITTLE_ENDIAN && cst_streq(bo, BYTE_ORDER_BIG))
+	    || (CST_BIG_ENDIAN && cst_streq(bo, BYTE_ORDER_LITTLE)))
+	    swap_bytes_short(w->samples,w->num_samples);
+
+    return 0;
+}
+
 int cst_wave_load_riff(cst_wave *w,const char *filename)
 {
-    FILE *fd;
+    cst_file fd;
     int r;
 
     if ((fd = cst_fopen(filename,CST_OPEN_READ|CST_OPEN_BINARY)) == NULL)
@@ -158,7 +241,7 @@ int cst_wave_load_riff(cst_wave *w,const char *filename)
     return r;
 }
 
-int cst_wave_load_riff_fd(cst_wave *w,cst_file_t fd)
+int cst_wave_load_riff_fd(cst_wave *w,cst_file fd)
 {
     char info[4];
     short d_short;
@@ -241,7 +324,7 @@ int cst_wave_load_riff_fd(cst_wave *w,cst_file_t fd)
     data_length = samples * num_channels;
     cst_wave_resize(w,samples,num_channels);
 
-    if ((d = cst_fread(fd,w->samples,2,data_length)) != data_length)
+    if ((d = cst_fread(fd,w->samples,sizeof(short),data_length)) != data_length)
     {
 	cst_errmsg("cst_wave_load_riff: %d missing samples, resized accordingly\n",
 		   data_length-d);

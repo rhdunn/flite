@@ -35,17 +35,19 @@
 ##                                                                       ##
 ##       Authors:  Alan W Black (awb@cs.cmu.edu)                         ##
 ##                 Kevin A. Lenzo (lenzo@cs.cmu.edu)                     ##
-##          Date:  August 2001                                           ##
-##       Version:  1.0-beta                                              ## 
+##          Date:  December 2001                                         ##
+##       Version:  1.1-release                                           ## 
 ##                                                                       ## 
 ###########################################################################
 TOP=.
 DIRNAME=.
 BUILD_DIRS = include src doc lang main
-ALL_DIRS=config lib tools $(BUILD_DIRS) testsuite
+ALL_DIRS=config lib tools $(BUILD_DIRS) testsuite sapi
 CONFIG=configure configure.in config.sub config.guess \
        missing install-sh mkinstalldirs
-FILES = Makefile README ACKNOWLEDGEMENTS $(CONFIG)
+FILES = Makefile README ACKNOWLEDGEMENTS COPYING $(CONFIG)
+DIST_CLEAN = config.cache config.log config.status \
+		config/config config/system.mak FileList
 
 ALL = $(BUILD_DIRS)
 
@@ -59,18 +61,15 @@ config/config: config/config.in config.status
 configure: configure.in
 	autoconf
 
-distclean: clean
-	@ echo Removing configure-generated files ...
-	@ $(RM) config.cache config.log config.status \
-		config/config config/system.mak
-
 backup: time-stamp
 	@ $(RM) -f $(TOP)/FileList
 	@ $(MAKE) file-list
 	@ echo .time-stamp >>FileList
-	@ sed 's/^\.\///' <FileList | sed 's/^/flite\//' >.file-list-all
-	@ (cd ..; tar zcvf flite/$(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE).tar.gz `cat flite/.file-list-all`)
+	@ ln -s . $(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE)
+	@ sed 's/^\.\///' <FileList | sed 's/^/'$(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE)'\//' >.file-list-all
+	@ tar zcvf $(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE).tar.gz `cat $(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE)/.file-list-all`
 	@ $(RM) -f $(TOP)/.file-list-all
+	@ $(RM) $(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE) 
 	@ ls -l $(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE).tar.gz
 
 tags:

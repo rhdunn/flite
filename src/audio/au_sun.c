@@ -37,7 +37,6 @@
 /*  Sun/Solaris audio support                                            */
 /*                                                                       */
 /*************************************************************************/
-#ifdef CST_AUDIO_SUNOS
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -45,6 +44,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <errno.h>
 #include <sys/filio.h>
 #include <sys/audioio.h>
 #include "cst_string.h"
@@ -53,46 +53,110 @@
 
 static const char *sun_audio_device = "/dev/audio";
 
-int audio_set_sample_rate_sun(int afd,int sample_rate)
+cst_audiodev *audio_open_sun(int sps, int channels, cst_audiofmt fmt)
 {
     audio_info_t ainfo;
+    int fd;
+    cst_audiodev *ad;
 
-    ioctl(afd,AUDIO_GETINFO,&ainfo);
-    
-    ainfo.play.encoding = AUDIO_ENCODING_LINEAR;
-    ainfo.play.precision = 16;
+    if ((fd = open(sun_audio_device,O_WRONLY)) < 0)
+    {
+	cst_errmsg("sun_audio: failed to open audio device %s: %s\n",
+		   sun_audio_device, strerror(errno));
+	cst_error();
+    }
+    ioctl(fd,AUDIO_GETINFO,&ainfo);
+
+    switch (fmt)
+    {
+    case CST_AUDIO_LINEAR16:
+	ainfo.play.encoding = AUDIO_ENCODING_LINEAR;
+	ainfo.play.precision = 16;
+	break;
+    case CST_AUDIO_LINEAR8:
+	ainfo.play.encoding = AUDIO_ENCODING_LINEAR;
+	ainfo.play.precision = 8;
+	break;
+    case CST_AUDIO_MULAW:
+	ainfo.play.encoding = AUDIO_ENCODING_ULAW;
+	ainfo.play.precision = 8;
+	break;
+    }
+
     ainfo.play.channels = 1;
-    ainfo.play.sample_rate = sample_rate;
+    ainfo.play.sample_rate = sps;
 
-    if (ioctl(afd,AUDIO_SETINFO,&ainfo) == -1)
-	return FALSE;
+    if (ioctl(fd,AUDIO_SETINFO,&ainfo) == -1)
+    {
+	cst_errmsg("sun_audio: failed to set audio params: %s\n",
+		   strerror(errno));
+	close(fd);
+	cst_error();
+    }
+
+    ad = cst_alloc(cst_audiodev, 1);
+
+    ad->sps = sps;
+    ad->real_sps = ainfo.play.sample_rate;
+
+    ad->channels = channels;
+    ad->real_channels = ainfo.play.channels;
+
+    ad->fmt = fmt;
+    if (ainfo.play.encoding == AUDIO_ENCODING_LINEAR)
+    {
+	if (ainfo.play.precision == 16)
+	    ad->real_fmt = CST_AUDIO_LINEAR16;
+	else if (ainfo.play.precision == 8)
+	    ad->real_fmt = CST_AUDIO_LINEAR8;
+	else
+	{
+	    cst_errmsg("sun_audio: linear %d bit audio unsupported\n",
+		       ainfo.play.precision);
+	    close(fd);
+	    cst_free(ad);
+	    cst_error();
+	}
+    }
+    else if (ainfo.play.encoding == AUDIO_ENCODING_ULAW)
+	ad->real_fmt = CST_AUDIO_MULAW;
     else
-	return TRUE;;
+    {
+	    cst_errmsg("sun_audio: unsupported audio format (%d bit/encoding #%d)\n",
+		       ainfo.play.precision, ainfo.play.encoding);
+	    close(fd);
+	    cst_free(ad);
+	    cst_error();
+    }
+    ad->platform_data = (void *)fd;
+
+    return ad;
 }
 
-int audio_open_sun()
+int audio_close_sun(cst_audiodev *ad)
 {
-    int r;
-    r = open(sun_audio_device,O_WRONLY);
-    if (r == -1)
-	cst_errmsg("sun_audio: failed to open audio device %s\n",
-		   sun_audio_device);
-    return r;
+    int rv;
+
+    if (ad == NULL)
+	    return 0;
+
+    rv = close((int)ad->platform_data);
+    cst_free(ad);
+    return rv;
 }
 
-int audio_close_sun(int fd)
+int audio_write_sun(cst_audiodev *ad, void *samples, int num_bytes)
 {
-    return close(fd);
+    return write((int)ad->platform_data,samples,num_bytes);
 }
 
-int audio_write_sun(int afd, void *samples, int num_bytes)
+int audio_flush_sun(cst_audiodev *ad)
 {
-    return write(afd,samples,num_bytes);
+    return ioctl((int)ad->platform_data, AUDIO_DRAIN, 0);
 }
 
-int audio_flush_sun(int afd)
+/* FIXME... */
+int audio_drain_sun(cst_audiodev *ad)
 {
-    return ioctl(afd, AUDIO_DRAIN, 0);
+    return ioctl((int)ad->platform_data, AUDIO_DRAIN, 0);
 }
-
-#endif

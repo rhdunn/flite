@@ -39,13 +39,15 @@ DIRNAME=src/audio
 BUILD_DIRS = 
 ALL_DIRS= 
 H = native_audio.h
-SRCS = auclient.c auserver.c audio.c \
-       au_vw.c au_none.c au_command.c au_sun.c
-OBJS = $(SRCS:.c=.o)
-FILES = Makefile $(H) $(SRCS)
+include $(TOP)/config/config
+
+SRCS = auclient.c auserver.c audio.c 
+OBJS = $(SRCS:.c=.o) $(AUDIODRIVER:%=au_%.o)
+FILES = Makefile $(H) $(SRCS) au_alsa.c au_command.c au_none.c \
+	au_oss.c au_sun.c au_wince.c
 LIBNAME = flite
 
-LOCAL_INCLUDES = -I. $(AUDIOTYPE)
+LOCAL_INCLUDES = -I. $(AUDIODEFS)
 
 ALL = .build_lib
 

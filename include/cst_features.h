@@ -41,6 +41,7 @@
 #define _CST_FEATURES_H__
 
 #include <stdio.h>
+
 #include "cst_alloc.h"
 #include "cst_val.h"
 #include "cst_string.h"
@@ -53,10 +54,12 @@ typedef struct cst_featvalpair_struct {
 
 typedef struct cst_features_struct {
     struct cst_featvalpair_struct *head;
+    cst_alloc_context ctx;
 } cst_features;
 
 /* Constructor functions */
-cst_features *new_features();
+cst_features *new_features(void);
+cst_features *new_features_local(cst_alloc_context ctx);
 void delete_features(cst_features *f);
 
 /* Accessor functions */
@@ -80,6 +83,9 @@ int feat_remove(cst_features *f,const char *name);
 int feat_present(const cst_features *f,const char *name);
 int feat_length(const cst_features *f);
 
+CST_VAL_USER_TYPE_DCLS(features,cst_features)
+
 int feat_copy_into(const cst_features *from,cst_features *to);
+int feat_print(FILE *fd,const cst_features *f);
 
 #endif

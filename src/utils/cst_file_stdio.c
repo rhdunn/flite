@@ -1,8 +1,7 @@
 /*************************************************************************/
 /*                                                                       */
-/*                  Language Technologies Institute                      */
-/*                     Carnegie Mellon University                        */
-/*                        Copyright (c) 1999                             */
+/*                           Cepstral, LLC                               */
+/*                        Copyright (c) 2001                             */
 /*                        All Rights Reserved.                           */
 /*                                                                       */
 /*  Permission is hereby granted, free of charge, to use and distribute  */
@@ -19,15 +18,14 @@
 /*      derived from this software without specific prior written        */
 /*      permission.                                                      */
 /*                                                                       */
-/*  CARNEGIE MELLON UNIVERSITY AND THE CONTRIBUTORS TO THIS WORK         */
-/*  DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING      */
-/*  ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT   */
-/*  SHALL CARNEGIE MELLON UNIVERSITY NOR THE CONTRIBUTORS BE LIABLE      */
-/*  FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    */
-/*  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN   */
-/*  AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,          */
-/*  ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF       */
-/*  THIS SOFTWARE.                                                       */
+/*  CEPSTRAL, LLC AND THE CONTRIBUTORS TO THIS WORK DISCLAIM ALL         */
+/*  WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED       */
+/*  WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL         */
+/*  CEPSTRAL, LLC NOR THE CONTRIBUTORS BE LIABLE FOR ANY SPECIAL,        */
+/*  INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER          */
+/*  RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION    */
+/*  OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  */
+/*  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.          */
 /*                                                                       */
 /*************************************************************************/
 /*             Author:  David Huggins-Daines <dhd@cepstral.com>          */
@@ -42,8 +40,10 @@
 #include <string.h>
 #include <stdarg.h>
 #include "cst_file.h"
+#include "cst_error.h"
+#include "cst_alloc.h"
 
-cst_file_t cst_fopen(const char *path, int mode)
+cst_file cst_fopen(const char *path, int mode)
 {
     char cmode[4];
 
@@ -65,27 +65,40 @@ cst_file_t cst_fopen(const char *path, int mode)
     return fopen(path, cmode);
 }
 
-long cst_fwrite(cst_file_t fh, const void *buf, long size, long count)
+long cst_fwrite(cst_file fh, const void *buf, long size, long count)
 {
     return fwrite(buf, size, count, fh);
 }
 
-long cst_fread(cst_file_t fh, void *buf, long size, long count)
+long cst_fread(cst_file fh, void *buf, long size, long count)
 {
     return fread(buf, size, count, fh);
 }
 
-int cst_fgetc(cst_file_t fh)
+long cst_filesize(cst_file fh)
+{
+	/* FIXME: guaranteed to break on text files on Win32 */
+	long pos, epos;
+
+	pos = ftell(fh);
+	fseek(fh, 0, SEEK_END);
+	epos = ftell(fh);
+	fseek(fh, pos, SEEK_SET);
+
+	return epos;
+}
+
+int cst_fgetc(cst_file fh)
 {
     return fgetc(fh);
 }
 
-long cst_ftell(cst_file_t fh)
+long cst_ftell(cst_file fh)
 {
     return ftell(fh);
 }
 
-long cst_fseek(cst_file_t fh, long pos, int whence)
+long cst_fseek(cst_file fh, long pos, int whence)
 {
     int w = 0;
 
@@ -99,19 +112,19 @@ long cst_fseek(cst_file_t fh, long pos, int whence)
     return fseek(fh, pos, w);
 }
 
-int cst_fprintf(cst_file_t fh, char *fmt, ...)
+int cst_fprintf(cst_file fh, char *fmt, ...)
 {
     va_list args;
     int rv;
 
     va_start(args, fmt);
-    rv = fprintf(fh, fmt, args);
+    rv = vfprintf(fh, fmt, args);
     va_end(args);
 
     return rv;
 }
 
-int cst_fclose(cst_file_t fh)
+int cst_fclose(cst_file fh)
 {
     return fclose(fh);
 }

@@ -38,16 +38,19 @@ TOP=../..
 DIRNAME=lang/cmu_time_awb
 BUILD_DIRS = 
 ALL_DIRS= 
+H = voxdefs.h
 SRCS = cmu_time_awb.c \
 	cmu_time_awb_clunits.c \
 	cmu_time_awb_cart.c \
 	cmu_time_awb_mcep.c \
-	cmu_time_awb_lpc.c
+	cmu_time_awb_lpc.c \
+	cmu_time_awb_lex_entry.c \
+	cmu_time_awb_lex_phone.c
 OBJS = $(SRCS:.c=.o)
 SCM=
 FILES = Makefile $(SCM) $(SRCS) $(H)
 LIBNAME = flite_cmu_time_awb
-LOCAL_INCLUDES = -I$(TOP)/lang/usenglish
+LOCAL_INCLUDES = -I$(TOP)/lang/usenglish -I$(TOP)/lang/cmulex
 
 ALL = .build_lib
 

@@ -46,6 +46,10 @@ extern const int cst_endian_loc;
 /* Intel, Alpha, DEC Mips, Vax, Arm, Other MIPS (Casio etc) */
 #define CST_LITTLE_ENDIAN (((char *)&cst_endian_loc)[0] != 0)
 
+/* EST byte order strings */
+#define BYTE_ORDER_BIG "10"
+#define BYTE_ORDER_LITTLE "01"
+
 #define SWAPINT(x) ((((unsigned)x) & 0xff) << 24 | \
         (((unsigned)x) & 0xff00) << 8 | \
 	(((unsigned)x) & 0xff0000) >> 8 | \

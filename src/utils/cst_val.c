@@ -39,9 +39,9 @@
 /*************************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
+#include "cst_file.h"
 #include "cst_val.h"
 #include "cst_string.h"
-#include "cst_file.h"
 
 static cst_val *new_val()
 {
@@ -141,6 +141,7 @@ int val_int(const cst_val *v)
 		   (v ? CST_VAL_TYPE(v) : -1));
 	cst_error();
     }
+    return 0;
 }
 
 float val_float(const cst_val *v)
@@ -157,6 +158,7 @@ float val_float(const cst_val *v)
 		   (v ? CST_VAL_TYPE(v) : -1));
 	cst_error();
     }
+    return 0;
 }
 
 const char *val_string(const cst_val *v)
@@ -169,6 +171,7 @@ const char *val_string(const cst_val *v)
 		   (v ? CST_VAL_TYPE(v) : -1));
 	cst_error();
     }
+    return 0;
 }
 
 const cst_val *val_car(const cst_val *v)
@@ -181,6 +184,7 @@ const cst_val *val_car(const cst_val *v)
 		   (v ? CST_VAL_TYPE(v) : -1));
 	cst_error();
     }
+    return 0;
 }
 
 const cst_val *val_cdr(const cst_val *v)
@@ -193,6 +197,7 @@ const cst_val *val_cdr(const cst_val *v)
 		   (v ? CST_VAL_TYPE(v) : -1));
 	cst_error();
     }
+    return 0;
 }
 
 void *val_void(const cst_val *v)
@@ -206,6 +211,7 @@ void *val_void(const cst_val *v)
 	cst_errmsg("VAL: tried to access void in %d typed val\n",
 		   (v ? CST_VAL_TYPE(v) : -1));
 	cst_error();
+	return NULL;
     }
     else 
 	return CST_VAL_VOID(v);
@@ -230,8 +236,45 @@ int cst_val_consp(const cst_val *v)
 	return FALSE;
 }
 
+const cst_val *set_cdr(cst_val *v1, const cst_val *v2)
+{
+    /* destructive set cdr, be careful you have a pointer to current cdr */
+    
+    if (!cst_val_consp(v1))
+    {
+	cst_errmsg("VAL: tried to set cdr of non-consp cell\n");
+	cst_error();
+	return NULL;
+    }
+    else
+    {
+	val_dec_refcount(CST_VAL_CDR(v1));
+	val_inc_refcount(v1);
+	CST_VAL_CDR(v1) = (cst_val *)v2;
+    }
+    return v1;
+}
 
-void val_print(cst_file_t fd,const cst_val *v)
+const cst_val *set_car(cst_val *v1, const cst_val *v2)
+{
+    /* destructive set car, be careful you have a pointer to current cdr */
+    
+    if (!cst_val_consp(v1))
+    {
+	cst_errmsg("VAL: tried to set car of non-consp cell\n");
+	cst_error();
+	return NULL;
+    }
+    else
+    {
+	val_dec_refcount(CST_VAL_CAR(v1));
+	val_inc_refcount(v1);
+	CST_VAL_CAR(v1) = (cst_val *)v2;
+    }
+    return v1;
+}
+
+void val_print(cst_file fd,const cst_val *v)
 {
     const cst_val *p;
 

@@ -41,84 +41,50 @@
 #include "flite.h"
 #include "cst_diphone.h"
 #include "usenglish.h"
+#include "cmulex.h"
 
-static cst_utterance *cmu_us_kal_utt_init(cst_utterance *u, cst_voice *v);
-static cst_utterance *cmu_us_kal_utt_synth(cst_utterance *u, cst_voice *v);
 static cst_utterance *cmu_us_kal_postlex(cst_utterance *u);
 extern cst_diphone_db cmu_us_kal_db;
 
 cst_voice *cmu_us_kal_diphone = NULL;
 
-cst_voice *register_cmu_us_kal()
+cst_voice *register_cmu_us_kal(const char *voxdir)
 {
     cst_voice *v = new_voice();
 
-    v->utt_init = cmu_us_kal_utt_init;
-    v->utt_synth = cmu_us_kal_utt_synth;
-
-    usenglish_init();
-
     /* Set up basic values for synthesizing with this voice */
+    usenglish_init(v);
     feat_set_string(v->features,"name","cmu_us_kal_diphone");
 
-    /* Phoneset */
-    feat_set(v->features,"phoneset",phoneset_val(&us_phoneset));
-    feat_set_string(v->features,"silence",us_phoneset.silence);
-
-    /* Text analyser */
-    feat_set_string(v->features,"text_whitespace",us_english_whitespace);
-    feat_set_string(v->features,"text_postpunctuation",us_english_punctuation);
-    feat_set_string(v->features,"text_prepunctuation",
-		    us_english_prepunctuation);
-    feat_set_string(v->features,"text_singlecharsymbols",
-		    us_english_singlecharsymbols);
-
-    feat_set(v->features,"textanalysis_func",uttfunc_val(&us_textanalysis));
-
-    /* Phrasing */
-    feat_set(v->features,"phrasing_cart",cart_val(&us_phrasing_cart));
-
     /* Lexicon */
+    cmu_lex_init();
     feat_set(v->features,"lexicon",lexicon_val(&cmu_lex));
 
     /* Intonation */
-    feat_set(v->features,"int_cart_accents",cart_val(&us_int_accent_cart));
-    feat_set(v->features,"int_cart_tones",cart_val(&us_int_tone_cart));
     feat_set_float(v->features,"int_f0_target_mean",100.0);
     feat_set_float(v->features,"int_f0_target_stddev",11.0);
-    feat_set(v->features,"f0_model_func",uttfunc_val(&us_f0_model));
 
     /* Post lexical rules */
     feat_set(v->features,"postlex_func",uttfunc_val(&cmu_us_kal_postlex));
 
-    /* Duration */
-    feat_set(v->features,"dur_cart",cart_val(&us_durz_cart));
-    feat_set(v->features,"dur_stats",dur_stats_val(&us_dur_stats));
-    feat_set_float(v->features,"Duration_Stretch",1.0);
-
     /* Waveform synthesis: diphone_synth */
     feat_set(v->features,"wave_synth_func",uttfunc_val(&diphone_synth));
     feat_set(v->features,"diphone_db",diphone_db_val(&cmu_us_kal_db));
+    feat_set_int(v->features,"sample_rate",cmu_us_kal_db.sts->sample_rate);
+    feat_set_string(v->features,"resynth_type","fixed");
     feat_set_string(v->features,"join_type","modified_lpc");
-/*    feat_set_string(v->features,"join_type","simple_join"); */
 
     cmu_us_kal_diphone = v;
 
     return cmu_us_kal_diphone;
 }
 
-static cst_utterance *cmu_us_kal_utt_init(cst_utterance *u, cst_voice *v)
+void unregister_cmu_us_kal(cst_voice *v)
 {
-    /* Set up voice specific paramerers for synthesis */
-
-    return u;
-}
-
-static cst_utterance *cmu_us_kal_utt_synth(cst_utterance *u, cst_voice *v)
-{
-    feat_copy_into(v->features,u->features);
-    /* Use standard synthesizer */
-    return utt_synth(u);
+    if (v != cmu_us_kal_diphone)
+	return;
+    delete_voice(v);
+    cmu_us_kal_diphone = NULL;
 }
 
 static void fix_ah(cst_utterance *u)

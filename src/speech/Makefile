@@ -40,7 +40,7 @@ BUILD_DIRS =
 ALL_DIRS= 
 H = 
 SRCS = cst_wave.c cst_wave_io.c cst_track.c cst_track_io.c \
-       cst_wave_utils.c cst_lpcres.c
+       cst_wave_utils.c cst_lpcres.c rateconv.c
 OBJS = $(SRCS:.c=.o)
 FILES = Makefile $(H) $(SRCS)
 LIBNAME = flite

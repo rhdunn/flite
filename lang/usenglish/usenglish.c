@@ -38,17 +38,44 @@
 
 #include "flite.h"
 #include "usenglish.h"
+#include "us_f0.h"
+#include "us_text.h"
+#include "us_ffeatures.h"
 
-void cmu_lex_init();
-
-void usenglish_init()
+void usenglish_init(cst_voice *v)
 {
-    /* This function breaks thread safety, so things should be re-written */
-    /* to avoid it                                                       */
+    us_text_init();
 
-    us_ff_register();
-    cmu_lex_init();
-    us_text_init();  /* some regex constants */
+    /* Phoneset */
+    feat_set(v->features,"phoneset",phoneset_val(&us_phoneset));
+    feat_set_string(v->features,"silence",us_phoneset.silence);
 
+    /* Text analyser */
+    feat_set_string(v->features,"text_whitespace",us_english_whitespace);
+    feat_set_string(v->features,"text_postpunctuation",us_english_punctuation);
+    feat_set_string(v->features,"text_prepunctuation",
+		    us_english_prepunctuation);
+    feat_set_string(v->features,"text_singlecharsymbols",
+		    us_english_singlecharsymbols);
+
+    feat_set(v->features,"tokentowords_func",itemfunc_val(&us_tokentowords));
+
+    /* Phrasing */
+    feat_set(v->features,"phrasing_cart",cart_val(&us_phrasing_cart));
+
+    /* Intonation */
+    feat_set(v->features,"int_cart_accents",cart_val(&us_int_accent_cart));
+    feat_set(v->features,"int_cart_tones",cart_val(&us_int_tone_cart));
+
+    /* Duration */
+    feat_set(v->features,"dur_cart",cart_val(&us_durz_cart));
+    feat_set(v->features,"dur_stats",dur_stats_val((dur_stats *)us_dur_stats));
+
+    /* f0 model */
+    feat_set(v->features,"f0_model_func",uttfunc_val(&us_f0_model));
+
+    /* Post lexical rules */
+    feat_set(v->features,"postlex_func",uttfunc_val(&us_postlex));
+
+    us_ff_register(v->ffunctions);
 }
-

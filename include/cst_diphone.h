@@ -41,6 +41,7 @@
 #define _CST_DIPHONE_H__
 
 #include <stdio.h>
+
 #include "cst_val.h"
 #include "cst_features.h"
 #include "cst_wave.h"

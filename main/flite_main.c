@@ -45,8 +45,10 @@
 
 #include "flite.h"
 #include "flite_version.h"
+#include "voxdefs.h"
 
-cst_voice *register_cmu_us_kal();
+cst_voice *REGISTER_VOX(const char *voxdir);
+cst_voice *UNREGISTER_VOX(cst_voice *vox);
 
 static void flite_version()
 {
@@ -75,11 +77,14 @@ static void flite_usage()
            "  -o WAVEFILE Explicitly set output filename\n"
            "  -f TEXTFILE Explicitly set input filename\n"
            "  -t TEXT     Explicitly set input textstring\n"
+           "  -p PHONES   Explicitly set input textstring and synthesize as phones\n"
            "  --set F=V   Set feature (guesses type)\n"
            "  -s F=V      Set feature (guesses type)\n"
            "  --seti F=V  Set int feature\n"
            "  --setf F=V  Set float feature\n"
            "  --sets F=V  Set string feature\n"
+	   "  -b          Benchmark mode\n"
+	   "  -l          Loop endlessly\n"
            "  -v          Verbose mode\n");
     exit(0);
 }
@@ -109,7 +114,7 @@ static void ef_set(cst_features *f,const char *fv,const char *type)
 	    feat_set_float(f,feat,atof(val));
 	else
 	    feat_set_string(f,feat,val);
-	/* I don't free feat, because feats think they are const */
+	/* I don't free feat, because feats think featnames are const */
 	/* which is true except in this particular case          */
     }
 }
@@ -117,25 +122,27 @@ static void ef_set(cst_features *f,const char *fv,const char *type)
 int main(int argc, char **argv)
 {
     struct timeval tv;
-    struct timezone tz; 
     cst_voice *v;
     const char *filename;
     const char *outtype;
     int i;
     float durs;
     double time_start, time_end;
-    int flite_verbose, explicit_filename, explicit_text;
+    int flite_verbose, flite_loop, flite_bench;
+    int explicit_filename, explicit_text, explicit_phones;
+#define ITER_MAX 3
+    int bench_iter = 0;
     cst_features *extra_feats;
 
     filename = 0;
     outtype = "play";   /* default is to play */
     flite_verbose = FALSE;
-    explicit_text = explicit_filename = FALSE;
+    flite_loop = FALSE;
+    flite_bench = FALSE;
+    explicit_text = explicit_filename = explicit_phones = FALSE;
     extra_feats = new_features();
 
     flite_init();
-
-    /* if (argc < 2) flite_usage(); */
 
     for (i=1; i<argc; i++)
     {
@@ -150,6 +157,13 @@ int main(int argc, char **argv)
 	    flite_usage();
 	else if (cst_streq(argv[i],"-v"))
 	    flite_verbose = TRUE;
+	else if (cst_streq(argv[i],"-l"))
+	    flite_loop = TRUE;
+	else if (cst_streq(argv[i],"-b"))
+	{
+	    flite_bench = TRUE;
+	    break; /* ignore other arguments */
+	}
 	else if ((cst_streq(argv[i],"-o")) && (i+1 < argc))
 	{
 	    outtype = argv[i+1];
@@ -182,6 +196,12 @@ int main(int argc, char **argv)
 	    ef_set(extra_feats,argv[i+1],"string");
 	    i++;
 	}
+	else if (cst_streq(argv[i],"-p") && (i+1 < argc))
+	{
+	    filename = argv[i+1];
+	    explicit_phones = TRUE;
+	    i++;
+	}
 	else if (cst_streq(argv[i],"-t") && (i+1 < argc))
 	{
 	    filename = argv[i+1];
@@ -195,28 +215,42 @@ int main(int argc, char **argv)
     }
 
     if (filename == NULL) filename = "-";  /* stdin */
-    v = register_cmu_us_kal();
+    v = REGISTER_VOX(NULL);
     feat_copy_into(extra_feats,v->features);
     durs = 0.0;
 
-    gettimeofday(&tv,&tz);
+    if (flite_bench)
+    {
+	outtype = "none";
+	filename = "A whole joy was reaping, but they've gone south, you should fetch azure mike.";
+	explicit_text = TRUE;
+    }
+
+loop:
+    gettimeofday(&tv,NULL);
     time_start = (double)(tv.tv_sec)+(((double)tv.tv_usec)/1000000.0);
 
-    if ((strchr(filename,' ') && !explicit_filename) || explicit_text)
+    if (explicit_phones)
+	durs = flite_phones_to_speech(filename,v,outtype);
+    else if ((strchr(filename,' ') && !explicit_filename) || explicit_text)
 	durs = flite_text_to_speech(filename,v,outtype);
     else
 	durs = flite_file_to_speech(filename,v,outtype);
 
-    gettimeofday(&tv,&tz);
+    gettimeofday(&tv,NULL);
     time_end = ((double)(tv.tv_sec))+((double)tv.tv_usec/1000000.0);
 
-    if (flite_verbose)
-	printf("%f seconds of speech synthesized in %f (%f)\n",
+    if (flite_verbose || (flite_bench && bench_iter == ITER_MAX))
+	printf("times faster than real-time: %f\n(%f seconds of speech synthesized in %f)\n",
+	       durs/(float)(time_end-time_start),
 	       durs,
-	       (float)(time_end-time_start),
-	       durs/(float)(time_end-time_start));
+	       (float)(time_end-time_start));
+
+    if (flite_loop || (flite_bench && bench_iter++ < ITER_MAX))
+	    goto loop;
 
     delete_features(extra_feats);
+    UNREGISTER_VOX(v);
 
     return 0;
 }

@@ -69,7 +69,7 @@ struct cst_item_struct {
 
 /* Constructor functions */
 cst_item *new_item_relation(cst_relation *r,cst_item *i);
-cst_item_contents *new_item_contents();
+cst_item_contents *new_item_contents(cst_item *i);
 
 /* Remove this item from this references */
 void delete_item(cst_item *item);
@@ -121,8 +121,15 @@ float ffeature_float(const cst_item *item,const char *featpath);
 const cst_val *ffeature(const cst_item *item,const char *featpath);
 cst_item* path_to_item(const cst_item *item,const char *featpath);
 
+/* Feature function, for features that are derived algorithmically from others. */
 typedef const cst_val *(*cst_ffunction)(const cst_item *i);
 CST_VAL_USER_FUNCPTR_DCLS(ffunc,cst_ffunction)
-void ff_register(const char *name, cst_ffunction f);
+void ff_register(cst_features *ffeatures, const char *name,
+			   cst_ffunction f);
+void ff_unregister(cst_features *ffeatures, const char *name);
+
+/* Generalized item hook function, like cst_uttfunc. */
+typedef cst_val *(*cst_itemfunc)(cst_item *i);
+CST_VAL_USER_FUNCPTR_DCLS(itemfunc,cst_itemfunc)
 
 #endif

@@ -4,16 +4,16 @@
 
 #define unit_ae_after_0 0
 #define unit_ae_after_1 1
-#define unit_ae_after_10 2
-#define unit_ae_after_11 3
-#define unit_ae_after_2 4
-#define unit_ae_after_3 5
-#define unit_ae_after_4 6
-#define unit_ae_after_5 7
-#define unit_ae_after_6 8
-#define unit_ae_after_7 9
-#define unit_ae_after_8 10
-#define unit_ae_after_9 11
+#define unit_ae_after_2 2
+#define unit_ae_after_3 3
+#define unit_ae_after_4 4
+#define unit_ae_after_5 5
+#define unit_ae_after_6 6
+#define unit_ae_after_7 7
+#define unit_ae_after_8 8
+#define unit_ae_after_9 9
+#define unit_ae_after_10 10
+#define unit_ae_after_11 11
 #define unit_ae_afternoon_0 12
 #define unit_ae_afternoon_1 13
 #define unit_ae_afternoon_2 14
@@ -29,16 +29,16 @@
 #define unit_ae_half_1 24
 #define unit_ae_past_0 25
 #define unit_ae_past_1 26
-#define unit_ae_past_10 27
-#define unit_ae_past_11 28
-#define unit_ae_past_2 29
-#define unit_ae_past_3 30
-#define unit_ae_past_4 31
-#define unit_ae_past_5 32
-#define unit_ae_past_6 33
-#define unit_ae_past_7 34
-#define unit_ae_past_8 35
-#define unit_ae_past_9 36
+#define unit_ae_past_2 27
+#define unit_ae_past_3 28
+#define unit_ae_past_4 29
+#define unit_ae_past_5 30
+#define unit_ae_past_6 31
+#define unit_ae_past_7 32
+#define unit_ae_past_8 33
+#define unit_ae_past_9 34
+#define unit_ae_past_10 35
+#define unit_ae_past_11 36
 #define unit_ah_just_0 37
 #define unit_ah_just_1 38
 #define unit_ah_just_2 39
@@ -57,2158 +57,2099 @@
 #define unit_ao_four_1 52
 #define unit_ao_morning_0 53
 #define unit_ao_morning_1 54
-#define unit_ao_morning_10 55
-#define unit_ao_morning_2 56
-#define unit_ao_morning_3 57
-#define unit_ao_morning_4 58
-#define unit_ao_morning_5 59
-#define unit_ao_morning_6 60
-#define unit_ao_morning_7 61
-#define unit_ao_morning_8 62
-#define unit_ao_morning_9 63
+#define unit_ao_morning_2 55
+#define unit_ao_morning_3 56
+#define unit_ao_morning_4 57
+#define unit_ao_morning_5 58
+#define unit_ao_morning_6 59
+#define unit_ao_morning_7 60
+#define unit_ao_morning_8 61
+#define unit_ao_morning_9 62
+#define unit_ao_morning_10 63
 #define unit_ao_quarter_0 64
 #define unit_ao_quarter_1 65
 #define unit_ao_quarter_2 66
 #define unit_ao_quarter_3 67
 #define unit_ao_quarter_4 68
-#define unit_aw_now_10 69
-#define unit_aw_now_11 70
-#define unit_aw_now_12 71
-#define unit_aw_now_13 72
-#define unit_aw_now_14 73
-#define unit_aw_now_15 74
-#define unit_aw_now_16 75
-#define unit_aw_now_17 76
-#define unit_aw_now_18 77
-#define unit_aw_now_19 78
-#define unit_aw_now_2 79
-#define unit_aw_now_20 80
-#define unit_aw_now_21 81
-#define unit_aw_now_22 82
-#define unit_aw_now_3 83
-#define unit_aw_now_4 84
-#define unit_aw_now_5 85
-#define unit_aw_now_6 86
-#define unit_aw_now_7 87
-#define unit_aw_now_8 88
-#define unit_aw_now_9 89
-#define unit_ax_a_0 90
-#define unit_ax_a_1 91
-#define unit_ax_a_2 92
-#define unit_ax_a_3 93
-#define unit_ax_a_4 94
-#define unit_ax_a_5 95
-#define unit_ax_eleven_0 96
-#define unit_ax_eleven_1 97
-#define unit_ax_little_0 98
-#define unit_ax_little_1 99
-#define unit_ax_little_2 100
-#define unit_ax_little_3 101
-#define unit_ax_little_4 102
-#define unit_ax_little_5 103
-#define unit_ax_seven_0 104
-#define unit_ax_seven_1 105
-#define unit_ax_the_1 106
-#define unit_ax_the_10 107
-#define unit_ax_the_11 108
-#define unit_ax_the_12 109
-#define unit_ax_the_13 110
-#define unit_ax_the_14 111
-#define unit_ax_the_15 112
-#define unit_ax_the_16 113
-#define unit_ax_the_17 114
-#define unit_ax_the_18 115
-#define unit_ax_the_19 116
-#define unit_ax_the_2 117
-#define unit_ax_the_21 118
-#define unit_ax_the_22 119
-#define unit_ax_the_23 120
-#define unit_ax_the_24 121
-#define unit_ax_the_25 122
-#define unit_ax_the_26 123
-#define unit_ax_the_27 124
-#define unit_ax_the_28 125
-#define unit_ax_the_29 126
-#define unit_ax_the_3 127
-#define unit_ax_the_30 128
-#define unit_ax_the_31 129
-#define unit_ax_the_32 130
-#define unit_ax_the_33 131
-#define unit_ax_the_34 132
-#define unit_ax_the_35 133
-#define unit_ax_the_36 134
-#define unit_ax_the_37 135
-#define unit_ax_the_38 136
-#define unit_ax_the_39 137
-#define unit_ax_the_4 138
-#define unit_ax_the_40 139
-#define unit_ax_the_41 140
-#define unit_ax_the_42 141
-#define unit_ax_the_43 142
-#define unit_ax_the_44 143
-#define unit_ax_the_45 144
-#define unit_ax_the_5 145
-#define unit_ax_the_6 146
-#define unit_ax_the_7 147
-#define unit_ax_the_8 148
-#define unit_ax_the_9 149
-#define unit_ax_to_0 150
-#define unit_ax_to_1 151
-#define unit_ax_to_10 152
-#define unit_ax_to_2 153
-#define unit_ax_to_3 154
-#define unit_ax_to_4 155
-#define unit_ax_to_5 156
-#define unit_ax_to_6 157
-#define unit_ax_to_7 158
-#define unit_ax_to_8 159
-#define unit_ax_to_9 160
-#define unit_ay_five_0 161
-#define unit_ay_five_1 162
-#define unit_ay_five_2 163
-#define unit_ay_five_3 164
-#define unit_ay_five_4 165
-#define unit_ay_five_5 166
-#define unit_ay_five_6 167
-#define unit_ay_five_7 168
-#define unit_ay_five_8 169
-#define unit_ay_five_9 170
-#define unit_ay_midnight_0 171
-#define unit_ay_nine_0 172
-#define unit_ay_nine_1 173
-#define unit_ay_time_0 174
-#define unit_ay_time_1 175
-#define unit_ay_time_10 176
-#define unit_ay_time_11 177
-#define unit_ay_time_12 178
-#define unit_ay_time_13 179
-#define unit_ay_time_14 180
-#define unit_ay_time_15 181
-#define unit_ay_time_16 182
-#define unit_ay_time_17 183
-#define unit_ay_time_18 184
-#define unit_ay_time_19 185
-#define unit_ay_time_2 186
-#define unit_ay_time_20 187
-#define unit_ay_time_21 188
-#define unit_ay_time_22 189
-#define unit_ay_time_23 190
-#define unit_ay_time_3 191
-#define unit_ay_time_4 192
-#define unit_ay_time_5 193
-#define unit_ay_time_6 194
-#define unit_ay_time_7 195
-#define unit_ay_time_8 196
-#define unit_ay_time_9 197
-#define unit_d_midnight_0 198
-#define unit_dh_the_0 199
-#define unit_dh_the_1 200
-#define unit_dh_the_10 201
-#define unit_dh_the_12 202
-#define unit_dh_the_13 203
-#define unit_dh_the_14 204
-#define unit_dh_the_15 205
-#define unit_dh_the_16 206
-#define unit_dh_the_17 207
-#define unit_dh_the_18 208
-#define unit_dh_the_19 209
-#define unit_dh_the_2 210
-#define unit_dh_the_20 211
-#define unit_dh_the_21 212
-#define unit_dh_the_22 213
-#define unit_dh_the_23 214
-#define unit_dh_the_24 215
-#define unit_dh_the_25 216
-#define unit_dh_the_26 217
-#define unit_dh_the_27 218
-#define unit_dh_the_28 219
-#define unit_dh_the_29 220
-#define unit_dh_the_3 221
-#define unit_dh_the_30 222
-#define unit_dh_the_31 223
-#define unit_dh_the_32 224
-#define unit_dh_the_33 225
-#define unit_dh_the_34 226
-#define unit_dh_the_36 227
-#define unit_dh_the_37 228
-#define unit_dh_the_38 229
-#define unit_dh_the_39 230
-#define unit_dh_the_4 231
-#define unit_dh_the_40 232
-#define unit_dh_the_41 233
-#define unit_dh_the_42 234
-#define unit_dh_the_43 235
-#define unit_dh_the_44 236
-#define unit_dh_the_45 237
-#define unit_dh_the_5 238
-#define unit_dh_the_6 239
-#define unit_dh_the_7 240
-#define unit_dh_the_8 241
-#define unit_dh_the_9 242
-#define unit_eh_eleven_0 243
-#define unit_eh_eleven_1 244
-#define unit_eh_seven_0 245
-#define unit_eh_seven_1 246
-#define unit_eh_ten_0 247
-#define unit_eh_ten_1 248
-#define unit_eh_ten_2 249
-#define unit_eh_ten_3 250
-#define unit_eh_ten_4 251
-#define unit_eh_ten_5 252
-#define unit_eh_twelve_0 253
-#define unit_eh_twenty_0 254
-#define unit_eh_twenty_1 255
-#define unit_eh_twenty_2 256
-#define unit_eh_twenty_3 257
-#define unit_eh_twenty_4 258
-#define unit_eh_twenty_5 259
-#define unit_eh_twenty_6 260
-#define unit_eh_twenty_7 261
-#define unit_er_after_0 262
-#define unit_er_after_1 263
-#define unit_er_after_10 264
-#define unit_er_after_11 265
-#define unit_er_after_2 266
-#define unit_er_after_3 267
-#define unit_er_after_4 268
-#define unit_er_after_5 269
-#define unit_er_after_6 270
-#define unit_er_after_7 271
-#define unit_er_after_8 272
-#define unit_er_after_9 273
-#define unit_er_afternoon_0 274
-#define unit_er_afternoon_1 275
-#define unit_er_afternoon_2 276
-#define unit_er_afternoon_3 277
-#define unit_er_afternoon_4 278
-#define unit_er_quarter_0 279
-#define unit_er_quarter_1 280
-#define unit_er_quarter_2 281
-#define unit_er_quarter_3 282
-#define unit_er_quarter_4 283
-#define unit_ey_eight_0 284
-#define unit_ey_eight_1 285
-#define unit_f_after_0 286
-#define unit_f_after_1 287
-#define unit_f_after_10 288
-#define unit_f_after_11 289
-#define unit_f_after_2 290
-#define unit_f_after_3 291
-#define unit_f_after_4 292
-#define unit_f_after_5 293
-#define unit_f_after_6 294
-#define unit_f_after_7 295
-#define unit_f_after_8 296
-#define unit_f_after_9 297
-#define unit_f_afternoon_0 298
-#define unit_f_afternoon_1 299
-#define unit_f_afternoon_2 300
-#define unit_f_afternoon_3 301
-#define unit_f_afternoon_4 302
-#define unit_f_five_0 303
-#define unit_f_five_1 304
-#define unit_f_five_2 305
-#define unit_f_five_3 306
-#define unit_f_five_4 307
-#define unit_f_five_5 308
-#define unit_f_five_6 309
-#define unit_f_five_7 310
-#define unit_f_five_8 311
-#define unit_f_five_9 312
-#define unit_f_four_0 313
-#define unit_f_four_1 314
-#define unit_f_half_0 315
-#define unit_f_half_1 316
-#define unit_g_exactly_0 317
-#define unit_g_exactly_1 318
-#define unit_g_exactly_2 319
-#define unit_g_exactly_3 320
-#define unit_g_exactly_4 321
-#define unit_g_exactly_5 322
-#define unit_hh_half_0 323
-#define unit_hh_half_1 324
-#define unit_ih_eleven_0 325
-#define unit_ih_eleven_1 326
-#define unit_ih_evening_0 327
-#define unit_ih_evening_1 328
-#define unit_ih_evening_2 329
-#define unit_ih_evening_3 330
-#define unit_ih_evening_4 331
-#define unit_ih_evening_5 332
-#define unit_ih_exactly_0 333
-#define unit_ih_exactly_1 334
-#define unit_ih_exactly_2 335
-#define unit_ih_exactly_3 336
-#define unit_ih_exactly_4 337
-#define unit_ih_exactly_5 338
-#define unit_ih_in_0 339
-#define unit_ih_in_1 340
-#define unit_ih_in_10 341
-#define unit_ih_in_11 342
-#define unit_ih_in_12 343
-#define unit_ih_in_13 344
-#define unit_ih_in_14 345
-#define unit_ih_in_15 346
-#define unit_ih_in_16 347
-#define unit_ih_in_17 348
-#define unit_ih_in_18 349
-#define unit_ih_in_19 350
-#define unit_ih_in_2 351
-#define unit_ih_in_20 352
-#define unit_ih_in_21 353
-#define unit_ih_in_3 354
-#define unit_ih_in_4 355
-#define unit_ih_in_6 356
-#define unit_ih_in_7 357
-#define unit_ih_in_8 358
-#define unit_ih_in_9 359
-#define unit_ih_is_0 360
-#define unit_ih_is_1 361
+#define unit_aw_now_0 69
+#define unit_aw_now_1 70
+#define unit_aw_now_2 71
+#define unit_aw_now_3 72
+#define unit_aw_now_4 73
+#define unit_aw_now_5 74
+#define unit_aw_now_6 75
+#define unit_aw_now_7 76
+#define unit_aw_now_8 77
+#define unit_aw_now_9 78
+#define unit_aw_now_10 79
+#define unit_aw_now_11 80
+#define unit_aw_now_12 81
+#define unit_aw_now_13 82
+#define unit_aw_now_14 83
+#define unit_aw_now_15 84
+#define unit_aw_now_16 85
+#define unit_aw_now_17 86
+#define unit_aw_now_18 87
+#define unit_aw_now_19 88
+#define unit_aw_now_20 89
+#define unit_aw_now_21 90
+#define unit_aw_now_22 91
+#define unit_ax_a_0 92
+#define unit_ax_a_1 93
+#define unit_ax_a_2 94
+#define unit_ax_a_3 95
+#define unit_ax_a_4 96
+#define unit_ax_a_5 97
+#define unit_ax_eleven_0 98
+#define unit_ax_eleven_1 99
+#define unit_ax_little_0 100
+#define unit_ax_little_1 101
+#define unit_ax_little_2 102
+#define unit_ax_little_3 103
+#define unit_ax_little_4 104
+#define unit_ax_little_5 105
+#define unit_ax_seven_0 106
+#define unit_ax_seven_1 107
+#define unit_ax_the_0 108
+#define unit_ax_the_1 109
+#define unit_ax_the_2 110
+#define unit_ax_the_3 111
+#define unit_ax_the_4 112
+#define unit_ax_the_5 113
+#define unit_ax_the_6 114
+#define unit_ax_the_7 115
+#define unit_ax_the_8 116
+#define unit_ax_the_9 117
+#define unit_ax_the_10 118
+#define unit_ax_the_11 119
+#define unit_ax_the_12 120
+#define unit_ax_the_13 121
+#define unit_ax_the_14 122
+#define unit_ax_the_15 123
+#define unit_ax_the_16 124
+#define unit_ax_the_17 125
+#define unit_ax_the_18 126
+#define unit_ax_the_19 127
+#define unit_ax_the_20 128
+#define unit_ax_the_21 129
+#define unit_ax_the_22 130
+#define unit_ax_the_23 131
+#define unit_ax_the_24 132
+#define unit_ax_the_25 133
+#define unit_ax_the_26 134
+#define unit_ax_the_27 135
+#define unit_ax_the_28 136
+#define unit_ax_the_29 137
+#define unit_ax_the_30 138
+#define unit_ax_the_31 139
+#define unit_ax_the_32 140
+#define unit_ax_to_0 141
+#define unit_ax_to_1 142
+#define unit_ax_to_2 143
+#define unit_ax_to_3 144
+#define unit_ax_to_4 145
+#define unit_ax_to_5 146
+#define unit_ax_to_6 147
+#define unit_ax_to_7 148
+#define unit_ax_to_8 149
+#define unit_ax_to_9 150
+#define unit_ax_to_10 151
+#define unit_ay_five_0 152
+#define unit_ay_five_1 153
+#define unit_ay_five_2 154
+#define unit_ay_five_3 155
+#define unit_ay_five_4 156
+#define unit_ay_five_5 157
+#define unit_ay_five_6 158
+#define unit_ay_five_7 159
+#define unit_ay_five_8 160
+#define unit_ay_five_9 161
+#define unit_ay_midnight_0 162
+#define unit_ay_nine_0 163
+#define unit_ay_nine_1 164
+#define unit_ay_time_0 165
+#define unit_ay_time_1 166
+#define unit_ay_time_2 167
+#define unit_ay_time_3 168
+#define unit_ay_time_4 169
+#define unit_ay_time_5 170
+#define unit_ay_time_6 171
+#define unit_ay_time_7 172
+#define unit_ay_time_8 173
+#define unit_ay_time_9 174
+#define unit_ay_time_10 175
+#define unit_ay_time_11 176
+#define unit_ay_time_12 177
+#define unit_ay_time_13 178
+#define unit_ay_time_14 179
+#define unit_ay_time_15 180
+#define unit_ay_time_16 181
+#define unit_ay_time_17 182
+#define unit_ay_time_18 183
+#define unit_ay_time_19 184
+#define unit_ay_time_20 185
+#define unit_ay_time_21 186
+#define unit_ay_time_22 187
+#define unit_d_midnight_0 188
+#define unit_dh_the_0 189
+#define unit_dh_the_1 190
+#define unit_dh_the_2 191
+#define unit_dh_the_3 192
+#define unit_dh_the_4 193
+#define unit_dh_the_5 194
+#define unit_dh_the_6 195
+#define unit_dh_the_7 196
+#define unit_dh_the_8 197
+#define unit_dh_the_9 198
+#define unit_dh_the_10 199
+#define unit_dh_the_11 200
+#define unit_dh_the_12 201
+#define unit_dh_the_13 202
+#define unit_dh_the_14 203
+#define unit_dh_the_15 204
+#define unit_dh_the_16 205
+#define unit_dh_the_17 206
+#define unit_dh_the_18 207
+#define unit_dh_the_19 208
+#define unit_dh_the_20 209
+#define unit_dh_the_21 210
+#define unit_dh_the_22 211
+#define unit_dh_the_23 212
+#define unit_dh_the_24 213
+#define unit_dh_the_25 214
+#define unit_dh_the_26 215
+#define unit_dh_the_27 216
+#define unit_dh_the_28 217
+#define unit_dh_the_29 218
+#define unit_dh_the_30 219
+#define unit_dh_the_31 220
+#define unit_dh_the_32 221
+#define unit_dh_the_33 222
+#define unit_dh_the_34 223
+#define unit_dh_the_35 224
+#define unit_dh_the_36 225
+#define unit_dh_the_37 226
+#define unit_dh_the_38 227
+#define unit_dh_the_39 228
+#define unit_dh_the_40 229
+#define unit_dh_the_41 230
+#define unit_dh_the_42 231
+#define unit_dh_the_43 232
+#define unit_dh_the_44 233
+#define unit_eh_eleven_0 234
+#define unit_eh_eleven_1 235
+#define unit_eh_seven_0 236
+#define unit_eh_seven_1 237
+#define unit_eh_ten_0 238
+#define unit_eh_ten_1 239
+#define unit_eh_ten_2 240
+#define unit_eh_ten_3 241
+#define unit_eh_ten_4 242
+#define unit_eh_ten_5 243
+#define unit_eh_twelve_0 244
+#define unit_eh_twenty_0 245
+#define unit_eh_twenty_1 246
+#define unit_eh_twenty_2 247
+#define unit_eh_twenty_3 248
+#define unit_eh_twenty_4 249
+#define unit_eh_twenty_5 250
+#define unit_eh_twenty_6 251
+#define unit_eh_twenty_7 252
+#define unit_er_after_0 253
+#define unit_er_after_1 254
+#define unit_er_after_2 255
+#define unit_er_after_3 256
+#define unit_er_after_4 257
+#define unit_er_after_5 258
+#define unit_er_after_6 259
+#define unit_er_after_7 260
+#define unit_er_after_8 261
+#define unit_er_after_9 262
+#define unit_er_after_10 263
+#define unit_er_after_11 264
+#define unit_er_afternoon_0 265
+#define unit_er_afternoon_1 266
+#define unit_er_afternoon_2 267
+#define unit_er_afternoon_3 268
+#define unit_er_afternoon_4 269
+#define unit_er_quarter_0 270
+#define unit_er_quarter_1 271
+#define unit_er_quarter_2 272
+#define unit_er_quarter_3 273
+#define unit_er_quarter_4 274
+#define unit_ey_eight_0 275
+#define unit_ey_eight_1 276
+#define unit_f_after_0 277
+#define unit_f_after_1 278
+#define unit_f_after_2 279
+#define unit_f_after_3 280
+#define unit_f_after_4 281
+#define unit_f_after_5 282
+#define unit_f_after_6 283
+#define unit_f_after_7 284
+#define unit_f_after_8 285
+#define unit_f_after_9 286
+#define unit_f_after_10 287
+#define unit_f_after_11 288
+#define unit_f_afternoon_0 289
+#define unit_f_afternoon_1 290
+#define unit_f_afternoon_2 291
+#define unit_f_afternoon_3 292
+#define unit_f_afternoon_4 293
+#define unit_f_five_0 294
+#define unit_f_five_1 295
+#define unit_f_five_2 296
+#define unit_f_five_3 297
+#define unit_f_five_4 298
+#define unit_f_five_5 299
+#define unit_f_five_6 300
+#define unit_f_five_7 301
+#define unit_f_five_8 302
+#define unit_f_five_9 303
+#define unit_f_four_0 304
+#define unit_f_four_1 305
+#define unit_f_half_0 306
+#define unit_f_half_1 307
+#define unit_g_exactly_0 308
+#define unit_g_exactly_1 309
+#define unit_g_exactly_2 310
+#define unit_g_exactly_3 311
+#define unit_g_exactly_4 312
+#define unit_g_exactly_5 313
+#define unit_hh_half_0 314
+#define unit_hh_half_1 315
+#define unit_ih_eleven_0 316
+#define unit_ih_eleven_1 317
+#define unit_ih_evening_0 318
+#define unit_ih_evening_1 319
+#define unit_ih_evening_2 320
+#define unit_ih_evening_3 321
+#define unit_ih_evening_4 322
+#define unit_ih_evening_5 323
+#define unit_ih_exactly_0 324
+#define unit_ih_exactly_1 325
+#define unit_ih_exactly_2 326
+#define unit_ih_exactly_3 327
+#define unit_ih_exactly_4 328
+#define unit_ih_exactly_5 329
+#define unit_ih_in_0 330
+#define unit_ih_in_1 331
+#define unit_ih_in_2 332
+#define unit_ih_in_3 333
+#define unit_ih_in_4 334
+#define unit_ih_in_5 335
+#define unit_ih_in_6 336
+#define unit_ih_in_7 337
+#define unit_ih_in_8 338
+#define unit_ih_in_9 339
+#define unit_ih_in_10 340
+#define unit_ih_in_11 341
+#define unit_ih_in_12 342
+#define unit_ih_in_13 343
+#define unit_ih_in_14 344
+#define unit_ih_in_15 345
+#define unit_ih_in_16 346
+#define unit_ih_in_17 347
+#define unit_ih_in_18 348
+#define unit_ih_in_19 349
+#define unit_ih_in_20 350
+#define unit_ih_in_21 351
+#define unit_ih_is_0 352
+#define unit_ih_is_1 353
+#define unit_ih_is_2 354
+#define unit_ih_is_3 355
+#define unit_ih_is_4 356
+#define unit_ih_is_5 357
+#define unit_ih_is_6 358
+#define unit_ih_is_7 359
+#define unit_ih_is_8 360
+#define unit_ih_is_9 361
 #define unit_ih_is_10 362
 #define unit_ih_is_11 363
 #define unit_ih_is_12 364
 #define unit_ih_is_13 365
 #define unit_ih_is_14 366
 #define unit_ih_is_15 367
-#define unit_ih_is_17 368
-#define unit_ih_is_18 369
-#define unit_ih_is_19 370
-#define unit_ih_is_2 371
+#define unit_ih_is_16 368
+#define unit_ih_is_17 369
+#define unit_ih_is_18 370
+#define unit_ih_is_19 371
 #define unit_ih_is_20 372
 #define unit_ih_is_21 373
-#define unit_ih_is_23 374
-#define unit_ih_is_3 375
-#define unit_ih_is_4 376
-#define unit_ih_is_5 377
-#define unit_ih_is_6 378
-#define unit_ih_is_7 379
-#define unit_ih_is_8 380
-#define unit_ih_is_9 381
-#define unit_ih_little_0 382
-#define unit_ih_little_1 383
-#define unit_ih_little_2 384
-#define unit_ih_little_3 385
-#define unit_ih_little_4 386
-#define unit_ih_little_5 387
-#define unit_ih_midnight_0 388
-#define unit_ih_morning_0 389
-#define unit_ih_morning_1 390
-#define unit_ih_morning_10 391
-#define unit_ih_morning_2 392
-#define unit_ih_morning_3 393
-#define unit_ih_morning_4 394
-#define unit_ih_morning_5 395
-#define unit_ih_morning_6 396
-#define unit_ih_morning_7 397
-#define unit_ih_morning_8 398
-#define unit_ih_morning_9 399
-#define unit_ih_six_0 400
-#define unit_ih_six_1 401
-#define unit_iy_evening_0 402
-#define unit_iy_evening_1 403
-#define unit_iy_evening_2 404
-#define unit_iy_evening_3 405
-#define unit_iy_evening_4 406
-#define unit_iy_evening_5 407
-#define unit_iy_exactly_0 408
-#define unit_iy_exactly_1 409
-#define unit_iy_exactly_2 410
-#define unit_iy_exactly_3 411
-#define unit_iy_exactly_4 412
-#define unit_iy_exactly_5 413
-#define unit_iy_three_0 414
-#define unit_iy_three_1 415
-#define unit_iy_twenty_0 416
-#define unit_iy_twenty_1 417
-#define unit_iy_twenty_2 418
-#define unit_iy_twenty_3 419
-#define unit_iy_twenty_4 420
-#define unit_iy_twenty_5 421
-#define unit_iy_twenty_6 422
-#define unit_iy_twenty_7 423
-#define unit_jh_just_0 424
-#define unit_jh_just_1 425
-#define unit_jh_just_2 426
-#define unit_jh_just_3 427
-#define unit_jh_just_4 428
-#define unit_jh_just_5 429
-#define unit_k_exactly_0 430
-#define unit_k_exactly_1 431
-#define unit_k_exactly_2 432
-#define unit_k_exactly_3 433
-#define unit_k_exactly_4 434
-#define unit_k_exactly_5 435
-#define unit_k_quarter_0 436
-#define unit_k_quarter_1 437
-#define unit_k_quarter_2 438
-#define unit_k_quarter_3 439
-#define unit_k_quarter_4 440
-#define unit_k_six_0 441
-#define unit_k_six_1 442
-#define unit_l_almost_0 443
-#define unit_l_almost_1 444
-#define unit_l_almost_2 445
-#define unit_l_almost_3 446
-#define unit_l_almost_4 447
-#define unit_l_almost_5 448
-#define unit_l_eleven_0 449
-#define unit_l_eleven_1 450
-#define unit_l_exactly_0 451
-#define unit_l_exactly_1 452
-#define unit_l_exactly_2 453
-#define unit_l_exactly_3 454
-#define unit_l_exactly_4 455
-#define unit_l_exactly_5 456
-#define unit_l_little_0 457
-#define unit_l_little_1 458
-#define unit_l_little_10 459
-#define unit_l_little_11 460
-#define unit_l_little_2 461
-#define unit_l_little_3 462
-#define unit_l_little_4 463
-#define unit_l_little_5 464
-#define unit_l_little_6 465
-#define unit_l_little_7 466
-#define unit_l_little_8 467
-#define unit_l_little_9 468
-#define unit_l_twelve_0 469
-#define unit_m_almost_0 470
-#define unit_m_almost_1 471
-#define unit_m_almost_2 472
-#define unit_m_almost_3 473
-#define unit_m_almost_4 474
-#define unit_m_almost_5 475
-#define unit_m_midnight_0 476
-#define unit_m_morning_0 477
-#define unit_m_morning_1 478
-#define unit_m_morning_10 479
-#define unit_m_morning_2 480
-#define unit_m_morning_3 481
-#define unit_m_morning_4 482
-#define unit_m_morning_5 483
-#define unit_m_morning_6 484
-#define unit_m_morning_7 485
-#define unit_m_morning_8 486
-#define unit_m_morning_9 487
-#define unit_m_time_0 488
-#define unit_m_time_1 489
-#define unit_m_time_10 490
-#define unit_m_time_11 491
-#define unit_m_time_12 492
-#define unit_m_time_13 493
-#define unit_m_time_14 494
-#define unit_m_time_15 495
-#define unit_m_time_17 496
-#define unit_m_time_18 497
-#define unit_m_time_19 498
-#define unit_m_time_2 499
-#define unit_m_time_20 500
-#define unit_m_time_21 501
-#define unit_m_time_22 502
-#define unit_m_time_23 503
-#define unit_m_time_3 504
-#define unit_m_time_4 505
-#define unit_m_time_5 506
-#define unit_m_time_7 507
-#define unit_m_time_8 508
-#define unit_m_time_9 509
-#define unit_n_afternoon_0 510
-#define unit_n_afternoon_1 511
-#define unit_n_afternoon_2 512
-#define unit_n_afternoon_3 513
-#define unit_n_afternoon_4 514
-#define unit_n_afternoon_5 515
-#define unit_n_afternoon_6 516
-#define unit_n_afternoon_7 517
-#define unit_n_afternoon_8 518
-#define unit_n_afternoon_9 519
-#define unit_n_eleven_0 520
-#define unit_n_eleven_1 521
-#define unit_n_evening_0 522
-#define unit_n_evening_1 523
-#define unit_n_evening_2 524
-#define unit_n_evening_3 525
-#define unit_n_evening_4 526
-#define unit_n_evening_5 527
-#define unit_n_in_0 528
-#define unit_n_in_1 529
-#define unit_n_in_10 530
-#define unit_n_in_11 531
-#define unit_n_in_12 532
-#define unit_n_in_13 533
-#define unit_n_in_14 534
-#define unit_n_in_15 535
-#define unit_n_in_16 536
-#define unit_n_in_17 537
-#define unit_n_in_18 538
-#define unit_n_in_19 539
-#define unit_n_in_2 540
-#define unit_n_in_20 541
-#define unit_n_in_21 542
-#define unit_n_in_3 543
-#define unit_n_in_4 544
-#define unit_n_in_6 545
-#define unit_n_in_7 546
-#define unit_n_in_8 547
-#define unit_n_in_9 548
-#define unit_n_midnight_0 549
-#define unit_n_morning_0 550
-#define unit_n_morning_1 551
-#define unit_n_morning_10 552
-#define unit_n_morning_2 553
-#define unit_n_morning_3 554
-#define unit_n_morning_4 555
-#define unit_n_morning_5 556
-#define unit_n_morning_6 557
-#define unit_n_morning_7 558
-#define unit_n_morning_8 559
-#define unit_n_morning_9 560
-#define unit_n_nine_0 561
-#define unit_n_nine_1 562
-#define unit_n_nine_2 563
-#define unit_n_nine_3 564
-#define unit_n_now_0 565
-#define unit_n_now_1 566
-#define unit_n_now_10 567
-#define unit_n_now_11 568
-#define unit_n_now_12 569
-#define unit_n_now_13 570
-#define unit_n_now_14 571
-#define unit_n_now_15 572
-#define unit_n_now_16 573
-#define unit_n_now_17 574
-#define unit_n_now_18 575
-#define unit_n_now_19 576
-#define unit_n_now_2 577
-#define unit_n_now_20 578
-#define unit_n_now_21 579
-#define unit_n_now_22 580
-#define unit_n_now_23 581
-#define unit_n_now_3 582
-#define unit_n_now_4 583
-#define unit_n_now_5 584
-#define unit_n_now_6 585
-#define unit_n_now_7 586
-#define unit_n_now_8 587
-#define unit_n_now_9 588
-#define unit_n_one_0 589
-#define unit_n_one_1 590
-#define unit_n_seven_0 591
-#define unit_n_seven_1 592
-#define unit_n_ten_0 593
-#define unit_n_ten_1 594
-#define unit_n_ten_2 595
-#define unit_n_ten_3 596
-#define unit_n_ten_4 597
-#define unit_n_ten_5 598
-#define unit_n_twenty_0 599
-#define unit_n_twenty_1 600
-#define unit_n_twenty_2 601
-#define unit_n_twenty_3 602
-#define unit_n_twenty_4 603
-#define unit_n_twenty_5 604
-#define unit_n_twenty_6 605
-#define unit_n_twenty_7 606
-#define unit_ng_evening_0 607
-#define unit_ng_evening_1 608
-#define unit_ng_evening_2 609
-#define unit_ng_evening_3 610
-#define unit_ng_evening_4 611
-#define unit_ng_evening_5 612
-#define unit_ng_morning_0 613
-#define unit_ng_morning_1 614
-#define unit_ng_morning_10 615
-#define unit_ng_morning_2 616
-#define unit_ng_morning_3 617
-#define unit_ng_morning_4 618
-#define unit_ng_morning_5 619
-#define unit_ng_morning_6 620
-#define unit_ng_morning_7 621
-#define unit_ng_morning_8 622
-#define unit_ng_morning_9 623
-#define unit_ow_almost_0 624
-#define unit_ow_almost_1 625
-#define unit_ow_almost_2 626
-#define unit_ow_almost_3 627
-#define unit_ow_almost_4 628
-#define unit_ow_almost_5 629
-#define unit_p_past_0 630
-#define unit_p_past_1 631
-#define unit_p_past_10 632
-#define unit_p_past_11 633
-#define unit_p_past_2 634
-#define unit_p_past_3 635
-#define unit_p_past_4 636
-#define unit_p_past_5 637
-#define unit_p_past_6 638
-#define unit_p_past_7 639
-#define unit_p_past_8 640
-#define unit_p_past_9 641
-#define unit_pau_0_0 642
-#define unit_pau_0_1 643
-#define unit_pau_0_11 644
-#define unit_pau_0_12 645
-#define unit_pau_0_13 646
-#define unit_pau_0_14 647
-#define unit_pau_0_15 648
-#define unit_pau_0_16 649
-#define unit_pau_0_17 650
-#define unit_pau_0_18 651
-#define unit_pau_0_19 652
-#define unit_pau_0_2 653
-#define unit_pau_0_20 654
-#define unit_pau_0_21 655
-#define unit_pau_0_22 656
-#define unit_pau_0_23 657
-#define unit_pau_0_3 658
-#define unit_pau_0_5 659
-#define unit_pau_0_6 660
-#define unit_pau_0_7 661
-#define unit_pau_aw_0 662
-#define unit_pau_aw_1 663
-#define unit_pau_aw_10 664
-#define unit_pau_aw_11 665
-#define unit_pau_aw_12 666
-#define unit_pau_aw_13 667
-#define unit_pau_aw_14 668
-#define unit_pau_aw_15 669
-#define unit_pau_aw_16 670
-#define unit_pau_aw_17 671
-#define unit_pau_aw_18 672
-#define unit_pau_aw_19 673
-#define unit_pau_aw_2 674
-#define unit_pau_aw_20 675
-#define unit_pau_aw_21 676
-#define unit_pau_aw_22 677
-#define unit_pau_aw_23 678
-#define unit_pau_aw_3 679
-#define unit_pau_aw_4 680
-#define unit_pau_aw_5 681
-#define unit_pau_aw_6 682
-#define unit_pau_aw_7 683
-#define unit_pau_aw_8 684
-#define unit_pau_aw_9 685
-#define unit_pau_iy_0 686
-#define unit_pau_iy_1 687
-#define unit_pau_n_0 688
-#define unit_pau_n_1 689
-#define unit_pau_n_10 690
-#define unit_pau_n_11 691
-#define unit_pau_n_12 692
-#define unit_pau_n_13 693
-#define unit_pau_n_14 694
-#define unit_pau_n_2 695
-#define unit_pau_n_3 696
-#define unit_pau_n_4 697
-#define unit_pau_n_5 698
-#define unit_pau_n_6 699
-#define unit_pau_n_7 700
-#define unit_pau_n_8 701
-#define unit_pau_n_9 702
-#define unit_pau_ng_0 703
-#define unit_pau_ng_1 704
-#define unit_pau_ng_10 705
-#define unit_pau_ng_11 706
-#define unit_pau_ng_12 707
-#define unit_pau_ng_13 708
-#define unit_pau_ng_14 709
-#define unit_pau_ng_15 710
-#define unit_pau_ng_16 711
-#define unit_pau_ng_2 712
-#define unit_pau_ng_3 713
-#define unit_pau_ng_4 714
-#define unit_pau_ng_5 715
-#define unit_pau_ng_6 716
-#define unit_pau_ng_7 717
-#define unit_pau_ng_8 718
-#define unit_pau_ng_9 719
-#define unit_pau_pau_10 720
-#define unit_pau_pau_12 721
-#define unit_pau_pau_13 722
-#define unit_pau_pau_17 723
-#define unit_pau_pau_18 724
-#define unit_pau_pau_19 725
-#define unit_pau_pau_23 726
-#define unit_pau_pau_24 727
-#define unit_pau_pau_26 728
-#define unit_pau_pau_28 729
-#define unit_pau_pau_29 730
-#define unit_pau_pau_3 731
-#define unit_pau_pau_30 732
-#define unit_pau_pau_32 733
-#define unit_pau_pau_33 734
-#define unit_pau_pau_34 735
-#define unit_pau_pau_37 736
-#define unit_pau_pau_40 737
-#define unit_pau_pau_41 738
-#define unit_pau_pau_44 739
-#define unit_pau_pau_45 740
-#define unit_pau_pau_48 741
-#define unit_pau_pau_5 742
-#define unit_pau_pau_50 743
-#define unit_pau_pau_53 744
-#define unit_pau_pau_54 745
-#define unit_pau_pau_55 746
-#define unit_pau_pau_56 747
-#define unit_pau_pau_57 748
-#define unit_pau_pau_58 749
-#define unit_pau_pau_59 750
-#define unit_pau_pau_60 751
-#define unit_pau_pau_61 752
-#define unit_pau_pau_62 753
-#define unit_pau_pau_63 754
-#define unit_pau_pau_64 755
-#define unit_pau_pau_65 756
-#define unit_pau_pau_67 757
-#define unit_pau_pau_69 758
-#define unit_pau_pau_70 759
-#define unit_pau_pau_73 760
-#define unit_pau_pau_74 761
-#define unit_pau_pau_75 762
-#define unit_pau_pau_77 763
-#define unit_pau_pau_79 764
-#define unit_pau_pau_8 765
-#define unit_pau_pau_81 766
-#define unit_pau_pau_83 767
-#define unit_pau_pau_84 768
-#define unit_pau_pau_85 769
-#define unit_pau_pau_87 770
-#define unit_pau_pau_89 771
-#define unit_pau_pau_92 772
-#define unit_pau_pau_93 773
-#define unit_pau_r_0 774
-#define unit_pau_r_1 775
-#define unit_pau_s_0 776
-#define unit_pau_s_1 777
-#define unit_pau_t_0 778
-#define unit_pau_t_1 779
-#define unit_pau_t_2 780
-#define unit_pau_uw_0 781
-#define unit_pau_uw_1 782
-#define unit_pau_v_0 783
-#define unit_pau_v_1 784
-#define unit_pau_v_2 785
-#define unit_r_four_0 786
-#define unit_r_four_1 787
-#define unit_r_morning_0 788
-#define unit_r_morning_1 789
-#define unit_r_morning_10 790
-#define unit_r_morning_2 791
-#define unit_r_morning_3 792
-#define unit_r_morning_4 793
-#define unit_r_morning_5 794
-#define unit_r_morning_6 795
-#define unit_r_morning_7 796
-#define unit_r_morning_8 797
-#define unit_r_morning_9 798
-#define unit_r_quarter_0 799
-#define unit_r_quarter_1 800
-#define unit_r_quarter_2 801
-#define unit_r_quarter_3 802
-#define unit_r_quarter_4 803
-#define unit_r_three_0 804
-#define unit_r_three_1 805
-#define unit_s_almost_0 806
-#define unit_s_almost_1 807
-#define unit_s_almost_2 808
-#define unit_s_almost_3 809
-#define unit_s_almost_4 810
-#define unit_s_almost_5 811
-#define unit_s_just_0 812
-#define unit_s_just_1 813
-#define unit_s_just_2 814
-#define unit_s_just_3 815
-#define unit_s_just_4 816
-#define unit_s_just_5 817
-#define unit_s_past_0 818
-#define unit_s_past_1 819
-#define unit_s_past_10 820
-#define unit_s_past_11 821
-#define unit_s_past_2 822
-#define unit_s_past_3 823
-#define unit_s_past_4 824
-#define unit_s_past_5 825
-#define unit_s_past_6 826
-#define unit_s_past_7 827
-#define unit_s_past_8 828
-#define unit_s_past_9 829
-#define unit_s_seven_0 830
-#define unit_s_seven_1 831
-#define unit_s_six_0 832
-#define unit_s_six_1 833
-#define unit_s_six_2 834
-#define unit_s_six_3 835
-#define unit_t_after_0 836
-#define unit_t_after_1 837
-#define unit_t_after_10 838
-#define unit_t_after_11 839
-#define unit_t_after_2 840
-#define unit_t_after_3 841
-#define unit_t_after_4 842
-#define unit_t_after_5 843
-#define unit_t_after_6 844
-#define unit_t_after_7 845
-#define unit_t_after_8 846
-#define unit_t_after_9 847
-#define unit_t_afternoon_0 848
-#define unit_t_afternoon_1 849
-#define unit_t_afternoon_2 850
-#define unit_t_afternoon_3 851
-#define unit_t_afternoon_4 852
-#define unit_t_almost_0 853
-#define unit_t_almost_1 854
-#define unit_t_almost_2 855
-#define unit_t_almost_3 856
-#define unit_t_almost_4 857
-#define unit_t_almost_5 858
-#define unit_t_eight_0 859
-#define unit_t_eight_1 860
-#define unit_t_exactly_0 861
-#define unit_t_exactly_1 862
-#define unit_t_exactly_2 863
-#define unit_t_exactly_3 864
-#define unit_t_exactly_4 865
-#define unit_t_exactly_5 866
-#define unit_t_just_0 867
-#define unit_t_just_1 868
-#define unit_t_just_2 869
-#define unit_t_just_3 870
-#define unit_t_just_4 871
-#define unit_t_just_5 872
-#define unit_t_little_0 873
-#define unit_t_little_1 874
-#define unit_t_little_2 875
-#define unit_t_little_3 876
-#define unit_t_little_4 877
-#define unit_t_little_5 878
-#define unit_t_midnight_0 879
-#define unit_t_past_0 880
-#define unit_t_past_1 881
-#define unit_t_past_10 882
-#define unit_t_past_11 883
-#define unit_t_past_2 884
-#define unit_t_past_3 885
-#define unit_t_past_4 886
-#define unit_t_past_5 887
-#define unit_t_past_6 888
-#define unit_t_past_7 889
-#define unit_t_past_8 890
-#define unit_t_past_9 891
-#define unit_t_quarter_0 892
-#define unit_t_quarter_1 893
-#define unit_t_quarter_2 894
-#define unit_t_quarter_3 895
-#define unit_t_quarter_4 896
-#define unit_t_ten_0 897
-#define unit_t_ten_1 898
-#define unit_t_ten_2 899
-#define unit_t_ten_3 900
-#define unit_t_ten_4 901
-#define unit_t_ten_5 902
-#define unit_t_time_0 903
-#define unit_t_time_1 904
-#define unit_t_time_10 905
-#define unit_t_time_11 906
-#define unit_t_time_12 907
-#define unit_t_time_13 908
-#define unit_t_time_14 909
-#define unit_t_time_15 910
-#define unit_t_time_16 911
-#define unit_t_time_17 912
-#define unit_t_time_18 913
-#define unit_t_time_19 914
-#define unit_t_time_2 915
-#define unit_t_time_20 916
-#define unit_t_time_21 917
-#define unit_t_time_22 918
-#define unit_t_time_23 919
-#define unit_t_time_3 920
-#define unit_t_time_4 921
-#define unit_t_time_5 922
-#define unit_t_time_6 923
-#define unit_t_time_7 924
-#define unit_t_time_8 925
-#define unit_t_time_9 926
-#define unit_t_to_0 927
-#define unit_t_to_1 928
-#define unit_t_to_10 929
-#define unit_t_to_2 930
-#define unit_t_to_3 931
-#define unit_t_to_4 932
-#define unit_t_to_5 933
-#define unit_t_to_6 934
-#define unit_t_to_7 935
-#define unit_t_to_8 936
-#define unit_t_to_9 937
-#define unit_t_twelve_0 938
-#define unit_t_twenty_0 939
-#define unit_t_twenty_1 940
-#define unit_t_twenty_10 941
-#define unit_t_twenty_11 942
-#define unit_t_twenty_12 943
-#define unit_t_twenty_13 944
-#define unit_t_twenty_14 945
-#define unit_t_twenty_15 946
-#define unit_t_twenty_2 947
-#define unit_t_twenty_3 948
-#define unit_t_twenty_4 949
-#define unit_t_twenty_5 950
-#define unit_t_twenty_6 951
-#define unit_t_twenty_7 952
-#define unit_t_twenty_8 953
-#define unit_t_twenty_9 954
-#define unit_t_two_0 955
-#define unit_t_two_1 956
-#define unit_th_three_0 957
-#define unit_th_three_1 958
-#define unit_uw_afternoon_0 959
-#define unit_uw_afternoon_1 960
-#define unit_uw_afternoon_2 961
-#define unit_uw_afternoon_3 962
-#define unit_uw_afternoon_4 963
-#define unit_uw_two_0 964
-#define unit_uw_two_1 965
-#define unit_v_eleven_0 966
-#define unit_v_eleven_1 967
-#define unit_v_evening_0 968
-#define unit_v_evening_1 969
-#define unit_v_evening_2 970
-#define unit_v_evening_3 971
-#define unit_v_evening_4 972
-#define unit_v_evening_5 973
-#define unit_v_five_0 974
-#define unit_v_five_1 975
-#define unit_v_five_2 976
-#define unit_v_five_3 977
-#define unit_v_five_4 978
-#define unit_v_five_5 979
-#define unit_v_five_6 980
-#define unit_v_five_7 981
-#define unit_v_five_8 982
-#define unit_v_five_9 983
-#define unit_v_seven_0 984
-#define unit_v_seven_1 985
-#define unit_v_twelve_0 986
-#define unit_w_one_0 987
-#define unit_w_one_1 988
-#define unit_w_quarter_0 989
-#define unit_w_quarter_1 990
-#define unit_w_quarter_2 991
-#define unit_w_quarter_3 992
-#define unit_w_quarter_4 993
-#define unit_w_twelve_0 994
-#define unit_w_twenty_0 995
-#define unit_w_twenty_1 996
-#define unit_w_twenty_2 997
-#define unit_w_twenty_3 998
-#define unit_w_twenty_4 999
-#define unit_w_twenty_5 1000
-#define unit_w_twenty_6 1001
-#define unit_w_twenty_7 1002
-#define unit_z_exactly_0 1003
-#define unit_z_exactly_1 1004
-#define unit_z_exactly_2 1005
-#define unit_z_exactly_3 1006
-#define unit_z_exactly_4 1007
-#define unit_z_exactly_5 1008
-#define unit_z_is_0 1009
-#define unit_z_is_1 1010
-#define unit_z_is_10 1011
-#define unit_z_is_11 1012
-#define unit_z_is_12 1013
-#define unit_z_is_13 1014
-#define unit_z_is_14 1015
-#define unit_z_is_15 1016
-#define unit_z_is_16 1017
-#define unit_z_is_17 1018
-#define unit_z_is_18 1019
-#define unit_z_is_19 1020
-#define unit_z_is_2 1021
-#define unit_z_is_20 1022
-#define unit_z_is_21 1023
-#define unit_z_is_23 1024
-#define unit_z_is_3 1025
-#define unit_z_is_4 1026
-#define unit_z_is_5 1027
-#define unit_z_is_6 1028
-#define unit_z_is_7 1029
-#define unit_z_is_8 1030
-#define unit_z_is_9 1031
+#define unit_ih_is_22 374
+#define unit_ih_is_23 375
+#define unit_ih_little_0 376
+#define unit_ih_little_1 377
+#define unit_ih_little_2 378
+#define unit_ih_little_3 379
+#define unit_ih_little_4 380
+#define unit_ih_little_5 381
+#define unit_ih_midnight_0 382
+#define unit_ih_morning_0 383
+#define unit_ih_morning_1 384
+#define unit_ih_morning_2 385
+#define unit_ih_morning_3 386
+#define unit_ih_morning_4 387
+#define unit_ih_morning_5 388
+#define unit_ih_morning_6 389
+#define unit_ih_morning_7 390
+#define unit_ih_morning_8 391
+#define unit_ih_morning_9 392
+#define unit_ih_morning_10 393
+#define unit_ih_six_0 394
+#define unit_ih_six_1 395
+#define unit_iy_evening_0 396
+#define unit_iy_evening_1 397
+#define unit_iy_evening_2 398
+#define unit_iy_evening_3 399
+#define unit_iy_evening_4 400
+#define unit_iy_evening_5 401
+#define unit_iy_exactly_0 402
+#define unit_iy_exactly_1 403
+#define unit_iy_exactly_2 404
+#define unit_iy_exactly_3 405
+#define unit_iy_exactly_4 406
+#define unit_iy_exactly_5 407
+#define unit_iy_the_0 408
+#define unit_iy_the_1 409
+#define unit_iy_the_2 410
+#define unit_iy_the_3 411
+#define unit_iy_the_4 412
+#define unit_iy_the_5 413
+#define unit_iy_the_6 414
+#define unit_iy_the_7 415
+#define unit_iy_the_8 416
+#define unit_iy_the_9 417
+#define unit_iy_the_10 418
+#define unit_iy_three_0 419
+#define unit_iy_three_1 420
+#define unit_iy_twenty_0 421
+#define unit_iy_twenty_1 422
+#define unit_iy_twenty_2 423
+#define unit_iy_twenty_3 424
+#define unit_iy_twenty_4 425
+#define unit_iy_twenty_5 426
+#define unit_iy_twenty_6 427
+#define unit_iy_twenty_7 428
+#define unit_jh_just_0 429
+#define unit_jh_just_1 430
+#define unit_jh_just_2 431
+#define unit_jh_just_3 432
+#define unit_jh_just_4 433
+#define unit_jh_just_5 434
+#define unit_k_exactly_0 435
+#define unit_k_exactly_1 436
+#define unit_k_exactly_2 437
+#define unit_k_exactly_3 438
+#define unit_k_exactly_4 439
+#define unit_k_exactly_5 440
+#define unit_k_quarter_0 441
+#define unit_k_quarter_1 442
+#define unit_k_quarter_2 443
+#define unit_k_quarter_3 444
+#define unit_k_quarter_4 445
+#define unit_k_six_0 446
+#define unit_k_six_1 447
+#define unit_l_almost_0 448
+#define unit_l_almost_1 449
+#define unit_l_almost_2 450
+#define unit_l_almost_3 451
+#define unit_l_almost_4 452
+#define unit_l_almost_5 453
+#define unit_l_eleven_0 454
+#define unit_l_eleven_1 455
+#define unit_l_exactly_0 456
+#define unit_l_exactly_1 457
+#define unit_l_exactly_2 458
+#define unit_l_exactly_3 459
+#define unit_l_exactly_4 460
+#define unit_l_exactly_5 461
+#define unit_l_little_0 462
+#define unit_l_little_1 463
+#define unit_l_little_2 464
+#define unit_l_little_3 465
+#define unit_l_little_4 466
+#define unit_l_little_5 467
+#define unit_l_little_6 468
+#define unit_l_little_7 469
+#define unit_l_little_8 470
+#define unit_l_little_9 471
+#define unit_l_little_10 472
+#define unit_l_little_11 473
+#define unit_l_twelve_0 474
+#define unit_m_almost_0 475
+#define unit_m_almost_1 476
+#define unit_m_almost_2 477
+#define unit_m_almost_3 478
+#define unit_m_almost_4 479
+#define unit_m_almost_5 480
+#define unit_m_midnight_0 481
+#define unit_m_morning_0 482
+#define unit_m_morning_1 483
+#define unit_m_morning_2 484
+#define unit_m_morning_3 485
+#define unit_m_morning_4 486
+#define unit_m_morning_5 487
+#define unit_m_morning_6 488
+#define unit_m_morning_7 489
+#define unit_m_morning_8 490
+#define unit_m_morning_9 491
+#define unit_m_morning_10 492
+#define unit_m_time_0 493
+#define unit_m_time_1 494
+#define unit_m_time_2 495
+#define unit_m_time_3 496
+#define unit_m_time_4 497
+#define unit_m_time_5 498
+#define unit_m_time_6 499
+#define unit_m_time_7 500
+#define unit_m_time_8 501
+#define unit_m_time_9 502
+#define unit_m_time_10 503
+#define unit_m_time_11 504
+#define unit_m_time_12 505
+#define unit_m_time_13 506
+#define unit_m_time_14 507
+#define unit_m_time_15 508
+#define unit_m_time_16 509
+#define unit_m_time_17 510
+#define unit_m_time_18 511
+#define unit_m_time_19 512
+#define unit_m_time_20 513
+#define unit_n_afternoon_0 514
+#define unit_n_afternoon_1 515
+#define unit_n_afternoon_2 516
+#define unit_n_afternoon_3 517
+#define unit_n_afternoon_4 518
+#define unit_n_afternoon_5 519
+#define unit_n_afternoon_6 520
+#define unit_n_afternoon_7 521
+#define unit_n_afternoon_8 522
+#define unit_n_afternoon_9 523
+#define unit_n_eleven_0 524
+#define unit_n_eleven_1 525
+#define unit_n_evening_0 526
+#define unit_n_evening_1 527
+#define unit_n_evening_2 528
+#define unit_n_evening_3 529
+#define unit_n_evening_4 530
+#define unit_n_evening_5 531
+#define unit_n_in_0 532
+#define unit_n_in_1 533
+#define unit_n_in_2 534
+#define unit_n_in_3 535
+#define unit_n_in_4 536
+#define unit_n_in_5 537
+#define unit_n_in_6 538
+#define unit_n_in_7 539
+#define unit_n_in_8 540
+#define unit_n_in_9 541
+#define unit_n_in_10 542
+#define unit_n_in_11 543
+#define unit_n_in_12 544
+#define unit_n_in_13 545
+#define unit_n_in_14 546
+#define unit_n_in_15 547
+#define unit_n_in_16 548
+#define unit_n_in_17 549
+#define unit_n_in_18 550
+#define unit_n_in_19 551
+#define unit_n_midnight_0 552
+#define unit_n_morning_0 553
+#define unit_n_morning_1 554
+#define unit_n_morning_2 555
+#define unit_n_morning_3 556
+#define unit_n_morning_4 557
+#define unit_n_morning_5 558
+#define unit_n_morning_6 559
+#define unit_n_morning_7 560
+#define unit_n_morning_8 561
+#define unit_n_morning_9 562
+#define unit_n_morning_10 563
+#define unit_n_nine_0 564
+#define unit_n_nine_1 565
+#define unit_n_nine_2 566
+#define unit_n_nine_3 567
+#define unit_n_now_0 568
+#define unit_n_now_1 569
+#define unit_n_now_2 570
+#define unit_n_now_3 571
+#define unit_n_now_4 572
+#define unit_n_now_5 573
+#define unit_n_now_6 574
+#define unit_n_now_7 575
+#define unit_n_now_8 576
+#define unit_n_now_9 577
+#define unit_n_now_10 578
+#define unit_n_now_11 579
+#define unit_n_now_12 580
+#define unit_n_now_13 581
+#define unit_n_now_14 582
+#define unit_n_now_15 583
+#define unit_n_now_16 584
+#define unit_n_now_17 585
+#define unit_n_now_18 586
+#define unit_n_now_19 587
+#define unit_n_now_20 588
+#define unit_n_now_21 589
+#define unit_n_now_22 590
+#define unit_n_now_23 591
+#define unit_n_one_0 592
+#define unit_n_one_1 593
+#define unit_n_seven_0 594
+#define unit_n_seven_1 595
+#define unit_n_ten_0 596
+#define unit_n_ten_1 597
+#define unit_n_ten_2 598
+#define unit_n_ten_3 599
+#define unit_n_ten_4 600
+#define unit_n_ten_5 601
+#define unit_n_twenty_0 602
+#define unit_n_twenty_1 603
+#define unit_n_twenty_2 604
+#define unit_n_twenty_3 605
+#define unit_n_twenty_4 606
+#define unit_n_twenty_5 607
+#define unit_n_twenty_6 608
+#define unit_n_twenty_7 609
+#define unit_ng_evening_0 610
+#define unit_ng_evening_1 611
+#define unit_ng_evening_2 612
+#define unit_ng_evening_3 613
+#define unit_ng_evening_4 614
+#define unit_ng_evening_5 615
+#define unit_ng_morning_0 616
+#define unit_ng_morning_1 617
+#define unit_ng_morning_2 618
+#define unit_ng_morning_3 619
+#define unit_ng_morning_4 620
+#define unit_ng_morning_5 621
+#define unit_ng_morning_6 622
+#define unit_ng_morning_7 623
+#define unit_ng_morning_8 624
+#define unit_ng_morning_9 625
+#define unit_ng_morning_10 626
+#define unit_ow_almost_0 627
+#define unit_ow_almost_1 628
+#define unit_ow_almost_2 629
+#define unit_ow_almost_3 630
+#define unit_ow_almost_4 631
+#define unit_ow_almost_5 632
+#define unit_p_past_0 633
+#define unit_p_past_1 634
+#define unit_p_past_2 635
+#define unit_p_past_3 636
+#define unit_p_past_4 637
+#define unit_p_past_5 638
+#define unit_p_past_6 639
+#define unit_p_past_7 640
+#define unit_p_past_8 641
+#define unit_p_past_9 642
+#define unit_p_past_10 643
+#define unit_p_past_11 644
+#define unit_pau_0_0 645
+#define unit_pau_0_1 646
+#define unit_pau_0_2 647
+#define unit_pau_0_3 648
+#define unit_pau_0_4 649
+#define unit_pau_0_5 650
+#define unit_pau_0_6 651
+#define unit_pau_0_7 652
+#define unit_pau_0_8 653
+#define unit_pau_0_9 654
+#define unit_pau_0_10 655
+#define unit_pau_0_11 656
+#define unit_pau_0_12 657
+#define unit_pau_0_13 658
+#define unit_pau_0_14 659
+#define unit_pau_0_15 660
+#define unit_pau_0_16 661
+#define unit_pau_0_17 662
+#define unit_pau_0_18 663
+#define unit_pau_0_19 664
+#define unit_pau_aw_0 665
+#define unit_pau_aw_1 666
+#define unit_pau_aw_2 667
+#define unit_pau_aw_3 668
+#define unit_pau_aw_4 669
+#define unit_pau_aw_5 670
+#define unit_pau_aw_6 671
+#define unit_pau_aw_7 672
+#define unit_pau_aw_8 673
+#define unit_pau_aw_9 674
+#define unit_pau_aw_10 675
+#define unit_pau_aw_11 676
+#define unit_pau_aw_12 677
+#define unit_pau_aw_13 678
+#define unit_pau_aw_14 679
+#define unit_pau_aw_15 680
+#define unit_pau_aw_16 681
+#define unit_pau_aw_17 682
+#define unit_pau_aw_18 683
+#define unit_pau_aw_19 684
+#define unit_pau_aw_20 685
+#define unit_pau_aw_21 686
+#define unit_pau_iy_0 687
+#define unit_pau_iy_1 688
+#define unit_pau_n_0 689
+#define unit_pau_n_1 690
+#define unit_pau_n_2 691
+#define unit_pau_n_3 692
+#define unit_pau_n_4 693
+#define unit_pau_n_5 694
+#define unit_pau_n_6 695
+#define unit_pau_n_7 696
+#define unit_pau_n_8 697
+#define unit_pau_n_9 698
+#define unit_pau_n_10 699
+#define unit_pau_n_11 700
+#define unit_pau_n_12 701
+#define unit_pau_n_13 702
+#define unit_pau_n_14 703
+#define unit_pau_ng_0 704
+#define unit_pau_ng_1 705
+#define unit_pau_ng_2 706
+#define unit_pau_ng_3 707
+#define unit_pau_ng_4 708
+#define unit_pau_ng_5 709
+#define unit_pau_ng_6 710
+#define unit_pau_ng_7 711
+#define unit_pau_ng_8 712
+#define unit_pau_ng_9 713
+#define unit_pau_ng_10 714
+#define unit_pau_ng_11 715
+#define unit_pau_ng_12 716
+#define unit_pau_ng_13 717
+#define unit_pau_ng_14 718
+#define unit_pau_ng_15 719
+#define unit_pau_ng_16 720
+#define unit_pau_pau_0 721
+#define unit_pau_pau_1 722
+#define unit_pau_pau_2 723
+#define unit_pau_pau_3 724
+#define unit_pau_pau_4 725
+#define unit_pau_pau_5 726
+#define unit_pau_pau_6 727
+#define unit_pau_pau_7 728
+#define unit_pau_pau_8 729
+#define unit_pau_pau_9 730
+#define unit_pau_pau_10 731
+#define unit_pau_pau_11 732
+#define unit_pau_pau_12 733
+#define unit_pau_pau_13 734
+#define unit_pau_pau_14 735
+#define unit_pau_pau_15 736
+#define unit_pau_pau_16 737
+#define unit_pau_pau_17 738
+#define unit_pau_pau_18 739
+#define unit_pau_pau_19 740
+#define unit_pau_pau_20 741
+#define unit_pau_pau_21 742
+#define unit_pau_pau_22 743
+#define unit_pau_pau_23 744
+#define unit_pau_r_0 745
+#define unit_pau_r_1 746
+#define unit_pau_s_0 747
+#define unit_pau_s_1 748
+#define unit_pau_t_0 749
+#define unit_pau_t_1 750
+#define unit_pau_t_2 751
+#define unit_pau_uw_0 752
+#define unit_pau_uw_1 753
+#define unit_pau_v_0 754
+#define unit_pau_v_1 755
+#define unit_pau_v_2 756
+#define unit_r_four_0 757
+#define unit_r_four_1 758
+#define unit_r_morning_0 759
+#define unit_r_morning_1 760
+#define unit_r_morning_2 761
+#define unit_r_morning_3 762
+#define unit_r_morning_4 763
+#define unit_r_morning_5 764
+#define unit_r_morning_6 765
+#define unit_r_morning_7 766
+#define unit_r_morning_8 767
+#define unit_r_morning_9 768
+#define unit_r_morning_10 769
+#define unit_r_quarter_0 770
+#define unit_r_quarter_1 771
+#define unit_r_quarter_2 772
+#define unit_r_quarter_3 773
+#define unit_r_quarter_4 774
+#define unit_r_three_0 775
+#define unit_r_three_1 776
+#define unit_s_almost_0 777
+#define unit_s_almost_1 778
+#define unit_s_almost_2 779
+#define unit_s_almost_3 780
+#define unit_s_almost_4 781
+#define unit_s_almost_5 782
+#define unit_s_just_0 783
+#define unit_s_just_1 784
+#define unit_s_just_2 785
+#define unit_s_just_3 786
+#define unit_s_just_4 787
+#define unit_s_just_5 788
+#define unit_s_past_0 789
+#define unit_s_past_1 790
+#define unit_s_past_2 791
+#define unit_s_past_3 792
+#define unit_s_past_4 793
+#define unit_s_past_5 794
+#define unit_s_past_6 795
+#define unit_s_past_7 796
+#define unit_s_past_8 797
+#define unit_s_past_9 798
+#define unit_s_past_10 799
+#define unit_s_past_11 800
+#define unit_s_seven_0 801
+#define unit_s_seven_1 802
+#define unit_s_six_0 803
+#define unit_s_six_1 804
+#define unit_s_six_2 805
+#define unit_s_six_3 806
+#define unit_t_after_0 807
+#define unit_t_after_1 808
+#define unit_t_after_2 809
+#define unit_t_after_3 810
+#define unit_t_after_4 811
+#define unit_t_after_5 812
+#define unit_t_after_6 813
+#define unit_t_after_7 814
+#define unit_t_after_8 815
+#define unit_t_after_9 816
+#define unit_t_after_10 817
+#define unit_t_after_11 818
+#define unit_t_afternoon_0 819
+#define unit_t_afternoon_1 820
+#define unit_t_afternoon_2 821
+#define unit_t_afternoon_3 822
+#define unit_t_afternoon_4 823
+#define unit_t_almost_0 824
+#define unit_t_almost_1 825
+#define unit_t_almost_2 826
+#define unit_t_almost_3 827
+#define unit_t_almost_4 828
+#define unit_t_almost_5 829
+#define unit_t_eight_0 830
+#define unit_t_eight_1 831
+#define unit_t_exactly_0 832
+#define unit_t_exactly_1 833
+#define unit_t_exactly_2 834
+#define unit_t_exactly_3 835
+#define unit_t_exactly_4 836
+#define unit_t_exactly_5 837
+#define unit_t_just_0 838
+#define unit_t_just_1 839
+#define unit_t_just_2 840
+#define unit_t_just_3 841
+#define unit_t_just_4 842
+#define unit_t_just_5 843
+#define unit_t_little_0 844
+#define unit_t_little_1 845
+#define unit_t_little_2 846
+#define unit_t_little_3 847
+#define unit_t_little_4 848
+#define unit_t_little_5 849
+#define unit_t_midnight_0 850
+#define unit_t_past_0 851
+#define unit_t_past_1 852
+#define unit_t_past_2 853
+#define unit_t_past_3 854
+#define unit_t_past_4 855
+#define unit_t_past_5 856
+#define unit_t_past_6 857
+#define unit_t_past_7 858
+#define unit_t_past_8 859
+#define unit_t_past_9 860
+#define unit_t_past_10 861
+#define unit_t_past_11 862
+#define unit_t_quarter_0 863
+#define unit_t_quarter_1 864
+#define unit_t_quarter_2 865
+#define unit_t_quarter_3 866
+#define unit_t_quarter_4 867
+#define unit_t_ten_0 868
+#define unit_t_ten_1 869
+#define unit_t_ten_2 870
+#define unit_t_ten_3 871
+#define unit_t_ten_4 872
+#define unit_t_ten_5 873
+#define unit_t_time_0 874
+#define unit_t_time_1 875
+#define unit_t_time_2 876
+#define unit_t_time_3 877
+#define unit_t_time_4 878
+#define unit_t_time_5 879
+#define unit_t_time_6 880
+#define unit_t_time_7 881
+#define unit_t_time_8 882
+#define unit_t_time_9 883
+#define unit_t_time_10 884
+#define unit_t_time_11 885
+#define unit_t_time_12 886
+#define unit_t_time_13 887
+#define unit_t_time_14 888
+#define unit_t_time_15 889
+#define unit_t_time_16 890
+#define unit_t_time_17 891
+#define unit_t_time_18 892
+#define unit_t_time_19 893
+#define unit_t_time_20 894
+#define unit_t_time_21 895
+#define unit_t_time_22 896
+#define unit_t_time_23 897
+#define unit_t_to_0 898
+#define unit_t_to_1 899
+#define unit_t_to_2 900
+#define unit_t_to_3 901
+#define unit_t_to_4 902
+#define unit_t_to_5 903
+#define unit_t_to_6 904
+#define unit_t_to_7 905
+#define unit_t_to_8 906
+#define unit_t_to_9 907
+#define unit_t_to_10 908
+#define unit_t_twelve_0 909
+#define unit_t_twenty_0 910
+#define unit_t_twenty_1 911
+#define unit_t_twenty_2 912
+#define unit_t_twenty_3 913
+#define unit_t_twenty_4 914
+#define unit_t_twenty_5 915
+#define unit_t_twenty_6 916
+#define unit_t_twenty_7 917
+#define unit_t_twenty_8 918
+#define unit_t_twenty_9 919
+#define unit_t_twenty_10 920
+#define unit_t_twenty_11 921
+#define unit_t_twenty_12 922
+#define unit_t_twenty_13 923
+#define unit_t_twenty_14 924
+#define unit_t_twenty_15 925
+#define unit_t_two_0 926
+#define unit_t_two_1 927
+#define unit_th_three_0 928
+#define unit_th_three_1 929
+#define unit_uw_afternoon_0 930
+#define unit_uw_afternoon_1 931
+#define unit_uw_afternoon_2 932
+#define unit_uw_afternoon_3 933
+#define unit_uw_afternoon_4 934
+#define unit_uw_two_0 935
+#define unit_uw_two_1 936
+#define unit_v_eleven_0 937
+#define unit_v_eleven_1 938
+#define unit_v_evening_0 939
+#define unit_v_evening_1 940
+#define unit_v_evening_2 941
+#define unit_v_evening_3 942
+#define unit_v_evening_4 943
+#define unit_v_evening_5 944
+#define unit_v_five_0 945
+#define unit_v_five_1 946
+#define unit_v_five_2 947
+#define unit_v_five_3 948
+#define unit_v_five_4 949
+#define unit_v_five_5 950
+#define unit_v_five_6 951
+#define unit_v_five_7 952
+#define unit_v_five_8 953
+#define unit_v_five_9 954
+#define unit_v_seven_0 955
+#define unit_v_seven_1 956
+#define unit_v_twelve_0 957
+#define unit_w_one_0 958
+#define unit_w_one_1 959
+#define unit_w_quarter_0 960
+#define unit_w_quarter_1 961
+#define unit_w_quarter_2 962
+#define unit_w_quarter_3 963
+#define unit_w_quarter_4 964
+#define unit_w_twelve_0 965
+#define unit_w_twenty_0 966
+#define unit_w_twenty_1 967
+#define unit_w_twenty_2 968
+#define unit_w_twenty_3 969
+#define unit_w_twenty_4 970
+#define unit_w_twenty_5 971
+#define unit_w_twenty_6 972
+#define unit_w_twenty_7 973
+#define unit_z_exactly_0 974
+#define unit_z_exactly_1 975
+#define unit_z_exactly_2 976
+#define unit_z_exactly_3 977
+#define unit_z_exactly_4 978
+#define unit_z_exactly_5 979
+#define unit_z_is_0 980
+#define unit_z_is_1 981
+#define unit_z_is_2 982
+#define unit_z_is_3 983
+#define unit_z_is_4 984
+#define unit_z_is_5 985
+#define unit_z_is_6 986
+#define unit_z_is_7 987
+#define unit_z_is_8 988
+#define unit_z_is_9 989
+#define unit_z_is_10 990
+#define unit_z_is_11 991
+#define unit_z_is_12 992
+#define unit_z_is_13 993
+#define unit_z_is_14 994
+#define unit_z_is_15 995
+#define unit_z_is_16 996
+#define unit_z_is_17 997
+#define unit_z_is_18 998
+#define unit_z_is_19 999
+#define unit_z_is_20 1000
+#define unit_z_is_21 1001
 
 const cst_clunit cmu_time_awb_units[] = {
-	 { "ae_after_0", 11626, 11644, unit_l_little_0, unit_f_after_0 },
-	 { "ae_after_1", 10289, 10310, unit_t_just_0, unit_f_after_1 },
-	 { "ae_after_10", 1099, 1114, unit_l_little_10, unit_f_after_10 },
-	 { "ae_after_11", 613, 629, unit_t_just_5, unit_f_after_11 },
-	 { "ae_after_2", 8822, 8842, unit_l_little_2, unit_f_after_2 },
-	 { "ae_after_3", 8204, 8223, unit_t_just_1, unit_f_after_3 },
-	 { "ae_after_4", 6602, 6621, unit_l_little_4, unit_f_after_4 },
-	 { "ae_after_5", 6165, 6178, unit_t_just_2, unit_f_after_5 },
-	 { "ae_after_6", 5366, 5387, unit_l_little_6, unit_f_after_6 },
-	 { "ae_after_7", 4892, 4909, unit_t_just_3, unit_f_after_7 },
-	 { "ae_after_8", 3283, 3300, unit_l_little_8, unit_f_after_8 },
-	 { "ae_after_9", 2649, 2667, unit_t_just_4, unit_f_after_9 },
-	 { "ae_afternoon_0", 8424, 8440, unit_ax_the_13, unit_f_afternoon_0 },
-	 { "ae_afternoon_1", 7713, 7732, unit_ax_the_15, unit_f_afternoon_1 },
-	 { "ae_afternoon_2", 7277, 7293, unit_ax_the_17, unit_f_afternoon_2 },
-	 { "ae_afternoon_3", 6764, 6784, unit_ax_the_19, unit_f_afternoon_3 },
-	 { "ae_afternoon_4", 6347, 6366, unit_ax_the_21, unit_f_afternoon_4 },
-	 { "ae_exactly_0", 11190, 11207, unit_z_exactly_0, unit_k_exactly_0 },
-	 { "ae_exactly_1", 9268, 9287, unit_z_exactly_1, unit_k_exactly_1 },
-	 { "ae_exactly_2", 7089, 7109, unit_z_exactly_2, unit_k_exactly_2 },
-	 { "ae_exactly_3", 4288, 4307, unit_z_exactly_3, unit_k_exactly_3 },
-	 { "ae_exactly_4", 2050, 2068, unit_z_exactly_4, unit_k_exactly_4 },
-	 { "ae_exactly_5", 174, 188, unit_z_exactly_5, unit_k_exactly_5 },
-	 { "ae_half_0", 8874, 8890, unit_hh_half_0, unit_f_half_0 },
-	 { "ae_half_1", 2695, 2709, unit_hh_half_1, unit_f_half_1 },
-	 { "ae_past_0", 11272, 11290, unit_p_past_0, unit_s_past_0 },
-	 { "ae_past_1", 10842, 10863, unit_p_past_1, unit_s_past_1 },
-	 { "ae_past_10", 685, 703, unit_p_past_10, unit_s_past_10 },
-	 { "ae_past_11", 244, 261, unit_p_past_11, unit_s_past_11 },
-	 { "ae_past_2", 10378, 10397, unit_p_past_2, unit_s_past_2 },
-	 { "ae_past_3", 9834, 9854, unit_p_past_3, unit_s_past_3 },
-	 { "ae_past_4", 9390, 9411, unit_p_past_4, unit_s_past_4 },
-	 { "ae_past_5", 8905, 8926, unit_p_past_5, unit_s_past_5 },
-	 { "ae_past_6", 2721, 2742, unit_p_past_6, unit_s_past_6 },
-	 { "ae_past_7", 2172, 2189, unit_p_past_7, unit_s_past_7 },
-	 { "ae_past_8", 1682, 1700, unit_p_past_8, unit_s_past_8 },
-	 { "ae_past_9", 1175, 1192, unit_p_past_9, unit_s_past_9 },
-	 { "ah_just_0", 10265, 10276, unit_jh_just_0, unit_s_just_0 },
-	 { "ah_just_1", 8180, 8190, unit_jh_just_1, unit_s_just_1 },
-	 { "ah_just_2", 6142, 6152, unit_jh_just_2, unit_s_just_2 },
-	 { "ah_just_3", 4868, 4880, unit_jh_just_3, unit_s_just_3 },
-	 { "ah_just_4", 2626, 2636, unit_jh_just_4, unit_s_just_4 },
-	 { "ah_just_5", 592, 601, unit_jh_just_5, unit_s_just_5 },
-	 { "ah_one_0", 6279, 6293, unit_w_one_0, unit_n_one_0 },
-	 { "ah_one_1", 288, 305, unit_w_one_1, unit_n_one_1 },
-	 { "ao_almost_0", 10741, 10761, unit_pau_aw_2, unit_l_almost_0 },
-	 { "ao_almost_1", 9720, 9740, unit_pau_aw_4, unit_l_almost_1 },
-	 { "ao_almost_2", 7507, 7525, unit_pau_aw_8, unit_l_almost_2 },
-	 { "ao_almost_3", 5802, 5817, unit_pau_aw_12, unit_l_almost_3 },
-	 { "ao_almost_4", 3729, 3746, unit_pau_aw_16, unit_l_almost_4 },
-	 { "ao_almost_5", 1563, 1585, unit_pau_aw_20, unit_l_almost_5 },
-	 { "ao_four_0", 7640, 7668, unit_f_four_0, unit_r_four_0 },
-	 { "ao_four_1", 1724, 1747, unit_f_four_1, unit_r_four_1 },
-	 { "ao_morning_0", 5555, 5571, unit_m_morning_0, unit_r_morning_0 },
-	 { "ao_morning_1", 5061, 5078, unit_m_morning_1, unit_r_morning_1 },
-	 { "ao_morning_10", 364, 379, unit_m_morning_10, unit_r_morning_10 },
-	 { "ao_morning_2", 4483, 4498, unit_m_morning_2, unit_r_morning_2 },
-	 { "ao_morning_3", 3926, 3945, unit_m_morning_3, unit_r_morning_3 },
-	 { "ao_morning_4", 3495, 3508, unit_m_morning_4, unit_r_morning_4 },
-	 { "ao_morning_5", 2831, 2848, unit_m_morning_5, unit_r_morning_5 },
-	 { "ao_morning_6", 2299, 2316, unit_m_morning_6, unit_r_morning_6 },
-	 { "ao_morning_7", 1808, 1822, unit_m_morning_7, unit_r_morning_7 },
-	 { "ao_morning_8", 1302, 1317, unit_m_morning_8, unit_r_morning_8 },
-	 { "ao_morning_9", 804, 820, unit_m_morning_9, unit_r_morning_9 },
-	 { "ao_quarter_0", 11681, 11691, unit_w_quarter_0, unit_r_quarter_0 },
-	 { "ao_quarter_1", 10349, 10357, unit_w_quarter_1, unit_r_quarter_1 },
-	 { "ao_quarter_2", 7145, 7156, unit_w_quarter_2, unit_r_quarter_2 },
-	 { "ao_quarter_3", 4345, 4354, unit_w_quarter_3, unit_r_quarter_3 },
-	 { "ao_quarter_4", 1145, 1153, unit_w_quarter_4, unit_r_quarter_4 },
-	 { "aw_now_10", 6522, 6556, unit_n_now_10, unit_pau_aw_10 },
-	 { "aw_now_11", 6076, 6112, unit_n_now_11, unit_pau_aw_11 },
-	 { "aw_now_12", 5747, 5781, unit_n_now_12, unit_pau_aw_12 },
-	 { "aw_now_13", 5274, 5306, unit_n_now_13, unit_pau_aw_13 },
-	 { "aw_now_14", 4796, 4830, unit_n_now_14, unit_pau_aw_14 },
-	 { "aw_now_15", 4223, 4256, unit_n_now_15, unit_pau_aw_15 },
-	 { "aw_now_16", 3676, 3708, unit_n_now_16, unit_pau_aw_16 },
-	 { "aw_now_17", 3192, 3224, unit_n_now_17, unit_pau_aw_17 },
-	 { "aw_now_18", 2568, 2599, unit_n_now_18, unit_pau_aw_18 },
-	 { "aw_now_19", 1985, 2016, unit_n_now_19, unit_pau_aw_19 },
-	 { "aw_now_2", 10690, 10725, unit_n_now_2, unit_pau_aw_2 },
-	 { "aw_now_20", 1502, 1534, unit_n_now_20, unit_pau_aw_20 },
-	 { "aw_now_21", 1005, 1038, unit_n_now_21, unit_pau_aw_21 },
-	 { "aw_now_22", 526, 558, unit_n_now_22, unit_pau_aw_22 },
-	 { "aw_now_3", 10196, 10232, unit_n_now_3, unit_pau_aw_3 },
-	 { "aw_now_4", 9672, 9711, unit_n_now_4, unit_pau_aw_4 },
-	 { "aw_now_5", 9209, 9244, unit_n_now_5, unit_pau_aw_5 },
-	 { "aw_now_6", 8728, 8764, unit_n_now_6, unit_pau_aw_6 },
-	 { "aw_now_7", 8118, 8151, unit_n_now_7, unit_pau_aw_7 },
-	 { "aw_now_8", 7459, 7495, unit_n_now_8, unit_pau_aw_8 },
-	 { "aw_now_9", 7030, 7064, unit_n_now_9, unit_pau_aw_9 },
-	 { "ax_a_0", 11584, 11588, unit_pau_aw_0, unit_l_little_1 },
-	 { "ax_a_1", 8781, 8785, unit_pau_aw_6, unit_l_little_3 },
-	 { "ax_a_2", 6565, 6569, unit_pau_aw_10, unit_l_little_5 },
-	 { "ax_a_3", 5328, 5333, unit_pau_aw_13, unit_l_little_7 },
-	 { "ax_a_4", 3245, 3250, unit_pau_aw_17, unit_l_little_9 },
-	 { "ax_a_5", 1060, 1064, unit_pau_aw_21, unit_l_little_11 },
-	 { "ax_eleven_0", 11330, 11336, unit_v_eleven_0, unit_n_eleven_0 },
-	 { "ax_eleven_1", 5492, 5500, unit_v_eleven_1, unit_n_eleven_1 },
-	 { "ax_little_0", 11614, 11618, unit_t_little_0, unit_l_little_0 },
-	 { "ax_little_1", 8811, 8815, unit_t_little_1, unit_l_little_2 },
-	 { "ax_little_2", 6592, 6597, unit_t_little_2, unit_l_little_4 },
-	 { "ax_little_3", 5356, 5359, unit_t_little_3, unit_l_little_6 },
-	 { "ax_little_4", 3274, 3279, unit_t_little_4, unit_l_little_8 },
-	 { "ax_little_5", 1086, 1089, unit_t_little_5, unit_l_little_10 },
-	 { "ax_seven_0", 9443, 9452, unit_v_seven_0, unit_n_seven_0 },
-	 { "ax_seven_1", 3433, 3441, unit_v_seven_1, unit_n_seven_1 },
-	 { "ax_the_1", 11381, 11388, unit_dh_the_1, unit_iy_evening_0 },
-	 { "ax_the_10", 9143, 9147, unit_dh_the_10, unit_t_time_5 },
-	 { "ax_the_11", 8992, 8998, CLUNIT_NONE, unit_iy_evening_5 },
-	 { "ax_the_12", 8671, 8676, unit_dh_the_12, unit_t_time_6 },
-	 { "ax_the_13", 8419, 8424, unit_dh_the_13, unit_ae_afternoon_0 },
-	 { "ax_the_14", 8052, 8056, unit_dh_the_14, unit_t_time_7 },
-	 { "ax_the_15", 7707, 7713, unit_dh_the_15, unit_ae_afternoon_1 },
-	 { "ax_the_16", 7389, 7394, unit_dh_the_16, unit_t_time_8 },
-	 { "ax_the_17", 7268, 7277, unit_dh_the_17, unit_ae_afternoon_2 },
-	 { "ax_the_18", 6963, 6968, unit_dh_the_18, unit_t_time_9 },
-	 { "ax_the_19", 6758, 6764, unit_dh_the_19, unit_ae_afternoon_3 },
-	 { "ax_the_2", 11095, 11099, unit_dh_the_2, unit_t_time_1 },
-	 { "ax_the_21", 6342, 6347, unit_dh_the_21, unit_ae_afternoon_4 },
-	 { "ax_the_22", 6013, 6017, unit_dh_the_22, unit_t_time_11 },
-	 { "ax_the_23", 5687, 5690, unit_dh_the_23, unit_t_time_12 },
-	 { "ax_the_24", 5544, 5547, unit_dh_the_24, unit_m_morning_0 },
-	 { "ax_the_25", 5211, 5216, unit_dh_the_25, unit_t_time_13 },
-	 { "ax_the_26", 5050, 5055, unit_dh_the_26, unit_m_morning_1 },
-	 { "ax_the_27", 4731, 4736, unit_dh_the_27, unit_t_time_14 },
-	 { "ax_the_28", 4473, 4477, unit_dh_the_28, unit_m_morning_2 },
-	 { "ax_the_29", 4158, 4162, unit_dh_the_29, unit_t_time_15 },
-	 { "ax_the_3", 10954, 10961, unit_dh_the_3, unit_iy_evening_1 },
-	 { "ax_the_30", 3917, 3922, unit_dh_the_30, unit_m_morning_3 },
-	 { "ax_the_31", 3629, 3635, unit_dh_the_31, unit_t_time_16 },
-	 { "ax_the_32", 3483, 3487, unit_dh_the_32, unit_m_morning_4 },
-	 { "ax_the_33", 3123, 3130, unit_dh_the_33, unit_t_time_17 },
-	 { "ax_the_34", 2822, 2827, unit_dh_the_34, unit_m_morning_5 },
-	 { "ax_the_35", 2503, 2508, CLUNIT_NONE, unit_t_time_18 },
-	 { "ax_the_36", 2288, 2292, unit_dh_the_36, unit_m_morning_6 },
-	 { "ax_the_37", 1921, 1925, unit_dh_the_37, unit_t_time_19 },
-	 { "ax_the_38", 1796, 1801, unit_dh_the_38, unit_m_morning_7 },
-	 { "ax_the_39", 1439, 1442, unit_dh_the_39, unit_t_time_20 },
-	 { "ax_the_4", 10623, 10626, unit_dh_the_4, unit_t_time_2 },
-	 { "ax_the_40", 1291, 1296, unit_dh_the_40, unit_m_morning_8 },
-	 { "ax_the_41", 944, 948, unit_dh_the_41, unit_t_time_21 },
-	 { "ax_the_42", 794, 797, unit_dh_the_42, unit_m_morning_9 },
-	 { "ax_the_43", 478, 482, unit_dh_the_43, unit_t_time_22 },
-	 { "ax_the_44", 353, 357, unit_dh_the_44, unit_m_morning_10 },
-	 { "ax_the_45", 71, 77, unit_dh_the_45, unit_t_time_23 },
-	 { "ax_the_5", 10487, 10493, unit_dh_the_5, unit_iy_evening_2 },
-	 { "ax_the_6", 10129, 10134, unit_dh_the_6, unit_t_time_3 },
-	 { "ax_the_7", 9937, 9943, unit_dh_the_7, unit_iy_evening_3 },
-	 { "ax_the_8", 9606, 9611, unit_dh_the_8, unit_t_time_4 },
-	 { "ax_the_9", 9501, 9507, unit_dh_the_9, unit_iy_evening_4 },
-	 { "ax_to_0", 11721, 11729, unit_t_to_0, unit_m_midnight_0 },
-	 { "ax_to_1", 8323, 8330, unit_t_to_1, unit_f_five_2 },
-	 { "ax_to_10", 3401, 3403, unit_t_to_10, unit_s_seven_1 },
-	 { "ax_to_2", 7619, 7626, unit_t_to_2, unit_f_four_0 },
-	 { "ax_to_3", 7178, 7186, unit_t_to_3, unit_th_three_0 },
-	 { "ax_to_4", 6674, 6680, unit_t_to_4, unit_t_two_0 },
-	 { "ax_to_5", 6256, 6270, unit_t_to_5, unit_w_one_0 },
-	 { "ax_to_6", 5452, 5458, unit_t_to_6, unit_ih_eleven_1 },
-	 { "ax_to_7", 4971, 4977, unit_t_to_7, unit_t_ten_3 },
-	 { "ax_to_8", 4381, 4384, unit_t_to_8, unit_n_nine_3 },
-	 { "ax_to_9", 3837, 3843, unit_t_to_9, unit_ey_eight_1 },
-	 { "ay_five_0", 11238, 11260, unit_f_five_0, unit_v_five_0 },
-	 { "ay_five_1", 9355, 9378, unit_f_five_1, unit_v_five_1 },
-	 { "ay_five_2", 8340, 8369, unit_f_five_2, unit_v_five_2 },
-	 { "ay_five_3", 8290, 8313, unit_f_five_3, unit_v_five_3 },
-	 { "ay_five_4", 6223, 6244, unit_f_five_4, unit_v_five_4 },
-	 { "ay_five_5", 5416, 5441, unit_f_five_5, unit_v_five_5 },
-	 { "ay_five_6", 3368, 3391, unit_f_five_6, unit_v_five_6 },
-	 { "ay_five_7", 2210, 2243, unit_f_five_7, unit_v_five_7 },
-	 { "ay_five_8", 2134, 2159, unit_f_five_8, unit_v_five_8 },
-	 { "ay_five_9", 215, 233, unit_f_five_9, unit_v_five_9 },
-	 { "ay_midnight_0", 11763, 11781, unit_n_midnight_0, unit_t_midnight_0 },
-	 { "ay_nine_0", 10415, 10434, unit_n_nine_1, unit_n_nine_0 },
-	 { "ay_nine_1", 4395, 4418, unit_n_nine_3, unit_n_nine_2 },
-	 { "ay_time_0", 11525, 11549, unit_t_time_0, unit_m_time_0 },
-	 { "ay_time_1", 11105, 11129, unit_t_time_1, unit_m_time_1 },
-	 { "ay_time_10", 6471, 6490, unit_t_time_10, unit_m_time_10 },
-	 { "ay_time_11", 6023, 6043, unit_t_time_11, unit_m_time_11 },
-	 { "ay_time_12", 5695, 5713, unit_t_time_12, unit_m_time_12 },
-	 { "ay_time_13", 5222, 5240, unit_t_time_13, unit_m_time_13 },
-	 { "ay_time_14", 4743, 4762, unit_t_time_14, unit_m_time_14 },
-	 { "ay_time_15", 4169, 4191, unit_t_time_15, unit_m_time_15 },
-	 { "ay_time_16", 3640, 3662, unit_t_time_16, CLUNIT_NONE },
-	 { "ay_time_17", 3138, 3161, unit_t_time_17, unit_m_time_17 },
-	 { "ay_time_18", 2516, 2537, unit_t_time_18, unit_m_time_18 },
-	 { "ay_time_19", 1933, 1950, unit_t_time_19, unit_m_time_19 },
-	 { "ay_time_2", 10632, 10652, unit_t_time_2, unit_m_time_2 },
-	 { "ay_time_20", 1450, 1468, unit_t_time_20, unit_m_time_20 },
-	 { "ay_time_21", 954, 973, unit_t_time_21, unit_m_time_21 },
-	 { "ay_time_22", 489, 508, unit_t_time_22, unit_m_time_22 },
-	 { "ay_time_23", 84, 101, unit_t_time_23, unit_m_time_23 },
-	 { "ay_time_3", 10140, 10163, unit_t_time_3, unit_m_time_3 },
-	 { "ay_time_4", 9619, 9643, unit_t_time_4, unit_m_time_4 },
-	 { "ay_time_5", 9154, 9172, unit_t_time_5, unit_m_time_5 },
-	 { "ay_time_6", 8683, 8707, unit_t_time_6, CLUNIT_NONE },
-	 { "ay_time_7", 8061, 8087, unit_t_time_7, unit_m_time_7 },
-	 { "ay_time_8", 7403, 7422, unit_t_time_8, unit_m_time_8 },
-	 { "ay_time_9", 6973, 6993, unit_t_time_9, unit_m_time_9 },
-	 { "d_midnight_0", 11750, 11755, unit_ih_midnight_0, unit_n_midnight_0 },
-	 { "dh_the_0", 11512, 11516, unit_pau_pau_3, CLUNIT_NONE },
-	 { "dh_the_1", 11377, 11381, unit_n_in_0, unit_ax_the_1 },
-	 { "dh_the_10", 9139, 9143, unit_pau_pau_23, unit_ax_the_10 },
-	 { "dh_the_12", 8667, 8671, unit_pau_pau_26, unit_ax_the_12 },
-	 { "dh_the_13", 8416, 8419, unit_n_in_6, unit_ax_the_13 },
-	 { "dh_the_14", 8049, 8052, unit_pau_pau_30, unit_ax_the_14 },
-	 { "dh_the_15", 7704, 7707, unit_n_in_7, unit_ax_the_15 },
-	 { "dh_the_16", 7385, 7389, unit_pau_pau_34, unit_ax_the_16 },
-	 { "dh_the_17", 7265, 7268, unit_n_in_8, unit_ax_the_17 },
-	 { "dh_the_18", 6959, 6963, unit_pau_pau_37, unit_ax_the_18 },
-	 { "dh_the_19", 6756, 6758, unit_n_in_9, unit_ax_the_19 },
-	 { "dh_the_2", 11092, 11095, unit_pau_pau_8, unit_ax_the_2 },
-	 { "dh_the_20", 6459, 6464, unit_pau_pau_41, CLUNIT_NONE },
-	 { "dh_the_21", 6340, 6342, unit_n_in_10, unit_ax_the_21 },
-	 { "dh_the_22", 6009, 6013, unit_pau_pau_44, unit_ax_the_22 },
-	 { "dh_the_23", 5682, 5687, unit_pau_pau_48, unit_ax_the_23 },
-	 { "dh_the_24", 5542, 5544, unit_n_in_11, unit_ax_the_24 },
-	 { "dh_the_25", 5206, 5211, CLUNIT_NONE, unit_ax_the_25 },
-	 { "dh_the_26", 5048, 5050, unit_n_in_12, unit_ax_the_26 },
-	 { "dh_the_27", 4726, 4731, unit_pau_pau_56, unit_ax_the_27 },
-	 { "dh_the_28", 4470, 4473, unit_n_in_13, unit_ax_the_28 },
-	 { "dh_the_29", 4152, 4158, unit_pau_pau_60, unit_ax_the_29 },
-	 { "dh_the_3", 10951, 10954, unit_n_in_1, unit_ax_the_3 },
-	 { "dh_the_30", 3915, 3917, unit_n_in_14, unit_ax_the_30 },
-	 { "dh_the_31", 3626, 3629, unit_pau_pau_64, unit_ax_the_31 },
-	 { "dh_the_32", 3481, 3483, unit_n_in_15, unit_ax_the_32 },
-	 { "dh_the_33", 3121, 3123, unit_pau_pau_67, unit_ax_the_33 },
-	 { "dh_the_34", 2820, 2822, unit_n_in_16, unit_ax_the_34 },
-	 { "dh_the_36", 2287, 2288, unit_n_in_17, unit_ax_the_36 },
-	 { "dh_the_37", 1917, 1921, unit_pau_pau_75, unit_ax_the_37 },
-	 { "dh_the_38", 1794, 1796, unit_n_in_18, unit_ax_the_38 },
-	 { "dh_the_39", 1435, 1439, unit_pau_pau_79, unit_ax_the_39 },
-	 { "dh_the_4", 10619, 10623, unit_pau_pau_12, unit_ax_the_4 },
-	 { "dh_the_40", 1289, 1291, unit_n_in_19, unit_ax_the_40 },
-	 { "dh_the_41", 941, 944, unit_pau_pau_83, unit_ax_the_41 },
-	 { "dh_the_42", 793, 794, unit_n_in_20, unit_ax_the_42 },
-	 { "dh_the_43", 475, 478, unit_pau_pau_87, unit_ax_the_43 },
-	 { "dh_the_44", 350, 353, unit_n_in_21, unit_ax_the_44 },
-	 { "dh_the_45", 67, 71, unit_pau_pau_92, unit_ax_the_45 },
-	 { "dh_the_5", 10485, 10487, unit_n_in_2, unit_ax_the_5 },
-	 { "dh_the_6", 10125, 10129, CLUNIT_NONE, unit_ax_the_6 },
-	 { "dh_the_7", 9935, 9937, unit_n_in_3, unit_ax_the_7 },
-	 { "dh_the_8", 9603, 9606, unit_pau_pau_19, unit_ax_the_8 },
-	 { "dh_the_9", 9496, 9501, unit_n_in_4, unit_ax_the_9 },
-	 { "eh_eleven_0", 11315, 11325, unit_l_eleven_0, unit_v_eleven_0 },
-	 { "eh_eleven_1", 5476, 5487, unit_l_eleven_1, unit_v_eleven_1 },
-	 { "eh_seven_0", 9423, 9434, unit_s_seven_0, unit_v_seven_0 },
-	 { "eh_seven_1", 3416, 3427, unit_s_seven_1, unit_v_seven_1 },
-	 { "eh_ten_0", 10881, 10904, unit_t_ten_0, unit_n_ten_0 },
-	 { "eh_ten_1", 10809, 10824, unit_t_ten_1, unit_n_ten_1 },
-	 { "eh_ten_2", 6647, 6660, unit_t_ten_2, unit_n_ten_2 },
-	 { "eh_ten_3", 4986, 5007, unit_t_ten_3, unit_n_ten_3 },
-	 { "eh_ten_4", 4945, 4957, unit_t_ten_4, unit_n_ten_4 },
-	 { "eh_ten_5", 657, 666, unit_t_ten_5, unit_n_ten_5 },
-	 { "eh_twelve_0", 5882, 5902, unit_w_twelve_0, unit_l_twelve_0 },
-	 { "eh_twenty_0", 9800, 9806, unit_w_twenty_0, unit_n_twenty_0 },
-	 { "eh_twenty_1", 9319, 9325, unit_w_twenty_1, unit_n_twenty_1 },
-	 { "eh_twenty_2", 8256, 8261, unit_w_twenty_2, unit_n_twenty_2 },
-	 { "eh_twenty_3", 7584, 7593, unit_w_twenty_3, unit_n_twenty_3 },
-	 { "eh_twenty_4", 3803, 3811, unit_w_twenty_4, unit_n_twenty_4 },
-	 { "eh_twenty_5", 3329, 3339, unit_w_twenty_5, unit_n_twenty_5 },
-	 { "eh_twenty_6", 2099, 2109, unit_w_twenty_6, unit_n_twenty_6 },
-	 { "eh_twenty_7", 1645, 1651, unit_w_twenty_7, unit_n_twenty_7 },
-	 { "er_after_0", 11655, 11661, unit_t_after_0, unit_k_quarter_0 },
-	 { "er_after_1", 10323, 10334, unit_t_after_1, unit_k_quarter_1 },
-	 { "er_after_10", 1125, 1131, unit_t_after_10, unit_k_quarter_4 },
-	 { "er_after_11", 641, 646, unit_t_after_11, unit_t_ten_5 },
-	 { "er_after_2", 8855, 8866, unit_t_after_2, unit_hh_half_0 },
-	 { "er_after_3", 8235, 8241, unit_t_after_3, unit_t_twenty_5 },
-	 { "er_after_4", 6632, 6639, unit_t_after_4, unit_t_ten_2 },
-	 { "er_after_5", 6200, 6213, unit_t_after_5, unit_f_five_4 },
-	 { "er_after_6", 5399, 5406, unit_t_after_6, unit_f_five_5 },
-	 { "er_after_7", 4922, 4930, unit_t_after_7, unit_t_ten_4 },
-	 { "er_after_8", 3313, 3316, unit_t_after_8, unit_t_twenty_11 },
-	 { "er_after_9", 2678, 2687, unit_t_after_9, unit_hh_half_1 },
-	 { "er_afternoon_0", 8454, 8459, unit_t_afternoon_0, unit_n_afternoon_1 },
-	 { "er_afternoon_1", 7747, 7754, unit_t_afternoon_1, unit_n_afternoon_3 },
-	 { "er_afternoon_2", 7306, 7311, unit_t_afternoon_2, unit_n_afternoon_5 },
-	 { "er_afternoon_3", 6798, 6806, unit_t_afternoon_3, unit_n_afternoon_7 },
-	 { "er_afternoon_4", 6380, 6386, unit_t_afternoon_4, unit_n_afternoon_9 },
-	 { "er_quarter_0", 11702, 11711, unit_t_quarter_0, unit_t_to_0 },
-	 { "er_quarter_1", 10366, 10371, unit_t_quarter_1, unit_p_past_2 },
-	 { "er_quarter_2", 7166, 7173, unit_t_quarter_2, unit_t_to_3 },
-	 { "er_quarter_3", 4364, 4373, unit_t_quarter_3, unit_t_to_8 },
-	 { "er_quarter_4", 1162, 1167, unit_t_quarter_4, unit_p_past_9 },
-	 { "ey_eight_0", 9866, 9889, unit_t_past_3, unit_t_eight_0 },
-	 { "ey_eight_1", 3843, 3869, unit_ax_to_9, unit_t_eight_1 },
-	 { "f_after_0", 11644, 11649, unit_ae_after_0, unit_t_after_0 },
-	 { "f_after_1", 10310, 10317, unit_ae_after_1, unit_t_after_1 },
-	 { "f_after_10", 1114, 1118, unit_ae_after_10, unit_t_after_10 },
-	 { "f_after_11", 629, 635, unit_ae_after_11, unit_t_after_11 },
-	 { "f_after_2", 8842, 8848, unit_ae_after_2, unit_t_after_2 },
-	 { "f_after_3", 8223, 8228, unit_ae_after_3, unit_t_after_3 },
-	 { "f_after_4", 6621, 6627, unit_ae_after_4, unit_t_after_4 },
-	 { "f_after_5", 6178, 6191, unit_ae_after_5, unit_t_after_5 },
-	 { "f_after_6", 5387, 5393, unit_ae_after_6, unit_t_after_6 },
-	 { "f_after_7", 4909, 4915, unit_ae_after_7, unit_t_after_7 },
-	 { "f_after_8", 3300, 3307, unit_ae_after_8, unit_t_after_8 },
-	 { "f_after_9", 2667, 2673, unit_ae_after_9, unit_t_after_9 },
-	 { "f_afternoon_0", 8440, 8448, unit_ae_afternoon_0, unit_t_afternoon_0 },
-	 { "f_afternoon_1", 7732, 7740, unit_ae_afternoon_1, unit_t_afternoon_1 },
-	 { "f_afternoon_2", 7293, 7299, unit_ae_afternoon_2, unit_t_afternoon_2 },
-	 { "f_afternoon_3", 6784, 6791, unit_ae_afternoon_3, unit_t_afternoon_3 },
-	 { "f_afternoon_4", 6366, 6373, unit_ae_afternoon_4, unit_t_afternoon_4 },
-	 { "f_five_0", 11228, 11238, unit_iy_exactly_0, unit_ay_five_0 },
-	 { "f_five_1", 9345, 9355, unit_iy_twenty_1, unit_ay_five_1 },
-	 { "f_five_2", 8330, 8340, unit_ax_to_1, unit_ay_five_2 },
-	 { "f_five_3", 8282, 8290, unit_iy_twenty_2, unit_ay_five_3 },
-	 { "f_five_4", 6213, 6223, unit_er_after_5, unit_ay_five_4 },
-	 { "f_five_5", 5406, 5416, unit_er_after_6, unit_ay_five_5 },
-	 { "f_five_6", 3356, 3368, unit_iy_twenty_5, unit_ay_five_6 },
-	 { "f_five_7", 2201, 2210, unit_t_past_7, unit_ay_five_7 },
-	 { "f_five_8", 2125, 2134, unit_iy_twenty_6, unit_ay_five_8 },
-	 { "f_five_9", 206, 215, unit_iy_exactly_5, unit_ay_five_9 },
-	 { "f_four_0", 7626, 7640, unit_ax_to_2, unit_ao_four_0 },
-	 { "f_four_1", 1713, 1724, unit_t_past_8, unit_ao_four_1 },
-	 { "f_half_0", 8890, 8895, unit_ae_half_0, unit_p_past_5 },
-	 { "f_half_1", 2709, 2714, unit_ae_half_1, unit_p_past_6 },
-	 { "g_exactly_0", 11178, 11184, unit_ih_exactly_0, unit_z_exactly_0 },
-	 { "g_exactly_1", 9254, 9261, unit_ih_exactly_1, unit_z_exactly_1 },
-	 { "g_exactly_2", 7079, 7082, unit_ih_exactly_2, unit_z_exactly_2 },
-	 { "g_exactly_3", 4277, 4281, unit_ih_exactly_3, unit_z_exactly_3 },
-	 { "g_exactly_4", 2039, 2043, unit_ih_exactly_4, unit_z_exactly_4 },
-	 { "g_exactly_5", 164, 168, unit_ih_exactly_5, unit_z_exactly_5 },
-	 { "hh_half_0", 8866, 8874, unit_er_after_2, unit_ae_half_0 },
-	 { "hh_half_1", 2687, 2695, unit_er_after_9, unit_ae_half_1 },
-	 { "ih_eleven_0", 11300, 11308, unit_t_past_0, unit_l_eleven_0 },
-	 { "ih_eleven_1", 5458, 5465, unit_ax_to_6, unit_l_eleven_1 },
-	 { "ih_evening_0", 11424, 11435, unit_n_evening_0, unit_ng_evening_0 },
-	 { "ih_evening_1", 10992, 11005, unit_n_evening_1, unit_ng_evening_1 },
-	 { "ih_evening_2", 10528, 10536, unit_n_evening_2, unit_ng_evening_2 },
-	 { "ih_evening_3", 9973, 9983, unit_n_evening_3, unit_ng_evening_3 },
-	 { "ih_evening_4", 9537, 9549, unit_n_evening_4, unit_ng_evening_4 },
-	 { "ih_evening_5", 9031, 9044, unit_n_evening_5, unit_ng_evening_5 },
-	 { "ih_exactly_0", 11174, 11178, unit_pau_aw_1, unit_g_exactly_0 },
-	 { "ih_exactly_1", 9248, 9254, unit_pau_aw_5, unit_g_exactly_1 },
-	 { "ih_exactly_2", 7074, 7079, unit_pau_aw_9, unit_g_exactly_2 },
-	 { "ih_exactly_3", 4270, 4277, unit_pau_aw_15, unit_g_exactly_3 },
-	 { "ih_exactly_4", 2031, 2039, unit_pau_aw_19, unit_g_exactly_4 },
-	 { "ih_exactly_5", 159, 164, unit_pau_aw_23, unit_g_exactly_5 },
-	 { "ih_in_0", 11362, 11368, unit_pau_n_0, unit_n_in_0 },
-	 { "ih_in_1", 10935, 10941, unit_pau_n_1, unit_n_in_1 },
-	 { "ih_in_10", 6325, 6333, unit_pau_n_9, unit_n_in_10 },
-	 { "ih_in_11", 5528, 5535, unit_pau_n_10, unit_n_in_11 },
-	 { "ih_in_12", 5034, 5041, unit_pau_n_11, unit_n_in_12 },
-	 { "ih_in_13", 4455, 4465, unit_pau_n_12, unit_n_in_13 },
-	 { "ih_in_14", 3900, 3910, unit_pau_t_2, unit_n_in_14 },
-	 { "ih_in_15", 3467, 3473, unit_pau_n_13, unit_n_in_15 },
-	 { "ih_in_16", 2805, 2812, unit_pau_s_1, unit_n_in_16 },
-	 { "ih_in_17", 2272, 2280, unit_pau_v_2, unit_n_in_17 },
-	 { "ih_in_18", 1781, 1788, unit_pau_r_1, unit_n_in_18 },
-	 { "ih_in_19", 1275, 1282, unit_pau_iy_1, unit_n_in_19 },
-	 { "ih_in_2", 10471, 10478, unit_pau_n_2, unit_n_in_2 },
-	 { "ih_in_20", 778, 784, unit_pau_uw_1, unit_n_in_20 },
-	 { "ih_in_21", 336, 345, unit_pau_n_14, unit_n_in_21 },
-	 { "ih_in_3", 9918, 9929, unit_pau_t_1, unit_n_in_3 },
-	 { "ih_in_4", 9482, 9489, unit_pau_n_3, unit_n_in_4 },
-	 { "ih_in_6", 8400, 8407, unit_pau_v_0, unit_n_in_6 },
-	 { "ih_in_7", 7686, 7697, unit_pau_r_0, unit_n_in_7 },
-	 { "ih_in_8", 7251, 7258, unit_pau_iy_0, unit_n_in_8 },
-	 { "ih_in_9", 6742, 6749, unit_pau_uw_0, unit_n_in_9 },
-	 { "ih_is_0", 11558, 11566, unit_m_time_0, unit_z_is_0 },
-	 { "ih_is_1", 11139, 11149, unit_m_time_1, unit_z_is_1 },
-	 { "ih_is_10", 6504, 6511, unit_m_time_10, unit_z_is_10 },
-	 { "ih_is_11", 6056, 6064, unit_m_time_11, unit_z_is_11 },
-	 { "ih_is_12", 5727, 5736, unit_m_time_12, unit_z_is_12 },
-	 { "ih_is_13", 5255, 5263, unit_m_time_13, unit_z_is_13 },
-	 { "ih_is_14", 4775, 4782, unit_m_time_14, unit_z_is_14 },
-	 { "ih_is_15", 4201, 4210, unit_m_time_15, unit_z_is_15 },
-	 { "ih_is_17", 3169, 3178, unit_m_time_17, unit_z_is_17 },
-	 { "ih_is_18", 2549, 2555, unit_m_time_18, unit_z_is_18 },
-	 { "ih_is_19", 1962, 1971, unit_m_time_19, unit_z_is_19 },
-	 { "ih_is_2", 10665, 10675, unit_m_time_2, unit_z_is_2 },
-	 { "ih_is_20", 1480, 1488, unit_m_time_20, unit_z_is_20 },
-	 { "ih_is_21", 985, 992, unit_m_time_21, unit_z_is_21 },
-	 { "ih_is_23", 116, 123, unit_m_time_23, unit_z_is_23 },
-	 { "ih_is_3", 10174, 10182, unit_m_time_3, unit_z_is_3 },
-	 { "ih_is_4", 9650, 9660, unit_m_time_4, unit_z_is_4 },
-	 { "ih_is_5", 9188, 9198, unit_m_time_5, unit_z_is_5 },
-	 { "ih_is_6", 8707, 8715, CLUNIT_NONE, unit_z_is_6 },
-	 { "ih_is_7", 8095, 8105, unit_m_time_7, unit_z_is_7 },
-	 { "ih_is_8", 7438, 7446, unit_m_time_8, unit_z_is_8 },
-	 { "ih_is_9", 7009, 7017, unit_m_time_9, unit_z_is_9 },
-	 { "ih_little_0", 11599, 11606, unit_l_little_1, unit_t_little_0 },
-	 { "ih_little_1", 8794, 8802, unit_l_little_3, unit_t_little_1 },
-	 { "ih_little_2", 6576, 6584, unit_l_little_5, unit_t_little_2 },
-	 { "ih_little_3", 5340, 5348, unit_l_little_7, unit_t_little_3 },
-	 { "ih_little_4", 3259, 3267, unit_l_little_9, unit_t_little_4 },
-	 { "ih_little_5", 1071, 1081, unit_l_little_11, unit_t_little_5 },
-	 { "ih_midnight_0", 11741, 11750, unit_m_midnight_0, unit_d_midnight_0 },
-	 { "ih_morning_0", 5584, 5590, unit_n_morning_0, unit_ng_morning_0 },
-	 { "ih_morning_1", 5090, 5099, unit_n_morning_1, unit_ng_morning_1 },
-	 { "ih_morning_10", 391, 400, unit_n_morning_10, unit_ng_morning_10 },
-	 { "ih_morning_2", 4511, 4517, unit_n_morning_2, unit_ng_morning_2 },
-	 { "ih_morning_3", 3957, 3966, unit_n_morning_3, unit_ng_morning_3 },
-	 { "ih_morning_4", 3520, 3529, unit_n_morning_4, unit_ng_morning_4 },
-	 { "ih_morning_5", 2861, 2867, unit_n_morning_5, unit_ng_morning_5 },
-	 { "ih_morning_6", 2328, 2336, unit_n_morning_6, unit_ng_morning_6 },
-	 { "ih_morning_7", 1834, 1842, unit_n_morning_7, unit_ng_morning_7 },
-	 { "ih_morning_8", 1329, 1338, unit_n_morning_8, unit_ng_morning_8 },
-	 { "ih_morning_9", 830, 840, unit_n_morning_9, unit_ng_morning_9 },
-	 { "ih_six_0", 8942, 8957, unit_s_six_1, unit_k_six_0 },
-	 { "ih_six_1", 2758, 2768, unit_s_six_3, unit_k_six_1 },
-	 { "iy_evening_0", 11388, 11411, unit_ax_the_1, unit_v_evening_0 },
-	 { "iy_evening_1", 10961, 10982, unit_ax_the_3, unit_v_evening_1 },
-	 { "iy_evening_2", 10493, 10514, unit_ax_the_5, unit_v_evening_2 },
-	 { "iy_evening_3", 9943, 9964, unit_ax_the_7, unit_v_evening_3 },
-	 { "iy_evening_4", 9507, 9524, unit_ax_the_9, unit_v_evening_4 },
-	 { "iy_evening_5", 8998, 9021, unit_ax_the_11, unit_v_evening_5 },
-	 { "iy_exactly_0", 11217, 11228, unit_l_exactly_0, unit_f_five_0 },
-	 { "iy_exactly_1", 9296, 9307, unit_l_exactly_1, unit_t_twenty_3 },
-	 { "iy_exactly_2", 7119, 7128, unit_l_exactly_2, unit_k_quarter_2 },
-	 { "iy_exactly_3", 4317, 4326, unit_l_exactly_3, unit_k_quarter_3 },
-	 { "iy_exactly_4", 2077, 2086, unit_l_exactly_4, unit_t_twenty_13 },
-	 { "iy_exactly_5", 198, 206, unit_l_exactly_5, unit_f_five_9 },
-	 { "iy_three_0", 7203, 7230, unit_r_three_0, unit_pau_iy_0 },
-	 { "iy_three_1", 1227, 1248, unit_r_three_1, unit_pau_iy_1 },
-	 { "iy_twenty_0", 9819, 9826, unit_t_twenty_0, unit_p_past_3 },
-	 { "iy_twenty_1", 9337, 9345, unit_t_twenty_2, unit_f_five_1 },
-	 { "iy_twenty_2", 8274, 8282, unit_t_twenty_4, unit_f_five_3 },
-	 { "iy_twenty_3", 7607, 7614, unit_t_twenty_6, unit_t_to_2 },
-	 { "iy_twenty_4", 3825, 3828, unit_t_twenty_8, unit_t_to_9 },
-	 { "iy_twenty_5", 3350, 3356, unit_t_twenty_10, unit_f_five_6 },
-	 { "iy_twenty_6", 2118, 2125, unit_t_twenty_12, unit_f_five_8 },
-	 { "iy_twenty_7", 1666, 1673, unit_t_twenty_14, unit_p_past_8 },
-	 { "jh_just_0", 10254, 10265, unit_pau_aw_3, unit_ah_just_0 },
-	 { "jh_just_1", 8172, 8180, unit_pau_aw_7, unit_ah_just_1 },
-	 { "jh_just_2", 6130, 6142, unit_pau_aw_11, unit_ah_just_2 },
-	 { "jh_just_3", 4862, 4868, unit_pau_pau_55, unit_ah_just_3 },
-	 { "jh_just_4", 2619, 2626, unit_pau_aw_18, unit_ah_just_4 },
-	 { "jh_just_5", 586, 592, unit_pau_aw_22, unit_ah_just_5 },
-	 { "k_exactly_0", 11207, 11210, unit_ae_exactly_0, unit_t_exactly_0 },
-	 { "k_exactly_1", 9287, 9290, unit_ae_exactly_1, unit_t_exactly_1 },
-	 { "k_exactly_2", 7109, 7111, unit_ae_exactly_2, unit_t_exactly_2 },
-	 { "k_exactly_3", 4307, 4311, unit_ae_exactly_3, unit_t_exactly_3 },
-	 { "k_exactly_4", 2068, 2071, unit_ae_exactly_4, unit_t_exactly_4 },
-	 { "k_exactly_5", 188, 191, unit_ae_exactly_5, unit_t_exactly_5 },
-	 { "k_quarter_0", 11661, 11676, unit_er_after_0, unit_w_quarter_0 },
-	 { "k_quarter_1", 10334, 10343, unit_er_after_1, unit_w_quarter_1 },
-	 { "k_quarter_2", 7128, 7142, unit_iy_exactly_2, unit_w_quarter_2 },
-	 { "k_quarter_3", 4326, 4340, unit_iy_exactly_3, unit_w_quarter_3 },
-	 { "k_quarter_4", 1131, 1141, unit_er_after_10, unit_w_quarter_4 },
-	 { "k_six_0", 8957, 8969, unit_ih_six_0, unit_s_six_0 },
-	 { "k_six_1", 2768, 2780, unit_ih_six_1, unit_s_six_2 },
-	 { "l_almost_0", 10761, 10765, unit_ao_almost_0, unit_m_almost_0 },
-	 { "l_almost_1", 9740, 9747, unit_ao_almost_1, unit_m_almost_1 },
-	 { "l_almost_2", 7525, 7530, unit_ao_almost_2, unit_m_almost_2 },
-	 { "l_almost_3", 5817, 5826, unit_ao_almost_3, unit_m_almost_3 },
-	 { "l_almost_4", 3746, 3753, unit_ao_almost_4, unit_m_almost_4 },
-	 { "l_almost_5", 1585, 1591, unit_ao_almost_5, unit_m_almost_5 },
-	 { "l_eleven_0", 11308, 11315, unit_ih_eleven_0, unit_eh_eleven_0 },
-	 { "l_eleven_1", 5465, 5476, unit_ih_eleven_1, unit_eh_eleven_1 },
-	 { "l_exactly_0", 11215, 11217, unit_t_exactly_0, unit_iy_exactly_0 },
-	 { "l_exactly_1", 9295, 9296, unit_t_exactly_1, unit_iy_exactly_1 },
-	 { "l_exactly_2", 7116, 7119, unit_t_exactly_2, unit_iy_exactly_2 },
-	 { "l_exactly_3", 4314, 4317, unit_t_exactly_3, unit_iy_exactly_3 },
-	 { "l_exactly_4", 2075, 2077, unit_t_exactly_4, unit_iy_exactly_4 },
-	 { "l_exactly_5", 197, 198, unit_t_exactly_5, unit_iy_exactly_5 },
-	 { "l_little_0", 11618, 11626, unit_ax_little_0, unit_ae_after_0 },
-	 { "l_little_1", 11588, 11599, unit_ax_a_0, unit_ih_little_0 },
-	 { "l_little_10", 1089, 1099, unit_ax_little_5, unit_ae_after_10 },
-	 { "l_little_11", 1064, 1071, unit_ax_a_5, unit_ih_little_5 },
-	 { "l_little_2", 8815, 8822, unit_ax_little_1, unit_ae_after_2 },
-	 { "l_little_3", 8785, 8794, unit_ax_a_1, unit_ih_little_1 },
-	 { "l_little_4", 6597, 6602, unit_ax_little_2, unit_ae_after_4 },
-	 { "l_little_5", 6569, 6576, unit_ax_a_2, unit_ih_little_2 },
-	 { "l_little_6", 5359, 5366, unit_ax_little_3, unit_ae_after_6 },
-	 { "l_little_7", 5333, 5340, unit_ax_a_3, unit_ih_little_3 },
-	 { "l_little_8", 3279, 3283, unit_ax_little_4, unit_ae_after_8 },
-	 { "l_little_9", 3250, 3259, unit_ax_a_4, unit_ih_little_4 },
-	 { "l_twelve_0", 5902, 5916, unit_eh_twelve_0, unit_v_twelve_0 },
-	 { "m_almost_0", 10765, 10775, unit_l_almost_0, unit_ow_almost_0 },
-	 { "m_almost_1", 9747, 9757, unit_l_almost_1, unit_ow_almost_1 },
-	 { "m_almost_2", 7530, 7541, unit_l_almost_2, unit_ow_almost_2 },
-	 { "m_almost_3", 5826, 5837, unit_l_almost_3, unit_ow_almost_3 },
-	 { "m_almost_4", 3753, 3763, unit_l_almost_4, unit_ow_almost_4 },
-	 { "m_almost_5", 1591, 1601, unit_l_almost_5, unit_ow_almost_5 },
-	 { "m_midnight_0", 11729, 11741, unit_ax_to_0, unit_ih_midnight_0 },
-	 { "m_morning_0", 5547, 5555, unit_ax_the_24, unit_ao_morning_0 },
-	 { "m_morning_1", 5055, 5061, unit_ax_the_26, unit_ao_morning_1 },
-	 { "m_morning_10", 357, 364, unit_ax_the_44, unit_ao_morning_10 },
-	 { "m_morning_2", 4477, 4483, unit_ax_the_28, unit_ao_morning_2 },
-	 { "m_morning_3", 3922, 3926, unit_ax_the_30, unit_ao_morning_3 },
-	 { "m_morning_4", 3487, 3495, unit_ax_the_32, unit_ao_morning_4 },
-	 { "m_morning_5", 2827, 2831, unit_ax_the_34, unit_ao_morning_5 },
-	 { "m_morning_6", 2292, 2299, unit_ax_the_36, unit_ao_morning_6 },
-	 { "m_morning_7", 1801, 1808, unit_ax_the_38, unit_ao_morning_7 },
-	 { "m_morning_8", 1296, 1302, unit_ax_the_40, unit_ao_morning_8 },
-	 { "m_morning_9", 797, 804, unit_ax_the_42, unit_ao_morning_9 },
-	 { "m_time_0", 11549, 11558, unit_ay_time_0, unit_ih_is_0 },
-	 { "m_time_1", 11129, 11139, unit_ay_time_1, unit_ih_is_1 },
-	 { "m_time_10", 6490, 6504, unit_ay_time_10, unit_ih_is_10 },
-	 { "m_time_11", 6043, 6056, unit_ay_time_11, unit_ih_is_11 },
-	 { "m_time_12", 5713, 5727, unit_ay_time_12, unit_ih_is_12 },
-	 { "m_time_13", 5240, 5255, unit_ay_time_13, unit_ih_is_13 },
-	 { "m_time_14", 4762, 4775, unit_ay_time_14, unit_ih_is_14 },
-	 { "m_time_15", 4191, 4201, unit_ay_time_15, unit_ih_is_15 },
-	 { "m_time_17", 3161, 3169, unit_ay_time_17, unit_ih_is_17 },
-	 { "m_time_18", 2537, 2549, unit_ay_time_18, unit_ih_is_18 },
-	 { "m_time_19", 1950, 1962, unit_ay_time_19, unit_ih_is_19 },
-	 { "m_time_2", 10652, 10665, unit_ay_time_2, unit_ih_is_2 },
-	 { "m_time_20", 1468, 1480, unit_ay_time_20, unit_ih_is_20 },
-	 { "m_time_21", 973, 985, unit_ay_time_21, unit_ih_is_21 },
-	 { "m_time_22", 508, 520, unit_ay_time_22, CLUNIT_NONE },
-	 { "m_time_23", 101, 116, unit_ay_time_23, unit_ih_is_23 },
-	 { "m_time_3", 10163, 10174, unit_ay_time_3, unit_ih_is_3 },
-	 { "m_time_4", 9643, 9650, unit_ay_time_4, unit_ih_is_4 },
-	 { "m_time_5", 9172, 9188, unit_ay_time_5, unit_ih_is_5 },
-	 { "m_time_7", 8087, 8095, unit_ay_time_7, unit_ih_is_7 },
-	 { "m_time_8", 7422, 7438, unit_ay_time_8, unit_ih_is_8 },
-	 { "m_time_9", 6993, 7009, unit_ay_time_9, unit_ih_is_9 },
-	 { "n_afternoon_0", 8482, 8490, unit_uw_afternoon_0, unit_pau_n_4 },
-	 { "n_afternoon_1", 8459, 8466, unit_er_afternoon_0, unit_uw_afternoon_0 },
-	 { "n_afternoon_2", 7777, 7788, unit_uw_afternoon_1, unit_pau_n_5 },
-	 { "n_afternoon_3", 7754, 7760, unit_er_afternoon_1, unit_uw_afternoon_1 },
-	 { "n_afternoon_4", 7335, 7345, unit_uw_afternoon_2, unit_pau_n_6 },
-	 { "n_afternoon_5", 7311, 7319, unit_er_afternoon_2, unit_uw_afternoon_2 },
-	 { "n_afternoon_6", 6826, 6833, unit_uw_afternoon_3, unit_pau_n_7 },
-	 { "n_afternoon_7", 6806, 6813, unit_er_afternoon_3, unit_uw_afternoon_3 },
-	 { "n_afternoon_8", 6410, 6421, unit_uw_afternoon_4, unit_pau_n_8 },
-	 { "n_afternoon_9", 6386, 6395, unit_er_afternoon_4, unit_uw_afternoon_4 },
-	 { "n_eleven_0", 11336, 11345, unit_ax_eleven_0, unit_pau_n_0 },
-	 { "n_eleven_1", 5500, 5507, unit_ax_eleven_1, unit_pau_n_10 },
-	 { "n_evening_0", 11417, 11424, unit_v_evening_0, unit_ih_evening_0 },
-	 { "n_evening_1", 10988, 10992, unit_v_evening_1, unit_ih_evening_1 },
-	 { "n_evening_2", 10523, 10528, unit_v_evening_2, unit_ih_evening_2 },
-	 { "n_evening_3", 9969, 9973, unit_v_evening_3, unit_ih_evening_3 },
-	 { "n_evening_4", 9531, 9537, unit_v_evening_4, unit_ih_evening_4 },
-	 { "n_evening_5", 9026, 9031, unit_v_evening_5, unit_ih_evening_5 },
-	 { "n_in_0", 11368, 11377, unit_ih_in_0, unit_dh_the_1 },
-	 { "n_in_1", 10941, 10951, unit_ih_in_1, unit_dh_the_3 },
-	 { "n_in_10", 6333, 6340, unit_ih_in_10, unit_dh_the_21 },
-	 { "n_in_11", 5535, 5542, unit_ih_in_11, unit_dh_the_24 },
-	 { "n_in_12", 5041, 5048, unit_ih_in_12, unit_dh_the_26 },
-	 { "n_in_13", 4465, 4470, unit_ih_in_13, unit_dh_the_28 },
-	 { "n_in_14", 3910, 3915, unit_ih_in_14, unit_dh_the_30 },
-	 { "n_in_15", 3473, 3481, unit_ih_in_15, unit_dh_the_32 },
-	 { "n_in_16", 2812, 2820, unit_ih_in_16, unit_dh_the_34 },
-	 { "n_in_17", 2280, 2287, unit_ih_in_17, unit_dh_the_36 },
-	 { "n_in_18", 1788, 1794, unit_ih_in_18, unit_dh_the_38 },
-	 { "n_in_19", 1282, 1289, unit_ih_in_19, unit_dh_the_40 },
-	 { "n_in_2", 10478, 10485, unit_ih_in_2, unit_dh_the_5 },
-	 { "n_in_20", 784, 793, unit_ih_in_20, unit_dh_the_42 },
-	 { "n_in_21", 345, 350, unit_ih_in_21, unit_dh_the_44 },
-	 { "n_in_3", 9929, 9935, unit_ih_in_3, unit_dh_the_7 },
-	 { "n_in_4", 9489, 9496, unit_ih_in_4, unit_dh_the_9 },
-	 { "n_in_6", 8407, 8416, unit_ih_in_6, unit_dh_the_13 },
-	 { "n_in_7", 7697, 7704, unit_ih_in_7, unit_dh_the_15 },
-	 { "n_in_8", 7258, 7265, unit_ih_in_8, unit_dh_the_17 },
-	 { "n_in_9", 6749, 6756, unit_ih_in_9, unit_dh_the_19 },
-	 { "n_midnight_0", 11755, 11763, unit_d_midnight_0, unit_ay_midnight_0 },
-	 { "n_morning_0", 5579, 5584, unit_r_morning_0, unit_ih_morning_0 },
-	 { "n_morning_1", 5085, 5090, unit_r_morning_1, unit_ih_morning_1 },
-	 { "n_morning_10", 386, 391, unit_r_morning_10, unit_ih_morning_10 },
-	 { "n_morning_2", 4506, 4511, unit_r_morning_2, unit_ih_morning_2 },
-	 { "n_morning_3", 3952, 3957, unit_r_morning_3, unit_ih_morning_3 },
-	 { "n_morning_4", 3515, 3520, unit_r_morning_4, unit_ih_morning_4 },
-	 { "n_morning_5", 2856, 2861, unit_r_morning_5, unit_ih_morning_5 },
-	 { "n_morning_6", 2323, 2328, unit_r_morning_6, unit_ih_morning_6 },
-	 { "n_morning_7", 1829, 1834, unit_r_morning_7, unit_ih_morning_7 },
-	 { "n_morning_8", 1323, 1329, unit_r_morning_8, unit_ih_morning_8 },
-	 { "n_morning_9", 826, 830, unit_r_morning_9, unit_ih_morning_9 },
-	 { "n_nine_0", 10434, 10453, unit_ay_nine_0, unit_pau_n_2 },
-	 { "n_nine_1", 10409, 10415, unit_t_past_2, unit_ay_nine_0 },
-	 { "n_nine_2", 4418, 4433, unit_ay_nine_1, unit_pau_n_12 },
-	 { "n_nine_3", 4384, 4395, unit_ax_to_8, unit_ay_nine_1 },
-	 { "n_now_0", 11574, 11578, unit_z_is_0, CLUNIT_NONE },
-	 { "n_now_1", 11157, 11163, unit_z_is_1, CLUNIT_NONE },
-	 { "n_now_10", 6519, 6522, unit_z_is_10, unit_aw_now_10 },
-	 { "n_now_11", 6073, 6076, unit_z_is_11, unit_aw_now_11 },
-	 { "n_now_12", 5744, 5747, unit_z_is_12, unit_aw_now_12 },
-	 { "n_now_13", 5271, 5274, unit_z_is_13, unit_aw_now_13 },
-	 { "n_now_14", 4793, 4796, unit_z_is_14, unit_aw_now_14 },
-	 { "n_now_15", 4219, 4223, unit_z_is_15, unit_aw_now_15 },
-	 { "n_now_16", 3672, 3676, unit_z_is_16, unit_aw_now_16 },
-	 { "n_now_17", 3185, 3192, unit_z_is_17, unit_aw_now_17 },
-	 { "n_now_18", 2563, 2568, unit_z_is_18, unit_aw_now_18 },
-	 { "n_now_19", 1978, 1985, unit_z_is_19, unit_aw_now_19 },
-	 { "n_now_2", 10684, 10690, unit_z_is_2, unit_aw_now_2 },
-	 { "n_now_20", 1496, 1502, unit_z_is_20, unit_aw_now_20 },
-	 { "n_now_21", 1000, 1005, unit_z_is_21, unit_aw_now_21 },
-	 { "n_now_22", 520, 526, CLUNIT_NONE, unit_aw_now_22 },
-	 { "n_now_23", 131, 136, unit_z_is_23, CLUNIT_NONE },
-	 { "n_now_3", 10192, 10196, unit_z_is_3, unit_aw_now_3 },
-	 { "n_now_4", 9669, 9672, unit_z_is_4, unit_aw_now_4 },
-	 { "n_now_5", 9206, 9209, unit_z_is_5, unit_aw_now_5 },
-	 { "n_now_6", 8724, 8728, unit_z_is_6, unit_aw_now_6 },
-	 { "n_now_7", 8114, 8118, unit_z_is_7, unit_aw_now_7 },
-	 { "n_now_8", 7453, 7459, unit_z_is_8, unit_aw_now_8 },
-	 { "n_now_9", 7025, 7030, unit_z_is_9, unit_aw_now_9 },
-	 { "n_one_0", 6293, 6303, unit_ah_one_0, unit_pau_n_9 },
-	 { "n_one_1", 305, 314, unit_ah_one_1, unit_pau_n_14 },
-	 { "n_seven_0", 9452, 9461, unit_ax_seven_0, unit_pau_n_3 },
-	 { "n_seven_1", 3441, 3449, unit_ax_seven_1, unit_pau_n_13 },
-	 { "n_ten_0", 10904, 10913, unit_eh_ten_0, unit_pau_n_1 },
-	 { "n_ten_1", 10824, 10832, unit_eh_ten_1, unit_p_past_1 },
-	 { "n_ten_2", 6660, 6666, unit_eh_ten_2, unit_t_to_4 },
-	 { "n_ten_3", 5007, 5022, unit_eh_ten_3, unit_pau_n_11 },
-	 { "n_ten_4", 4957, 4964, unit_eh_ten_4, unit_t_to_7 },
-	 { "n_ten_5", 666, 677, unit_eh_ten_5, unit_p_past_10 },
-	 { "n_twenty_0", 9806, 9814, unit_eh_twenty_0, unit_t_twenty_0 },
-	 { "n_twenty_1", 9325, 9332, unit_eh_twenty_1, unit_t_twenty_2 },
-	 { "n_twenty_2", 8261, 8269, unit_eh_twenty_2, unit_t_twenty_4 },
-	 { "n_twenty_3", 7593, 7601, unit_eh_twenty_3, unit_t_twenty_6 },
-	 { "n_twenty_4", 3811, 3818, unit_eh_twenty_4, unit_t_twenty_8 },
-	 { "n_twenty_5", 3339, 3345, unit_eh_twenty_5, unit_t_twenty_10 },
-	 { "n_twenty_6", 2109, 2114, unit_eh_twenty_6, unit_t_twenty_12 },
-	 { "n_twenty_7", 1651, 1658, unit_eh_twenty_7, unit_t_twenty_14 },
-	 { "ng_evening_0", 11435, 11443, unit_ih_evening_0, unit_pau_ng_0 },
-	 { "ng_evening_1", 11005, 11012, unit_ih_evening_1, unit_pau_ng_1 },
-	 { "ng_evening_2", 10536, 10544, unit_ih_evening_2, unit_pau_ng_2 },
-	 { "ng_evening_3", 9983, 9994, unit_ih_evening_3, unit_pau_ng_3 },
-	 { "ng_evening_4", 9549, 9557, unit_ih_evening_4, unit_pau_ng_4 },
-	 { "ng_evening_5", 9044, 9052, unit_ih_evening_5, unit_pau_ng_5 },
-	 { "ng_morning_0", 5590, 5600, unit_ih_morning_0, unit_pau_ng_6 },
-	 { "ng_morning_1", 5099, 5108, unit_ih_morning_1, unit_pau_ng_7 },
-	 { "ng_morning_10", 400, 408, unit_ih_morning_10, unit_pau_ng_16 },
-	 { "ng_morning_2", 4517, 4527, unit_ih_morning_2, unit_pau_ng_8 },
-	 { "ng_morning_3", 3966, 3973, unit_ih_morning_3, unit_pau_ng_9 },
-	 { "ng_morning_4", 3529, 3537, unit_ih_morning_4, unit_pau_ng_10 },
-	 { "ng_morning_5", 2867, 2875, unit_ih_morning_5, unit_pau_ng_11 },
-	 { "ng_morning_6", 2336, 2349, unit_ih_morning_6, unit_pau_ng_12 },
-	 { "ng_morning_7", 1842, 1850, unit_ih_morning_7, unit_pau_ng_13 },
-	 { "ng_morning_8", 1338, 1347, unit_ih_morning_8, unit_pau_ng_14 },
-	 { "ng_morning_9", 840, 848, unit_ih_morning_9, unit_pau_ng_15 },
-	 { "ow_almost_0", 10775, 10793, unit_m_almost_0, unit_s_almost_0 },
-	 { "ow_almost_1", 9757, 9777, unit_m_almost_1, unit_s_almost_1 },
-	 { "ow_almost_2", 7541, 7560, unit_m_almost_2, unit_s_almost_2 },
-	 { "ow_almost_3", 5837, 5853, unit_m_almost_3, unit_s_almost_3 },
-	 { "ow_almost_4", 3763, 3779, unit_m_almost_4, unit_s_almost_4 },
-	 { "ow_almost_5", 1601, 1620, unit_m_almost_5, unit_s_almost_5 },
-	 { "p_past_0", 11263, 11272, unit_v_five_0, unit_ae_past_0 },
-	 { "p_past_1", 10832, 10842, unit_n_ten_1, unit_ae_past_1 },
-	 { "p_past_10", 677, 685, unit_n_ten_5, unit_ae_past_10 },
-	 { "p_past_11", 237, 244, unit_v_five_9, unit_ae_past_11 },
-	 { "p_past_2", 10371, 10378, unit_er_quarter_1, unit_ae_past_2 },
-	 { "p_past_3", 9826, 9834, unit_iy_twenty_0, unit_ae_past_3 },
-	 { "p_past_4", 9383, 9390, unit_v_five_1, unit_ae_past_4 },
-	 { "p_past_5", 8895, 8905, unit_f_half_0, unit_ae_past_5 },
-	 { "p_past_6", 2714, 2721, unit_f_half_1, unit_ae_past_6 },
-	 { "p_past_7", 2163, 2172, unit_v_five_8, unit_ae_past_7 },
-	 { "p_past_8", 1673, 1682, unit_iy_twenty_7, unit_ae_past_8 },
-	 { "p_past_9", 1167, 1175, unit_er_quarter_4, unit_ae_past_9 },
-	 { "pau_0_0", 11481, 11495, unit_pau_pau_5, CLUNIT_NONE },
-	 { "pau_0_1", 11060, 11074, unit_pau_pau_10, CLUNIT_NONE },
-	 { "pau_0_11", 5969, 5983, unit_pau_pau_45, unit_pau_pau_44 },
-	 { "pau_0_12", 5649, 5663, unit_pau_pau_50, CLUNIT_NONE },
-	 { "pau_0_13", 5192, 5206, unit_pau_pau_53, CLUNIT_NONE },
-	 { "pau_0_14", 4654, 4668, unit_pau_pau_58, unit_pau_pau_57 },
-	 { "pau_0_15", 4110, 4124, unit_pau_pau_61, unit_pau_pau_60 },
-	 { "pau_0_16", 3588, 3602, unit_pau_pau_65, unit_pau_pau_64 },
-	 { "pau_0_17", 3089, 3103, unit_pau_pau_69, CLUNIT_NONE },
-	 { "pau_0_18", 2489, 2503, unit_pau_pau_73, CLUNIT_NONE },
-	 { "pau_0_19", 1885, 1899, unit_pau_pau_77, CLUNIT_NONE },
-	 { "pau_0_2", 10581, 10595, unit_pau_pau_13, unit_pau_pau_12 },
-	 { "pau_0_20", 1398, 1412, unit_pau_pau_81, CLUNIT_NONE },
-	 { "pau_0_21", 887, 901, unit_pau_pau_85, unit_pau_pau_84 },
-	 { "pau_0_22", 441, 455, unit_pau_pau_89, CLUNIT_NONE },
-	 { "pau_0_23", 0, 14, CLUNIT_NONE, unit_pau_pau_93 },
-	 { "pau_0_3", 10111, 10125, unit_pau_pau_17, CLUNIT_NONE },
-	 { "pau_0_5", 9102, 9116, unit_pau_pau_24, unit_pau_pau_23 },
-	 { "pau_0_6", 8632, 8646, unit_pau_pau_28, CLUNIT_NONE },
-	 { "pau_0_7", 8014, 8028, unit_pau_pau_32, CLUNIT_NONE },
-	 { "pau_aw_0", 11578, 11584, CLUNIT_NONE, unit_ax_a_0 },
-	 { "pau_aw_1", 11163, 11174, CLUNIT_NONE, unit_ih_exactly_0 },
-	 { "pau_aw_10", 6556, 6565, unit_aw_now_10, unit_ax_a_2 },
-	 { "pau_aw_11", 6112, 6130, unit_aw_now_11, unit_jh_just_2 },
-	 { "pau_aw_12", 5781, 5802, unit_aw_now_12, unit_ao_almost_3 },
-	 { "pau_aw_13", 5306, 5328, unit_aw_now_13, unit_ax_a_3 },
-	 { "pau_aw_14", 4830, 4845, unit_aw_now_14, unit_pau_pau_55 },
-	 { "pau_aw_15", 4256, 4270, unit_aw_now_15, unit_ih_exactly_3 },
-	 { "pau_aw_16", 3708, 3729, unit_aw_now_16, unit_ao_almost_4 },
-	 { "pau_aw_17", 3224, 3245, unit_aw_now_17, unit_ax_a_4 },
-	 { "pau_aw_18", 2599, 2619, unit_aw_now_18, unit_jh_just_4 },
-	 { "pau_aw_19", 2016, 2031, unit_aw_now_19, unit_ih_exactly_4 },
-	 { "pau_aw_2", 10725, 10741, unit_aw_now_2, unit_ao_almost_0 },
-	 { "pau_aw_20", 1534, 1563, unit_aw_now_20, unit_ao_almost_5 },
-	 { "pau_aw_21", 1038, 1060, unit_aw_now_21, unit_ax_a_5 },
-	 { "pau_aw_22", 558, 586, unit_aw_now_22, unit_jh_just_5 },
-	 { "pau_aw_23", 136, 159, CLUNIT_NONE, unit_ih_exactly_5 },
-	 { "pau_aw_3", 10232, 10254, unit_aw_now_3, unit_jh_just_0 },
-	 { "pau_aw_4", 9711, 9720, unit_aw_now_4, unit_ao_almost_1 },
-	 { "pau_aw_5", 9244, 9248, unit_aw_now_5, unit_ih_exactly_1 },
-	 { "pau_aw_6", 8764, 8781, unit_aw_now_6, unit_ax_a_1 },
-	 { "pau_aw_7", 8151, 8172, unit_aw_now_7, unit_jh_just_1 },
-	 { "pau_aw_8", 7495, 7507, unit_aw_now_8, unit_ao_almost_2 },
-	 { "pau_aw_9", 7064, 7074, unit_aw_now_9, unit_ih_exactly_2 },
-	 { "pau_iy_0", 7230, 7251, unit_iy_three_0, unit_ih_in_8 },
-	 { "pau_iy_1", 1248, 1275, unit_iy_three_1, unit_ih_in_19 },
-	 { "pau_n_0", 11345, 11362, unit_n_eleven_0, unit_ih_in_0 },
-	 { "pau_n_1", 10913, 10935, unit_n_ten_0, unit_ih_in_1 },
-	 { "pau_n_10", 5507, 5528, unit_n_eleven_1, unit_ih_in_11 },
-	 { "pau_n_11", 5022, 5034, unit_n_ten_3, unit_ih_in_12 },
-	 { "pau_n_12", 4433, 4455, unit_n_nine_2, unit_ih_in_13 },
-	 { "pau_n_13", 3449, 3467, unit_n_seven_1, unit_ih_in_15 },
-	 { "pau_n_14", 314, 336, unit_n_one_1, unit_ih_in_21 },
-	 { "pau_n_2", 10453, 10471, unit_n_nine_0, unit_ih_in_2 },
-	 { "pau_n_3", 9461, 9482, unit_n_seven_0, unit_ih_in_4 },
-	 { "pau_n_4", 8490, 8511, unit_n_afternoon_0, unit_pau_pau_29 },
-	 { "pau_n_5", 7788, 7811, unit_n_afternoon_2, unit_pau_pau_33 },
-	 { "pau_n_6", 7345, 7367, unit_n_afternoon_4, CLUNIT_NONE },
-	 { "pau_n_7", 6833, 6855, unit_n_afternoon_6, unit_pau_pau_40 },
-	 { "pau_n_8", 6421, 6443, unit_n_afternoon_8, CLUNIT_NONE },
-	 { "pau_n_9", 6303, 6325, unit_n_one_0, unit_ih_in_10 },
-	 { "pau_ng_0", 11443, 11458, unit_ng_evening_0, CLUNIT_NONE },
-	 { "pau_ng_1", 11012, 11039, unit_ng_evening_1, CLUNIT_NONE },
-	 { "pau_ng_10", 3537, 3559, unit_ng_morning_4, CLUNIT_NONE },
-	 { "pau_ng_11", 2875, 2897, unit_ng_morning_5, unit_pau_pau_70 },
-	 { "pau_ng_12", 2349, 2371, unit_ng_morning_6, unit_pau_pau_74 },
-	 { "pau_ng_13", 1850, 1865, unit_ng_morning_7, CLUNIT_NONE },
-	 { "pau_ng_14", 1347, 1371, unit_ng_morning_8, CLUNIT_NONE },
-	 { "pau_ng_15", 848, 863, unit_ng_morning_9, CLUNIT_NONE },
-	 { "pau_ng_16", 408, 423, unit_ng_morning_10, CLUNIT_NONE },
-	 { "pau_ng_2", 10544, 10566, unit_ng_evening_2, CLUNIT_NONE },
-	 { "pau_ng_3", 9994, 10014, unit_ng_evening_3, unit_pau_pau_18 },
-	 { "pau_ng_4", 9557, 9583, unit_ng_evening_4, CLUNIT_NONE },
-	 { "pau_ng_5", 9052, 9074, unit_ng_evening_5, CLUNIT_NONE },
-	 { "pau_ng_6", 5600, 5622, unit_ng_morning_0, CLUNIT_NONE },
-	 { "pau_ng_7", 5108, 5123, unit_ng_morning_1, unit_pau_pau_54 },
-	 { "pau_ng_8", 4527, 4542, unit_ng_morning_2, unit_pau_pau_59 },
-	 { "pau_ng_9", 3973, 3988, unit_ng_morning_3, unit_pau_pau_63 },
-	 { "pau_pau_10", 11039, 11060, CLUNIT_NONE, unit_pau_0_1 },
-	 { "pau_pau_12", 10595, 10619, unit_pau_0_2, unit_dh_the_4 },
-	 { "pau_pau_13", 10566, 10581, CLUNIT_NONE, unit_pau_0_2 },
-	 { "pau_pau_17", 10088, 10111, unit_pau_pau_18, unit_pau_0_3 },
-	 { "pau_pau_18", 10014, 10088, unit_pau_ng_3, unit_pau_pau_17 },
-	 { "pau_pau_19", 9583, 9603, CLUNIT_NONE, unit_dh_the_8 },
-	 { "pau_pau_23", 9116, 9139, unit_pau_0_5, unit_dh_the_10 },
-	 { "pau_pau_24", 9074, 9102, CLUNIT_NONE, unit_pau_0_5 },
-	 { "pau_pau_26", 8646, 8667, CLUNIT_NONE, unit_dh_the_12 },
-	 { "pau_pau_28", 8616, 8632, unit_pau_pau_29, unit_pau_0_6 },
-	 { "pau_pau_29", 8511, 8616, unit_pau_n_4, unit_pau_pau_28 },
-	 { "pau_pau_3", 11495, 11512, CLUNIT_NONE, unit_dh_the_0 },
-	 { "pau_pau_30", 8028, 8049, CLUNIT_NONE, unit_dh_the_14 },
-	 { "pau_pau_32", 7991, 8014, unit_pau_pau_33, unit_pau_0_7 },
-	 { "pau_pau_33", 7811, 7991, unit_pau_n_5, unit_pau_pau_32 },
-	 { "pau_pau_34", 7367, 7385, CLUNIT_NONE, unit_dh_the_16 },
-	 { "pau_pau_37", 6945, 6959, CLUNIT_NONE, unit_dh_the_18 },
-	 { "pau_pau_40", 6855, 6945, unit_pau_n_7, CLUNIT_NONE },
-	 { "pau_pau_41", 6443, 6459, CLUNIT_NONE, unit_dh_the_20 },
-	 { "pau_pau_44", 5983, 6009, unit_pau_0_11, unit_dh_the_22 },
-	 { "pau_pau_45", 5947, 5969, CLUNIT_NONE, unit_pau_0_11 },
-	 { "pau_pau_48", 5663, 5682, CLUNIT_NONE, unit_dh_the_23 },
-	 { "pau_pau_5", 11458, 11481, CLUNIT_NONE, unit_pau_0_0 },
-	 { "pau_pau_50", 5622, 5649, CLUNIT_NONE, unit_pau_0_12 },
-	 { "pau_pau_53", 5163, 5192, unit_pau_pau_54, unit_pau_0_13 },
-	 { "pau_pau_54", 5123, 5163, unit_pau_ng_7, unit_pau_pau_53 },
-	 { "pau_pau_55", 4845, 4862, unit_pau_aw_14, unit_jh_just_3 },
-	 { "pau_pau_56", 4698, 4726, unit_pau_pau_57, unit_dh_the_27 },
-	 { "pau_pau_57", 4668, 4698, unit_pau_0_14, unit_pau_pau_56 },
-	 { "pau_pau_58", 4624, 4654, unit_pau_pau_59, unit_pau_0_14 },
-	 { "pau_pau_59", 4542, 4624, unit_pau_ng_8, unit_pau_pau_58 },
-	 { "pau_pau_60", 4124, 4152, unit_pau_0_15, unit_dh_the_29 },
-	 { "pau_pau_61", 4086, 4110, unit_pau_pau_62, unit_pau_0_15 },
-	 { "pau_pau_62", 4063, 4086, unit_pau_pau_63, unit_pau_pau_61 },
-	 { "pau_pau_63", 3988, 4063, unit_pau_ng_9, unit_pau_pau_62 },
-	 { "pau_pau_64", 3602, 3626, unit_pau_0_16, unit_dh_the_31 },
-	 { "pau_pau_65", 3559, 3588, CLUNIT_NONE, unit_pau_0_16 },
-	 { "pau_pau_67", 3103, 3121, CLUNIT_NONE, unit_dh_the_33 },
-	 { "pau_pau_69", 3061, 3089, unit_pau_pau_70, unit_pau_0_17 },
-	 { "pau_pau_70", 2897, 3061, unit_pau_ng_11, unit_pau_pau_69 },
-	 { "pau_pau_73", 2461, 2489, unit_pau_pau_74, unit_pau_0_18 },
-	 { "pau_pau_74", 2371, 2461, unit_pau_ng_12, unit_pau_pau_73 },
-	 { "pau_pau_75", 1899, 1917, CLUNIT_NONE, unit_dh_the_37 },
-	 { "pau_pau_77", 1865, 1885, CLUNIT_NONE, unit_pau_0_19 },
-	 { "pau_pau_79", 1412, 1435, CLUNIT_NONE, unit_dh_the_39 },
-	 { "pau_pau_8", 11074, 11092, CLUNIT_NONE, unit_dh_the_2 },
-	 { "pau_pau_81", 1371, 1398, CLUNIT_NONE, unit_pau_0_20 },
-	 { "pau_pau_83", 916, 941, unit_pau_pau_84, unit_dh_the_41 },
-	 { "pau_pau_84", 901, 916, unit_pau_0_21, unit_pau_pau_83 },
-	 { "pau_pau_85", 863, 887, CLUNIT_NONE, unit_pau_0_21 },
-	 { "pau_pau_87", 455, 475, CLUNIT_NONE, unit_dh_the_43 },
-	 { "pau_pau_89", 423, 441, CLUNIT_NONE, unit_pau_0_22 },
-	 { "pau_pau_92", 44, 67, unit_pau_pau_93, unit_dh_the_45 },
-	 { "pau_pau_93", 14, 44, unit_pau_0_23, unit_pau_pau_92 },
-	 { "pau_r_0", 7680, 7686, unit_r_four_0, unit_ih_in_7 },
-	 { "pau_r_1", 1759, 1781, unit_r_four_1, unit_ih_in_18 },
-	 { "pau_s_0", 8986, 8992, unit_s_six_0, CLUNIT_NONE },
-	 { "pau_s_1", 2790, 2805, unit_s_six_2, unit_ih_in_16 },
-	 { "pau_t_0", 11801, 11816, unit_t_midnight_0, CLUNIT_NONE },
-	 { "pau_t_1", 9903, 9918, unit_t_eight_0, unit_ih_in_3 },
-	 { "pau_t_2", 3879, 3900, unit_t_eight_1, unit_ih_in_14 },
-	 { "pau_uw_0", 6719, 6742, unit_uw_two_0, unit_ih_in_9 },
-	 { "pau_uw_1", 757, 778, unit_uw_two_1, unit_ih_in_20 },
-	 { "pau_v_0", 8380, 8400, unit_v_five_2, unit_ih_in_6 },
-	 { "pau_v_1", 5932, 5947, unit_v_twelve_0, CLUNIT_NONE },
-	 { "pau_v_2", 2251, 2272, unit_v_five_7, unit_ih_in_17 },
-	 { "r_four_0", 7668, 7680, unit_ao_four_0, unit_pau_r_0 },
-	 { "r_four_1", 1747, 1759, unit_ao_four_1, unit_pau_r_1 },
-	 { "r_morning_0", 5571, 5579, unit_ao_morning_0, unit_n_morning_0 },
-	 { "r_morning_1", 5078, 5085, unit_ao_morning_1, unit_n_morning_1 },
-	 { "r_morning_10", 379, 386, unit_ao_morning_10, unit_n_morning_10 },
-	 { "r_morning_2", 4498, 4506, unit_ao_morning_2, unit_n_morning_2 },
-	 { "r_morning_3", 3945, 3952, unit_ao_morning_3, unit_n_morning_3 },
-	 { "r_morning_4", 3508, 3515, unit_ao_morning_4, unit_n_morning_4 },
-	 { "r_morning_5", 2848, 2856, unit_ao_morning_5, unit_n_morning_5 },
-	 { "r_morning_6", 2316, 2323, unit_ao_morning_6, unit_n_morning_6 },
-	 { "r_morning_7", 1822, 1829, unit_ao_morning_7, unit_n_morning_7 },
-	 { "r_morning_8", 1317, 1323, unit_ao_morning_8, unit_n_morning_8 },
-	 { "r_morning_9", 820, 826, unit_ao_morning_9, unit_n_morning_9 },
-	 { "r_quarter_0", 11691, 11696, unit_ao_quarter_0, unit_t_quarter_0 },
-	 { "r_quarter_1", 10357, 10359, unit_ao_quarter_1, unit_t_quarter_1 },
-	 { "r_quarter_2", 7156, 7160, unit_ao_quarter_2, unit_t_quarter_2 },
-	 { "r_quarter_3", 4354, 4359, unit_ao_quarter_3, unit_t_quarter_3 },
-	 { "r_quarter_4", 1153, 1157, unit_ao_quarter_4, unit_t_quarter_4 },
-	 { "r_three_0", 7198, 7203, unit_th_three_0, unit_iy_three_0 },
-	 { "r_three_1", 1218, 1227, unit_th_three_1, unit_iy_three_1 },
-	 { "s_almost_0", 10793, 10800, unit_ow_almost_0, unit_t_almost_0 },
-	 { "s_almost_1", 9777, 9785, unit_ow_almost_1, unit_t_almost_1 },
-	 { "s_almost_2", 7560, 7568, unit_ow_almost_2, unit_t_almost_2 },
-	 { "s_almost_3", 5853, 5863, unit_ow_almost_3, unit_t_almost_3 },
-	 { "s_almost_4", 3779, 3787, unit_ow_almost_4, unit_t_almost_4 },
-	 { "s_almost_5", 1620, 1629, unit_ow_almost_5, unit_t_almost_5 },
-	 { "s_just_0", 10276, 10283, unit_ah_just_0, unit_t_just_0 },
-	 { "s_just_1", 8190, 8198, unit_ah_just_1, unit_t_just_1 },
-	 { "s_just_2", 6152, 6160, unit_ah_just_2, unit_t_just_2 },
-	 { "s_just_3", 4880, 4886, unit_ah_just_3, unit_t_just_3 },
-	 { "s_just_4", 2636, 2643, unit_ah_just_4, unit_t_just_4 },
-	 { "s_just_5", 601, 608, unit_ah_just_5, unit_t_just_5 },
-	 { "s_past_0", 11290, 11294, unit_ae_past_0, unit_t_past_0 },
-	 { "s_past_1", 10863, 10871, unit_ae_past_1, unit_t_past_1 },
-	 { "s_past_10", 703, 712, unit_ae_past_10, unit_t_past_10 },
-	 { "s_past_11", 261, 271, unit_ae_past_11, unit_t_past_11 },
-	 { "s_past_2", 10397, 10404, unit_ae_past_2, unit_t_past_2 },
-	 { "s_past_3", 9854, 9861, unit_ae_past_3, unit_t_past_3 },
-	 { "s_past_4", 9411, 9415, unit_ae_past_4, unit_t_past_4 },
-	 { "s_past_5", 8926, 8933, unit_ae_past_5, unit_t_past_5 },
-	 { "s_past_6", 2742, 2748, unit_ae_past_6, unit_t_past_6 },
-	 { "s_past_7", 2189, 2196, unit_ae_past_7, unit_t_past_7 },
-	 { "s_past_8", 1700, 1706, unit_ae_past_8, unit_t_past_8 },
-	 { "s_past_9", 1192, 1203, unit_ae_past_9, unit_t_past_9 },
-	 { "s_seven_0", 9415, 9423, unit_t_past_4, unit_eh_seven_0 },
-	 { "s_seven_1", 3403, 3416, unit_ax_to_10, unit_eh_seven_1 },
-	 { "s_six_0", 8969, 8986, unit_k_six_0, unit_pau_s_0 },
-	 { "s_six_1", 8934, 8942, unit_t_past_5, unit_ih_six_0 },
-	 { "s_six_2", 2780, 2790, unit_k_six_1, unit_pau_s_1 },
-	 { "s_six_3", 2750, 2758, unit_t_past_6, unit_ih_six_1 },
-	 { "t_after_0", 11649, 11655, unit_f_after_0, unit_er_after_0 },
-	 { "t_after_1", 10317, 10323, unit_f_after_1, unit_er_after_1 },
-	 { "t_after_10", 1118, 1125, unit_f_after_10, unit_er_after_10 },
-	 { "t_after_11", 635, 641, unit_f_after_11, unit_er_after_11 },
-	 { "t_after_2", 8848, 8855, unit_f_after_2, unit_er_after_2 },
-	 { "t_after_3", 8228, 8235, unit_f_after_3, unit_er_after_3 },
-	 { "t_after_4", 6627, 6632, unit_f_after_4, unit_er_after_4 },
-	 { "t_after_5", 6191, 6200, unit_f_after_5, unit_er_after_5 },
-	 { "t_after_6", 5393, 5399, unit_f_after_6, unit_er_after_6 },
-	 { "t_after_7", 4915, 4922, unit_f_after_7, unit_er_after_7 },
-	 { "t_after_8", 3307, 3313, unit_f_after_8, unit_er_after_8 },
-	 { "t_after_9", 2673, 2678, unit_f_after_9, unit_er_after_9 },
-	 { "t_afternoon_0", 8448, 8454, unit_f_afternoon_0, unit_er_afternoon_0 },
-	 { "t_afternoon_1", 7740, 7747, unit_f_afternoon_1, unit_er_afternoon_1 },
-	 { "t_afternoon_2", 7299, 7306, unit_f_afternoon_2, unit_er_afternoon_2 },
-	 { "t_afternoon_3", 6791, 6798, unit_f_afternoon_3, unit_er_afternoon_3 },
-	 { "t_afternoon_4", 6373, 6380, unit_f_afternoon_4, unit_er_afternoon_4 },
-	 { "t_almost_0", 10800, 10805, unit_s_almost_0, unit_t_ten_1 },
-	 { "t_almost_1", 9785, 9791, unit_s_almost_1, unit_t_twenty_1 },
-	 { "t_almost_2", 7568, 7574, unit_s_almost_2, unit_t_twenty_7 },
-	 { "t_almost_3", 5863, 5868, unit_s_almost_3, unit_t_twelve_0 },
-	 { "t_almost_4", 3787, 3790, unit_s_almost_4, unit_t_twenty_9 },
-	 { "t_almost_5", 1629, 1634, unit_s_almost_5, unit_t_twenty_15 },
-	 { "t_eight_0", 9889, 9903, unit_ey_eight_0, unit_pau_t_1 },
-	 { "t_eight_1", 3869, 3879, unit_ey_eight_1, unit_pau_t_2 },
-	 { "t_exactly_0", 11210, 11215, unit_k_exactly_0, unit_l_exactly_0 },
-	 { "t_exactly_1", 9290, 9295, unit_k_exactly_1, unit_l_exactly_1 },
-	 { "t_exactly_2", 7111, 7116, unit_k_exactly_2, unit_l_exactly_2 },
-	 { "t_exactly_3", 4311, 4314, unit_k_exactly_3, unit_l_exactly_3 },
-	 { "t_exactly_4", 2071, 2075, unit_k_exactly_4, unit_l_exactly_4 },
-	 { "t_exactly_5", 191, 197, unit_k_exactly_5, unit_l_exactly_5 },
-	 { "t_just_0", 10283, 10289, unit_s_just_0, unit_ae_after_1 },
-	 { "t_just_1", 8198, 8204, unit_s_just_1, unit_ae_after_3 },
-	 { "t_just_2", 6160, 6165, unit_s_just_2, unit_ae_after_5 },
-	 { "t_just_3", 4886, 4892, unit_s_just_3, unit_ae_after_7 },
-	 { "t_just_4", 2643, 2649, unit_s_just_4, unit_ae_after_9 },
-	 { "t_just_5", 608, 613, unit_s_just_5, unit_ae_after_11 },
-	 { "t_little_0", 11606, 11614, unit_ih_little_0, unit_ax_little_0 },
-	 { "t_little_1", 8802, 8811, unit_ih_little_1, unit_ax_little_1 },
-	 { "t_little_2", 6584, 6592, unit_ih_little_2, unit_ax_little_2 },
-	 { "t_little_3", 5348, 5356, unit_ih_little_3, unit_ax_little_3 },
-	 { "t_little_4", 3267, 3274, unit_ih_little_4, unit_ax_little_4 },
-	 { "t_little_5", 1081, 1086, unit_ih_little_5, unit_ax_little_5 },
-	 { "t_midnight_0", 11781, 11801, unit_ay_midnight_0, unit_pau_t_0 },
-	 { "t_past_0", 11294, 11300, unit_s_past_0, unit_ih_eleven_0 },
-	 { "t_past_1", 10871, 10877, unit_s_past_1, unit_t_ten_0 },
-	 { "t_past_10", 712, 719, unit_s_past_10, unit_t_two_1 },
-	 { "t_past_11", 271, 280, unit_s_past_11, unit_w_one_1 },
-	 { "t_past_2", 10404, 10409, unit_s_past_2, unit_n_nine_1 },
-	 { "t_past_3", 9861, 9866, unit_s_past_3, unit_ey_eight_0 },
-	 { "t_past_4", 9415, 9415, unit_s_past_4, unit_s_seven_0 },
-	 { "t_past_5", 8933, 8934, unit_s_past_5, unit_s_six_1 },
-	 { "t_past_6", 2748, 2750, unit_s_past_6, unit_s_six_3 },
-	 { "t_past_7", 2196, 2201, unit_s_past_7, unit_f_five_7 },
-	 { "t_past_8", 1706, 1713, unit_s_past_8, unit_f_four_1 },
-	 { "t_past_9", 1203, 1209, unit_s_past_9, unit_th_three_1 },
-	 { "t_quarter_0", 11696, 11702, unit_r_quarter_0, unit_er_quarter_0 },
-	 { "t_quarter_1", 10359, 10366, unit_r_quarter_1, unit_er_quarter_1 },
-	 { "t_quarter_2", 7160, 7166, unit_r_quarter_2, unit_er_quarter_2 },
-	 { "t_quarter_3", 4359, 4364, unit_r_quarter_3, unit_er_quarter_3 },
-	 { "t_quarter_4", 1157, 1162, unit_r_quarter_4, unit_er_quarter_4 },
-	 { "t_ten_0", 10877, 10881, unit_t_past_1, unit_eh_ten_0 },
-	 { "t_ten_1", 10805, 10809, unit_t_almost_0, unit_eh_ten_1 },
-	 { "t_ten_2", 6639, 6647, unit_er_after_4, unit_eh_ten_2 },
-	 { "t_ten_3", 4977, 4986, unit_ax_to_7, unit_eh_ten_3 },
-	 { "t_ten_4", 4930, 4945, unit_er_after_7, unit_eh_ten_4 },
-	 { "t_ten_5", 646, 657, unit_er_after_11, unit_eh_ten_5 },
-	 { "t_time_0", 11516, 11525, CLUNIT_NONE, unit_ay_time_0 },
-	 { "t_time_1", 11099, 11105, unit_ax_the_2, unit_ay_time_1 },
-	 { "t_time_10", 6464, 6471, CLUNIT_NONE, unit_ay_time_10 },
-	 { "t_time_11", 6017, 6023, unit_ax_the_22, unit_ay_time_11 },
-	 { "t_time_12", 5690, 5695, unit_ax_the_23, unit_ay_time_12 },
-	 { "t_time_13", 5216, 5222, unit_ax_the_25, unit_ay_time_13 },
-	 { "t_time_14", 4736, 4743, unit_ax_the_27, unit_ay_time_14 },
-	 { "t_time_15", 4162, 4169, unit_ax_the_29, unit_ay_time_15 },
-	 { "t_time_16", 3635, 3640, unit_ax_the_31, unit_ay_time_16 },
-	 { "t_time_17", 3130, 3138, unit_ax_the_33, unit_ay_time_17 },
-	 { "t_time_18", 2508, 2516, unit_ax_the_35, unit_ay_time_18 },
-	 { "t_time_19", 1925, 1933, unit_ax_the_37, unit_ay_time_19 },
-	 { "t_time_2", 10626, 10632, unit_ax_the_4, unit_ay_time_2 },
-	 { "t_time_20", 1442, 1450, unit_ax_the_39, unit_ay_time_20 },
-	 { "t_time_21", 948, 954, unit_ax_the_41, unit_ay_time_21 },
-	 { "t_time_22", 482, 489, unit_ax_the_43, unit_ay_time_22 },
-	 { "t_time_23", 77, 84, unit_ax_the_45, unit_ay_time_23 },
-	 { "t_time_3", 10134, 10140, unit_ax_the_6, unit_ay_time_3 },
-	 { "t_time_4", 9611, 9619, unit_ax_the_8, unit_ay_time_4 },
-	 { "t_time_5", 9147, 9154, unit_ax_the_10, unit_ay_time_5 },
-	 { "t_time_6", 8676, 8683, unit_ax_the_12, unit_ay_time_6 },
-	 { "t_time_7", 8056, 8061, unit_ax_the_14, unit_ay_time_7 },
-	 { "t_time_8", 7394, 7403, unit_ax_the_16, unit_ay_time_8 },
-	 { "t_time_9", 6968, 6973, unit_ax_the_18, unit_ay_time_9 },
-	 { "t_to_0", 11711, 11721, unit_er_quarter_0, unit_ax_to_0 },
-	 { "t_to_1", 8317, 8323, unit_v_five_3, unit_ax_to_1 },
-	 { "t_to_10", 3395, 3401, unit_v_five_6, unit_ax_to_10 },
-	 { "t_to_2", 7614, 7619, unit_iy_twenty_3, unit_ax_to_2 },
-	 { "t_to_3", 7173, 7178, unit_er_quarter_2, unit_ax_to_3 },
-	 { "t_to_4", 6666, 6674, unit_n_ten_2, unit_ax_to_4 },
-	 { "t_to_5", 6250, 6256, unit_v_five_4, unit_ax_to_5 },
-	 { "t_to_6", 5446, 5452, unit_v_five_5, unit_ax_to_6 },
-	 { "t_to_7", 4964, 4971, unit_n_ten_4, unit_ax_to_7 },
-	 { "t_to_8", 4373, 4381, unit_er_quarter_3, unit_ax_to_8 },
-	 { "t_to_9", 3828, 3837, unit_iy_twenty_4, unit_ax_to_9 },
-	 { "t_twelve_0", 5868, 5877, unit_t_almost_3, unit_w_twelve_0 },
-	 { "t_twenty_0", 9814, 9819, unit_n_twenty_0, unit_iy_twenty_0 },
-	 { "t_twenty_1", 9791, 9798, unit_t_almost_1, unit_w_twenty_0 },
-	 { "t_twenty_10", 3345, 3350, unit_n_twenty_5, unit_iy_twenty_5 },
-	 { "t_twenty_11", 3316, 3326, unit_er_after_8, unit_w_twenty_5 },
-	 { "t_twenty_12", 2114, 2118, unit_n_twenty_6, unit_iy_twenty_6 },
-	 { "t_twenty_13", 2086, 2096, unit_iy_exactly_4, unit_w_twenty_6 },
-	 { "t_twenty_14", 1658, 1666, unit_n_twenty_7, unit_iy_twenty_7 },
-	 { "t_twenty_15", 1634, 1643, unit_t_almost_5, unit_w_twenty_7 },
-	 { "t_twenty_2", 9332, 9337, unit_n_twenty_1, unit_iy_twenty_1 },
-	 { "t_twenty_3", 9307, 9317, unit_iy_exactly_1, unit_w_twenty_1 },
-	 { "t_twenty_4", 8269, 8274, unit_n_twenty_2, unit_iy_twenty_2 },
-	 { "t_twenty_5", 8241, 8252, unit_er_after_3, unit_w_twenty_2 },
-	 { "t_twenty_6", 7601, 7607, unit_n_twenty_3, unit_iy_twenty_3 },
-	 { "t_twenty_7", 7574, 7583, unit_t_almost_2, unit_w_twenty_3 },
-	 { "t_twenty_8", 3818, 3825, unit_n_twenty_4, unit_iy_twenty_4 },
-	 { "t_twenty_9", 3790, 3801, unit_t_almost_4, unit_w_twenty_4 },
-	 { "t_two_0", 6680, 6691, unit_ax_to_4, unit_uw_two_0 },
-	 { "t_two_1", 719, 726, unit_t_past_10, unit_uw_two_1 },
-	 { "th_three_0", 7186, 7198, unit_ax_to_3, unit_r_three_0 },
-	 { "th_three_1", 1209, 1218, unit_t_past_9, unit_r_three_1 },
-	 { "uw_afternoon_0", 8466, 8482, unit_n_afternoon_1, unit_n_afternoon_0 },
-	 { "uw_afternoon_1", 7760, 7777, unit_n_afternoon_3, unit_n_afternoon_2 },
-	 { "uw_afternoon_2", 7319, 7335, unit_n_afternoon_5, unit_n_afternoon_4 },
-	 { "uw_afternoon_3", 6813, 6826, unit_n_afternoon_7, unit_n_afternoon_6 },
-	 { "uw_afternoon_4", 6395, 6410, unit_n_afternoon_9, unit_n_afternoon_8 },
-	 { "uw_two_0", 6691, 6719, unit_t_two_0, unit_pau_uw_0 },
-	 { "uw_two_1", 726, 757, unit_t_two_1, unit_pau_uw_1 },
-	 { "v_eleven_0", 11325, 11330, unit_eh_eleven_0, unit_ax_eleven_0 },
-	 { "v_eleven_1", 5487, 5492, unit_eh_eleven_1, unit_ax_eleven_1 },
-	 { "v_evening_0", 11411, 11417, unit_iy_evening_0, unit_n_evening_0 },
-	 { "v_evening_1", 10982, 10988, unit_iy_evening_1, unit_n_evening_1 },
-	 { "v_evening_2", 10514, 10523, unit_iy_evening_2, unit_n_evening_2 },
-	 { "v_evening_3", 9964, 9969, unit_iy_evening_3, unit_n_evening_3 },
-	 { "v_evening_4", 9524, 9531, unit_iy_evening_4, unit_n_evening_4 },
-	 { "v_evening_5", 9021, 9026, unit_iy_evening_5, unit_n_evening_5 },
-	 { "v_five_0", 11260, 11263, unit_ay_five_0, unit_p_past_0 },
-	 { "v_five_1", 9378, 9383, unit_ay_five_1, unit_p_past_4 },
-	 { "v_five_2", 8369, 8380, unit_ay_five_2, unit_pau_v_0 },
-	 { "v_five_3", 8313, 8317, unit_ay_five_3, unit_t_to_1 },
-	 { "v_five_4", 6244, 6250, unit_ay_five_4, unit_t_to_5 },
-	 { "v_five_5", 5441, 5446, unit_ay_five_5, unit_t_to_6 },
-	 { "v_five_6", 3391, 3395, unit_ay_five_6, unit_t_to_10 },
-	 { "v_five_7", 2243, 2251, unit_ay_five_7, unit_pau_v_2 },
-	 { "v_five_8", 2159, 2163, unit_ay_five_8, unit_p_past_7 },
-	 { "v_five_9", 233, 237, unit_ay_five_9, unit_p_past_11 },
-	 { "v_seven_0", 9434, 9443, unit_eh_seven_0, unit_ax_seven_0 },
-	 { "v_seven_1", 3427, 3433, unit_eh_seven_1, unit_ax_seven_1 },
-	 { "v_twelve_0", 5916, 5932, unit_l_twelve_0, unit_pau_v_1 },
-	 { "w_one_0", 6270, 6279, unit_ax_to_5, unit_ah_one_0 },
-	 { "w_one_1", 280, 288, unit_t_past_11, unit_ah_one_1 },
-	 { "w_quarter_0", 11676, 11681, unit_k_quarter_0, unit_ao_quarter_0 },
-	 { "w_quarter_1", 10343, 10349, unit_k_quarter_1, unit_ao_quarter_1 },
-	 { "w_quarter_2", 7142, 7145, unit_k_quarter_2, unit_ao_quarter_2 },
-	 { "w_quarter_3", 4340, 4345, unit_k_quarter_3, unit_ao_quarter_3 },
-	 { "w_quarter_4", 1141, 1145, unit_k_quarter_4, unit_ao_quarter_4 },
-	 { "w_twelve_0", 5877, 5882, unit_t_twelve_0, unit_eh_twelve_0 },
-	 { "w_twenty_0", 9798, 9800, unit_t_twenty_1, unit_eh_twenty_0 },
-	 { "w_twenty_1", 9317, 9319, unit_t_twenty_3, unit_eh_twenty_1 },
-	 { "w_twenty_2", 8252, 8256, unit_t_twenty_5, unit_eh_twenty_2 },
-	 { "w_twenty_3", 7583, 7584, unit_t_twenty_7, unit_eh_twenty_3 },
-	 { "w_twenty_4", 3801, 3803, unit_t_twenty_9, unit_eh_twenty_4 },
-	 { "w_twenty_5", 3326, 3329, unit_t_twenty_11, unit_eh_twenty_5 },
-	 { "w_twenty_6", 2096, 2099, unit_t_twenty_13, unit_eh_twenty_6 },
-	 { "w_twenty_7", 1643, 1645, unit_t_twenty_15, unit_eh_twenty_7 },
-	 { "z_exactly_0", 11184, 11190, unit_g_exactly_0, unit_ae_exactly_0 },
-	 { "z_exactly_1", 9261, 9268, unit_g_exactly_1, unit_ae_exactly_1 },
-	 { "z_exactly_2", 7082, 7089, unit_g_exactly_2, unit_ae_exactly_2 },
-	 { "z_exactly_3", 4281, 4288, unit_g_exactly_3, unit_ae_exactly_3 },
-	 { "z_exactly_4", 2043, 2050, unit_g_exactly_4, unit_ae_exactly_4 },
-	 { "z_exactly_5", 168, 174, unit_g_exactly_5, unit_ae_exactly_5 },
-	 { "z_is_0", 11566, 11574, unit_ih_is_0, unit_n_now_0 },
-	 { "z_is_1", 11149, 11157, unit_ih_is_1, unit_n_now_1 },
-	 { "z_is_10", 6511, 6519, unit_ih_is_10, unit_n_now_10 },
-	 { "z_is_11", 6064, 6073, unit_ih_is_11, unit_n_now_11 },
-	 { "z_is_12", 5736, 5744, unit_ih_is_12, unit_n_now_12 },
-	 { "z_is_13", 5263, 5271, unit_ih_is_13, unit_n_now_13 },
-	 { "z_is_14", 4782, 4793, unit_ih_is_14, unit_n_now_14 },
-	 { "z_is_15", 4210, 4219, unit_ih_is_15, unit_n_now_15 },
-	 { "z_is_16", 3662, 3672, CLUNIT_NONE, unit_n_now_16 },
-	 { "z_is_17", 3178, 3185, unit_ih_is_17, unit_n_now_17 },
-	 { "z_is_18", 2555, 2563, unit_ih_is_18, unit_n_now_18 },
-	 { "z_is_19", 1971, 1978, unit_ih_is_19, unit_n_now_19 },
-	 { "z_is_2", 10675, 10684, unit_ih_is_2, unit_n_now_2 },
-	 { "z_is_20", 1488, 1496, unit_ih_is_20, unit_n_now_20 },
-	 { "z_is_21", 992, 1000, unit_ih_is_21, unit_n_now_21 },
-	 { "z_is_23", 123, 131, unit_ih_is_23, unit_n_now_23 },
-	 { "z_is_3", 10182, 10192, unit_ih_is_3, unit_n_now_3 },
-	 { "z_is_4", 9660, 9669, unit_ih_is_4, unit_n_now_4 },
-	 { "z_is_5", 9198, 9206, unit_ih_is_5, unit_n_now_5 },
-	 { "z_is_6", 8715, 8724, unit_ih_is_6, unit_n_now_6 },
-	 { "z_is_7", 8105, 8114, unit_ih_is_7, unit_n_now_7 },
-	 { "z_is_8", 7446, 7453, unit_ih_is_8, unit_n_now_8 },
-	 { "z_is_9", 7017, 7025, unit_ih_is_9, unit_n_now_9 },
-	{ 0, 0, 0, 0 }
+	 { /* ae_after_0 */ 0, 0, 10234, 10252, unit_l_little_0, unit_f_after_0 },
+	 { /* ae_after_1 */ 0, 0, 8956, 8977, unit_t_just_0, unit_f_after_1 },
+	 { /* ae_after_2 */ 0, 0, 7615, 7635, unit_l_little_2, unit_f_after_2 },
+	 { /* ae_after_3 */ 0, 0, 7116, 7135, unit_t_just_1, unit_f_after_3 },
+	 { /* ae_after_4 */ 0, 0, 5823, 5842, unit_l_little_4, unit_f_after_4 },
+	 { /* ae_after_5 */ 0, 0, 5372, 5385, unit_t_just_2, unit_f_after_5 },
+	 { /* ae_after_6 */ 0, 0, 4622, 4643, unit_l_little_6, unit_f_after_6 },
+	 { /* ae_after_7 */ 0, 0, 4204, 4221, unit_t_just_3, unit_f_after_7 },
+	 { /* ae_after_8 */ 0, 0, 2872, 2889, unit_l_little_8, unit_f_after_8 },
+	 { /* ae_after_9 */ 0, 0, 2430, 2448, unit_t_just_4, unit_f_after_9 },
+	 { /* ae_after_10 */ 0, 0, 1014, 1029, unit_l_little_10, unit_f_after_10 },
+	 { /* ae_after_11 */ 0, 0, 567, 583, unit_t_just_5, unit_f_after_11 },
+	 { /* ae_afternoon_0 */ 1, 0, 7336, 7352, unit_iy_the_6, unit_f_afternoon_0 },
+	 { /* ae_afternoon_1 */ 1, 0, 6828, 6847, unit_iy_the_7, unit_f_afternoon_1 },
+	 { /* ae_afternoon_2 */ 1, 0, 6408, 6424, unit_iy_the_8, unit_f_afternoon_2 },
+	 { /* ae_afternoon_3 */ 1, 0, 5985, 6005, unit_iy_the_9, unit_f_afternoon_3 },
+	 { /* ae_afternoon_4 */ 1, 0, 5554, 5573, unit_iy_the_10, unit_f_afternoon_4 },
+	 { /* ae_exactly_0 */ 2, 0, 9825, 9842, unit_z_exactly_0, unit_k_exactly_0 },
+	 { /* ae_exactly_1 */ 2, 0, 8029, 8048, unit_z_exactly_1, unit_k_exactly_1 },
+	 { /* ae_exactly_2 */ 2, 0, 6220, 6240, unit_z_exactly_2, unit_k_exactly_2 },
+	 { /* ae_exactly_3 */ 2, 0, 3742, 3761, unit_z_exactly_3, unit_k_exactly_3 },
+	 { /* ae_exactly_4 */ 2, 0, 1918, 1936, unit_z_exactly_4, unit_k_exactly_4 },
+	 { /* ae_exactly_5 */ 2, 0, 130, 144, unit_z_exactly_5, unit_k_exactly_5 },
+	 { /* ae_half_0 */ 3, 0, 7667, 7683, unit_hh_half_0, unit_f_half_0 },
+	 { /* ae_half_1 */ 3, 0, 2476, 2490, unit_hh_half_1, unit_f_half_1 },
+	 { /* ae_past_0 */ 4, 0, 9907, 9925, unit_p_past_0, unit_s_past_0 },
+	 { /* ae_past_1 */ 4, 0, 9485, 9506, unit_p_past_1, unit_s_past_1 },
+	 { /* ae_past_2 */ 4, 0, 9045, 9064, unit_p_past_2, unit_s_past_2 },
+	 { /* ae_past_3 */ 4, 0, 8609, 8629, unit_p_past_3, unit_s_past_3 },
+	 { /* ae_past_4 */ 4, 0, 8151, 8172, unit_p_past_4, unit_s_past_4 },
+	 { /* ae_past_5 */ 4, 0, 7698, 7719, unit_p_past_5, unit_s_past_5 },
+	 { /* ae_past_6 */ 4, 0, 2502, 2523, unit_p_past_6, unit_s_past_6 },
+	 { /* ae_past_7 */ 4, 0, 2040, 2057, unit_p_past_7, unit_s_past_7 },
+	 { /* ae_past_8 */ 4, 0, 1570, 1588, unit_p_past_8, unit_s_past_8 },
+	 { /* ae_past_9 */ 4, 0, 1090, 1107, unit_p_past_9, unit_s_past_9 },
+	 { /* ae_past_10 */ 4, 0, 639, 657, unit_p_past_10, unit_s_past_10 },
+	 { /* ae_past_11 */ 4, 0, 200, 217, unit_p_past_11, unit_s_past_11 },
+	 { /* ah_just_0 */ 5, 1, 8932, 8943, unit_jh_just_0, unit_s_just_0 },
+	 { /* ah_just_1 */ 5, 1, 7092, 7102, unit_jh_just_1, unit_s_just_1 },
+	 { /* ah_just_2 */ 5, 1, 5349, 5359, unit_jh_just_2, unit_s_just_2 },
+	 { /* ah_just_3 */ 5, 1, 4180, 4192, unit_jh_just_3, unit_s_just_3 },
+	 { /* ah_just_4 */ 5, 1, 2407, 2417, unit_jh_just_4, unit_s_just_4 },
+	 { /* ah_just_5 */ 5, 1, 546, 555, unit_jh_just_5, unit_s_just_5 },
+	 { /* ah_one_0 */ 6, 1, 5486, 5500, unit_w_one_0, unit_n_one_0 },
+	 { /* ah_one_1 */ 6, 1, 244, 261, unit_w_one_1, unit_n_one_1 },
+	 { /* ao_almost_0 */ 7, 2, 9384, 9404, unit_pau_aw_0, unit_l_almost_0 },
+	 { /* ao_almost_1 */ 7, 2, 8495, 8515, unit_pau_aw_2, unit_l_almost_1 },
+	 { /* ao_almost_2 */ 7, 2, 6622, 6640, unit_pau_aw_6, unit_l_almost_2 },
+	 { /* ao_almost_3 */ 7, 2, 5031, 5046, unit_pau_aw_10, unit_l_almost_3 },
+	 { /* ao_almost_4 */ 7, 2, 3305, 3322, unit_pau_aw_14, unit_l_almost_4 },
+	 { /* ao_almost_5 */ 7, 2, 1451, 1473, unit_pau_aw_18, unit_l_almost_5 },
+	 { /* ao_four_0 */ 8, 2, 6755, 6783, unit_f_four_0, unit_r_four_0 },
+	 { /* ao_four_1 */ 8, 2, 1612, 1635, unit_f_four_1, unit_r_four_1 },
+	 { /* ao_morning_0 */ 9, 2, 4811, 4827, unit_m_morning_0, unit_r_morning_0 },
+	 { /* ao_morning_1 */ 9, 2, 4373, 4390, unit_m_morning_1, unit_r_morning_1 },
+	 { /* ao_morning_2 */ 9, 2, 3937, 3952, unit_m_morning_2, unit_r_morning_2 },
+	 { /* ao_morning_3 */ 9, 2, 3502, 3521, unit_m_morning_3, unit_r_morning_3 },
+	 { /* ao_morning_4 */ 9, 2, 3084, 3097, unit_m_morning_4, unit_r_morning_4 },
+	 { /* ao_morning_5 */ 9, 2, 2612, 2629, unit_m_morning_5, unit_r_morning_5 },
+	 { /* ao_morning_6 */ 9, 2, 2167, 2184, unit_m_morning_6, unit_r_morning_6 },
+	 { /* ao_morning_7 */ 9, 2, 1696, 1710, unit_m_morning_7, unit_r_morning_7 },
+	 { /* ao_morning_8 */ 9, 2, 1217, 1232, unit_m_morning_8, unit_r_morning_8 },
+	 { /* ao_morning_9 */ 9, 2, 758, 774, unit_m_morning_9, unit_r_morning_9 },
+	 { /* ao_morning_10 */ 9, 2, 320, 335, unit_m_morning_10, unit_r_morning_10 },
+	 { /* ao_quarter_0 */ 10, 2, 10289, 10299, unit_w_quarter_0, unit_r_quarter_0 },
+	 { /* ao_quarter_1 */ 10, 2, 9016, 9024, unit_w_quarter_1, unit_r_quarter_1 },
+	 { /* ao_quarter_2 */ 10, 2, 6276, 6287, unit_w_quarter_2, unit_r_quarter_2 },
+	 { /* ao_quarter_3 */ 10, 2, 3799, 3808, unit_w_quarter_3, unit_r_quarter_3 },
+	 { /* ao_quarter_4 */ 10, 2, 1060, 1068, unit_w_quarter_4, unit_r_quarter_4 },
+	 { /* aw_now_0 */ 11, 3, 9775, 9809, unit_n_now_1, CLUNIT_NONE },
+	 { /* aw_now_1 */ 11, 3, 9333, 9368, unit_n_now_2, unit_pau_aw_0 },
+	 { /* aw_now_2 */ 11, 3, 8863, 8899, unit_n_now_3, unit_pau_aw_1 },
+	 { /* aw_now_3 */ 11, 3, 8447, 8486, unit_n_now_4, unit_pau_aw_2 },
+	 { /* aw_now_4 */ 11, 3, 7970, 8005, unit_n_now_5, unit_pau_aw_3 },
+	 { /* aw_now_5 */ 11, 3, 7521, 7557, unit_n_now_6, unit_pau_aw_4 },
+	 { /* aw_now_6 */ 11, 3, 7030, 7063, unit_n_now_7, unit_pau_aw_5 },
+	 { /* aw_now_7 */ 11, 3, 6574, 6610, unit_n_now_8, unit_pau_aw_6 },
+	 { /* aw_now_8 */ 11, 3, 6161, 6195, unit_n_now_9, unit_pau_aw_7 },
+	 { /* aw_now_9 */ 11, 3, 5743, 5777, unit_n_now_10, unit_pau_aw_8 },
+	 { /* aw_now_10 */ 11, 3, 5283, 5319, unit_n_now_11, unit_pau_aw_9 },
+	 { /* aw_now_11 */ 11, 3, 4976, 5010, unit_n_now_12, unit_pau_aw_10 },
+	 { /* aw_now_12 */ 11, 3, 4530, 4562, unit_n_now_13, unit_pau_aw_11 },
+	 { /* aw_now_13 */ 11, 3, 4108, 4142, unit_n_now_14, unit_pau_aw_12 },
+	 { /* aw_now_14 */ 11, 3, 3677, 3710, unit_n_now_15, unit_pau_aw_13 },
+	 { /* aw_now_15 */ 11, 3, 3252, 3284, unit_n_now_16, unit_pau_aw_14 },
+	 { /* aw_now_16 */ 11, 3, 2781, 2813, unit_n_now_17, unit_pau_aw_15 },
+	 { /* aw_now_17 */ 11, 3, 2349, 2380, unit_n_now_18, unit_pau_aw_16 },
+	 { /* aw_now_18 */ 11, 3, 1853, 1884, unit_n_now_19, unit_pau_aw_17 },
+	 { /* aw_now_19 */ 11, 3, 1390, 1422, unit_n_now_20, unit_pau_aw_18 },
+	 { /* aw_now_20 */ 11, 3, 920, 953, unit_n_now_21, unit_pau_aw_19 },
+	 { /* aw_now_21 */ 11, 3, 480, 512, unit_n_now_22, unit_pau_aw_20 },
+	 { /* aw_now_22 */ 11, 3, 60, 92, unit_n_now_23, unit_pau_aw_21 },
+	 { /* ax_a_0 */ 12, 4, 10192, 10196, CLUNIT_NONE, unit_l_little_1 },
+	 { /* ax_a_1 */ 12, 4, 7574, 7578, unit_pau_aw_4, unit_l_little_3 },
+	 { /* ax_a_2 */ 12, 4, 5786, 5790, unit_pau_aw_8, unit_l_little_5 },
+	 { /* ax_a_3 */ 12, 4, 4584, 4589, unit_pau_aw_11, unit_l_little_7 },
+	 { /* ax_a_4 */ 12, 4, 2834, 2839, unit_pau_aw_15, unit_l_little_9 },
+	 { /* ax_a_5 */ 12, 4, 975, 979, unit_pau_aw_19, unit_l_little_11 },
+	 { /* ax_eleven_0 */ 13, 4, 9965, 9971, unit_v_eleven_0, unit_n_eleven_0 },
+	 { /* ax_eleven_1 */ 13, 4, 4748, 4756, unit_v_eleven_1, unit_n_eleven_1 },
+	 { /* ax_little_0 */ 14, 4, 10222, 10226, unit_t_little_0, unit_l_little_0 },
+	 { /* ax_little_1 */ 14, 4, 7604, 7608, unit_t_little_1, unit_l_little_2 },
+	 { /* ax_little_2 */ 14, 4, 5813, 5818, unit_t_little_2, unit_l_little_4 },
+	 { /* ax_little_3 */ 14, 4, 4612, 4615, unit_t_little_3, unit_l_little_6 },
+	 { /* ax_little_4 */ 14, 4, 2863, 2868, unit_t_little_4, unit_l_little_8 },
+	 { /* ax_little_5 */ 14, 4, 1001, 1004, unit_t_little_5, unit_l_little_10 },
+	 { /* ax_seven_0 */ 15, 4, 8204, 8213, unit_v_seven_0, unit_n_seven_0 },
+	 { /* ax_seven_1 */ 15, 4, 3022, 3030, unit_v_seven_1, unit_n_seven_1 },
+	 { /* ax_the_0 */ 16, 4, 10128, 10130, unit_dh_the_0, unit_t_time_0 },
+	 { /* ax_the_1 */ 16, 4, 9707, 9711, unit_dh_the_2, unit_t_time_1 },
+	 { /* ax_the_2 */ 16, 4, 9275, 9278, unit_dh_the_4, unit_t_time_2 },
+	 { /* ax_the_3 */ 16, 4, 8807, 8812, unit_dh_the_6, unit_t_time_3 },
+	 { /* ax_the_4 */ 16, 4, 8381, 8386, unit_dh_the_8, unit_t_time_4 },
+	 { /* ax_the_5 */ 16, 4, 7904, 7908, unit_dh_the_10, unit_t_time_5 },
+	 { /* ax_the_6 */ 16, 4, 7462, 7467, unit_dh_the_12, unit_t_time_6 },
+	 { /* ax_the_7 */ 16, 4, 6964, 6968, unit_dh_the_14, unit_t_time_7 },
+	 { /* ax_the_8 */ 16, 4, 6520, 6525, unit_dh_the_16, unit_t_time_8 },
+	 { /* ax_the_9 */ 16, 4, 6094, 6099, unit_dh_the_18, unit_t_time_9 },
+	 { /* ax_the_10 */ 16, 4, 5220, 5224, unit_dh_the_22, unit_t_time_11 },
+	 { /* ax_the_11 */ 16, 4, 4916, 4919, unit_dh_the_23, unit_t_time_12 },
+	 { /* ax_the_12 */ 16, 4, 4800, 4803, unit_dh_the_24, unit_m_morning_0 },
+	 { /* ax_the_13 */ 16, 4, 4362, 4367, unit_dh_the_25, unit_m_morning_1 },
+	 { /* ax_the_14 */ 16, 4, 4043, 4048, unit_dh_the_26, unit_t_time_14 },
+	 { /* ax_the_15 */ 16, 4, 3927, 3931, unit_dh_the_27, unit_m_morning_2 },
+	 { /* ax_the_16 */ 16, 4, 3612, 3616, unit_dh_the_28, unit_t_time_15 },
+	 { /* ax_the_17 */ 16, 4, 3493, 3498, unit_dh_the_29, unit_m_morning_3 },
+	 { /* ax_the_18 */ 16, 4, 3189, 3195, unit_dh_the_30, unit_t_time_16 },
+	 { /* ax_the_19 */ 16, 4, 3072, 3076, unit_dh_the_31, unit_m_morning_4 },
+	 { /* ax_the_20 */ 16, 4, 2712, 2719, unit_dh_the_32, unit_t_time_17 },
+	 { /* ax_the_21 */ 16, 4, 2603, 2608, unit_dh_the_33, unit_m_morning_5 },
+	 { /* ax_the_22 */ 16, 4, 2284, 2289, unit_dh_the_34, unit_t_time_18 },
+	 { /* ax_the_23 */ 16, 4, 2156, 2160, unit_dh_the_35, unit_m_morning_6 },
+	 { /* ax_the_24 */ 16, 4, 1789, 1793, unit_dh_the_36, unit_t_time_19 },
+	 { /* ax_the_25 */ 16, 4, 1684, 1689, unit_dh_the_37, unit_m_morning_7 },
+	 { /* ax_the_26 */ 16, 4, 1327, 1330, unit_dh_the_38, unit_t_time_20 },
+	 { /* ax_the_27 */ 16, 4, 1206, 1211, unit_dh_the_39, unit_m_morning_8 },
+	 { /* ax_the_28 */ 16, 4, 859, 863, unit_dh_the_40, unit_t_time_21 },
+	 { /* ax_the_29 */ 16, 4, 748, 751, unit_dh_the_41, unit_m_morning_9 },
+	 { /* ax_the_30 */ 16, 4, 416, 420, unit_dh_the_42, unit_t_time_22 },
+	 { /* ax_the_31 */ 16, 4, 309, 313, unit_dh_the_43, unit_m_morning_10 },
+	 { /* ax_the_32 */ 16, 4, 27, 33, unit_dh_the_44, unit_t_time_23 },
+	 { /* ax_to_0 */ 17, 4, 10329, 10337, unit_t_to_0, unit_m_midnight_0 },
+	 { /* ax_to_1 */ 17, 4, 7235, 7242, unit_t_to_1, unit_f_five_2 },
+	 { /* ax_to_2 */ 17, 4, 6734, 6741, unit_t_to_2, unit_f_four_0 },
+	 { /* ax_to_3 */ 17, 4, 6309, 6317, unit_t_to_3, unit_th_three_0 },
+	 { /* ax_to_4 */ 17, 4, 5895, 5901, unit_t_to_4, unit_t_two_0 },
+	 { /* ax_to_5 */ 17, 4, 5463, 5477, unit_t_to_5, unit_w_one_0 },
+	 { /* ax_to_6 */ 17, 4, 4708, 4714, unit_t_to_6, unit_ih_eleven_1 },
+	 { /* ax_to_7 */ 17, 4, 4283, 4289, unit_t_to_7, unit_t_ten_3 },
+	 { /* ax_to_8 */ 17, 4, 3835, 3838, unit_t_to_8, unit_n_nine_3 },
+	 { /* ax_to_9 */ 17, 4, 3413, 3419, unit_t_to_9, unit_ey_eight_1 },
+	 { /* ax_to_10 */ 17, 4, 2990, 2992, unit_t_to_10, unit_s_seven_1 },
+	 { /* ay_five_0 */ 18, 5, 9873, 9895, unit_f_five_0, unit_v_five_0 },
+	 { /* ay_five_1 */ 18, 5, 8116, 8139, unit_f_five_1, unit_v_five_1 },
+	 { /* ay_five_2 */ 18, 5, 7252, 7281, unit_f_five_2, unit_v_five_2 },
+	 { /* ay_five_3 */ 18, 5, 7202, 7225, unit_f_five_3, unit_v_five_3 },
+	 { /* ay_five_4 */ 18, 5, 5430, 5451, unit_f_five_4, unit_v_five_4 },
+	 { /* ay_five_5 */ 18, 5, 4672, 4697, unit_f_five_5, unit_v_five_5 },
+	 { /* ay_five_6 */ 18, 5, 2957, 2980, unit_f_five_6, unit_v_five_6 },
+	 { /* ay_five_7 */ 18, 5, 2078, 2111, unit_f_five_7, unit_v_five_7 },
+	 { /* ay_five_8 */ 18, 5, 2002, 2027, unit_f_five_8, unit_v_five_8 },
+	 { /* ay_five_9 */ 18, 5, 171, 189, unit_f_five_9, unit_v_five_9 },
+	 { /* ay_midnight_0 */ 19, 5, 10371, 10389, unit_n_midnight_0, unit_t_midnight_0 },
+	 { /* ay_nine_0 */ 20, 5, 9082, 9101, unit_n_nine_1, unit_n_nine_0 },
+	 { /* ay_nine_1 */ 20, 5, 3849, 3872, unit_n_nine_3, unit_n_nine_2 },
+	 { /* ay_time_0 */ 21, 5, 10139, 10163, unit_t_time_0, unit_m_time_0 },
+	 { /* ay_time_1 */ 21, 5, 9717, 9741, unit_t_time_1, unit_m_time_1 },
+	 { /* ay_time_2 */ 21, 5, 9284, 9304, unit_t_time_2, unit_m_time_2 },
+	 { /* ay_time_3 */ 21, 5, 8818, 8841, unit_t_time_3, CLUNIT_NONE },
+	 { /* ay_time_4 */ 21, 5, 8394, 8418, unit_t_time_4, unit_m_time_3 },
+	 { /* ay_time_5 */ 21, 5, 7915, 7933, unit_t_time_5, unit_m_time_4 },
+	 { /* ay_time_6 */ 21, 5, 7474, 7498, unit_t_time_6, unit_m_time_5 },
+	 { /* ay_time_7 */ 21, 5, 6973, 6999, unit_t_time_7, unit_m_time_6 },
+	 { /* ay_time_8 */ 21, 5, 6534, 6553, unit_t_time_8, CLUNIT_NONE },
+	 { /* ay_time_9 */ 21, 5, 6104, 6124, unit_t_time_9, unit_m_time_7 },
+	 { /* ay_time_10 */ 21, 5, 5692, 5711, unit_t_time_10, unit_m_time_8 },
+	 { /* ay_time_11 */ 21, 5, 5230, 5250, unit_t_time_11, unit_m_time_9 },
+	 { /* ay_time_12 */ 21, 5, 4924, 4942, unit_t_time_12, unit_m_time_10 },
+	 { /* ay_time_13 */ 21, 5, 4478, 4496, unit_t_time_13, unit_m_time_11 },
+	 { /* ay_time_14 */ 21, 5, 4055, 4074, unit_t_time_14, unit_m_time_12 },
+	 { /* ay_time_15 */ 21, 5, 3623, 3645, unit_t_time_15, unit_m_time_13 },
+	 { /* ay_time_16 */ 21, 5, 3200, 3222, unit_t_time_16, unit_m_time_14 },
+	 { /* ay_time_17 */ 21, 5, 2727, 2750, unit_t_time_17, unit_m_time_15 },
+	 { /* ay_time_18 */ 21, 5, 2297, 2318, unit_t_time_18, unit_m_time_16 },
+	 { /* ay_time_19 */ 21, 5, 1801, 1818, unit_t_time_19, unit_m_time_17 },
+	 { /* ay_time_20 */ 21, 5, 1338, 1356, unit_t_time_20, unit_m_time_18 },
+	 { /* ay_time_21 */ 21, 5, 869, 888, unit_t_time_21, unit_m_time_19 },
+	 { /* ay_time_22 */ 21, 5, 427, 446, unit_t_time_22, unit_m_time_20 },
+	 { /* d_midnight_0 */ 22, 6, 10358, 10363, unit_ih_midnight_0, unit_n_midnight_0 },
+	 { /* dh_the_0 */ 23, 7, 10124, 10128, unit_pau_pau_0, unit_ax_the_0 },
+	 { /* dh_the_1 */ 23, 7, 10012, 10016, unit_n_in_0, unit_iy_the_0 },
+	 { /* dh_the_2 */ 23, 7, 9704, 9707, unit_pau_pau_1, unit_ax_the_1 },
+	 { /* dh_the_3 */ 23, 7, 9584, 9587, CLUNIT_NONE, unit_iy_the_1 },
+	 { /* dh_the_4 */ 23, 7, 9271, 9275, unit_pau_pau_2, unit_ax_the_2 },
+	 { /* dh_the_5 */ 23, 7, 9152, 9154, unit_n_in_1, unit_iy_the_2 },
+	 { /* dh_the_6 */ 23, 7, 8803, 8807, CLUNIT_NONE, unit_ax_the_3 },
+	 { /* dh_the_7 */ 23, 7, 8710, 8712, unit_n_in_2, unit_iy_the_3 },
+	 { /* dh_the_8 */ 23, 7, 8378, 8381, unit_pau_pau_3, unit_ax_the_4 },
+	 { /* dh_the_9 */ 23, 7, 8257, 8262, unit_n_in_3, unit_iy_the_4 },
+	 { /* dh_the_10 */ 23, 7, 7900, 7904, unit_pau_pau_4, unit_ax_the_5 },
+	 { /* dh_the_11 */ 23, 7, 7792, 7795, CLUNIT_NONE, unit_iy_the_5 },
+	 { /* dh_the_12 */ 23, 7, 7458, 7462, unit_pau_pau_5, unit_ax_the_6 },
+	 { /* dh_the_13 */ 23, 7, 7328, 7331, unit_n_in_4, unit_iy_the_6 },
+	 { /* dh_the_14 */ 23, 7, 6961, 6964, unit_pau_pau_6, unit_ax_the_7 },
+	 { /* dh_the_15 */ 23, 7, 6819, 6822, unit_n_in_5, unit_iy_the_7 },
+	 { /* dh_the_16 */ 23, 7, 6516, 6520, unit_pau_pau_7, unit_ax_the_8 },
+	 { /* dh_the_17 */ 23, 7, 6396, 6399, unit_n_in_6, unit_iy_the_8 },
+	 { /* dh_the_18 */ 23, 7, 6090, 6094, unit_pau_pau_8, unit_ax_the_9 },
+	 { /* dh_the_19 */ 23, 7, 5977, 5979, unit_n_in_7, unit_iy_the_9 },
+	 { /* dh_the_20 */ 23, 7, 5680, 5685, unit_pau_pau_9, CLUNIT_NONE },
+	 { /* dh_the_21 */ 23, 7, 5547, 5549, unit_n_in_8, unit_iy_the_10 },
+	 { /* dh_the_22 */ 23, 7, 5216, 5220, unit_pau_pau_10, unit_ax_the_10 },
+	 { /* dh_the_23 */ 23, 7, 4911, 4916, unit_pau_pau_11, unit_ax_the_11 },
+	 { /* dh_the_24 */ 23, 7, 4798, 4800, unit_n_in_9, unit_ax_the_12 },
+	 { /* dh_the_25 */ 23, 7, 4360, 4362, unit_n_in_10, unit_ax_the_13 },
+	 { /* dh_the_26 */ 23, 7, 4038, 4043, unit_pau_pau_14, unit_ax_the_14 },
+	 { /* dh_the_27 */ 23, 7, 3924, 3927, unit_n_in_11, unit_ax_the_15 },
+	 { /* dh_the_28 */ 23, 7, 3606, 3612, unit_pau_pau_15, unit_ax_the_16 },
+	 { /* dh_the_29 */ 23, 7, 3491, 3493, unit_n_in_12, unit_ax_the_17 },
+	 { /* dh_the_30 */ 23, 7, 3186, 3189, unit_pau_pau_16, unit_ax_the_18 },
+	 { /* dh_the_31 */ 23, 7, 3070, 3072, unit_n_in_13, unit_ax_the_19 },
+	 { /* dh_the_32 */ 23, 7, 2710, 2712, unit_pau_pau_17, unit_ax_the_20 },
+	 { /* dh_the_33 */ 23, 7, 2601, 2603, unit_n_in_14, unit_ax_the_21 },
+	 { /* dh_the_34 */ 23, 7, 2280, 2284, unit_pau_pau_18, unit_ax_the_22 },
+	 { /* dh_the_35 */ 23, 7, 2155, 2156, unit_n_in_15, unit_ax_the_23 },
+	 { /* dh_the_36 */ 23, 7, 1785, 1789, unit_pau_pau_19, unit_ax_the_24 },
+	 { /* dh_the_37 */ 23, 7, 1682, 1684, unit_n_in_16, unit_ax_the_25 },
+	 { /* dh_the_38 */ 23, 7, 1323, 1327, unit_pau_pau_20, unit_ax_the_26 },
+	 { /* dh_the_39 */ 23, 7, 1204, 1206, unit_n_in_17, unit_ax_the_27 },
+	 { /* dh_the_40 */ 23, 7, 856, 859, unit_pau_pau_21, unit_ax_the_28 },
+	 { /* dh_the_41 */ 23, 7, 747, 748, unit_n_in_18, unit_ax_the_29 },
+	 { /* dh_the_42 */ 23, 7, 413, 416, unit_pau_pau_22, unit_ax_the_30 },
+	 { /* dh_the_43 */ 23, 7, 306, 309, unit_n_in_19, unit_ax_the_31 },
+	 { /* dh_the_44 */ 23, 7, 23, 27, unit_pau_pau_23, unit_ax_the_32 },
+	 { /* eh_eleven_0 */ 24, 8, 9950, 9960, unit_l_eleven_0, unit_v_eleven_0 },
+	 { /* eh_eleven_1 */ 24, 8, 4732, 4743, unit_l_eleven_1, unit_v_eleven_1 },
+	 { /* eh_seven_0 */ 25, 8, 8184, 8195, unit_s_seven_0, unit_v_seven_0 },
+	 { /* eh_seven_1 */ 25, 8, 3005, 3016, unit_s_seven_1, unit_v_seven_1 },
+	 { /* eh_ten_0 */ 26, 8, 9524, 9547, unit_t_ten_0, unit_n_ten_0 },
+	 { /* eh_ten_1 */ 26, 8, 9452, 9467, unit_t_ten_1, unit_n_ten_1 },
+	 { /* eh_ten_2 */ 26, 8, 5868, 5881, unit_t_ten_2, unit_n_ten_2 },
+	 { /* eh_ten_3 */ 26, 8, 4298, 4319, unit_t_ten_3, unit_n_ten_3 },
+	 { /* eh_ten_4 */ 26, 8, 4257, 4269, unit_t_ten_4, unit_n_ten_4 },
+	 { /* eh_ten_5 */ 26, 8, 611, 620, unit_t_ten_5, unit_n_ten_5 },
+	 { /* eh_twelve_0 */ 27, 8, 5111, 5131, unit_w_twelve_0, unit_l_twelve_0 },
+	 { /* eh_twenty_0 */ 28, 8, 8575, 8581, unit_w_twenty_0, unit_n_twenty_0 },
+	 { /* eh_twenty_1 */ 28, 8, 8080, 8086, unit_w_twenty_1, unit_n_twenty_1 },
+	 { /* eh_twenty_2 */ 28, 8, 7168, 7173, unit_w_twenty_2, unit_n_twenty_2 },
+	 { /* eh_twenty_3 */ 28, 8, 6699, 6708, unit_w_twenty_3, unit_n_twenty_3 },
+	 { /* eh_twenty_4 */ 28, 8, 3379, 3387, unit_w_twenty_4, unit_n_twenty_4 },
+	 { /* eh_twenty_5 */ 28, 8, 2918, 2928, unit_w_twenty_5, unit_n_twenty_5 },
+	 { /* eh_twenty_6 */ 28, 8, 1967, 1977, unit_w_twenty_6, unit_n_twenty_6 },
+	 { /* eh_twenty_7 */ 28, 8, 1533, 1539, unit_w_twenty_7, unit_n_twenty_7 },
+	 { /* er_after_0 */ 29, 9, 10263, 10269, unit_t_after_0, unit_k_quarter_0 },
+	 { /* er_after_1 */ 29, 9, 8990, 9001, unit_t_after_1, unit_k_quarter_1 },
+	 { /* er_after_2 */ 29, 9, 7648, 7659, unit_t_after_2, unit_hh_half_0 },
+	 { /* er_after_3 */ 29, 9, 7147, 7153, unit_t_after_3, unit_t_twenty_5 },
+	 { /* er_after_4 */ 29, 9, 5853, 5860, unit_t_after_4, unit_t_ten_2 },
+	 { /* er_after_5 */ 29, 9, 5407, 5420, unit_t_after_5, unit_f_five_4 },
+	 { /* er_after_6 */ 29, 9, 4655, 4662, unit_t_after_6, unit_f_five_5 },
+	 { /* er_after_7 */ 29, 9, 4234, 4242, unit_t_after_7, unit_t_ten_4 },
+	 { /* er_after_8 */ 29, 9, 2902, 2905, unit_t_after_8, unit_t_twenty_11 },
+	 { /* er_after_9 */ 29, 9, 2459, 2468, unit_t_after_9, unit_hh_half_1 },
+	 { /* er_after_10 */ 29, 9, 1040, 1046, unit_t_after_10, unit_k_quarter_4 },
+	 { /* er_after_11 */ 29, 9, 595, 600, unit_t_after_11, unit_t_ten_5 },
+	 { /* er_afternoon_0 */ 30, 9, 7366, 7371, unit_t_afternoon_0, unit_n_afternoon_1 },
+	 { /* er_afternoon_1 */ 30, 9, 6862, 6869, unit_t_afternoon_1, unit_n_afternoon_3 },
+	 { /* er_afternoon_2 */ 30, 9, 6437, 6442, unit_t_afternoon_2, unit_n_afternoon_5 },
+	 { /* er_afternoon_3 */ 30, 9, 6019, 6027, unit_t_afternoon_3, unit_n_afternoon_7 },
+	 { /* er_afternoon_4 */ 30, 9, 5587, 5593, unit_t_afternoon_4, unit_n_afternoon_9 },
+	 { /* er_quarter_0 */ 31, 9, 10310, 10319, unit_t_quarter_0, unit_t_to_0 },
+	 { /* er_quarter_1 */ 31, 9, 9033, 9038, unit_t_quarter_1, unit_p_past_2 },
+	 { /* er_quarter_2 */ 31, 9, 6297, 6304, unit_t_quarter_2, unit_t_to_3 },
+	 { /* er_quarter_3 */ 31, 9, 3818, 3827, unit_t_quarter_3, unit_t_to_8 },
+	 { /* er_quarter_4 */ 31, 9, 1077, 1082, unit_t_quarter_4, unit_p_past_9 },
+	 { /* ey_eight_0 */ 32, 10, 8641, 8664, unit_t_past_3, unit_t_eight_0 },
+	 { /* ey_eight_1 */ 32, 10, 3419, 3445, unit_ax_to_9, unit_t_eight_1 },
+	 { /* f_after_0 */ 33, 11, 10252, 10257, unit_ae_after_0, unit_t_after_0 },
+	 { /* f_after_1 */ 33, 11, 8977, 8984, unit_ae_after_1, unit_t_after_1 },
+	 { /* f_after_2 */ 33, 11, 7635, 7641, unit_ae_after_2, unit_t_after_2 },
+	 { /* f_after_3 */ 33, 11, 7135, 7140, unit_ae_after_3, unit_t_after_3 },
+	 { /* f_after_4 */ 33, 11, 5842, 5848, unit_ae_after_4, unit_t_after_4 },
+	 { /* f_after_5 */ 33, 11, 5385, 5398, unit_ae_after_5, unit_t_after_5 },
+	 { /* f_after_6 */ 33, 11, 4643, 4649, unit_ae_after_6, unit_t_after_6 },
+	 { /* f_after_7 */ 33, 11, 4221, 4227, unit_ae_after_7, unit_t_after_7 },
+	 { /* f_after_8 */ 33, 11, 2889, 2896, unit_ae_after_8, unit_t_after_8 },
+	 { /* f_after_9 */ 33, 11, 2448, 2454, unit_ae_after_9, unit_t_after_9 },
+	 { /* f_after_10 */ 33, 11, 1029, 1033, unit_ae_after_10, unit_t_after_10 },
+	 { /* f_after_11 */ 33, 11, 583, 589, unit_ae_after_11, unit_t_after_11 },
+	 { /* f_afternoon_0 */ 34, 11, 7352, 7360, unit_ae_afternoon_0, unit_t_afternoon_0 },
+	 { /* f_afternoon_1 */ 34, 11, 6847, 6855, unit_ae_afternoon_1, unit_t_afternoon_1 },
+	 { /* f_afternoon_2 */ 34, 11, 6424, 6430, unit_ae_afternoon_2, unit_t_afternoon_2 },
+	 { /* f_afternoon_3 */ 34, 11, 6005, 6012, unit_ae_afternoon_3, unit_t_afternoon_3 },
+	 { /* f_afternoon_4 */ 34, 11, 5573, 5580, unit_ae_afternoon_4, unit_t_afternoon_4 },
+	 { /* f_five_0 */ 35, 11, 9863, 9873, unit_iy_exactly_0, unit_ay_five_0 },
+	 { /* f_five_1 */ 35, 11, 8106, 8116, unit_iy_twenty_1, unit_ay_five_1 },
+	 { /* f_five_2 */ 35, 11, 7242, 7252, unit_ax_to_1, unit_ay_five_2 },
+	 { /* f_five_3 */ 35, 11, 7194, 7202, unit_iy_twenty_2, unit_ay_five_3 },
+	 { /* f_five_4 */ 35, 11, 5420, 5430, unit_er_after_5, unit_ay_five_4 },
+	 { /* f_five_5 */ 35, 11, 4662, 4672, unit_er_after_6, unit_ay_five_5 },
+	 { /* f_five_6 */ 35, 11, 2945, 2957, unit_iy_twenty_5, unit_ay_five_6 },
+	 { /* f_five_7 */ 35, 11, 2069, 2078, unit_t_past_7, unit_ay_five_7 },
+	 { /* f_five_8 */ 35, 11, 1993, 2002, unit_iy_twenty_6, unit_ay_five_8 },
+	 { /* f_five_9 */ 35, 11, 162, 171, unit_iy_exactly_5, unit_ay_five_9 },
+	 { /* f_four_0 */ 36, 11, 6741, 6755, unit_ax_to_2, unit_ao_four_0 },
+	 { /* f_four_1 */ 36, 11, 1601, 1612, unit_t_past_8, unit_ao_four_1 },
+	 { /* f_half_0 */ 37, 11, 7683, 7688, unit_ae_half_0, unit_p_past_5 },
+	 { /* f_half_1 */ 37, 11, 2490, 2495, unit_ae_half_1, unit_p_past_6 },
+	 { /* g_exactly_0 */ 38, 12, 9813, 9819, unit_ih_exactly_0, unit_z_exactly_0 },
+	 { /* g_exactly_1 */ 38, 12, 8015, 8022, unit_ih_exactly_1, unit_z_exactly_1 },
+	 { /* g_exactly_2 */ 38, 12, 6210, 6213, unit_ih_exactly_2, unit_z_exactly_2 },
+	 { /* g_exactly_3 */ 38, 12, 3731, 3735, unit_ih_exactly_3, unit_z_exactly_3 },
+	 { /* g_exactly_4 */ 38, 12, 1907, 1911, unit_ih_exactly_4, unit_z_exactly_4 },
+	 { /* g_exactly_5 */ 38, 12, 120, 124, unit_ih_exactly_5, unit_z_exactly_5 },
+	 { /* hh_half_0 */ 39, 13, 7659, 7667, unit_er_after_2, unit_ae_half_0 },
+	 { /* hh_half_1 */ 39, 13, 2468, 2476, unit_er_after_9, unit_ae_half_1 },
+	 { /* ih_eleven_0 */ 40, 14, 9935, 9943, unit_t_past_0, unit_l_eleven_0 },
+	 { /* ih_eleven_1 */ 40, 14, 4714, 4721, unit_ax_to_6, unit_l_eleven_1 },
+	 { /* ih_evening_0 */ 41, 14, 10059, 10070, unit_n_evening_0, unit_ng_evening_0 },
+	 { /* ih_evening_1 */ 41, 14, 9625, 9638, unit_n_evening_1, unit_ng_evening_1 },
+	 { /* ih_evening_2 */ 41, 14, 9195, 9203, unit_n_evening_2, unit_ng_evening_2 },
+	 { /* ih_evening_3 */ 41, 14, 8748, 8758, unit_n_evening_3, unit_ng_evening_3 },
+	 { /* ih_evening_4 */ 41, 14, 8298, 8310, unit_n_evening_4, unit_ng_evening_4 },
+	 { /* ih_evening_5 */ 41, 14, 7834, 7847, unit_n_evening_5, unit_ng_evening_5 },
+	 { /* ih_exactly_0 */ 42, 14, 9809, 9813, CLUNIT_NONE, unit_g_exactly_0 },
+	 { /* ih_exactly_1 */ 42, 14, 8009, 8015, unit_pau_aw_3, unit_g_exactly_1 },
+	 { /* ih_exactly_2 */ 42, 14, 6205, 6210, unit_pau_aw_7, unit_g_exactly_2 },
+	 { /* ih_exactly_3 */ 42, 14, 3724, 3731, unit_pau_aw_13, unit_g_exactly_3 },
+	 { /* ih_exactly_4 */ 42, 14, 1899, 1907, unit_pau_aw_17, unit_g_exactly_4 },
+	 { /* ih_exactly_5 */ 42, 14, 115, 120, unit_pau_aw_21, unit_g_exactly_5 },
+	 { /* ih_in_0 */ 43, 14, 9997, 10003, unit_pau_n_0, unit_n_in_0 },
+	 { /* ih_in_1 */ 43, 14, 9578, 9584, unit_pau_n_1, CLUNIT_NONE },
+	 { /* ih_in_2 */ 43, 14, 9138, 9145, unit_pau_n_2, unit_n_in_1 },
+	 { /* ih_in_3 */ 43, 14, 8693, 8704, unit_pau_t_1, unit_n_in_2 },
+	 { /* ih_in_4 */ 43, 14, 8243, 8250, unit_pau_n_3, unit_n_in_3 },
+	 { /* ih_in_5 */ 43, 14, 7785, 7792, unit_pau_s_0, CLUNIT_NONE },
+	 { /* ih_in_6 */ 43, 14, 7312, 7319, unit_pau_v_0, unit_n_in_4 },
+	 { /* ih_in_7 */ 43, 14, 6801, 6812, unit_pau_r_0, unit_n_in_5 },
+	 { /* ih_in_8 */ 43, 14, 6382, 6389, unit_pau_iy_0, unit_n_in_6 },
+	 { /* ih_in_9 */ 43, 14, 5963, 5970, unit_pau_uw_0, unit_n_in_7 },
+	 { /* ih_in_10 */ 43, 14, 5532, 5540, unit_pau_n_9, unit_n_in_8 },
+	 { /* ih_in_11 */ 43, 14, 4784, 4791, unit_pau_n_10, unit_n_in_9 },
+	 { /* ih_in_12 */ 43, 14, 4346, 4353, unit_pau_n_11, unit_n_in_10 },
+	 { /* ih_in_13 */ 43, 14, 3909, 3919, unit_pau_n_12, unit_n_in_11 },
+	 { /* ih_in_14 */ 43, 14, 3476, 3486, unit_pau_t_2, unit_n_in_12 },
+	 { /* ih_in_15 */ 43, 14, 3056, 3062, unit_pau_n_13, unit_n_in_13 },
+	 { /* ih_in_16 */ 43, 14, 2586, 2593, unit_pau_s_1, unit_n_in_14 },
+	 { /* ih_in_17 */ 43, 14, 2140, 2148, unit_pau_v_2, unit_n_in_15 },
+	 { /* ih_in_18 */ 43, 14, 1669, 1676, unit_pau_r_1, unit_n_in_16 },
+	 { /* ih_in_19 */ 43, 14, 1190, 1197, unit_pau_iy_1, unit_n_in_17 },
+	 { /* ih_in_20 */ 43, 14, 732, 738, unit_pau_uw_1, unit_n_in_18 },
+	 { /* ih_in_21 */ 43, 14, 292, 301, unit_pau_n_14, unit_n_in_19 },
+	 { /* ih_is_0 */ 44, 14, 10172, 10180, unit_m_time_0, unit_z_is_0 },
+	 { /* ih_is_1 */ 44, 14, 9751, 9761, unit_m_time_1, unit_z_is_1 },
+	 { /* ih_is_2 */ 44, 14, 9317, 9327, unit_m_time_2, CLUNIT_NONE },
+	 { /* ih_is_3 */ 44, 14, 8841, 8849, CLUNIT_NONE, unit_z_is_2 },
+	 { /* ih_is_4 */ 44, 14, 8425, 8435, unit_m_time_3, unit_z_is_3 },
+	 { /* ih_is_5 */ 44, 14, 7949, 7959, unit_m_time_4, unit_z_is_4 },
+	 { /* ih_is_6 */ 44, 14, 7509, 7517, unit_m_time_5, CLUNIT_NONE },
+	 { /* ih_is_7 */ 44, 14, 7007, 7017, unit_m_time_6, unit_z_is_5 },
+	 { /* ih_is_8 */ 44, 14, 6553, 6561, CLUNIT_NONE, unit_z_is_6 },
+	 { /* ih_is_9 */ 44, 14, 6140, 6148, unit_m_time_7, unit_z_is_7 },
+	 { /* ih_is_10 */ 44, 14, 5725, 5732, unit_m_time_8, unit_z_is_8 },
+	 { /* ih_is_11 */ 44, 14, 5263, 5271, unit_m_time_9, unit_z_is_9 },
+	 { /* ih_is_12 */ 44, 14, 4956, 4965, unit_m_time_10, unit_z_is_10 },
+	 { /* ih_is_13 */ 44, 14, 4511, 4519, unit_m_time_11, unit_z_is_11 },
+	 { /* ih_is_14 */ 44, 14, 4087, 4094, unit_m_time_12, unit_z_is_12 },
+	 { /* ih_is_15 */ 44, 14, 3655, 3664, unit_m_time_13, unit_z_is_13 },
+	 { /* ih_is_16 */ 44, 14, 3232, 3238, unit_m_time_14, unit_z_is_14 },
+	 { /* ih_is_17 */ 44, 14, 2758, 2767, unit_m_time_15, unit_z_is_15 },
+	 { /* ih_is_18 */ 44, 14, 2330, 2336, unit_m_time_16, unit_z_is_16 },
+	 { /* ih_is_19 */ 44, 14, 1830, 1839, unit_m_time_17, unit_z_is_17 },
+	 { /* ih_is_20 */ 44, 14, 1368, 1376, unit_m_time_18, unit_z_is_18 },
+	 { /* ih_is_21 */ 44, 14, 900, 907, unit_m_time_19, unit_z_is_19 },
+	 { /* ih_is_22 */ 44, 14, 458, 465, unit_m_time_20, unit_z_is_20 },
+	 { /* ih_is_23 */ 44, 14, 40, 47, CLUNIT_NONE, unit_z_is_21 },
+	 { /* ih_little_0 */ 45, 14, 10207, 10214, unit_l_little_1, unit_t_little_0 },
+	 { /* ih_little_1 */ 45, 14, 7587, 7595, unit_l_little_3, unit_t_little_1 },
+	 { /* ih_little_2 */ 45, 14, 5797, 5805, unit_l_little_5, unit_t_little_2 },
+	 { /* ih_little_3 */ 45, 14, 4596, 4604, unit_l_little_7, unit_t_little_3 },
+	 { /* ih_little_4 */ 45, 14, 2848, 2856, unit_l_little_9, unit_t_little_4 },
+	 { /* ih_little_5 */ 45, 14, 986, 996, unit_l_little_11, unit_t_little_5 },
+	 { /* ih_midnight_0 */ 46, 14, 10349, 10358, unit_m_midnight_0, unit_d_midnight_0 },
+	 { /* ih_morning_0 */ 47, 14, 4840, 4846, unit_n_morning_0, unit_ng_morning_0 },
+	 { /* ih_morning_1 */ 47, 14, 4402, 4411, unit_n_morning_1, unit_ng_morning_1 },
+	 { /* ih_morning_2 */ 47, 14, 3965, 3971, unit_n_morning_2, unit_ng_morning_2 },
+	 { /* ih_morning_3 */ 47, 14, 3533, 3542, unit_n_morning_3, unit_ng_morning_3 },
+	 { /* ih_morning_4 */ 47, 14, 3109, 3118, unit_n_morning_4, unit_ng_morning_4 },
+	 { /* ih_morning_5 */ 47, 14, 2642, 2648, unit_n_morning_5, unit_ng_morning_5 },
+	 { /* ih_morning_6 */ 47, 14, 2196, 2204, unit_n_morning_6, unit_ng_morning_6 },
+	 { /* ih_morning_7 */ 47, 14, 1722, 1730, unit_n_morning_7, unit_ng_morning_7 },
+	 { /* ih_morning_8 */ 47, 14, 1244, 1253, unit_n_morning_8, unit_ng_morning_8 },
+	 { /* ih_morning_9 */ 47, 14, 784, 794, unit_n_morning_9, unit_ng_morning_9 },
+	 { /* ih_morning_10 */ 47, 14, 347, 356, unit_n_morning_10, unit_ng_morning_10 },
+	 { /* ih_six_0 */ 48, 14, 7735, 7750, unit_s_six_1, unit_k_six_0 },
+	 { /* ih_six_1 */ 48, 14, 2539, 2549, unit_s_six_3, unit_k_six_1 },
+	 { /* iy_evening_0 */ 49, 15, 10023, 10046, unit_iy_the_0, unit_v_evening_0 },
+	 { /* iy_evening_1 */ 49, 15, 9594, 9615, unit_iy_the_1, unit_v_evening_1 },
+	 { /* iy_evening_2 */ 49, 15, 9160, 9181, unit_iy_the_2, unit_v_evening_2 },
+	 { /* iy_evening_3 */ 49, 15, 8718, 8739, unit_iy_the_3, unit_v_evening_3 },
+	 { /* iy_evening_4 */ 49, 15, 8268, 8285, unit_iy_the_4, unit_v_evening_4 },
+	 { /* iy_evening_5 */ 49, 15, 7801, 7824, unit_iy_the_5, unit_v_evening_5 },
+	 { /* iy_exactly_0 */ 50, 15, 9852, 9863, unit_l_exactly_0, unit_f_five_0 },
+	 { /* iy_exactly_1 */ 50, 15, 8057, 8068, unit_l_exactly_1, unit_t_twenty_3 },
+	 { /* iy_exactly_2 */ 50, 15, 6250, 6259, unit_l_exactly_2, unit_k_quarter_2 },
+	 { /* iy_exactly_3 */ 50, 15, 3771, 3780, unit_l_exactly_3, unit_k_quarter_3 },
+	 { /* iy_exactly_4 */ 50, 15, 1945, 1954, unit_l_exactly_4, unit_t_twenty_13 },
+	 { /* iy_exactly_5 */ 50, 15, 154, 162, unit_l_exactly_5, unit_f_five_9 },
+	 { /* iy_the_0 */ 51, 15, 10016, 10023, unit_dh_the_1, unit_iy_evening_0 },
+	 { /* iy_the_1 */ 51, 15, 9587, 9594, unit_dh_the_3, unit_iy_evening_1 },
+	 { /* iy_the_2 */ 51, 15, 9154, 9160, unit_dh_the_5, unit_iy_evening_2 },
+	 { /* iy_the_3 */ 51, 15, 8712, 8718, unit_dh_the_7, unit_iy_evening_3 },
+	 { /* iy_the_4 */ 51, 15, 8262, 8268, unit_dh_the_9, unit_iy_evening_4 },
+	 { /* iy_the_5 */ 51, 15, 7795, 7801, unit_dh_the_11, unit_iy_evening_5 },
+	 { /* iy_the_6 */ 51, 15, 7331, 7336, unit_dh_the_13, unit_ae_afternoon_0 },
+	 { /* iy_the_7 */ 51, 15, 6822, 6828, unit_dh_the_15, unit_ae_afternoon_1 },
+	 { /* iy_the_8 */ 51, 15, 6399, 6408, unit_dh_the_17, unit_ae_afternoon_2 },
+	 { /* iy_the_9 */ 51, 15, 5979, 5985, unit_dh_the_19, unit_ae_afternoon_3 },
+	 { /* iy_the_10 */ 51, 15, 5549, 5554, unit_dh_the_21, unit_ae_afternoon_4 },
+	 { /* iy_three_0 */ 52, 15, 6334, 6361, unit_r_three_0, unit_pau_iy_0 },
+	 { /* iy_three_1 */ 52, 15, 1142, 1163, unit_r_three_1, unit_pau_iy_1 },
+	 { /* iy_twenty_0 */ 53, 15, 8594, 8601, unit_t_twenty_0, unit_p_past_3 },
+	 { /* iy_twenty_1 */ 53, 15, 8098, 8106, unit_t_twenty_2, unit_f_five_1 },
+	 { /* iy_twenty_2 */ 53, 15, 7186, 7194, unit_t_twenty_4, unit_f_five_3 },
+	 { /* iy_twenty_3 */ 53, 15, 6722, 6729, unit_t_twenty_6, unit_t_to_2 },
+	 { /* iy_twenty_4 */ 53, 15, 3401, 3404, unit_t_twenty_8, unit_t_to_9 },
+	 { /* iy_twenty_5 */ 53, 15, 2939, 2945, unit_t_twenty_10, unit_f_five_6 },
+	 { /* iy_twenty_6 */ 53, 15, 1986, 1993, unit_t_twenty_12, unit_f_five_8 },
+	 { /* iy_twenty_7 */ 53, 15, 1554, 1561, unit_t_twenty_14, unit_p_past_8 },
+	 { /* jh_just_0 */ 54, 16, 8921, 8932, unit_pau_aw_1, unit_ah_just_0 },
+	 { /* jh_just_1 */ 54, 16, 7084, 7092, unit_pau_aw_5, unit_ah_just_1 },
+	 { /* jh_just_2 */ 54, 16, 5337, 5349, unit_pau_aw_9, unit_ah_just_2 },
+	 { /* jh_just_3 */ 54, 16, 4174, 4180, unit_pau_pau_13, unit_ah_just_3 },
+	 { /* jh_just_4 */ 54, 16, 2400, 2407, unit_pau_aw_16, unit_ah_just_4 },
+	 { /* jh_just_5 */ 54, 16, 540, 546, unit_pau_aw_20, unit_ah_just_5 },
+	 { /* k_exactly_0 */ 55, 17, 9842, 9845, unit_ae_exactly_0, unit_t_exactly_0 },
+	 { /* k_exactly_1 */ 55, 17, 8048, 8051, unit_ae_exactly_1, unit_t_exactly_1 },
+	 { /* k_exactly_2 */ 55, 17, 6240, 6242, unit_ae_exactly_2, unit_t_exactly_2 },
+	 { /* k_exactly_3 */ 55, 17, 3761, 3765, unit_ae_exactly_3, unit_t_exactly_3 },
+	 { /* k_exactly_4 */ 55, 17, 1936, 1939, unit_ae_exactly_4, unit_t_exactly_4 },
+	 { /* k_exactly_5 */ 55, 17, 144, 147, unit_ae_exactly_5, unit_t_exactly_5 },
+	 { /* k_quarter_0 */ 56, 17, 10269, 10284, unit_er_after_0, unit_w_quarter_0 },
+	 { /* k_quarter_1 */ 56, 17, 9001, 9010, unit_er_after_1, unit_w_quarter_1 },
+	 { /* k_quarter_2 */ 56, 17, 6259, 6273, unit_iy_exactly_2, unit_w_quarter_2 },
+	 { /* k_quarter_3 */ 56, 17, 3780, 3794, unit_iy_exactly_3, unit_w_quarter_3 },
+	 { /* k_quarter_4 */ 56, 17, 1046, 1056, unit_er_after_10, unit_w_quarter_4 },
+	 { /* k_six_0 */ 57, 17, 7750, 7762, unit_ih_six_0, unit_s_six_0 },
+	 { /* k_six_1 */ 57, 17, 2549, 2561, unit_ih_six_1, unit_s_six_2 },
+	 { /* l_almost_0 */ 58, 18, 9404, 9408, unit_ao_almost_0, unit_m_almost_0 },
+	 { /* l_almost_1 */ 58, 18, 8515, 8522, unit_ao_almost_1, unit_m_almost_1 },
+	 { /* l_almost_2 */ 58, 18, 6640, 6645, unit_ao_almost_2, unit_m_almost_2 },
+	 { /* l_almost_3 */ 58, 18, 5046, 5055, unit_ao_almost_3, unit_m_almost_3 },
+	 { /* l_almost_4 */ 58, 18, 3322, 3329, unit_ao_almost_4, unit_m_almost_4 },
+	 { /* l_almost_5 */ 58, 18, 1473, 1479, unit_ao_almost_5, unit_m_almost_5 },
+	 { /* l_eleven_0 */ 59, 18, 9943, 9950, unit_ih_eleven_0, unit_eh_eleven_0 },
+	 { /* l_eleven_1 */ 59, 18, 4721, 4732, unit_ih_eleven_1, unit_eh_eleven_1 },
+	 { /* l_exactly_0 */ 60, 18, 9850, 9852, unit_t_exactly_0, unit_iy_exactly_0 },
+	 { /* l_exactly_1 */ 60, 18, 8056, 8057, unit_t_exactly_1, unit_iy_exactly_1 },
+	 { /* l_exactly_2 */ 60, 18, 6247, 6250, unit_t_exactly_2, unit_iy_exactly_2 },
+	 { /* l_exactly_3 */ 60, 18, 3768, 3771, unit_t_exactly_3, unit_iy_exactly_3 },
+	 { /* l_exactly_4 */ 60, 18, 1943, 1945, unit_t_exactly_4, unit_iy_exactly_4 },
+	 { /* l_exactly_5 */ 60, 18, 153, 154, unit_t_exactly_5, unit_iy_exactly_5 },
+	 { /* l_little_0 */ 61, 18, 10226, 10234, unit_ax_little_0, unit_ae_after_0 },
+	 { /* l_little_1 */ 61, 18, 10196, 10207, unit_ax_a_0, unit_ih_little_0 },
+	 { /* l_little_2 */ 61, 18, 7608, 7615, unit_ax_little_1, unit_ae_after_2 },
+	 { /* l_little_3 */ 61, 18, 7578, 7587, unit_ax_a_1, unit_ih_little_1 },
+	 { /* l_little_4 */ 61, 18, 5818, 5823, unit_ax_little_2, unit_ae_after_4 },
+	 { /* l_little_5 */ 61, 18, 5790, 5797, unit_ax_a_2, unit_ih_little_2 },
+	 { /* l_little_6 */ 61, 18, 4615, 4622, unit_ax_little_3, unit_ae_after_6 },
+	 { /* l_little_7 */ 61, 18, 4589, 4596, unit_ax_a_3, unit_ih_little_3 },
+	 { /* l_little_8 */ 61, 18, 2868, 2872, unit_ax_little_4, unit_ae_after_8 },
+	 { /* l_little_9 */ 61, 18, 2839, 2848, unit_ax_a_4, unit_ih_little_4 },
+	 { /* l_little_10 */ 61, 18, 1004, 1014, unit_ax_little_5, unit_ae_after_10 },
+	 { /* l_little_11 */ 61, 18, 979, 986, unit_ax_a_5, unit_ih_little_5 },
+	 { /* l_twelve_0 */ 62, 18, 5131, 5145, unit_eh_twelve_0, unit_v_twelve_0 },
+	 { /* m_almost_0 */ 63, 19, 9408, 9418, unit_l_almost_0, unit_ow_almost_0 },
+	 { /* m_almost_1 */ 63, 19, 8522, 8532, unit_l_almost_1, unit_ow_almost_1 },
+	 { /* m_almost_2 */ 63, 19, 6645, 6656, unit_l_almost_2, unit_ow_almost_2 },
+	 { /* m_almost_3 */ 63, 19, 5055, 5066, unit_l_almost_3, unit_ow_almost_3 },
+	 { /* m_almost_4 */ 63, 19, 3329, 3339, unit_l_almost_4, unit_ow_almost_4 },
+	 { /* m_almost_5 */ 63, 19, 1479, 1489, unit_l_almost_5, unit_ow_almost_5 },
+	 { /* m_midnight_0 */ 64, 19, 10337, 10349, unit_ax_to_0, unit_ih_midnight_0 },
+	 { /* m_morning_0 */ 65, 19, 4803, 4811, unit_ax_the_12, unit_ao_morning_0 },
+	 { /* m_morning_1 */ 65, 19, 4367, 4373, unit_ax_the_13, unit_ao_morning_1 },
+	 { /* m_morning_2 */ 65, 19, 3931, 3937, unit_ax_the_15, unit_ao_morning_2 },
+	 { /* m_morning_3 */ 65, 19, 3498, 3502, unit_ax_the_17, unit_ao_morning_3 },
+	 { /* m_morning_4 */ 65, 19, 3076, 3084, unit_ax_the_19, unit_ao_morning_4 },
+	 { /* m_morning_5 */ 65, 19, 2608, 2612, unit_ax_the_21, unit_ao_morning_5 },
+	 { /* m_morning_6 */ 65, 19, 2160, 2167, unit_ax_the_23, unit_ao_morning_6 },
+	 { /* m_morning_7 */ 65, 19, 1689, 1696, unit_ax_the_25, unit_ao_morning_7 },
+	 { /* m_morning_8 */ 65, 19, 1211, 1217, unit_ax_the_27, unit_ao_morning_8 },
+	 { /* m_morning_9 */ 65, 19, 751, 758, unit_ax_the_29, unit_ao_morning_9 },
+	 { /* m_morning_10 */ 65, 19, 313, 320, unit_ax_the_31, unit_ao_morning_10 },
+	 { /* m_time_0 */ 66, 19, 10163, 10172, unit_ay_time_0, unit_ih_is_0 },
+	 { /* m_time_1 */ 66, 19, 9741, 9751, unit_ay_time_1, unit_ih_is_1 },
+	 { /* m_time_2 */ 66, 19, 9304, 9317, unit_ay_time_2, unit_ih_is_2 },
+	 { /* m_time_3 */ 66, 19, 8418, 8425, unit_ay_time_4, unit_ih_is_4 },
+	 { /* m_time_4 */ 66, 19, 7933, 7949, unit_ay_time_5, unit_ih_is_5 },
+	 { /* m_time_5 */ 66, 19, 7498, 7509, unit_ay_time_6, unit_ih_is_6 },
+	 { /* m_time_6 */ 66, 19, 6999, 7007, unit_ay_time_7, unit_ih_is_7 },
+	 { /* m_time_7 */ 66, 19, 6124, 6140, unit_ay_time_9, unit_ih_is_9 },
+	 { /* m_time_8 */ 66, 19, 5711, 5725, unit_ay_time_10, unit_ih_is_10 },
+	 { /* m_time_9 */ 66, 19, 5250, 5263, unit_ay_time_11, unit_ih_is_11 },
+	 { /* m_time_10 */ 66, 19, 4942, 4956, unit_ay_time_12, unit_ih_is_12 },
+	 { /* m_time_11 */ 66, 19, 4496, 4511, unit_ay_time_13, unit_ih_is_13 },
+	 { /* m_time_12 */ 66, 19, 4074, 4087, unit_ay_time_14, unit_ih_is_14 },
+	 { /* m_time_13 */ 66, 19, 3645, 3655, unit_ay_time_15, unit_ih_is_15 },
+	 { /* m_time_14 */ 66, 19, 3222, 3232, unit_ay_time_16, unit_ih_is_16 },
+	 { /* m_time_15 */ 66, 19, 2750, 2758, unit_ay_time_17, unit_ih_is_17 },
+	 { /* m_time_16 */ 66, 19, 2318, 2330, unit_ay_time_18, unit_ih_is_18 },
+	 { /* m_time_17 */ 66, 19, 1818, 1830, unit_ay_time_19, unit_ih_is_19 },
+	 { /* m_time_18 */ 66, 19, 1356, 1368, unit_ay_time_20, unit_ih_is_20 },
+	 { /* m_time_19 */ 66, 19, 888, 900, unit_ay_time_21, unit_ih_is_21 },
+	 { /* m_time_20 */ 66, 19, 446, 458, unit_ay_time_22, unit_ih_is_22 },
+	 { /* n_afternoon_0 */ 67, 20, 7394, 7402, unit_uw_afternoon_0, unit_pau_n_4 },
+	 { /* n_afternoon_1 */ 67, 20, 7371, 7378, unit_er_afternoon_0, unit_uw_afternoon_0 },
+	 { /* n_afternoon_2 */ 67, 20, 6892, 6903, unit_uw_afternoon_1, unit_pau_n_5 },
+	 { /* n_afternoon_3 */ 67, 20, 6869, 6875, unit_er_afternoon_1, unit_uw_afternoon_1 },
+	 { /* n_afternoon_4 */ 67, 20, 6466, 6476, unit_uw_afternoon_2, unit_pau_n_6 },
+	 { /* n_afternoon_5 */ 67, 20, 6442, 6450, unit_er_afternoon_2, unit_uw_afternoon_2 },
+	 { /* n_afternoon_6 */ 67, 20, 6047, 6054, unit_uw_afternoon_3, unit_pau_n_7 },
+	 { /* n_afternoon_7 */ 67, 20, 6027, 6034, unit_er_afternoon_3, unit_uw_afternoon_3 },
+	 { /* n_afternoon_8 */ 67, 20, 5617, 5628, unit_uw_afternoon_4, unit_pau_n_8 },
+	 { /* n_afternoon_9 */ 67, 20, 5593, 5602, unit_er_afternoon_4, unit_uw_afternoon_4 },
+	 { /* n_eleven_0 */ 68, 20, 9971, 9980, unit_ax_eleven_0, unit_pau_n_0 },
+	 { /* n_eleven_1 */ 68, 20, 4756, 4763, unit_ax_eleven_1, unit_pau_n_10 },
+	 { /* n_evening_0 */ 69, 20, 10052, 10059, unit_v_evening_0, unit_ih_evening_0 },
+	 { /* n_evening_1 */ 69, 20, 9621, 9625, unit_v_evening_1, unit_ih_evening_1 },
+	 { /* n_evening_2 */ 69, 20, 9190, 9195, unit_v_evening_2, unit_ih_evening_2 },
+	 { /* n_evening_3 */ 69, 20, 8744, 8748, unit_v_evening_3, unit_ih_evening_3 },
+	 { /* n_evening_4 */ 69, 20, 8292, 8298, unit_v_evening_4, unit_ih_evening_4 },
+	 { /* n_evening_5 */ 69, 20, 7829, 7834, unit_v_evening_5, unit_ih_evening_5 },
+	 { /* n_in_0 */ 70, 20, 10003, 10012, unit_ih_in_0, unit_dh_the_1 },
+	 { /* n_in_1 */ 70, 20, 9145, 9152, unit_ih_in_2, unit_dh_the_5 },
+	 { /* n_in_2 */ 70, 20, 8704, 8710, unit_ih_in_3, unit_dh_the_7 },
+	 { /* n_in_3 */ 70, 20, 8250, 8257, unit_ih_in_4, unit_dh_the_9 },
+	 { /* n_in_4 */ 70, 20, 7319, 7328, unit_ih_in_6, unit_dh_the_13 },
+	 { /* n_in_5 */ 70, 20, 6812, 6819, unit_ih_in_7, unit_dh_the_15 },
+	 { /* n_in_6 */ 70, 20, 6389, 6396, unit_ih_in_8, unit_dh_the_17 },
+	 { /* n_in_7 */ 70, 20, 5970, 5977, unit_ih_in_9, unit_dh_the_19 },
+	 { /* n_in_8 */ 70, 20, 5540, 5547, unit_ih_in_10, unit_dh_the_21 },
+	 { /* n_in_9 */ 70, 20, 4791, 4798, unit_ih_in_11, unit_dh_the_24 },
+	 { /* n_in_10 */ 70, 20, 4353, 4360, unit_ih_in_12, unit_dh_the_25 },
+	 { /* n_in_11 */ 70, 20, 3919, 3924, unit_ih_in_13, unit_dh_the_27 },
+	 { /* n_in_12 */ 70, 20, 3486, 3491, unit_ih_in_14, unit_dh_the_29 },
+	 { /* n_in_13 */ 70, 20, 3062, 3070, unit_ih_in_15, unit_dh_the_31 },
+	 { /* n_in_14 */ 70, 20, 2593, 2601, unit_ih_in_16, unit_dh_the_33 },
+	 { /* n_in_15 */ 70, 20, 2148, 2155, unit_ih_in_17, unit_dh_the_35 },
+	 { /* n_in_16 */ 70, 20, 1676, 1682, unit_ih_in_18, unit_dh_the_37 },
+	 { /* n_in_17 */ 70, 20, 1197, 1204, unit_ih_in_19, unit_dh_the_39 },
+	 { /* n_in_18 */ 70, 20, 738, 747, unit_ih_in_20, unit_dh_the_41 },
+	 { /* n_in_19 */ 70, 20, 301, 306, unit_ih_in_21, unit_dh_the_43 },
+	 { /* n_midnight_0 */ 71, 20, 10363, 10371, unit_d_midnight_0, unit_ay_midnight_0 },
+	 { /* n_morning_0 */ 72, 20, 4835, 4840, unit_r_morning_0, unit_ih_morning_0 },
+	 { /* n_morning_1 */ 72, 20, 4397, 4402, unit_r_morning_1, unit_ih_morning_1 },
+	 { /* n_morning_2 */ 72, 20, 3960, 3965, unit_r_morning_2, unit_ih_morning_2 },
+	 { /* n_morning_3 */ 72, 20, 3528, 3533, unit_r_morning_3, unit_ih_morning_3 },
+	 { /* n_morning_4 */ 72, 20, 3104, 3109, unit_r_morning_4, unit_ih_morning_4 },
+	 { /* n_morning_5 */ 72, 20, 2637, 2642, unit_r_morning_5, unit_ih_morning_5 },
+	 { /* n_morning_6 */ 72, 20, 2191, 2196, unit_r_morning_6, unit_ih_morning_6 },
+	 { /* n_morning_7 */ 72, 20, 1717, 1722, unit_r_morning_7, unit_ih_morning_7 },
+	 { /* n_morning_8 */ 72, 20, 1238, 1244, unit_r_morning_8, unit_ih_morning_8 },
+	 { /* n_morning_9 */ 72, 20, 780, 784, unit_r_morning_9, unit_ih_morning_9 },
+	 { /* n_morning_10 */ 72, 20, 342, 347, unit_r_morning_10, unit_ih_morning_10 },
+	 { /* n_nine_0 */ 73, 20, 9101, 9120, unit_ay_nine_0, unit_pau_n_2 },
+	 { /* n_nine_1 */ 73, 20, 9076, 9082, unit_t_past_2, unit_ay_nine_0 },
+	 { /* n_nine_2 */ 73, 20, 3872, 3887, unit_ay_nine_1, unit_pau_n_12 },
+	 { /* n_nine_3 */ 73, 20, 3838, 3849, unit_ax_to_8, unit_ay_nine_1 },
+	 { /* n_now_0 */ 74, 20, 10188, 10192, unit_z_is_0, CLUNIT_NONE },
+	 { /* n_now_1 */ 74, 20, 9769, 9775, unit_z_is_1, unit_aw_now_0 },
+	 { /* n_now_2 */ 74, 20, 9327, 9333, CLUNIT_NONE, unit_aw_now_1 },
+	 { /* n_now_3 */ 74, 20, 8859, 8863, unit_z_is_2, unit_aw_now_2 },
+	 { /* n_now_4 */ 74, 20, 8444, 8447, unit_z_is_3, unit_aw_now_3 },
+	 { /* n_now_5 */ 74, 20, 7967, 7970, unit_z_is_4, unit_aw_now_4 },
+	 { /* n_now_6 */ 74, 20, 7517, 7521, CLUNIT_NONE, unit_aw_now_5 },
+	 { /* n_now_7 */ 74, 20, 7026, 7030, unit_z_is_5, unit_aw_now_6 },
+	 { /* n_now_8 */ 74, 20, 6568, 6574, unit_z_is_6, unit_aw_now_7 },
+	 { /* n_now_9 */ 74, 20, 6156, 6161, unit_z_is_7, unit_aw_now_8 },
+	 { /* n_now_10 */ 74, 20, 5740, 5743, unit_z_is_8, unit_aw_now_9 },
+	 { /* n_now_11 */ 74, 20, 5280, 5283, unit_z_is_9, unit_aw_now_10 },
+	 { /* n_now_12 */ 74, 20, 4973, 4976, unit_z_is_10, unit_aw_now_11 },
+	 { /* n_now_13 */ 74, 20, 4527, 4530, unit_z_is_11, unit_aw_now_12 },
+	 { /* n_now_14 */ 74, 20, 4105, 4108, unit_z_is_12, unit_aw_now_13 },
+	 { /* n_now_15 */ 74, 20, 3673, 3677, unit_z_is_13, unit_aw_now_14 },
+	 { /* n_now_16 */ 74, 20, 3248, 3252, unit_z_is_14, unit_aw_now_15 },
+	 { /* n_now_17 */ 74, 20, 2774, 2781, unit_z_is_15, unit_aw_now_16 },
+	 { /* n_now_18 */ 74, 20, 2344, 2349, unit_z_is_16, unit_aw_now_17 },
+	 { /* n_now_19 */ 74, 20, 1846, 1853, unit_z_is_17, unit_aw_now_18 },
+	 { /* n_now_20 */ 74, 20, 1384, 1390, unit_z_is_18, unit_aw_now_19 },
+	 { /* n_now_21 */ 74, 20, 915, 920, unit_z_is_19, unit_aw_now_20 },
+	 { /* n_now_22 */ 74, 20, 474, 480, unit_z_is_20, unit_aw_now_21 },
+	 { /* n_now_23 */ 74, 20, 55, 60, unit_z_is_21, unit_aw_now_22 },
+	 { /* n_one_0 */ 75, 20, 5500, 5510, unit_ah_one_0, unit_pau_n_9 },
+	 { /* n_one_1 */ 75, 20, 261, 270, unit_ah_one_1, unit_pau_n_14 },
+	 { /* n_seven_0 */ 76, 20, 8213, 8222, unit_ax_seven_0, unit_pau_n_3 },
+	 { /* n_seven_1 */ 76, 20, 3030, 3038, unit_ax_seven_1, unit_pau_n_13 },
+	 { /* n_ten_0 */ 77, 20, 9547, 9556, unit_eh_ten_0, unit_pau_n_1 },
+	 { /* n_ten_1 */ 77, 20, 9467, 9475, unit_eh_ten_1, unit_p_past_1 },
+	 { /* n_ten_2 */ 77, 20, 5881, 5887, unit_eh_ten_2, unit_t_to_4 },
+	 { /* n_ten_3 */ 77, 20, 4319, 4334, unit_eh_ten_3, unit_pau_n_11 },
+	 { /* n_ten_4 */ 77, 20, 4269, 4276, unit_eh_ten_4, unit_t_to_7 },
+	 { /* n_ten_5 */ 77, 20, 620, 631, unit_eh_ten_5, unit_p_past_10 },
+	 { /* n_twenty_0 */ 78, 20, 8581, 8589, unit_eh_twenty_0, unit_t_twenty_0 },
+	 { /* n_twenty_1 */ 78, 20, 8086, 8093, unit_eh_twenty_1, unit_t_twenty_2 },
+	 { /* n_twenty_2 */ 78, 20, 7173, 7181, unit_eh_twenty_2, unit_t_twenty_4 },
+	 { /* n_twenty_3 */ 78, 20, 6708, 6716, unit_eh_twenty_3, unit_t_twenty_6 },
+	 { /* n_twenty_4 */ 78, 20, 3387, 3394, unit_eh_twenty_4, unit_t_twenty_8 },
+	 { /* n_twenty_5 */ 78, 20, 2928, 2934, unit_eh_twenty_5, unit_t_twenty_10 },
+	 { /* n_twenty_6 */ 78, 20, 1977, 1982, unit_eh_twenty_6, unit_t_twenty_12 },
+	 { /* n_twenty_7 */ 78, 20, 1539, 1546, unit_eh_twenty_7, unit_t_twenty_14 },
+	 { /* ng_evening_0 */ 79, 21, 10070, 10078, unit_ih_evening_0, unit_pau_ng_0 },
+	 { /* ng_evening_1 */ 79, 21, 9638, 9645, unit_ih_evening_1, unit_pau_ng_1 },
+	 { /* ng_evening_2 */ 79, 21, 9203, 9211, unit_ih_evening_2, unit_pau_ng_2 },
+	 { /* ng_evening_3 */ 79, 21, 8758, 8769, unit_ih_evening_3, unit_pau_ng_3 },
+	 { /* ng_evening_4 */ 79, 21, 8310, 8318, unit_ih_evening_4, unit_pau_ng_4 },
+	 { /* ng_evening_5 */ 79, 21, 7847, 7855, unit_ih_evening_5, unit_pau_ng_5 },
+	 { /* ng_morning_0 */ 80, 21, 4846, 4856, unit_ih_morning_0, unit_pau_ng_6 },
+	 { /* ng_morning_1 */ 80, 21, 4411, 4420, unit_ih_morning_1, unit_pau_ng_7 },
+	 { /* ng_morning_2 */ 80, 21, 3971, 3981, unit_ih_morning_2, unit_pau_ng_8 },
+	 { /* ng_morning_3 */ 80, 21, 3542, 3549, unit_ih_morning_3, unit_pau_ng_9 },
+	 { /* ng_morning_4 */ 80, 21, 3118, 3126, unit_ih_morning_4, unit_pau_ng_10 },
+	 { /* ng_morning_5 */ 80, 21, 2648, 2656, unit_ih_morning_5, unit_pau_ng_11 },
+	 { /* ng_morning_6 */ 80, 21, 2204, 2217, unit_ih_morning_6, unit_pau_ng_12 },
+	 { /* ng_morning_7 */ 80, 21, 1730, 1738, unit_ih_morning_7, unit_pau_ng_13 },
+	 { /* ng_morning_8 */ 80, 21, 1253, 1262, unit_ih_morning_8, unit_pau_ng_14 },
+	 { /* ng_morning_9 */ 80, 21, 794, 802, unit_ih_morning_9, unit_pau_ng_15 },
+	 { /* ng_morning_10 */ 80, 21, 356, 364, unit_ih_morning_10, unit_pau_ng_16 },
+	 { /* ow_almost_0 */ 81, 22, 9418, 9436, unit_m_almost_0, unit_s_almost_0 },
+	 { /* ow_almost_1 */ 81, 22, 8532, 8552, unit_m_almost_1, unit_s_almost_1 },
+	 { /* ow_almost_2 */ 81, 22, 6656, 6675, unit_m_almost_2, unit_s_almost_2 },
+	 { /* ow_almost_3 */ 81, 22, 5066, 5082, unit_m_almost_3, unit_s_almost_3 },
+	 { /* ow_almost_4 */ 81, 22, 3339, 3355, unit_m_almost_4, unit_s_almost_4 },
+	 { /* ow_almost_5 */ 81, 22, 1489, 1508, unit_m_almost_5, unit_s_almost_5 },
+	 { /* p_past_0 */ 82, 23, 9898, 9907, unit_v_five_0, unit_ae_past_0 },
+	 { /* p_past_1 */ 82, 23, 9475, 9485, unit_n_ten_1, unit_ae_past_1 },
+	 { /* p_past_2 */ 82, 23, 9038, 9045, unit_er_quarter_1, unit_ae_past_2 },
+	 { /* p_past_3 */ 82, 23, 8601, 8609, unit_iy_twenty_0, unit_ae_past_3 },
+	 { /* p_past_4 */ 82, 23, 8144, 8151, unit_v_five_1, unit_ae_past_4 },
+	 { /* p_past_5 */ 82, 23, 7688, 7698, unit_f_half_0, unit_ae_past_5 },
+	 { /* p_past_6 */ 82, 23, 2495, 2502, unit_f_half_1, unit_ae_past_6 },
+	 { /* p_past_7 */ 82, 23, 2031, 2040, unit_v_five_8, unit_ae_past_7 },
+	 { /* p_past_8 */ 82, 23, 1561, 1570, unit_iy_twenty_7, unit_ae_past_8 },
+	 { /* p_past_9 */ 82, 23, 1082, 1090, unit_er_quarter_4, unit_ae_past_9 },
+	 { /* p_past_10 */ 82, 23, 631, 639, unit_n_ten_5, unit_ae_past_10 },
+	 { /* p_past_11 */ 82, 23, 193, 200, unit_v_five_9, unit_ae_past_11 },
+	 { /* pau_0_0 */ 83, 24, 10093, 10107, CLUNIT_NONE, CLUNIT_NONE },
+	 { /* pau_0_1 */ 83, 24, 9672, 9686, CLUNIT_NONE, CLUNIT_NONE },
+	 { /* pau_0_2 */ 83, 24, 9233, 9247, CLUNIT_NONE, unit_pau_pau_2 },
+	 { /* pau_0_3 */ 83, 24, 8789, 8803, CLUNIT_NONE, CLUNIT_NONE },
+	 { /* pau_0_4 */ 83, 24, 8344, 8358, CLUNIT_NONE, CLUNIT_NONE },
+	 { /* pau_0_5 */ 83, 24, 7423, 7437, CLUNIT_NONE, CLUNIT_NONE },
+	 { /* pau_0_6 */ 83, 24, 6926, 6940, CLUNIT_NONE, CLUNIT_NONE },
+	 { /* pau_0_7 */ 83, 24, 5650, 5664, CLUNIT_NONE, unit_pau_pau_9 },
+	 { /* pau_0_8 */ 83, 24, 5176, 5190, CLUNIT_NONE, unit_pau_pau_10 },
+	 { /* pau_0_9 */ 83, 24, 4878, 4892, CLUNIT_NONE, CLUNIT_NONE },
+	 { /* pau_0_10 */ 83, 24, 4435, 4449, CLUNIT_NONE, unit_pau_pau_12 },
+	 { /* pau_0_11 */ 83, 24, 3996, 4010, CLUNIT_NONE, CLUNIT_NONE },
+	 { /* pau_0_12 */ 83, 24, 3564, 3578, CLUNIT_NONE, unit_pau_pau_15 },
+	 { /* pau_0_13 */ 83, 24, 3148, 3162, CLUNIT_NONE, unit_pau_pau_16 },
+	 { /* pau_0_14 */ 83, 24, 2678, 2692, CLUNIT_NONE, CLUNIT_NONE },
+	 { /* pau_0_15 */ 83, 24, 2239, 2253, CLUNIT_NONE, CLUNIT_NONE },
+	 { /* pau_0_16 */ 83, 24, 1753, 1767, CLUNIT_NONE, CLUNIT_NONE },
+	 { /* pau_0_17 */ 83, 24, 1286, 1300, CLUNIT_NONE, CLUNIT_NONE },
+	 { /* pau_0_18 */ 83, 24, 817, 831, CLUNIT_NONE, CLUNIT_NONE },
+	 { /* pau_0_19 */ 83, 24, 379, 393, CLUNIT_NONE, CLUNIT_NONE },
+	 { /* pau_aw_0 */ 84, 24, 9368, 9384, unit_aw_now_1, unit_ao_almost_0 },
+	 { /* pau_aw_1 */ 84, 24, 8899, 8921, unit_aw_now_2, unit_jh_just_0 },
+	 { /* pau_aw_2 */ 84, 24, 8486, 8495, unit_aw_now_3, unit_ao_almost_1 },
+	 { /* pau_aw_3 */ 84, 24, 8005, 8009, unit_aw_now_4, unit_ih_exactly_1 },
+	 { /* pau_aw_4 */ 84, 24, 7557, 7574, unit_aw_now_5, unit_ax_a_1 },
+	 { /* pau_aw_5 */ 84, 24, 7063, 7084, unit_aw_now_6, unit_jh_just_1 },
+	 { /* pau_aw_6 */ 84, 24, 6610, 6622, unit_aw_now_7, unit_ao_almost_2 },
+	 { /* pau_aw_7 */ 84, 24, 6195, 6205, unit_aw_now_8, unit_ih_exactly_2 },
+	 { /* pau_aw_8 */ 84, 24, 5777, 5786, unit_aw_now_9, unit_ax_a_2 },
+	 { /* pau_aw_9 */ 84, 24, 5319, 5337, unit_aw_now_10, unit_jh_just_2 },
+	 { /* pau_aw_10 */ 84, 24, 5010, 5031, unit_aw_now_11, unit_ao_almost_3 },
+	 { /* pau_aw_11 */ 84, 24, 4562, 4584, unit_aw_now_12, unit_ax_a_3 },
+	 { /* pau_aw_12 */ 84, 24, 4142, 4157, unit_aw_now_13, unit_pau_pau_13 },
+	 { /* pau_aw_13 */ 84, 24, 3710, 3724, unit_aw_now_14, unit_ih_exactly_3 },
+	 { /* pau_aw_14 */ 84, 24, 3284, 3305, unit_aw_now_15, unit_ao_almost_4 },
+	 { /* pau_aw_15 */ 84, 24, 2813, 2834, unit_aw_now_16, unit_ax_a_4 },
+	 { /* pau_aw_16 */ 84, 24, 2380, 2400, unit_aw_now_17, unit_jh_just_4 },
+	 { /* pau_aw_17 */ 84, 24, 1884, 1899, unit_aw_now_18, unit_ih_exactly_4 },
+	 { /* pau_aw_18 */ 84, 24, 1422, 1451, unit_aw_now_19, unit_ao_almost_5 },
+	 { /* pau_aw_19 */ 84, 24, 953, 975, unit_aw_now_20, unit_ax_a_5 },
+	 { /* pau_aw_20 */ 84, 24, 512, 540, unit_aw_now_21, unit_jh_just_5 },
+	 { /* pau_aw_21 */ 84, 24, 92, 115, unit_aw_now_22, unit_ih_exactly_5 },
+	 { /* pau_iy_0 */ 85, 24, 6361, 6382, unit_iy_three_0, unit_ih_in_8 },
+	 { /* pau_iy_1 */ 85, 24, 1163, 1190, unit_iy_three_1, unit_ih_in_19 },
+	 { /* pau_n_0 */ 86, 24, 9980, 9997, unit_n_eleven_0, unit_ih_in_0 },
+	 { /* pau_n_1 */ 86, 24, 9556, 9578, unit_n_ten_0, unit_ih_in_1 },
+	 { /* pau_n_2 */ 86, 24, 9120, 9138, unit_n_nine_0, unit_ih_in_2 },
+	 { /* pau_n_3 */ 86, 24, 8222, 8243, unit_n_seven_0, unit_ih_in_4 },
+	 { /* pau_n_4 */ 86, 24, 7402, 7423, unit_n_afternoon_0, CLUNIT_NONE },
+	 { /* pau_n_5 */ 86, 24, 6903, 6926, unit_n_afternoon_2, CLUNIT_NONE },
+	 { /* pau_n_6 */ 86, 24, 6476, 6498, unit_n_afternoon_4, CLUNIT_NONE },
+	 { /* pau_n_7 */ 86, 24, 6054, 6076, unit_n_afternoon_6, CLUNIT_NONE },
+	 { /* pau_n_8 */ 86, 24, 5628, 5650, unit_n_afternoon_8, CLUNIT_NONE },
+	 { /* pau_n_9 */ 86, 24, 5510, 5532, unit_n_one_0, unit_ih_in_10 },
+	 { /* pau_n_10 */ 86, 24, 4763, 4784, unit_n_eleven_1, unit_ih_in_11 },
+	 { /* pau_n_11 */ 86, 24, 4334, 4346, unit_n_ten_3, unit_ih_in_12 },
+	 { /* pau_n_12 */ 86, 24, 3887, 3909, unit_n_nine_2, unit_ih_in_13 },
+	 { /* pau_n_13 */ 86, 24, 3038, 3056, unit_n_seven_1, unit_ih_in_15 },
+	 { /* pau_n_14 */ 86, 24, 270, 292, unit_n_one_1, unit_ih_in_21 },
+	 { /* pau_ng_0 */ 87, 24, 10078, 10093, unit_ng_evening_0, CLUNIT_NONE },
+	 { /* pau_ng_1 */ 87, 24, 9645, 9672, unit_ng_evening_1, CLUNIT_NONE },
+	 { /* pau_ng_2 */ 87, 24, 9211, 9233, unit_ng_evening_2, CLUNIT_NONE },
+	 { /* pau_ng_3 */ 87, 24, 8769, 8789, unit_ng_evening_3, CLUNIT_NONE },
+	 { /* pau_ng_4 */ 87, 24, 8318, 8344, unit_ng_evening_4, CLUNIT_NONE },
+	 { /* pau_ng_5 */ 87, 24, 7855, 7877, unit_ng_evening_5, CLUNIT_NONE },
+	 { /* pau_ng_6 */ 87, 24, 4856, 4878, unit_ng_morning_0, CLUNIT_NONE },
+	 { /* pau_ng_7 */ 87, 24, 4420, 4435, unit_ng_morning_1, CLUNIT_NONE },
+	 { /* pau_ng_8 */ 87, 24, 3981, 3996, unit_ng_morning_2, CLUNIT_NONE },
+	 { /* pau_ng_9 */ 87, 24, 3549, 3564, unit_ng_morning_3, CLUNIT_NONE },
+	 { /* pau_ng_10 */ 87, 24, 3126, 3148, unit_ng_morning_4, CLUNIT_NONE },
+	 { /* pau_ng_11 */ 87, 24, 2656, 2678, unit_ng_morning_5, CLUNIT_NONE },
+	 { /* pau_ng_12 */ 87, 24, 2217, 2239, unit_ng_morning_6, CLUNIT_NONE },
+	 { /* pau_ng_13 */ 87, 24, 1738, 1753, unit_ng_morning_7, CLUNIT_NONE },
+	 { /* pau_ng_14 */ 87, 24, 1262, 1286, unit_ng_morning_8, CLUNIT_NONE },
+	 { /* pau_ng_15 */ 87, 24, 802, 817, unit_ng_morning_9, CLUNIT_NONE },
+	 { /* pau_ng_16 */ 87, 24, 364, 379, unit_ng_morning_10, CLUNIT_NONE },
+	 { /* pau_pau_0 */ 88, 24, 10107, 10124, CLUNIT_NONE, unit_dh_the_0 },
+	 { /* pau_pau_1 */ 88, 24, 9686, 9704, CLUNIT_NONE, unit_dh_the_2 },
+	 { /* pau_pau_2 */ 88, 24, 9247, 9271, unit_pau_0_2, unit_dh_the_4 },
+	 { /* pau_pau_3 */ 88, 24, 8358, 8378, CLUNIT_NONE, unit_dh_the_8 },
+	 { /* pau_pau_4 */ 88, 24, 7877, 7900, CLUNIT_NONE, unit_dh_the_10 },
+	 { /* pau_pau_5 */ 88, 24, 7437, 7458, CLUNIT_NONE, unit_dh_the_12 },
+	 { /* pau_pau_6 */ 88, 24, 6940, 6961, CLUNIT_NONE, unit_dh_the_14 },
+	 { /* pau_pau_7 */ 88, 24, 6498, 6516, CLUNIT_NONE, unit_dh_the_16 },
+	 { /* pau_pau_8 */ 88, 24, 6076, 6090, CLUNIT_NONE, unit_dh_the_18 },
+	 { /* pau_pau_9 */ 88, 24, 5664, 5680, unit_pau_0_7, unit_dh_the_20 },
+	 { /* pau_pau_10 */ 88, 24, 5190, 5216, unit_pau_0_8, unit_dh_the_22 },
+	 { /* pau_pau_11 */ 88, 24, 4892, 4911, CLUNIT_NONE, unit_dh_the_23 },
+	 { /* pau_pau_12 */ 88, 24, 4449, 4472, unit_pau_0_10, CLUNIT_NONE },
+	 { /* pau_pau_13 */ 88, 24, 4157, 4174, unit_pau_aw_12, unit_jh_just_3 },
+	 { /* pau_pau_14 */ 88, 24, 4010, 4038, CLUNIT_NONE, unit_dh_the_26 },
+	 { /* pau_pau_15 */ 88, 24, 3578, 3606, unit_pau_0_12, unit_dh_the_28 },
+	 { /* pau_pau_16 */ 88, 24, 3162, 3186, unit_pau_0_13, unit_dh_the_30 },
+	 { /* pau_pau_17 */ 88, 24, 2692, 2710, CLUNIT_NONE, unit_dh_the_32 },
+	 { /* pau_pau_18 */ 88, 24, 2253, 2280, CLUNIT_NONE, unit_dh_the_34 },
+	 { /* pau_pau_19 */ 88, 24, 1767, 1785, CLUNIT_NONE, unit_dh_the_36 },
+	 { /* pau_pau_20 */ 88, 24, 1300, 1323, CLUNIT_NONE, unit_dh_the_38 },
+	 { /* pau_pau_21 */ 88, 24, 831, 856, CLUNIT_NONE, unit_dh_the_40 },
+	 { /* pau_pau_22 */ 88, 24, 393, 413, CLUNIT_NONE, unit_dh_the_42 },
+	 { /* pau_pau_23 */ 88, 24, 0, 23, CLUNIT_NONE, unit_dh_the_44 },
+	 { /* pau_r_0 */ 89, 24, 6795, 6801, unit_r_four_0, unit_ih_in_7 },
+	 { /* pau_r_1 */ 89, 24, 1647, 1669, unit_r_four_1, unit_ih_in_18 },
+	 { /* pau_s_0 */ 90, 24, 7779, 7785, unit_s_six_0, unit_ih_in_5 },
+	 { /* pau_s_1 */ 90, 24, 2571, 2586, unit_s_six_2, unit_ih_in_16 },
+	 { /* pau_t_0 */ 91, 24, 10409, 10424, unit_t_midnight_0, CLUNIT_NONE },
+	 { /* pau_t_1 */ 91, 24, 8678, 8693, unit_t_eight_0, unit_ih_in_3 },
+	 { /* pau_t_2 */ 91, 24, 3455, 3476, unit_t_eight_1, unit_ih_in_14 },
+	 { /* pau_uw_0 */ 92, 24, 5940, 5963, unit_uw_two_0, unit_ih_in_9 },
+	 { /* pau_uw_1 */ 92, 24, 711, 732, unit_uw_two_1, unit_ih_in_20 },
+	 { /* pau_v_0 */ 93, 24, 7292, 7312, unit_v_five_2, unit_ih_in_6 },
+	 { /* pau_v_1 */ 93, 24, 5161, 5176, unit_v_twelve_0, CLUNIT_NONE },
+	 { /* pau_v_2 */ 93, 24, 2119, 2140, unit_v_five_7, unit_ih_in_17 },
+	 { /* r_four_0 */ 94, 25, 6783, 6795, unit_ao_four_0, unit_pau_r_0 },
+	 { /* r_four_1 */ 94, 25, 1635, 1647, unit_ao_four_1, unit_pau_r_1 },
+	 { /* r_morning_0 */ 95, 25, 4827, 4835, unit_ao_morning_0, unit_n_morning_0 },
+	 { /* r_morning_1 */ 95, 25, 4390, 4397, unit_ao_morning_1, unit_n_morning_1 },
+	 { /* r_morning_2 */ 95, 25, 3952, 3960, unit_ao_morning_2, unit_n_morning_2 },
+	 { /* r_morning_3 */ 95, 25, 3521, 3528, unit_ao_morning_3, unit_n_morning_3 },
+	 { /* r_morning_4 */ 95, 25, 3097, 3104, unit_ao_morning_4, unit_n_morning_4 },
+	 { /* r_morning_5 */ 95, 25, 2629, 2637, unit_ao_morning_5, unit_n_morning_5 },
+	 { /* r_morning_6 */ 95, 25, 2184, 2191, unit_ao_morning_6, unit_n_morning_6 },
+	 { /* r_morning_7 */ 95, 25, 1710, 1717, unit_ao_morning_7, unit_n_morning_7 },
+	 { /* r_morning_8 */ 95, 25, 1232, 1238, unit_ao_morning_8, unit_n_morning_8 },
+	 { /* r_morning_9 */ 95, 25, 774, 780, unit_ao_morning_9, unit_n_morning_9 },
+	 { /* r_morning_10 */ 95, 25, 335, 342, unit_ao_morning_10, unit_n_morning_10 },
+	 { /* r_quarter_0 */ 96, 25, 10299, 10304, unit_ao_quarter_0, unit_t_quarter_0 },
+	 { /* r_quarter_1 */ 96, 25, 9024, 9026, unit_ao_quarter_1, unit_t_quarter_1 },
+	 { /* r_quarter_2 */ 96, 25, 6287, 6291, unit_ao_quarter_2, unit_t_quarter_2 },
+	 { /* r_quarter_3 */ 96, 25, 3808, 3813, unit_ao_quarter_3, unit_t_quarter_3 },
+	 { /* r_quarter_4 */ 96, 25, 1068, 1072, unit_ao_quarter_4, unit_t_quarter_4 },
+	 { /* r_three_0 */ 97, 25, 6329, 6334, unit_th_three_0, unit_iy_three_0 },
+	 { /* r_three_1 */ 97, 25, 1133, 1142, unit_th_three_1, unit_iy_three_1 },
+	 { /* s_almost_0 */ 98, 26, 9436, 9443, unit_ow_almost_0, unit_t_almost_0 },
+	 { /* s_almost_1 */ 98, 26, 8552, 8560, unit_ow_almost_1, unit_t_almost_1 },
+	 { /* s_almost_2 */ 98, 26, 6675, 6683, unit_ow_almost_2, unit_t_almost_2 },
+	 { /* s_almost_3 */ 98, 26, 5082, 5092, unit_ow_almost_3, unit_t_almost_3 },
+	 { /* s_almost_4 */ 98, 26, 3355, 3363, unit_ow_almost_4, unit_t_almost_4 },
+	 { /* s_almost_5 */ 98, 26, 1508, 1517, unit_ow_almost_5, unit_t_almost_5 },
+	 { /* s_just_0 */ 99, 26, 8943, 8950, unit_ah_just_0, unit_t_just_0 },
+	 { /* s_just_1 */ 99, 26, 7102, 7110, unit_ah_just_1, unit_t_just_1 },
+	 { /* s_just_2 */ 99, 26, 5359, 5367, unit_ah_just_2, unit_t_just_2 },
+	 { /* s_just_3 */ 99, 26, 4192, 4198, unit_ah_just_3, unit_t_just_3 },
+	 { /* s_just_4 */ 99, 26, 2417, 2424, unit_ah_just_4, unit_t_just_4 },
+	 { /* s_just_5 */ 99, 26, 555, 562, unit_ah_just_5, unit_t_just_5 },
+	 { /* s_past_0 */ 100, 26, 9925, 9929, unit_ae_past_0, unit_t_past_0 },
+	 { /* s_past_1 */ 100, 26, 9506, 9514, unit_ae_past_1, unit_t_past_1 },
+	 { /* s_past_2 */ 100, 26, 9064, 9071, unit_ae_past_2, unit_t_past_2 },
+	 { /* s_past_3 */ 100, 26, 8629, 8636, unit_ae_past_3, unit_t_past_3 },
+	 { /* s_past_4 */ 100, 26, 8172, 8176, unit_ae_past_4, unit_t_past_4 },
+	 { /* s_past_5 */ 100, 26, 7719, 7726, unit_ae_past_5, unit_t_past_5 },
+	 { /* s_past_6 */ 100, 26, 2523, 2529, unit_ae_past_6, unit_t_past_6 },
+	 { /* s_past_7 */ 100, 26, 2057, 2064, unit_ae_past_7, unit_t_past_7 },
+	 { /* s_past_8 */ 100, 26, 1588, 1594, unit_ae_past_8, unit_t_past_8 },
+	 { /* s_past_9 */ 100, 26, 1107, 1118, unit_ae_past_9, unit_t_past_9 },
+	 { /* s_past_10 */ 100, 26, 657, 666, unit_ae_past_10, unit_t_past_10 },
+	 { /* s_past_11 */ 100, 26, 217, 227, unit_ae_past_11, unit_t_past_11 },
+	 { /* s_seven_0 */ 101, 26, 8177, 8184, unit_t_past_4, unit_eh_seven_0 },
+	 { /* s_seven_1 */ 101, 26, 2992, 3005, unit_ax_to_10, unit_eh_seven_1 },
+	 { /* s_six_0 */ 102, 26, 7762, 7779, unit_k_six_0, unit_pau_s_0 },
+	 { /* s_six_1 */ 102, 26, 7727, 7735, unit_t_past_5, unit_ih_six_0 },
+	 { /* s_six_2 */ 102, 26, 2561, 2571, unit_k_six_1, unit_pau_s_1 },
+	 { /* s_six_3 */ 102, 26, 2531, 2539, unit_t_past_6, unit_ih_six_1 },
+	 { /* t_after_0 */ 103, 27, 10257, 10263, unit_f_after_0, unit_er_after_0 },
+	 { /* t_after_1 */ 103, 27, 8984, 8990, unit_f_after_1, unit_er_after_1 },
+	 { /* t_after_2 */ 103, 27, 7641, 7648, unit_f_after_2, unit_er_after_2 },
+	 { /* t_after_3 */ 103, 27, 7140, 7147, unit_f_after_3, unit_er_after_3 },
+	 { /* t_after_4 */ 103, 27, 5848, 5853, unit_f_after_4, unit_er_after_4 },
+	 { /* t_after_5 */ 103, 27, 5398, 5407, unit_f_after_5, unit_er_after_5 },
+	 { /* t_after_6 */ 103, 27, 4649, 4655, unit_f_after_6, unit_er_after_6 },
+	 { /* t_after_7 */ 103, 27, 4227, 4234, unit_f_after_7, unit_er_after_7 },
+	 { /* t_after_8 */ 103, 27, 2896, 2902, unit_f_after_8, unit_er_after_8 },
+	 { /* t_after_9 */ 103, 27, 2454, 2459, unit_f_after_9, unit_er_after_9 },
+	 { /* t_after_10 */ 103, 27, 1033, 1040, unit_f_after_10, unit_er_after_10 },
+	 { /* t_after_11 */ 103, 27, 589, 595, unit_f_after_11, unit_er_after_11 },
+	 { /* t_afternoon_0 */ 104, 27, 7360, 7366, unit_f_afternoon_0, unit_er_afternoon_0 },
+	 { /* t_afternoon_1 */ 104, 27, 6855, 6862, unit_f_afternoon_1, unit_er_afternoon_1 },
+	 { /* t_afternoon_2 */ 104, 27, 6430, 6437, unit_f_afternoon_2, unit_er_afternoon_2 },
+	 { /* t_afternoon_3 */ 104, 27, 6012, 6019, unit_f_afternoon_3, unit_er_afternoon_3 },
+	 { /* t_afternoon_4 */ 104, 27, 5580, 5587, unit_f_afternoon_4, unit_er_afternoon_4 },
+	 { /* t_almost_0 */ 105, 27, 9443, 9448, unit_s_almost_0, unit_t_ten_1 },
+	 { /* t_almost_1 */ 105, 27, 8560, 8566, unit_s_almost_1, unit_t_twenty_1 },
+	 { /* t_almost_2 */ 105, 27, 6683, 6689, unit_s_almost_2, unit_t_twenty_7 },
+	 { /* t_almost_3 */ 105, 27, 5092, 5097, unit_s_almost_3, unit_t_twelve_0 },
+	 { /* t_almost_4 */ 105, 27, 3363, 3366, unit_s_almost_4, unit_t_twenty_9 },
+	 { /* t_almost_5 */ 105, 27, 1517, 1522, unit_s_almost_5, unit_t_twenty_15 },
+	 { /* t_eight_0 */ 106, 27, 8664, 8678, unit_ey_eight_0, unit_pau_t_1 },
+	 { /* t_eight_1 */ 106, 27, 3445, 3455, unit_ey_eight_1, unit_pau_t_2 },
+	 { /* t_exactly_0 */ 107, 27, 9845, 9850, unit_k_exactly_0, unit_l_exactly_0 },
+	 { /* t_exactly_1 */ 107, 27, 8051, 8056, unit_k_exactly_1, unit_l_exactly_1 },
+	 { /* t_exactly_2 */ 107, 27, 6242, 6247, unit_k_exactly_2, unit_l_exactly_2 },
+	 { /* t_exactly_3 */ 107, 27, 3765, 3768, unit_k_exactly_3, unit_l_exactly_3 },
+	 { /* t_exactly_4 */ 107, 27, 1939, 1943, unit_k_exactly_4, unit_l_exactly_4 },
+	 { /* t_exactly_5 */ 107, 27, 147, 153, unit_k_exactly_5, unit_l_exactly_5 },
+	 { /* t_just_0 */ 108, 27, 8950, 8956, unit_s_just_0, unit_ae_after_1 },
+	 { /* t_just_1 */ 108, 27, 7110, 7116, unit_s_just_1, unit_ae_after_3 },
+	 { /* t_just_2 */ 108, 27, 5367, 5372, unit_s_just_2, unit_ae_after_5 },
+	 { /* t_just_3 */ 108, 27, 4198, 4204, unit_s_just_3, unit_ae_after_7 },
+	 { /* t_just_4 */ 108, 27, 2424, 2430, unit_s_just_4, unit_ae_after_9 },
+	 { /* t_just_5 */ 108, 27, 562, 567, unit_s_just_5, unit_ae_after_11 },
+	 { /* t_little_0 */ 109, 27, 10214, 10222, unit_ih_little_0, unit_ax_little_0 },
+	 { /* t_little_1 */ 109, 27, 7595, 7604, unit_ih_little_1, unit_ax_little_1 },
+	 { /* t_little_2 */ 109, 27, 5805, 5813, unit_ih_little_2, unit_ax_little_2 },
+	 { /* t_little_3 */ 109, 27, 4604, 4612, unit_ih_little_3, unit_ax_little_3 },
+	 { /* t_little_4 */ 109, 27, 2856, 2863, unit_ih_little_4, unit_ax_little_4 },
+	 { /* t_little_5 */ 109, 27, 996, 1001, unit_ih_little_5, unit_ax_little_5 },
+	 { /* t_midnight_0 */ 110, 27, 10389, 10409, unit_ay_midnight_0, unit_pau_t_0 },
+	 { /* t_past_0 */ 111, 27, 9929, 9935, unit_s_past_0, unit_ih_eleven_0 },
+	 { /* t_past_1 */ 111, 27, 9514, 9520, unit_s_past_1, unit_t_ten_0 },
+	 { /* t_past_2 */ 111, 27, 9071, 9076, unit_s_past_2, unit_n_nine_1 },
+	 { /* t_past_3 */ 111, 27, 8636, 8641, unit_s_past_3, unit_ey_eight_0 },
+	 { /* t_past_4 */ 111, 27, 8176, 8177, unit_s_past_4, unit_s_seven_0 },
+	 { /* t_past_5 */ 111, 27, 7726, 7727, unit_s_past_5, unit_s_six_1 },
+	 { /* t_past_6 */ 111, 27, 2529, 2531, unit_s_past_6, unit_s_six_3 },
+	 { /* t_past_7 */ 111, 27, 2064, 2069, unit_s_past_7, unit_f_five_7 },
+	 { /* t_past_8 */ 111, 27, 1594, 1601, unit_s_past_8, unit_f_four_1 },
+	 { /* t_past_9 */ 111, 27, 1118, 1124, unit_s_past_9, unit_th_three_1 },
+	 { /* t_past_10 */ 111, 27, 666, 673, unit_s_past_10, unit_t_two_1 },
+	 { /* t_past_11 */ 111, 27, 227, 236, unit_s_past_11, unit_w_one_1 },
+	 { /* t_quarter_0 */ 112, 27, 10304, 10310, unit_r_quarter_0, unit_er_quarter_0 },
+	 { /* t_quarter_1 */ 112, 27, 9026, 9033, unit_r_quarter_1, unit_er_quarter_1 },
+	 { /* t_quarter_2 */ 112, 27, 6291, 6297, unit_r_quarter_2, unit_er_quarter_2 },
+	 { /* t_quarter_3 */ 112, 27, 3813, 3818, unit_r_quarter_3, unit_er_quarter_3 },
+	 { /* t_quarter_4 */ 112, 27, 1072, 1077, unit_r_quarter_4, unit_er_quarter_4 },
+	 { /* t_ten_0 */ 113, 27, 9520, 9524, unit_t_past_1, unit_eh_ten_0 },
+	 { /* t_ten_1 */ 113, 27, 9448, 9452, unit_t_almost_0, unit_eh_ten_1 },
+	 { /* t_ten_2 */ 113, 27, 5860, 5868, unit_er_after_4, unit_eh_ten_2 },
+	 { /* t_ten_3 */ 113, 27, 4289, 4298, unit_ax_to_7, unit_eh_ten_3 },
+	 { /* t_ten_4 */ 113, 27, 4242, 4257, unit_er_after_7, unit_eh_ten_4 },
+	 { /* t_ten_5 */ 113, 27, 600, 611, unit_er_after_11, unit_eh_ten_5 },
+	 { /* t_time_0 */ 114, 27, 10130, 10139, unit_ax_the_0, unit_ay_time_0 },
+	 { /* t_time_1 */ 114, 27, 9711, 9717, unit_ax_the_1, unit_ay_time_1 },
+	 { /* t_time_2 */ 114, 27, 9278, 9284, unit_ax_the_2, unit_ay_time_2 },
+	 { /* t_time_3 */ 114, 27, 8812, 8818, unit_ax_the_3, unit_ay_time_3 },
+	 { /* t_time_4 */ 114, 27, 8386, 8394, unit_ax_the_4, unit_ay_time_4 },
+	 { /* t_time_5 */ 114, 27, 7908, 7915, unit_ax_the_5, unit_ay_time_5 },
+	 { /* t_time_6 */ 114, 27, 7467, 7474, unit_ax_the_6, unit_ay_time_6 },
+	 { /* t_time_7 */ 114, 27, 6968, 6973, unit_ax_the_7, unit_ay_time_7 },
+	 { /* t_time_8 */ 114, 27, 6525, 6534, unit_ax_the_8, unit_ay_time_8 },
+	 { /* t_time_9 */ 114, 27, 6099, 6104, unit_ax_the_9, unit_ay_time_9 },
+	 { /* t_time_10 */ 114, 27, 5685, 5692, CLUNIT_NONE, unit_ay_time_10 },
+	 { /* t_time_11 */ 114, 27, 5224, 5230, unit_ax_the_10, unit_ay_time_11 },
+	 { /* t_time_12 */ 114, 27, 4919, 4924, unit_ax_the_11, unit_ay_time_12 },
+	 { /* t_time_13 */ 114, 27, 4472, 4478, CLUNIT_NONE, unit_ay_time_13 },
+	 { /* t_time_14 */ 114, 27, 4048, 4055, unit_ax_the_14, unit_ay_time_14 },
+	 { /* t_time_15 */ 114, 27, 3616, 3623, unit_ax_the_16, unit_ay_time_15 },
+	 { /* t_time_16 */ 114, 27, 3195, 3200, unit_ax_the_18, unit_ay_time_16 },
+	 { /* t_time_17 */ 114, 27, 2719, 2727, unit_ax_the_20, unit_ay_time_17 },
+	 { /* t_time_18 */ 114, 27, 2289, 2297, unit_ax_the_22, unit_ay_time_18 },
+	 { /* t_time_19 */ 114, 27, 1793, 1801, unit_ax_the_24, unit_ay_time_19 },
+	 { /* t_time_20 */ 114, 27, 1330, 1338, unit_ax_the_26, unit_ay_time_20 },
+	 { /* t_time_21 */ 114, 27, 863, 869, unit_ax_the_28, unit_ay_time_21 },
+	 { /* t_time_22 */ 114, 27, 420, 427, unit_ax_the_30, unit_ay_time_22 },
+	 { /* t_time_23 */ 114, 27, 33, 40, unit_ax_the_32, CLUNIT_NONE },
+	 { /* t_to_0 */ 115, 27, 10319, 10329, unit_er_quarter_0, unit_ax_to_0 },
+	 { /* t_to_1 */ 115, 27, 7229, 7235, unit_v_five_3, unit_ax_to_1 },
+	 { /* t_to_2 */ 115, 27, 6729, 6734, unit_iy_twenty_3, unit_ax_to_2 },
+	 { /* t_to_3 */ 115, 27, 6304, 6309, unit_er_quarter_2, unit_ax_to_3 },
+	 { /* t_to_4 */ 115, 27, 5887, 5895, unit_n_ten_2, unit_ax_to_4 },
+	 { /* t_to_5 */ 115, 27, 5457, 5463, unit_v_five_4, unit_ax_to_5 },
+	 { /* t_to_6 */ 115, 27, 4702, 4708, unit_v_five_5, unit_ax_to_6 },
+	 { /* t_to_7 */ 115, 27, 4276, 4283, unit_n_ten_4, unit_ax_to_7 },
+	 { /* t_to_8 */ 115, 27, 3827, 3835, unit_er_quarter_3, unit_ax_to_8 },
+	 { /* t_to_9 */ 115, 27, 3404, 3413, unit_iy_twenty_4, unit_ax_to_9 },
+	 { /* t_to_10 */ 115, 27, 2984, 2990, unit_v_five_6, unit_ax_to_10 },
+	 { /* t_twelve_0 */ 116, 27, 5097, 5106, unit_t_almost_3, unit_w_twelve_0 },
+	 { /* t_twenty_0 */ 117, 27, 8589, 8594, unit_n_twenty_0, unit_iy_twenty_0 },
+	 { /* t_twenty_1 */ 117, 27, 8566, 8573, unit_t_almost_1, unit_w_twenty_0 },
+	 { /* t_twenty_2 */ 117, 27, 8093, 8098, unit_n_twenty_1, unit_iy_twenty_1 },
+	 { /* t_twenty_3 */ 117, 27, 8068, 8078, unit_iy_exactly_1, unit_w_twenty_1 },
+	 { /* t_twenty_4 */ 117, 27, 7181, 7186, unit_n_twenty_2, unit_iy_twenty_2 },
+	 { /* t_twenty_5 */ 117, 27, 7153, 7164, unit_er_after_3, unit_w_twenty_2 },
+	 { /* t_twenty_6 */ 117, 27, 6716, 6722, unit_n_twenty_3, unit_iy_twenty_3 },
+	 { /* t_twenty_7 */ 117, 27, 6689, 6698, unit_t_almost_2, unit_w_twenty_3 },
+	 { /* t_twenty_8 */ 117, 27, 3394, 3401, unit_n_twenty_4, unit_iy_twenty_4 },
+	 { /* t_twenty_9 */ 117, 27, 3366, 3377, unit_t_almost_4, unit_w_twenty_4 },
+	 { /* t_twenty_10 */ 117, 27, 2934, 2939, unit_n_twenty_5, unit_iy_twenty_5 },
+	 { /* t_twenty_11 */ 117, 27, 2905, 2915, unit_er_after_8, unit_w_twenty_5 },
+	 { /* t_twenty_12 */ 117, 27, 1982, 1986, unit_n_twenty_6, unit_iy_twenty_6 },
+	 { /* t_twenty_13 */ 117, 27, 1954, 1964, unit_iy_exactly_4, unit_w_twenty_6 },
+	 { /* t_twenty_14 */ 117, 27, 1546, 1554, unit_n_twenty_7, unit_iy_twenty_7 },
+	 { /* t_twenty_15 */ 117, 27, 1522, 1531, unit_t_almost_5, unit_w_twenty_7 },
+	 { /* t_two_0 */ 118, 27, 5901, 5912, unit_ax_to_4, unit_uw_two_0 },
+	 { /* t_two_1 */ 118, 27, 673, 680, unit_t_past_10, unit_uw_two_1 },
+	 { /* th_three_0 */ 119, 28, 6317, 6329, unit_ax_to_3, unit_r_three_0 },
+	 { /* th_three_1 */ 119, 28, 1124, 1133, unit_t_past_9, unit_r_three_1 },
+	 { /* uw_afternoon_0 */ 120, 29, 7378, 7394, unit_n_afternoon_1, unit_n_afternoon_0 },
+	 { /* uw_afternoon_1 */ 120, 29, 6875, 6892, unit_n_afternoon_3, unit_n_afternoon_2 },
+	 { /* uw_afternoon_2 */ 120, 29, 6450, 6466, unit_n_afternoon_5, unit_n_afternoon_4 },
+	 { /* uw_afternoon_3 */ 120, 29, 6034, 6047, unit_n_afternoon_7, unit_n_afternoon_6 },
+	 { /* uw_afternoon_4 */ 120, 29, 5602, 5617, unit_n_afternoon_9, unit_n_afternoon_8 },
+	 { /* uw_two_0 */ 121, 29, 5912, 5940, unit_t_two_0, unit_pau_uw_0 },
+	 { /* uw_two_1 */ 121, 29, 680, 711, unit_t_two_1, unit_pau_uw_1 },
+	 { /* v_eleven_0 */ 122, 30, 9960, 9965, unit_eh_eleven_0, unit_ax_eleven_0 },
+	 { /* v_eleven_1 */ 122, 30, 4743, 4748, unit_eh_eleven_1, unit_ax_eleven_1 },
+	 { /* v_evening_0 */ 123, 30, 10046, 10052, unit_iy_evening_0, unit_n_evening_0 },
+	 { /* v_evening_1 */ 123, 30, 9615, 9621, unit_iy_evening_1, unit_n_evening_1 },
+	 { /* v_evening_2 */ 123, 30, 9181, 9190, unit_iy_evening_2, unit_n_evening_2 },
+	 { /* v_evening_3 */ 123, 30, 8739, 8744, unit_iy_evening_3, unit_n_evening_3 },
+	 { /* v_evening_4 */ 123, 30, 8285, 8292, unit_iy_evening_4, unit_n_evening_4 },
+	 { /* v_evening_5 */ 123, 30, 7824, 7829, unit_iy_evening_5, unit_n_evening_5 },
+	 { /* v_five_0 */ 124, 30, 9895, 9898, unit_ay_five_0, unit_p_past_0 },
+	 { /* v_five_1 */ 124, 30, 8139, 8144, unit_ay_five_1, unit_p_past_4 },
+	 { /* v_five_2 */ 124, 30, 7281, 7292, unit_ay_five_2, unit_pau_v_0 },
+	 { /* v_five_3 */ 124, 30, 7225, 7229, unit_ay_five_3, unit_t_to_1 },
+	 { /* v_five_4 */ 124, 30, 5451, 5457, unit_ay_five_4, unit_t_to_5 },
+	 { /* v_five_5 */ 124, 30, 4697, 4702, unit_ay_five_5, unit_t_to_6 },
+	 { /* v_five_6 */ 124, 30, 2980, 2984, unit_ay_five_6, unit_t_to_10 },
+	 { /* v_five_7 */ 124, 30, 2111, 2119, unit_ay_five_7, unit_pau_v_2 },
+	 { /* v_five_8 */ 124, 30, 2027, 2031, unit_ay_five_8, unit_p_past_7 },
+	 { /* v_five_9 */ 124, 30, 189, 193, unit_ay_five_9, unit_p_past_11 },
+	 { /* v_seven_0 */ 125, 30, 8195, 8204, unit_eh_seven_0, unit_ax_seven_0 },
+	 { /* v_seven_1 */ 125, 30, 3016, 3022, unit_eh_seven_1, unit_ax_seven_1 },
+	 { /* v_twelve_0 */ 126, 30, 5145, 5161, unit_l_twelve_0, unit_pau_v_1 },
+	 { /* w_one_0 */ 127, 31, 5477, 5486, unit_ax_to_5, unit_ah_one_0 },
+	 { /* w_one_1 */ 127, 31, 236, 244, unit_t_past_11, unit_ah_one_1 },
+	 { /* w_quarter_0 */ 128, 31, 10284, 10289, unit_k_quarter_0, unit_ao_quarter_0 },
+	 { /* w_quarter_1 */ 128, 31, 9010, 9016, unit_k_quarter_1, unit_ao_quarter_1 },
+	 { /* w_quarter_2 */ 128, 31, 6273, 6276, unit_k_quarter_2, unit_ao_quarter_2 },
+	 { /* w_quarter_3 */ 128, 31, 3794, 3799, unit_k_quarter_3, unit_ao_quarter_3 },
+	 { /* w_quarter_4 */ 128, 31, 1056, 1060, unit_k_quarter_4, unit_ao_quarter_4 },
+	 { /* w_twelve_0 */ 129, 31, 5106, 5111, unit_t_twelve_0, unit_eh_twelve_0 },
+	 { /* w_twenty_0 */ 130, 31, 8573, 8575, unit_t_twenty_1, unit_eh_twenty_0 },
+	 { /* w_twenty_1 */ 130, 31, 8078, 8080, unit_t_twenty_3, unit_eh_twenty_1 },
+	 { /* w_twenty_2 */ 130, 31, 7164, 7168, unit_t_twenty_5, unit_eh_twenty_2 },
+	 { /* w_twenty_3 */ 130, 31, 6698, 6699, unit_t_twenty_7, unit_eh_twenty_3 },
+	 { /* w_twenty_4 */ 130, 31, 3377, 3379, unit_t_twenty_9, unit_eh_twenty_4 },
+	 { /* w_twenty_5 */ 130, 31, 2915, 2918, unit_t_twenty_11, unit_eh_twenty_5 },
+	 { /* w_twenty_6 */ 130, 31, 1964, 1967, unit_t_twenty_13, unit_eh_twenty_6 },
+	 { /* w_twenty_7 */ 130, 31, 1531, 1533, unit_t_twenty_15, unit_eh_twenty_7 },
+	 { /* z_exactly_0 */ 131, 32, 9819, 9825, unit_g_exactly_0, unit_ae_exactly_0 },
+	 { /* z_exactly_1 */ 131, 32, 8022, 8029, unit_g_exactly_1, unit_ae_exactly_1 },
+	 { /* z_exactly_2 */ 131, 32, 6213, 6220, unit_g_exactly_2, unit_ae_exactly_2 },
+	 { /* z_exactly_3 */ 131, 32, 3735, 3742, unit_g_exactly_3, unit_ae_exactly_3 },
+	 { /* z_exactly_4 */ 131, 32, 1911, 1918, unit_g_exactly_4, unit_ae_exactly_4 },
+	 { /* z_exactly_5 */ 131, 32, 124, 130, unit_g_exactly_5, unit_ae_exactly_5 },
+	 { /* z_is_0 */ 132, 32, 10180, 10188, unit_ih_is_0, unit_n_now_0 },
+	 { /* z_is_1 */ 132, 32, 9761, 9769, unit_ih_is_1, unit_n_now_1 },
+	 { /* z_is_2 */ 132, 32, 8849, 8859, unit_ih_is_3, unit_n_now_3 },
+	 { /* z_is_3 */ 132, 32, 8435, 8444, unit_ih_is_4, unit_n_now_4 },
+	 { /* z_is_4 */ 132, 32, 7959, 7967, unit_ih_is_5, unit_n_now_5 },
+	 { /* z_is_5 */ 132, 32, 7017, 7026, unit_ih_is_7, unit_n_now_7 },
+	 { /* z_is_6 */ 132, 32, 6561, 6568, unit_ih_is_8, unit_n_now_8 },
+	 { /* z_is_7 */ 132, 32, 6148, 6156, unit_ih_is_9, unit_n_now_9 },
+	 { /* z_is_8 */ 132, 32, 5732, 5740, unit_ih_is_10, unit_n_now_10 },
+	 { /* z_is_9 */ 132, 32, 5271, 5280, unit_ih_is_11, unit_n_now_11 },
+	 { /* z_is_10 */ 132, 32, 4965, 4973, unit_ih_is_12, unit_n_now_12 },
+	 { /* z_is_11 */ 132, 32, 4519, 4527, unit_ih_is_13, unit_n_now_13 },
+	 { /* z_is_12 */ 132, 32, 4094, 4105, unit_ih_is_14, unit_n_now_14 },
+	 { /* z_is_13 */ 132, 32, 3664, 3673, unit_ih_is_15, unit_n_now_15 },
+	 { /* z_is_14 */ 132, 32, 3238, 3248, unit_ih_is_16, unit_n_now_16 },
+	 { /* z_is_15 */ 132, 32, 2767, 2774, unit_ih_is_17, unit_n_now_17 },
+	 { /* z_is_16 */ 132, 32, 2336, 2344, unit_ih_is_18, unit_n_now_18 },
+	 { /* z_is_17 */ 132, 32, 1839, 1846, unit_ih_is_19, unit_n_now_19 },
+	 { /* z_is_18 */ 132, 32, 1376, 1384, unit_ih_is_20, unit_n_now_20 },
+	 { /* z_is_19 */ 132, 32, 907, 915, unit_ih_is_21, unit_n_now_21 },
+	 { /* z_is_20 */ 132, 32, 465, 474, unit_ih_is_22, unit_n_now_22 },
+	 { /* z_is_21 */ 132, 32, 47, 55, unit_ih_is_23, unit_n_now_23 },
+	{ CLUNIT_NONE, CLUNIT_NONE, -1, -1, CLUNIT_NONE, CLUNIT_NONE }
 };
 
-#define cmu_time_awb_num_units 1032
+#define cmu_time_awb_num_units 1002
 
-#define cmu_time_awb_num_unit_types 132
+#define cmu_time_awb_num_unit_types 133
 
-const char * const cmu_time_awb_unit_types[] = {
-	"t_midnight",
-	"ay_midnight",
-	"n_midnight",
-	"d_midnight",
-	"ih_midnight",
-	"m_midnight",
-	"ng_evening",
-	"ih_evening",
-	"n_evening",
-	"v_evening",
-	"iy_evening",
-	"uw_afternoon",
-	"n_afternoon",
-	"er_afternoon",
-	"t_afternoon",
-	"f_afternoon",
-	"ae_afternoon",
-	"v_twelve",
-	"l_twelve",
-	"eh_twelve",
-	"w_twelve",
-	"t_twelve",
-	"n_eleven",
-	"ax_eleven",
-	"v_eleven",
-	"eh_eleven",
-	"l_eleven",
-	"ih_eleven",
-	"ay_nine",
-	"n_nine",
-	"pau_t",
-	"t_eight",
-	"ey_eight",
-	"n_seven",
-	"ax_seven",
-	"v_seven",
-	"eh_seven",
-	"s_seven",
-	"ax_to",
-	"t_to",
-	"pau_s",
-	"k_six",
-	"ih_six",
-	"s_six",
-	"f_half",
-	"ae_half",
-	"hh_half",
-	"pau_v",
-	"pau_r",
-	"r_four",
-	"ao_four",
-	"f_four",
-	"iy_twenty",
-	"n_twenty",
-	"eh_twenty",
-	"w_twenty",
-	"t_twenty",
-	"t_almost",
-	"s_almost",
-	"ow_almost",
-	"m_almost",
-	"l_almost",
-	"ao_almost",
-	"pau_iy",
-	"iy_three",
-	"r_three",
-	"th_three",
-	"er_quarter",
-	"t_quarter",
-	"r_quarter",
-	"ao_quarter",
-	"w_quarter",
-	"k_quarter",
-	"ax_little",
-	"t_little",
-	"ih_little",
-	"l_little",
-	"ax_a",
-	"pau_uw",
-	"uw_two",
-	"t_two",
-	"n_ten",
-	"eh_ten",
-	"t_ten",
-	"er_after",
-	"t_after",
-	"f_after",
-	"ae_after",
-	"t_just",
-	"s_just",
-	"ah_just",
-	"jh_just",
-	"pau_ng",
-	"ng_morning",
-	"ih_morning",
-	"n_morning",
-	"r_morning",
-	"ao_morning",
-	"m_morning",
-	"n_in",
-	"ih_in",
-	"pau_n",
-	"n_one",
-	"ah_one",
-	"w_one",
-	"t_past",
-	"s_past",
-	"ae_past",
-	"p_past",
-	"v_five",
-	"ay_five",
-	"f_five",
-	"iy_exactly",
-	"l_exactly",
-	"t_exactly",
-	"k_exactly",
-	"ae_exactly",
-	"z_exactly",
-	"g_exactly",
-	"ih_exactly",
-	"pau_aw",
-	"aw_now",
-	"n_now",
-	"z_is",
-	"ih_is",
-	"m_time",
-	"ay_time",
-	"t_time",
-	"ax_the",
-	"dh_the",
-	"pau_pau",
-	"pau_0",
-	0
+const cst_clunit_type cmu_time_awb_unit_types[] = {
+	{ "ae_after", 0, 12 },
+	{ "ae_afternoon", 12, 5 },
+	{ "ae_exactly", 17, 6 },
+	{ "ae_half", 23, 2 },
+	{ "ae_past", 25, 12 },
+	{ "ah_just", 37, 6 },
+	{ "ah_one", 43, 2 },
+	{ "ao_almost", 45, 6 },
+	{ "ao_four", 51, 2 },
+	{ "ao_morning", 53, 11 },
+	{ "ao_quarter", 64, 5 },
+	{ "aw_now", 69, 23 },
+	{ "ax_a", 92, 6 },
+	{ "ax_eleven", 98, 2 },
+	{ "ax_little", 100, 6 },
+	{ "ax_seven", 106, 2 },
+	{ "ax_the", 108, 33 },
+	{ "ax_to", 141, 11 },
+	{ "ay_five", 152, 10 },
+	{ "ay_midnight", 162, 1 },
+	{ "ay_nine", 163, 2 },
+	{ "ay_time", 165, 23 },
+	{ "d_midnight", 188, 1 },
+	{ "dh_the", 189, 45 },
+	{ "eh_eleven", 234, 2 },
+	{ "eh_seven", 236, 2 },
+	{ "eh_ten", 238, 6 },
+	{ "eh_twelve", 244, 1 },
+	{ "eh_twenty", 245, 8 },
+	{ "er_after", 253, 12 },
+	{ "er_afternoon", 265, 5 },
+	{ "er_quarter", 270, 5 },
+	{ "ey_eight", 275, 2 },
+	{ "f_after", 277, 12 },
+	{ "f_afternoon", 289, 5 },
+	{ "f_five", 294, 10 },
+	{ "f_four", 304, 2 },
+	{ "f_half", 306, 2 },
+	{ "g_exactly", 308, 6 },
+	{ "hh_half", 314, 2 },
+	{ "ih_eleven", 316, 2 },
+	{ "ih_evening", 318, 6 },
+	{ "ih_exactly", 324, 6 },
+	{ "ih_in", 330, 22 },
+	{ "ih_is", 352, 24 },
+	{ "ih_little", 376, 6 },
+	{ "ih_midnight", 382, 1 },
+	{ "ih_morning", 383, 11 },
+	{ "ih_six", 394, 2 },
+	{ "iy_evening", 396, 6 },
+	{ "iy_exactly", 402, 6 },
+	{ "iy_the", 408, 11 },
+	{ "iy_three", 419, 2 },
+	{ "iy_twenty", 421, 8 },
+	{ "jh_just", 429, 6 },
+	{ "k_exactly", 435, 6 },
+	{ "k_quarter", 441, 5 },
+	{ "k_six", 446, 2 },
+	{ "l_almost", 448, 6 },
+	{ "l_eleven", 454, 2 },
+	{ "l_exactly", 456, 6 },
+	{ "l_little", 462, 12 },
+	{ "l_twelve", 474, 1 },
+	{ "m_almost", 475, 6 },
+	{ "m_midnight", 481, 1 },
+	{ "m_morning", 482, 11 },
+	{ "m_time", 493, 21 },
+	{ "n_afternoon", 514, 10 },
+	{ "n_eleven", 524, 2 },
+	{ "n_evening", 526, 6 },
+	{ "n_in", 532, 20 },
+	{ "n_midnight", 552, 1 },
+	{ "n_morning", 553, 11 },
+	{ "n_nine", 564, 4 },
+	{ "n_now", 568, 24 },
+	{ "n_one", 592, 2 },
+	{ "n_seven", 594, 2 },
+	{ "n_ten", 596, 6 },
+	{ "n_twenty", 602, 8 },
+	{ "ng_evening", 610, 6 },
+	{ "ng_morning", 616, 11 },
+	{ "ow_almost", 627, 6 },
+	{ "p_past", 633, 12 },
+	{ "pau_0", 645, 20 },
+	{ "pau_aw", 665, 22 },
+	{ "pau_iy", 687, 2 },
+	{ "pau_n", 689, 15 },
+	{ "pau_ng", 704, 17 },
+	{ "pau_pau", 721, 24 },
+	{ "pau_r", 745, 2 },
+	{ "pau_s", 747, 2 },
+	{ "pau_t", 749, 3 },
+	{ "pau_uw", 752, 2 },
+	{ "pau_v", 754, 3 },
+	{ "r_four", 757, 2 },
+	{ "r_morning", 759, 11 },
+	{ "r_quarter", 770, 5 },
+	{ "r_three", 775, 2 },
+	{ "s_almost", 777, 6 },
+	{ "s_just", 783, 6 },
+	{ "s_past", 789, 12 },
+	{ "s_seven", 801, 2 },
+	{ "s_six", 803, 4 },
+	{ "t_after", 807, 12 },
+	{ "t_afternoon", 819, 5 },
+	{ "t_almost", 824, 6 },
+	{ "t_eight", 830, 2 },
+	{ "t_exactly", 832, 6 },
+	{ "t_just", 838, 6 },
+	{ "t_little", 844, 6 },
+	{ "t_midnight", 850, 1 },
+	{ "t_past", 851, 12 },
+	{ "t_quarter", 863, 5 },
+	{ "t_ten", 868, 6 },
+	{ "t_time", 874, 24 },
+	{ "t_to", 898, 11 },
+	{ "t_twelve", 909, 1 },
+	{ "t_twenty", 910, 16 },
+	{ "t_two", 926, 2 },
+	{ "th_three", 928, 2 },
+	{ "uw_afternoon", 930, 5 },
+	{ "uw_two", 935, 2 },
+	{ "v_eleven", 937, 2 },
+	{ "v_evening", 939, 6 },
+	{ "v_five", 945, 10 },
+	{ "v_seven", 955, 2 },
+	{ "v_twelve", 957, 1 },
+	{ "w_one", 958, 2 },
+	{ "w_quarter", 960, 5 },
+	{ "w_twelve", 965, 1 },
+	{ "w_twenty", 966, 8 },
+	{ "z_exactly", 974, 6 },
+	{ "z_is", 980, 22 },
+	{ NULL, CLUNIT_NONE, CLUNIT_NONE }
 };
 
 /* Note that these are pre-scaled by 65536 for fixed-point math. */
@@ -2236,9 +2177,8 @@ cst_clunit_db cmu_time_awb_db = {
 
 	cmu_time_awb_join_weights,
 
-	5,  /* continuity weight */
 	1, /* optimal coupling */
-	5, /* extend selections */
-	0, /* join method */
-	0  /* unit_name function */
+	2, /* extend selections */
+	100, /* f0 weight */
+	NULL  /* unit_name function */
 };

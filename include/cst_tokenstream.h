@@ -47,7 +47,7 @@
 #include "cst_file.h"
 
 typedef struct  cst_tokenstream_struct {
-    cst_file_t fd;
+    cst_file fd;
     int file_pos;
     int line_number;
     char *string_buffer;
@@ -86,5 +86,9 @@ void ts_close(cst_tokenstream *ts);
 
 int ts_eof(cst_tokenstream *ts);
 const char *ts_get(cst_tokenstream *ts);
+
+const char *ts_get_quoted_token(cst_tokenstream *ts,
+				char quote,
+				char escape);
 
 #endif

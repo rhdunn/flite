@@ -1,6 +1,6 @@
 
          Flite: a small run-time speech synthesis engine
-                       version 1.0-beta
+                          version 1.1
           Copyright Carnegie Mellon University 1999-2001
                       All rights reserved
                       http://cmuflite.org
@@ -12,10 +12,6 @@ including University of Edinburgh's Festival Speech Synthesis System
 and Carnegie Mellon University's FestVox project, tools, scripts and
 documentation for building synthetic voices.  However, flite itself
 does not require either of these systems to compile and run.
-
-This is the first beta release of the code, although the system is
-basically functional it ius not complete.  An example voice is
-included but deserves much more work.
 
 The core Flite library was developed by Alan W Black <awb@cs.cmu.edu>
 (mostly in his so-called spare time) while employed in the Language
@@ -63,7 +59,7 @@ cmu_us_kal voice), an pruned lexicon (derived from
 cmulex) and a set of models for US English.  Here are comparisons
 with Festival using basically the same 8KHz diphone voice
                 Flite    Festival
-   core code    50K      2.6M
+   core code    100K     2.6M
    USEnglish    35K      ??
    lexicon      1.6M     5M
    diphone      2.1M     2.1M
@@ -78,9 +74,11 @@ flite synthesizes 9.79 time faster than real time.
 
 Requirements:  
 
-o A good C compiler, some of these files are quite large and some
-  C compilers might choke on these, gcc is fine.  Sun CC 3.01 has been
-  tested too.  We have not yet tested the compiled under Visual C
+o A good C compiler, some of these files are quite large and some C
+  compilers might choke on these, gcc is fine.  Sun CC 3.01 has been
+  tested too.  Visual C++ 6.0 is known to fail on the large diphone
+  database files.  We recommend you use GCC under Cygwin or mingw32
+  instead.
 o GNU Make
 o An audio device isn't required as flite can write its output to 
   a waveform file. 
@@ -93,9 +91,8 @@ o Various Intel Linux systems (and iPaq Linux)
 o FreeBSD 3.x and 4.x
 o Solaris 5.7
 o OSF1 V4.0 (gives an unimportant warning about sizes when compiled cst_val.c)
-o Windows (current only crossed compiled from Linux, and may need a little
-  work to get running again)
-o WinCE (2.11 and 3.0) (probably)
+o Windows 2000 under Cygwin 1.3.5
+o Some support for WinCE (2.11 and 3.0) is included but is not complete
 
 Other similar platforms should just work, we have also cross compiled
 on a Linux machine for StrongARM.  However note that new byte order
@@ -109,8 +106,9 @@ Compilation
 
 In general
 
-    tar zxvf flite-1.0-beta.tar.gz
+    tar zxvf flite-1.1-release.tar.gz
     cd flite
+    ./configure
     make
 
 Where tar is gnu tar (gtar), and make is gnu make (gmake).
@@ -137,12 +135,20 @@ edit config/config.
 
 The copy bin/flite to the ipaq.  This binary is also
 available from 
-   http://cmuflite.org/packed/flite-1.0/flite-1.0_bin_arm-linux.tar.gz
+   http://cmuflite.org/packed/flite-1.1/flite-1.1_bin16KHz_arm-linux.tar.gz
 Because the Linux ipaq audio driver only supports 16KHz (and more) 
-we include this larger voice.  This voice also used fixed point
-rather floating point as the StrongARM doesn't have floating 
-point instructions.  We are working on a much smaller voice for
-the ipaq hopefully small enough to fit in the flash.
+we include this larger voice.  
+
+The Sharp Zaurus SL-5000D is a very similar machine, however it 
+does support 8KHz sampling and a smaller binary is provided.  The
+Zaurus typicall has less free memory so there is an advantage to
+this
+   http://cmuflite.org/packed/flite-1.1/flite-1.1_bin8KHz_arm-linux.tar.gz
+
+This voice also used fixed point rather floating point as the
+StrongARM doesn't have floating point instructions.  We are working on
+a much smaller voice for the ipaq hopefully small enough to fit in the
+flash.
 
 Usage:
 ------
@@ -182,7 +188,7 @@ debugging.  Some typical examples are
      Use simple concatenation of diphones without prosodic modification
 ./bin/flite --seti verbosity=1 doc/alice
      Print sentences as ther are said 
-./bin/flite --setf Duration_Stretch=1.5 doc/alice
+./bin/flite --setf duration_stretch=1.5 doc/alice
      Make it speak slower
 ./bin/flite --setf int_f0_target_mean=145 doc/alice
      Make it speak higher
@@ -238,17 +244,3 @@ o Better quality speech (we have better diphone databases which
 o Documentation to allow people to more easily integrate flite
   into applications.
 o Some reasonable voices based on our newer voice building work
-
-
-
-
-
-
-
-
-
-
-
-
-
-

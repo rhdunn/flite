@@ -55,21 +55,21 @@ static int play_wave_from_socket(snd_header *header,int audiostream)
     /* it to pcm if required                                          */
     int num_samples;
     int sample_width;
-    int audio_device;
+    cst_audiodev *audio_device;
     int q,i,n,r;
     unsigned char bytes[CST_AUDIOBUFFSIZE];
     short shorts[CST_AUDIOBUFFSIZE];
-    cst_file_t fff;
+    cst_file fff;
 
     fff = cst_fopen("/tmp/awb.wav",CST_OPEN_WRITE|CST_OPEN_BINARY);
 
-    if ((audio_device = audio_open()) == -1)
+    if ((audio_device = audio_open(header->sample_rate,1,
+				   (header->encoding == CST_SND_SHORT) ?
+				   CST_AUDIO_LINEAR16 : CST_AUDIO_LINEAR8)) == NULL)
     {
 	cst_errmsg("play_wave_from_socket: can't open audio device\n");
 	return -1;
     }
-
-    audio_set_sample_rate(audio_device,header->sample_rate);
 
     if (header->encoding == CST_SND_SHORT)
 	sample_width = 2;

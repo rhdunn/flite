@@ -18,59 +18,64 @@
  *	3. Altered versions must be plainly marked as such, and must not
  *		be misrepresented as being the original software.
  */
+/* This is an altered version.  It has been modified by David
+   Huggins-Daines <dhd@cepstral.com> on 2001-10-23 to use a different
+   API and be re-entrant and safe and all that good stuff. */
 #include <stdio.h>
 #include <string.h>
-#include "regexp.h"
-#include "regmagic.h"
+#include "cst_regex.h"
+#include "cst_string.h"
+#include "cst_error.h"
 
-#ifndef CHARBITS
-#define	UCHARAT(p)	((int)*(unsigned char *)(p))
-#else
-#define	UCHARAT(p)	((int)*(p)&CHARBITS)
-#endif
-
-/*
- - regsub - perform substitutions after a regexp match
- */
-void hs_regsub(const hs_regexp *prog, const char *source, char *dest)
+size_t cst_regsub(const cst_regstate *state, const char *in, char *out, size_t max)
 {
-	register char *src;
-	register char *dst;
-	register char c;
-	register int no;
-	register int len;
+	const char *src;
+	char *dst;
+	int c, no, len;
+	size_t count;
 
-	if (prog == NULL || source == NULL || dest == NULL) {
-		hs_regerror("NULL parm to regsub");
-		return;
-	}
-	if (UCHARAT(prog->program) != MAGIC) {
-		hs_regerror("damaged regexp fed to regsub");
-		return;
+	if (state == NULL || in == NULL) {
+		cst_errmsg("NULL parm to regsub\n");
+		cst_error();
 	}
 
-	src = (char *)source;
-	dst = dest;
+	src = in;
+	dst = out;
+	count = 0;
 	while ((c = *src++) != '\0') {
+		if (out && dst + 1 > out + max - 1)
+			break;
 		if (c == '&')
 			no = 0;
 		else if (c == '\\' && '0' <= *src && *src <= '9')
 			no = *src++ - '0';
 		else
 			no = -1;
+
  		if (no < 0) {	/* Ordinary character. */
  			if (c == '\\' && (*src == '\\' || *src == '&'))
  				c = *src++;
- 			*dst++ = c;
- 		} else if (prog->startp[no] != NULL && prog->endp[no] != NULL) {
-			len = prog->endp[no] - prog->startp[no];
-			(void) strncpy(dst, prog->startp[no], len);
-			dst += len;
-			if (len != 0 && *(dst-1) == '\0') {	/* strncpy hit NUL. */
-				hs_regerror("damaged match string");
-				return;
+			if (out)
+				*dst++ = c;
+			count++;
+ 		} else if (state->startp[no] != NULL && state->endp[no] != NULL) {
+			len = state->endp[no] - state->startp[no];
+			if (out) {
+				if (dst + len > out + max - 1)
+					len = (out + max - 1) - dst;
+				strncpy(dst, state->startp[no], len);
+				dst += len;
+				/* strncpy hit NUL. */
+				if (len != 0 && *(dst-1) == '\0') {
+					cst_errmsg("damaged match string");
+					cst_error();
+				}
 			}
+			count += len;
 		}
 	}
-	*dst++ = '\0';
+	if (out && dst - out + 1 < max)
+		*dst++ = '\0';
+
+	return count;
 }

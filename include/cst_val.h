@@ -40,7 +40,7 @@
 #ifndef _CST_VAL_H__
 #define _CST_VAL_H__
 
-#include <stdio.h>
+#include "cst_file.h"
 #include "cst_error.h"
 #include "cst_alloc.h"
 #include "cst_val_defs.h"
@@ -97,7 +97,6 @@ cst_val *cons_val(const cst_val *a, const cst_val *b);
 /* Derefence and delete val if no other references */
 void delete_val(cst_val *val);
 void delete_val_list(cst_val *val);
-void val_free(cst_val *val);
 
 /* Accessor functions */
 int val_int(const cst_val *v);
@@ -106,6 +105,9 @@ const char *val_string(const cst_val *v);
 void *val_void(const cst_val *v);
 const cst_val *val_car(const cst_val *v);
 const cst_val *val_cdr(const cst_val *v);
+
+const cst_val *set_cdr(cst_val *v1, const cst_val *v2);
+const cst_val *set_car(cst_val *v1, const cst_val *v2);
 
 int cst_val_consp(const cst_val *v);
 
@@ -128,7 +130,7 @@ int val_greater(const cst_val *a, const cst_val *b);
 int val_member(const cst_val *a, const cst_val *b);
 int val_member_string (const char *a, const cst_val *b);
 
-void val_print(FILE *fd,const cst_val *v);
+void val_print(cst_file fd,const cst_val *v);
 cst_val *val_reverse(cst_val *v);
 cst_val *val_append(cst_val *a,cst_val *b);
 int val_length(const cst_val *l);
@@ -139,5 +141,9 @@ cst_val *val_inc_refcount(const cst_val *b);
 
 #include "cst_val_const.h"
 extern const cst_val_def cst_val_defs[];
+
+/* Generic pointer vals */
+typedef void cst_userdata;
+CST_VAL_USER_TYPE_DCLS(userdata,cst_userdata);
 
 #endif

@@ -2,7 +2,7 @@
 /*                                                                       */
 /*                  Language Technologies Institute                      */
 /*                     Carnegie Mellon University                        */
-/*                        Copyright (c) 2000                             */
+/*                        Copyright (c) 2001                             */
 /*                        All Rights Reserved.                           */
 /*                                                                       */
 /*  Permission is hereby granted, free of charge, to use and distribute  */
@@ -31,88 +31,68 @@
 /*                                                                       */
 /*************************************************************************/
 /*             Author:  Alan W Black (awb@cs.cmu.edu)                    */
-/*               Date:  August 2000                                      */
+/*               Date:  November 2001                                    */
 /*************************************************************************/
 /*                                                                       */
-/*  Access to "voxware" audio devices (Linux/FreeBSD etc),               */
-/*  (sorry my naming convention is showing my age here, basic any        */
-/*  generic audio on Linux/BSD such as OSS and ALSA)                     */
+/*  sufficient statitsics                                                */
 /*                                                                       */
 /*************************************************************************/
-#if defined(CST_AUDIO_LINUX) || defined(CST_AUDIO_FREEBSD)
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include "cst_string.h"
-#include "cst_wave.h"
-#include "cst_audio.h"
 
-#ifdef CST_AUDIO_LINUX
-/* Linux/voxware audio specific */
-#include <sys/ioctl.h>
-#include <sys/soundcard.h>
-#include <sys/types.h>
-#endif
-#ifdef CST_AUDIO_FREEBSD
-/* probably Net and Open too */
-#include <machine/soundcard.h>
-#endif
-#include <sys/stat.h>
-#include <fcntl.h>
+#include <math.h>
+#include "cst_alloc.h"
+#include "cst_ss.h"
 
-static const char * const vw_audio_device = "/dev/dsp";
-
-int audio_set_sample_rate_vw(int afd,int sample_rate)
+cst_ss *new_ss()
 {
-    int fmt;
-    int sfmts;
-    int stereo=0;
-    int channels=1;
+    cst_ss *ss = cst_alloc(cst_ss,1);
+    return ss;
+}
 
-    ioctl(afd,SNDCTL_DSP_RESET,0);
-    ioctl(afd,SNDCTL_DSP_SPEED,&sample_rate);
-    ioctl(afd,SNDCTL_DSP_STEREO,&stereo);
-    ioctl(afd,SNDCTL_DSP_CHANNELS,&channels);
-    ioctl(afd,SNDCTL_DSP_GETFMTS,&sfmts);
+void delete_ss(cst_ss *ss)
+{
+    cst_free(ss);
+}
 
-    if (sfmts == AFMT_U8)
-	fmt = AFMT_U8;         // its really an 8 bit only device
-    else if (CST_LITTLE_ENDIAN)
-	fmt = AFMT_S16_LE;  
-    else
-	fmt = AFMT_S16_BE;  
-    
-    ioctl(afd,SNDCTL_DSP_SETFMT,&fmt);
+void ss_reset(cst_ss *ss)
+{
+    ss->num_samples = 0;
+    ss->sum = 0;
+    ss->sumx = 0;
+}
 
-    if (fmt == AFMT_U8)
-	return -1;
+double ss_mean(cst_ss *ss)
+{
+    if (ss->num_samples > 0)
+	return ss->sum/ss->num_samples;
     else
 	return 0;
 }
 
-int audio_open_vw()
+double ss_variance(cst_ss *ss)
 {
-    int r;
-    r = open(vw_audio_device,O_WRONLY);
-    if (r == -1)
-	cst_errmsg("vw_audio: failed to open audio device %s\n",
-		   vw_audio_device);
-    return r;
+    if (ss->num_samples > 1)
+	return ((ss->num_samples*ss->sumx)-(ss->sum*ss->sum))/
+	    (ss->num_samples*(ss->num_samples-1));
+    else
+	return 0;
 }
 
-int audio_close_vw(int fd)
+double ss_stddev(cst_ss *ss)
 {
-    return close(fd);
+    return sqrt(ss_variance(ss));
 }
 
-int audio_write_vw(int afd, void *samples, int num_bytes)
+void ss_cummulate(cst_ss *ss,double a)
 {
-    return write(afd,samples,num_bytes);
+    ss->sum += a;
+    ss->sumx += a*a;
+    ss->num_samples++;
 }
 
-int audio_flush_vw(int afd)
+void ss_cummulate_n(cst_ss *ss,double a, double count)
 {
-    return ioctl(afd, SNDCTL_DSP_SYNC);
+    ss->sum += a*count;
+    ss->sumx += (a*a)*count;
+    ss->num_samples += count;
 }
-#endif
+

@@ -40,8 +40,8 @@
 ;;;                                                                     ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar lpc_min -7.852612)
-(defvar lpc_max  7.833154)
+(defvar lpc_min -7.992630)
+(defvar lpc_max  7.829990)
 
 (define (diphtoC diphindexfn name lpcdir odir)
   "(diphtoC diphindexfn name lpcdir odir)
@@ -159,13 +159,13 @@ as short term signal."
     (while (and sts_coeffs
 	    (> (absdiff phoneboundary_time (car (car sts_coeffs)))
 	       (absdiff phoneboundary_time (car (cadr sts_coeffs)))))
-     (output_stsS (car sts_coeffs) ofdsts)
+     (output_sts (car sts_coeffs) ofdsts)
      (set! sts_coeffs (cdr sts_coeffs)))
     (set! pb_pm pm_pos)
     (while (and sts_coeffs (cdr sts_coeffs)
 	    (> (absdiff end_time (car (car sts_coeffs)))
 	       (absdiff end_time (car (cadr sts_coeffs)))))
-     (output_stsS (car sts_coeffs) ofdsts)
+     (output_sts (car sts_coeffs) ofdsts)
      (set! sts_coeffs (cdr sts_coeffs)))
     (set! end_pm pm_pos)
 

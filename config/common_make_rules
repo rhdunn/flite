@@ -52,7 +52,7 @@ BINDIR=$(shell test -d $(TOP)/bin || mkdir $(TOP)/bin; echo $(TOP)/bin; )
 LIBDIR=$(TOP)/lib
 
 FLITELIBS = $(TOP)/lib/libflite.a
-LDFLAGS += -L$(TOP)/lib -lflite -lm
+LDFLAGS += -L$(TOP)/lib -lflite -lm $(AUDIOLIBS)
 
 all: .make_build_dirs $(ALL) nothing
 
@@ -78,13 +78,24 @@ endif
 
 clean:
 	@ echo make clean in $(DIRNAME) ...
-	@ rm -f *.o *.a *~ $(LOCAL_CLEAN)
+	@ rm -rf .build_lib .build_shlib *.o *.os *.a *~ $(LOCAL_CLEAN)
 ifdef ALL_DIRS
 	@ set -e; for i in $(ALL_DIRS) ; \
 	do \
 	   $(MAKE) -C $$i --no-print-directory clean; \
 	done
 endif
+
+distclean:
+	@ echo make distclean in $(DIRNAME) ...
+ifdef ALL_DIRS
+	@ set -e; for i in $(ALL_DIRS) ; \
+	do \
+	   $(MAKE) -C $$i --no-print-directory distclean; \
+	done
+endif
+	@ rm -rf .build_lib .build_shlib make.depend \
+		*.o *.os *.a *~ $(LOCAL_CLEAN) $(DIST_CLEAN)
 
 install: $(INSTALL_HEADERS) $(INSTALL_LIBS)
 	@ echo make install in $(DIRNAME) ...
@@ -94,7 +105,7 @@ ifdef INSTALL_HEADERS
 endif
 ifdef INSTALL_LIBS
 	@ mkdir -p $(INSTALLLIBDIR)
-	@ install -m644 $(INSTALL_LIBS) $(INSTALLLIBDIR)
+	@ cp -fd $(INSTALL_LIBS) $(INSTALLLIBDIR)
 endif
 ifdef ALL_DIRS
 	@ set -e; for i in $(ALL_DIRS) ; \

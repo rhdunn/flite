@@ -38,13 +38,13 @@ TOP=../..
 DIRNAME=lang/cmu_us_kal16
 BUILD_DIRS = 
 ALL_DIRS= 
-H = 
+H = voxdefs.h
 SRCS = cmu_us_kal16_diphone.c cmu_us_kal16.c
 OBJS = $(SRCS:.c=.o)
 SCM=
 FILES = Makefile $(SCM) $(SRCS) $(H)
 LIBNAME = flite_cmu_us_kal16
-LOCAL_INCLUDES = -I$(TOP)/lang/usenglish
+LOCAL_INCLUDES = -I$(TOP)/lang/usenglish  -I$(TOP)/lang/cmulex
 
 ALL = .build_lib
 

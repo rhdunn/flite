@@ -42,8 +42,7 @@ TOP=../..
 DIRNAME=src/regex
 BUILD_DIRS = 
 ALL_DIRS= 
-H = regexp.h regmagic.h
-SRCS = cst_regex.c regerror.c regexp.c regsub.c
+SRCS = cst_regex.c regexp.c regsub.c
 OBJS = $(SRCS:.c=.o)
 FILES = Makefile $(H) $(SRCS)
 LIBNAME = flite
