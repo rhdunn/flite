@@ -36,7 +36,6 @@ DIRNAME=flite
 VOICENAME=__VOICENAME__
 VOICETYPE=__VOICETYPE__
 
-LIBNAME = $(VOICENAME)
 LOCAL_INCLUDES = -I$(TOP)/lang/usenglish -I$(TOP)/lang/cmulex
 LOCAL_LIBS = -L . -l$(VOICENAME) -lflite_usenglish -lflite_cmulex
 H = 
@@ -75,4 +74,8 @@ $(VOICENAME)_mcep.o: $(VOICENAME)_mcep.c
 flite: flite_main.o $(FLITELIBS) lib$(VOICENAME).a
 	$(CC) $(CFLAGS) -o $@ flite_main.o $(LOCAL_LIBS) $(LDFLAGS)
 
+.build_lib: $(OBJS)
+	@ $(AR) cruv $(LIBDIR)/lib$(VOICENAME).a $(OBJS)
+	@ $(RANLIB) $(LIBDIR)/lib$(VOICENAME).a
+	@ touch .build_lib
 

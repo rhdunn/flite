@@ -38,9 +38,6 @@
 /*  Includes a mapping of fsf format regex's to hs format (escaping)     */
 /*                                                                       */
 /*************************************************************************/
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "cst_alloc.h"
 #include "cst_regex.h"
 

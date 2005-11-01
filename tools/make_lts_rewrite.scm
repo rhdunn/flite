@@ -36,6 +36,7 @@
 ;;;                                                                     ;;;
 ;;; Generate a C compilable lts rewrite rules.                          ;;;
 ;;;                                                                     ;;;
+;;; From CMU Flite                                                      ;;;
 ;;;                                                                     ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -58,16 +59,32 @@
 	 (set! w (cons l w)))))
      rule)
 
-    (set! xxx (reverse (cons (reverse w) q)))
+    (set! xxx (list
+	       (car (cddr q))  ;; reversed left hand side of rules
+	       (car (cdr q))   ;; middle condition
+	       (flip_stars (car q))         ;; RHS with * reverse
+	       (reverse w)))   ;; re-write output
     (format t "%l %l\n" rule xxx)
     xxx))
+
+(define (flip_stars q)
+  ;; We want klene star to appear before the object 
+  (cond
+   ((null q) q)
+   ((and (cdr q)
+	 (string-equal (cadr q) "*"))
+    (cons (cadr q) 
+	  (cons (car q) 
+		(flip_stars (cddr q)))))
+   (t
+    (cons (car q) (flip_stars (cdr q))))))
 
 (define (ltsrewritestoC name fname odir)
   "(ltsrewritestoC name idir odir)"
 
   (let 
-    ((ofde (fopen (path-append odir (string-append name "_lts_rewrites.c")) "w"))
-     (ofdh (fopen (path-append odir (string-append name "_lts_rewrites.h")) "w"))
+    ((ofde (fopen (path-append odir (string-append name ".c")) "w"))
+     (ofdh (fopen (path-append odir (string-append name ".h")) "w"))
      (rules (car (load fname t)))
      (ifd))
     (format ofde "/*******************************************************/\n")
@@ -78,7 +95,7 @@
     (format ofde "#include \"cst_string.h\"\n")
     (format ofde "#include \"cst_val.h\"\n")
     (format ofde "#include \"cst_lts_rewrites.h\"\n")
-    (format ofdh "extern const cst_lts_rewrites %s_lts_rewrites;\n\n" name)
+    (format ofdh "extern const cst_lts_rewrites %s;\n\n" name)
 
     (cellstovals 
      (format nil "%s_lts_sets" name)
@@ -92,13 +109,15 @@
       (car (cdr (cdr (cdr rules)))))
      ofde)
 
-    (format ofde "#define %s_lts_sets &%s_lts_sets_%04d\n" 
-	    name name eoc_sets)
+    (if (equal? eoc_sets 0)
+	(format ofde "#define %s_lts_sets 0\n" name)
+	(format ofde "#define %s_lts_sets &%s_lts_sets_%04d\n" 
+		name name eoc_sets))
     (format ofde "#define %s_lts_rules &%s_lts_rules_%04d\n" 
 	    name name cells_count)
 
     (format ofde "\n")
-    (format ofde "const cst_lts_rewrites %s_lts_rewrites  = {\n" name)
+    (format ofde "const cst_lts_rewrites %s = {\n" name)
     (format ofde "   \"%s\",\n" name)
     (format ofde "   %s_lts_sets,\n" name)
     (format ofde "   %s_lts_rules,\n" name)

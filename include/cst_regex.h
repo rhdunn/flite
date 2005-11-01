@@ -81,7 +81,7 @@
 #ifndef _CST_REGEX_H__
 #define _CST_REGEX_H__
 
-#include <stdio.h>
+#include "cst_file.h"
 #include "cst_string.h"
 
 /*

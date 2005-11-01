@@ -38,9 +38,9 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <math.h>
 #include "cst_alloc.h"
 #include "cst_ss.h"
+#include "cst_math.h"
 
 cst_ss *new_ss()
 {

@@ -37,7 +37,6 @@
 /*    String manipulation functions                                      */
 /*                                                                       */
 /*************************************************************************/
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -46,9 +45,9 @@
 
 #ifdef UNDER_CE /* WinCE does not fully implement ANSI C */
 
-char *cst_strrchr(const char *str, int c)
+unsigned char *cst_strrchr(const unsigned char *str, int c)
 {
-    char *p = (char *)str + strlen(str);
+    unsigned char *p = (const unsigned char *)str + cst_strlen(str);
     while (p >= str) {
 	if (*p == c)
 	    return p;
@@ -67,9 +66,9 @@ double cst_atof(const char *str)
 
 #else /* Sane operating system */
 
-char *cst_strrchr(const char *str, int c)
+unsigned char *cst_strrchr(const unsigned char *str, int c)
 {
-    return strrchr(str, c);
+    return (unsigned char *)strrchr((const char *)str, c);
 }
 
 double cst_atof(const char *str)
@@ -79,16 +78,21 @@ double cst_atof(const char *str)
 #endif /* WinCE brain damage */
 
 
-char *cst_strdup(const char *str)
+unsigned char *cst_strdup(const unsigned char *str)
 {
-    char *nstr = NULL;
+    unsigned char *nstr = NULL;
 
     if (str)
     {
-	nstr = cst_alloc(char,strlen(str)+1);
-	strcpy(nstr,str);
+	nstr = cst_alloc(unsigned char,strlen((const char *)str)+1);
+	memmove(nstr,str,strlen((const char *)str)+1);
     }
     return nstr;
+}
+
+unsigned char *cst_strchr(const unsigned char *s, int c)
+{
+    return (unsigned char *)strchr((const char *)s,c);
 }
 
 char *cst_substr(const char *str,int start, int length)
@@ -109,15 +113,17 @@ char *cst_string_before(const char *s,const char *c)
     char *p;
     char *q;
 
-    p = strstr(s,c);
-    q = cst_strdup(s);
+    p = (char *)cst_strstr(s,c);
+    if (p == NULL) 
+	return NULL;
+    q = (char *)cst_strdup((unsigned char *)s);
     q[strlen(s)-strlen(p)] = '\0';
     return q;
 }
 
-char *cst_downcase(const char *str)
+unsigned char *cst_downcase(const unsigned char *str)
 {
-    char *dc;
+    unsigned char *dc;
     int i;
 
     dc = cst_strdup(str);
@@ -129,9 +135,9 @@ char *cst_downcase(const char *str)
     return dc;
 }
 
-char *cst_upcase(const char *str)
+unsigned char *cst_upcase(const unsigned char *str)
 {
-    char *uc;
+    unsigned char *uc;
     int i;
 
     uc = cst_strdup(str);

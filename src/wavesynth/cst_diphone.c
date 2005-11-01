@@ -38,9 +38,7 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
+#include "cst_math.h"
 #include "cst_hrg.h"
 #include "cst_utt_utils.h"
 #include "cst_wave.h"
@@ -82,11 +80,13 @@ cst_utterance *get_diphone_units(cst_utterance *utt)
 	 s0 && item_next(s0); s0=s1)
     {
 	s1 = item_next(s0);
-	sprintf(diphone_name,
-		"%.10s-%.10s",
-		item_name(s0),
-		item_name(s1));
+	cst_sprintf(diphone_name,
+		    "%.10s-%.10s",
+		    item_name(s0),
+		    item_name(s1));
+
 	unit_entry = get_diphone_entry(udb,diphone_name);
+
 	if (unit_entry == -1)
 	{
 	    cst_errmsg("flite: udb failed to find entry for: %s\n",
@@ -102,7 +102,9 @@ cst_utterance *get_diphone_units(cst_utterance *utt)
 	item_set_int(u,"target_end", (int)(end0*udb->sts->sample_rate));
 	item_set_int(u,"unit_entry",unit_entry);
 	item_set_int(u,"unit_start",udb->diphones[unit_entry].start_pm);
-	item_set_int(u,"unit_end",udb->diphones[unit_entry].pb_pm);
+	item_set_int(u,"unit_end",
+		     udb->diphones[unit_entry].start_pm + 
+		     udb->diphones[unit_entry].pb_pm);
 	/* second half of diphone */
 	u = relation_append(units,NULL);
 	item_add_daughter(s1,u);
@@ -110,8 +112,13 @@ cst_utterance *get_diphone_units(cst_utterance *utt)
 	end1 = item_feat_float(s1,"end");
 	item_set_int(u,"target_end",(int)(((end0+end1)/2.0)*udb->sts->sample_rate));
 	item_set_int(u,"unit_entry",unit_entry);
-	item_set_int(u,"unit_start",udb->diphones[unit_entry].pb_pm);
-	item_set_int(u,"unit_end",udb->diphones[unit_entry].end_pm);
+	item_set_int(u,"unit_start",
+		     udb->diphones[unit_entry].start_pm + 
+		     udb->diphones[unit_entry].pb_pm);
+	item_set_int(u,"unit_end",
+		     udb->diphones[unit_entry].start_pm + 
+		     udb->diphones[unit_entry].pb_pm+
+		     udb->diphones[unit_entry].end_pm);
     }
     
     return utt;

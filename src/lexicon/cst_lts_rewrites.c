@@ -41,8 +41,6 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <stdio.h>
-#include <string.h>
 #include "cst_string.h"
 #include "cst_val.h"
 #include "cst_lts_rewrites.h"
@@ -75,18 +73,22 @@ static int item_match(const cst_val *PATT, const cst_val *THING,
 static int context_match(const cst_val *PATTERN, const cst_val *STRING,
 			 const cst_val *sets)
 {
+    int r,s,t;
+/*    printf("PATTERN: "); val_print(stdout, PATTERN); printf("\n"); */
+/*    printf("STRING: "); val_print(stdout, STRING); printf("\n"); */
     if (!PATTERN)
-	return TRUE;
+	r = TRUE;
     else if (!STRING)
-	return FALSE;
+	r = FALSE;
     else if (val_cdr(PATTERN) &&
 	     (cst_streq("*",val_string(val_car(PATTERN)))))
-	return 
-	    context_match(val_cdr(val_cdr(PATTERN)),STRING,sets) || /* skip */
-	    context_match(val_cdr(PATTERN),STRING,sets) || /* last match */
-	    (item_match(val_car(val_cdr(PATTERN)),val_car(STRING),sets) && 
-	     context_match(val_cdr(val_cdr(PATTERN)),   /* loop match */
-			   val_cdr(STRING),sets));
+    {
+	r = context_match(val_cdr(val_cdr(PATTERN)),STRING,sets);
+	s = context_match(val_cdr(PATTERN),STRING,sets);
+	t = item_match(val_car(val_cdr(PATTERN)),val_car(STRING),sets) && 
+	    context_match(PATTERN, val_cdr(STRING),sets);
+	r = r || s || t;
+    }
 #if 0
     else if (val_cdr(PATTERN) &&
 	     (cst_streq("+",val_string(val_car(PATTERN)))))
@@ -96,9 +98,11 @@ static int context_match(const cst_val *PATTERN, const cst_val *STRING,
 			  val_cdr(STRING),sets));
 #endif
     else if (item_match(val_car(PATTERN),val_car(STRING),sets))
-	return context_match(val_cdr(PATTERN),val_cdr(STRING),sets);
+	r = context_match(val_cdr(PATTERN),val_cdr(STRING),sets);
     else
-	return FALSE;
+	r = FALSE;
+/*    printf("R = %s\n",(r ? "TRUE" : "FALSE")); */
+    return r;
 }
 
 static int rule_matches(const cst_val *LC, const cst_val *RC, 
@@ -133,7 +137,7 @@ static const cst_val *find_rewrite_rule(const cst_val *LC,
     
     for (i=r->rules; i; i=val_cdr(i))
     {
-/*	val_print(stdout, val_car(i));	printf("\n");  */
+/*	val_print(stdout, val_car(i));	printf("\n"); */
 	RLC = val_car(val_car(i));
 	RA = val_car(val_cdr(val_car(i)));
 	RRC = val_car(val_cdr(val_cdr(val_car(i))));
@@ -209,7 +213,7 @@ cst_val *lts_rewrites(const cst_val *itape, const cst_lts_rewrites *r)
 	    otape = cons_val(val_car(i),otape);
     }
 
-    delete_val_list(LC);
+    delete_val(LC);
 
     return val_reverse(otape);
 }

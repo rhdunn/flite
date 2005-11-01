@@ -42,12 +42,6 @@ AC_C_BIGENDIAN
 if test "x$GCC" = "xyes"; then
 	CFLAGS="$CFLAGS -Wall"
 fi
-case "$host_os" in
-	darwin*)
-		CFLAGS="$CFLAGS -no-cpp-precomp"
-	;;
-esac
-
 AC_ARG_ENABLE( shared, 
                [  --disable-shared     without shared library support],
 	       [case "${enableval}" in
@@ -57,10 +51,73 @@ AC_ARG_ENABLE( shared,
                  esac],
                [shared=false])
 
+case "$target_cpu" in
+     i386|i486|i586|i686)
+	TARGET_CPU=i386
+     ;;
+     *)
+        TARGET_CPU=$target_cpu
+     ;;
+esac     
+TARGET_OS=$target_os
+
+M68KCC=
+M68KCLAGS=
+
+case "$target_os" in
+        palmos*)
+		shared=false
+     	        CFLAGS="$CFLAGS -DCST_NO_SOCKETS"
+		# PalmOS Apps are always in M68K
+		M68KCC=/usr/m68k-palmos/bin/gcc
+		# Generic build is ARM or M68K (probably ARM though)
+                CC="/usr/$TARGET_CPU-palmos/bin/gcc"
+		if test "$target_cpu" = "arm" 
+                then
+                   CC="$CC -fPIC -march=armv4t"
+                fi
+                RANLIB=/usr/$TARGET_CPU-palmos/bin/ranlib
+                AR=/usr/$TARGET_CPU-palmos/bin/ar
+		LEXDEFS="-DCST_NO_STATIC_LEX -DCST_NO_STATIC_LTS_MODEL"
+		VOXDEFS="-DCST_NO_STATIC_VOX"
+        ;;
+        wince*)
+                # For the GNUWINCE environment
+                # http://win-ce.voxware.com:28575/Development%20Tools/
+		shared=false
+     	        CFLAGS="$CFLAGS -DCST_NO_SOCKETS -march=armv4 -mapcs-32 -malignment-traps -DNEWLIB -DSARM -DWIN32 -DGNUWINCE"
+                CC="/usr/local/wince/bin/arm-wince-pe-gcc"
+                RANLIB=/usr/local/wince/bin/arm-wince-pe-ranlib
+                AR=/usr/local/wince/bin/arm-wince-pe-ar
+        ;;
+	darwin*)
+		CFLAGS="$CFLAGS -no-cpp-precomp"
+	;;
+esac
+
+AC_SUBST(TARGET_OS)
+AC_SUBST(TARGET_CPU)
+AC_SUBST(M68KCC)
+AC_SUBST(LEXDEFS)
+AC_SUBST(VOXDEFS)
+
+case "$host_cpu" in
+     i386|i486|i586|i686)
+	HOST_CPU=i386
+     ;;
+     *)
+        HOST_CPU=$host_cpu
+     ;;
+esac     
+HOST_OS=$host_os
+
+AC_SUBST(HOST_OS)
+AC_SUBST(HOST_CPU)
+
 SHFLAGS=
 OTHERLIBS=
 if test "$shared" = true; then
-   case "$host_os" in
+   case "$target_os" in
 	linux*)
 		SHFLAGS="-fPIC"
         ;;
@@ -72,6 +129,15 @@ if test "$shared" = true; then
 	;;
    esac
 fi
+case "$target_os" in
+     wince*)
+        OTHERLIBS="-lc -lgcc -lwinsock -lcoredll"
+     ;;
+     *)
+     ;;
+esac
+
+AC_SUBST(OTHERLIBS)
 AC_SUBST(SHFLAGS)
 
 AC_ARG_ENABLE( sockets, 
@@ -107,7 +173,7 @@ AC_CHECK_FUNC(mmap,MMAPTYPE=posix)
 
 dnl AC_CHECK_FUNC doesn't seem to work for Win32 API calls...
 if test "x$MMAPTYPE" = x; then
-   case "$host_os" in
+   case "$target_os" in
 	cygwin*|mingw*)
 		MMAPTYPE=win32
 	;;
@@ -117,6 +183,15 @@ if test "x$MMAPTYPE" = x; then
    esac
 fi
 AC_SUBST(MMAPTYPE)
+
+dnl stdio type, palmos/wince are different
+if test "$target_os" = "palmos"
+then
+    STDIOTYPE=palmos
+else
+    STDIOTYPE=stdio
+fi
+AC_SUBST(STDIOTYPE)
 
 dnl
 dnl determine audio type or use none if none supported on this platform
@@ -131,9 +206,10 @@ AC_CHECK_HEADER(machine/soundcard.h,
 AC_CHECK_HEADER(sys/audioio.h,
               [AUDIODRIVER="sun"
                AUDIODEFS=-DCST_AUDIO_SUNOS])
-AC_CHECK_HEADER(sys/asoundlib.h,
-              [AUDIODRIVER="alsa"
-	       AUDIODEFS=-DCST_AUDIO_ALSA])
+dnl AC_CHECK_HEADER(sys/asoundlib.h,
+dnl              [AUDIODRIVER="alsa"
+dnl	       AUDIODEFS=-DCST_AUDIO_ALSA
+dnl               AUDIOLIBS=-lasound])
 AC_CHECK_HEADER(mmsystem.h,
 	      [AUDIODRIVER="wince"
 	       AUDIODEFS=-DCST_AUDIO_WINCE
@@ -151,6 +227,11 @@ if test "x$AUDIODEFS" = x; then
 	linux|oss)
 	    AUDIODRIVER=oss
 	    AUDIODEFS=-DCST_AUDIO_LINUX
+	    ;;
+	alsa)
+            AUDIODRIVER="alsa"
+	    AUDIODEFS=-DCST_AUDIO_ALSA
+            AUDIOLIBS=-lasound
 	    ;;
 	*bsd)
 	    AUDIODRIVER=oss

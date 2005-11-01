@@ -40,7 +40,7 @@
 #ifndef _CST_UNITS_H__
 #define _CST_UNITS_H__
 
-#include <stdio.h>
+#include "cst_file.h"
 #include "cst_hrg.h"
 #include "cst_sts.h"
 

@@ -37,8 +37,6 @@
 /*  Track i/o                                                            */
 /*                                                                       */
 /*************************************************************************/
-#include <stdio.h>
-#include <stdlib.h>
 #include "cst_string.h"
 #include "cst_endian.h"
 #include "cst_tokenstream.h"
@@ -136,7 +134,7 @@ static int load_frame_binary(cst_track *t, int i, cst_tokenstream *ts, int swap)
     if (cst_fread(ts->fd, &val, sizeof(float), 1) != 1)
 	goto eof;
     if (swap)
-	*((unsigned int *)&val) = SWAPINT(*((unsigned int *)&val));
+        swapfloat(&val);
     t->times[i] = val;
 
     /* Ignore the 'breaks' field */
@@ -148,7 +146,7 @@ static int load_frame_binary(cst_track *t, int i, cst_tokenstream *ts, int swap)
 	if (cst_fread(ts->fd, &val, sizeof(float), 1) != 1)
 	    goto eof;
 	if (swap)
-	    *((unsigned int *)&val) = SWAPINT(*((unsigned int *)&val));
+	    swapfloat(&val);
 	t->frames[i][j] = val;
     }
 
@@ -167,7 +165,7 @@ int cst_track_load_est(cst_track *t, const char *filename)
 
     num_frames=0;
     num_channels=0;
-    ts = ts_open(filename);
+    ts = ts_open(filename,NULL,NULL,NULL,NULL);
     if (ts == NULL)
     {
 	cst_errmsg("cst_track_load: can't open file \"%s\"\n",

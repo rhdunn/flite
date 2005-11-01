@@ -185,7 +185,7 @@ static const cst_val *ssyl_out(const cst_item *syl)
 
     ss = item_as(syl,"Syllable");
 
-    fs = path_to_item(syl,"R:SylStructure.parent.R:Phrase.parent.daughtern.R:SylStructure.daughter");
+    fs = path_to_item(syl,"R:SylStructure.parent.R:Phrase.parent.daughtern.R:SylStructure.daughtern");
 
     for (c=0, p=item_next(ss); 
 	 p && (c < CST_CONST_INT_MAX); 
@@ -519,7 +519,7 @@ static const cst_val *last_accent(const cst_item *syl)
 	 s && (c < CST_CONST_INT_MAX); 
 	 s=item_prev(s),c++)
     {
-	if (accented(s))
+	if (val_int(accented(s)))
 	    return val_string_n(c);
     }
 

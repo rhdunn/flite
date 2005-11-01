@@ -38,8 +38,6 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <stdio.h>
-#include <string.h>
 #include <ctype.h>
 #include "flite.h"
 #include "usenglish.h"
@@ -611,7 +609,7 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
 	if (cst_streq("",ffeature_string(token,"p.punc")))
 	{   /* no preceeding punc */
 	    char n[10];
-	    sprintf(n,"%d",en_exp_roman(name));
+	    cst_sprintf(n,"%d",en_exp_roman(name));
 	    if (rex_like(token))
 		r = cons_val(string_val("the"),
 			     en_exp_ordinal(n));
@@ -936,8 +934,8 @@ static const char *states[99][5] =
   { "Ga", "", "georgia" , NULL, NULL },
   { "HI", "", "hawaii" , NULL, NULL },
   { "Hi", "ambiguous", "hawaii" , NULL, NULL },
-  { "IA", "", "indiana" , NULL, NULL },
-  { "Ia", "ambiguous", "indiana" , NULL, NULL },
+  { "IA", "", "iowa" , NULL, NULL },
+  { "Ia", "ambiguous", "iowa" , NULL, NULL },
   { "Ind", "ambiguous", "indiana" , NULL, NULL },
   { "ID", "ambiguous", "idaho" , NULL, NULL },
   { "IL", "ambiguous", "illinois" , NULL, NULL },

@@ -40,7 +40,7 @@
 #ifndef _CST_TRACK_H__
 #define _CST_TRACK_H__
 
-#include <stdio.h>
+#include "cst_file.h"
 #include "cst_error.h"
 #include "cst_alloc.h"
 #include "cst_endian.h"

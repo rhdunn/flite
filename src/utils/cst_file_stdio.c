@@ -124,6 +124,18 @@ int cst_fprintf(cst_file fh, char *fmt, ...)
     return rv;
 }
 
+int cst_sprintf(char *s, const char *fmt, ...)
+{
+    va_list args;
+    int rv;
+
+    va_start(args, fmt);
+    rv = vsprintf(s, fmt, args);
+    va_end(args);
+
+    return rv;
+}
+
 int cst_fclose(cst_file fh)
 {
     return fclose(fh);

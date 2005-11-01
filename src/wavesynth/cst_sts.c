@@ -63,75 +63,27 @@ const unsigned short * get_sts_frame(const cst_sts_list *sts_list, int frame)
     
     if (sts_list->sts == NULL)
     {
-	if (sts_list->frames->mem == NULL)
-	{
-	    unsigned short *data = cst_alloc(unsigned short, sts_list->num_channels);
-	    cst_fseek(sts_list->frames->fh,
-		      (frame * sts_list->num_channels * sizeof(unsigned short)),
-		      CST_SEEK_ABSOLUTE);
-	    cst_fread(sts_list->frames->fh, data, sizeof(unsigned short), sts_list->num_channels);
-	    return data;
-	}
-	else
-	    return (const unsigned short *)sts_list->frames->mem
-		+ (frame * sts_list->num_channels);
+	return (const unsigned short *)sts_list->frames
+	    + (frame * sts_list->num_channels);
     }
     else
 	return sts_list->sts[frame].frame;
 }
 
 const unsigned char * get_sts_residual_fixed(const cst_sts_list *sts_list, int frame)
-{
+{   /* Actually for mceps */
     if (sts_list->sts == NULL)
-	if (sts_list->residuals->mem == NULL)
-	{
-	    unsigned char *data = cst_alloc(unsigned char, sts_list->num_channels);
-	    cst_fseek(sts_list->residuals->fh, (frame * sts_list->num_channels),
-		      CST_SEEK_ABSOLUTE);
-	    cst_fread(sts_list->residuals->fh, data, 1, sts_list->num_channels);
-	    return data;
-	}
-	else
-	    return (const unsigned char *)sts_list->residuals->mem
-		+ (frame * sts_list->num_channels);
+	return (const unsigned char *)sts_list->residuals
+	    + (frame * sts_list->num_channels);
     else
 	return sts_list->sts[frame].residual;
-}
-
-static unsigned long mapped_frame_offset(const cst_sts_list *sts_list, int frame)
-{
-    /* This assumes that the voice compiler has generated an extra
-           offset at the end of the array. */
-    if (sts_list->resoffs->mem == NULL)
-    {
-	unsigned long off;
-
-	cst_fseek(sts_list->resoffs->fh, frame*sizeof(unsigned long), CST_SEEK_ABSOLUTE);
-	cst_fread(sts_list->resoffs->fh, &off, sizeof(off), 1);
-	return off;
-    }
-    else
-	return ((const unsigned long *)sts_list->resoffs->mem)[frame];
 }
 
 const unsigned char * get_sts_residual(const cst_sts_list *sts_list, int frame)
 {
     if (sts_list->sts == NULL)
     {
-	if (sts_list->frames->mem == NULL)
-	{
-	    unsigned char *data;
-	    unsigned long a = mapped_frame_offset(sts_list, frame);
-	    unsigned long b = mapped_frame_offset(sts_list, frame+1);
-
-	    data = cst_alloc(unsigned char, b - a);
-	    cst_fseek(sts_list->residuals->fh, a, CST_SEEK_ABSOLUTE);
-	    cst_fread(sts_list->residuals->fh, data, 1, b - a);
-	    return data;
-	}
-	else
-	    return (const unsigned char *)sts_list->residuals->mem
-		+ ((const unsigned long *)sts_list->resoffs->mem)[frame];
+        return &sts_list->residuals[sts_list->resoffs[frame]];
     }
     else
 	return sts_list->sts[frame].residual;
@@ -140,19 +92,7 @@ const unsigned char * get_sts_residual(const cst_sts_list *sts_list, int frame)
 int get_frame_size(const cst_sts_list *sts_list, int frame)
 {
     if (sts_list->sts == NULL) {
-	/* This assumes that the voice compiler has generated an extra
-           offset at the end of the array. */
-	if (sts_list->resoffs->mem == NULL)
-	{
-	    unsigned long offs[2];
-
-	    cst_fseek(sts_list->resoffs->fh, frame*sizeof(unsigned long), CST_SEEK_ABSOLUTE);
-	    cst_fread(sts_list->resoffs->fh, offs, sizeof(offs), 1);
-	    return offs[1] - offs[0];
-	}
-	else
-	    return ((const unsigned long *)sts_list->resoffs->mem)[frame+1]
-		- ((const unsigned long *)sts_list->resoffs->mem)[frame];
+	return sts_list->resoffs[frame+1] - sts_list->resoffs[frame];
     } else {
 	return sts_list->sts[frame].size;
     }
@@ -172,13 +112,15 @@ int get_unit_size(const cst_sts_list *s,int start, int end)
 void release_sts_frame(const cst_sts_list *sts_list, int frame,
 		       const unsigned short *data)
 {
-    if (sts_list->sts == NULL && sts_list->frames->mem == NULL)
-	cst_free((void *)data);
+    return;
+/*    if (sts_list->sts == NULL && sts_list->frames->mem == NULL)
+      cst_free((void *)data); */
 }
 
 void release_sts_residual(const cst_sts_list *sts_list, int frame,
 			  const unsigned char *data)
 {
-    if (sts_list->sts == NULL && sts_list->residuals->mem == NULL)
-	cst_free((void *)data);
+    return;
+/*    if (sts_list->sts == NULL && sts_list->residuals->mem == NULL)
+      cst_free((void *)data); */
 }

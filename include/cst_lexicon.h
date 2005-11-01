@@ -40,21 +40,18 @@
 #ifndef _CST_LEXICON_H__
 #define _CST_LEXICON_H__
 
-#include <stdio.h>
-
 #include "cst_item.h"
 #include "cst_lts.h"
-
-typedef struct lexicon_entry_struct {
-    char *word_pos;
-    int phone_index;
-} lexicon_entry;
 
 typedef struct lexicon_struct {
     char *name;
     int num_entries;
-    lexicon_entry *entry_index;
-    unsigned char *phones;
+    /* Entries are centered around bytes with value 255 */
+    /* entries and forward (compressed) pronunciations and backwards */
+    /* each are terminated (preceeded in pron case) by 0 */
+    /* This saves 4 bytes per entry for an index */
+    unsigned char *data; /* the entries and phone strings */
+    int num_bytes;       /* the number of bytes in the data */
     char **phone_table;
 
     cst_lts_rules *lts_rule_set;
@@ -64,14 +61,14 @@ typedef struct lexicon_struct {
     cst_val *(*lts_function)(const struct lexicon_struct *l, const char *word, const char *pos);
 
     char ***addenda;
+    /* ngram frequency table used for packed entries */
+    const unsigned char * const *phone_hufftable;
+    const unsigned char * const *entry_hufftable;
+
 } cst_lexicon;
 
 cst_lexicon *new_lexicon();
 void delete_lexicon(cst_lexicon *lex);
-
-lexicon_entry *lex_add_entry(cst_lexicon *l, const char *word, const char *pos,
-			     const unsigned char *phones);
-int lex_delete_entry(cst_lexicon *l, const char *word, const char *pos);
 
 cst_val *lex_lookup(const cst_lexicon *l, const char *word, const char *pos);
 int in_lex(const cst_lexicon *l, const char *word, const char *pos);

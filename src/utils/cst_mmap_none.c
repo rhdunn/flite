@@ -62,7 +62,7 @@ cst_filemap *cst_read_whole_file(const char *path)
     cst_file fh;
 
     if ((fh = cst_fopen(path, CST_OPEN_READ)) < 0) {
-	perror("cst_read_whole_file: Failed to open file");
+	cst_errmsg("cst_read_whole_file: Failed to open file\n");
 	return NULL;
     }
 
@@ -72,7 +72,7 @@ cst_filemap *cst_read_whole_file(const char *path)
     fmap->mem = cst_alloc(char, fmap->mapsize);
     if (cst_fread(fmap->fh, fmap->mem, 1, fmap->mapsize) < fmap->mapsize)
     {
-	perror("cst_read_whole_file: read() failed");
+	cst_errmsg("cst_read_whole_file: read() failed\n");
 	cst_fclose(fmap->fh);
 	cst_free(fmap->mem);
 	cst_free(fmap);
@@ -85,7 +85,7 @@ cst_filemap *cst_read_whole_file(const char *path)
 int cst_free_whole_file(cst_filemap *fmap)
 {
     if (cst_fclose(fmap->fh) < 0) {
-	perror("cst_free_whole_file: close() failed");
+	cst_errmsg("cst_free_whole_file: close() failed\n");
 	return -1;
     }
     cst_free(fmap->mem);
@@ -99,7 +99,7 @@ cst_filemap *cst_read_part_file(const char *path)
     cst_file fh;
 
     if ((fh = cst_fopen(path, CST_OPEN_READ)) == NULL) {
-	perror("cst_read_part_file: Failed to open file");
+	cst_errmsg("cst_read_part_file: Failed to open file\n");
 	return NULL;
     }
 
@@ -113,7 +113,7 @@ cst_filemap *cst_read_part_file(const char *path)
 int cst_free_part_file(cst_filemap *fmap)
 {
     if (cst_fclose(fmap->fh) < 0) {
-	perror("cst_munmap_file: cst_fclose() failed");
+	cst_errmsg("cst_munmap_file: cst_fclose() failed\n");
 	return -1;
     }
     cst_free(fmap);

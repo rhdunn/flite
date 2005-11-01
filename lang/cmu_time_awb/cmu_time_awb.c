@@ -47,10 +47,15 @@
 static char *cmu_time_awb_unit_name(cst_item *s);
 
 extern cst_clunit_db cmu_time_awb_db;
-extern const unsigned char cmu_time_awb_lex_phones[];
-extern const char * const cmu_time_awb_phone_table[];
-extern const lexicon_entry cmu_time_awb_lex_entry[];
+
+extern const int cmu_time_awb_lex_entry[];
+extern const unsigned char cmu_time_awb_lex_data[];
 extern const int cmu_time_awb_num_entries;
+extern const int cmu_time_awb_num_bytes;
+extern const char * const cmu_time_awb_lex_phone_table[54];
+extern const char * const cmu_time_awb_lex_phones_huff_table[];
+extern const char * const cmu_time_awb_lex_entries_huff_table[];
+
 cst_lexicon cmu_time_awb_lex;
 
 cst_voice *cmu_time_awb_ldom = NULL;
@@ -68,11 +73,14 @@ cst_voice *register_cmu_time_awb(const char *voxdir)
     /* Lexicon */
     cmu_time_awb_lex.name = "cmu_time_awb";
     cmu_time_awb_lex.num_entries = cmu_time_awb_num_entries;
-    cmu_time_awb_lex.entry_index = (lexicon_entry *) cmu_time_awb_lex_entry;
-    cmu_time_awb_lex.phones = (unsigned char *) cmu_time_awb_lex_phones;
-    cmu_time_awb_lex.phone_table = (char **) cmu_time_awb_phone_table;
+    cmu_time_awb_lex.num_bytes = cmu_time_awb_num_bytes;
+    cmu_time_awb_lex.data = cmu_time_awb_lex_data;
+    cmu_time_awb_lex.phone_table = cmu_time_awb_lex_phone_table;
     cmu_time_awb_lex.syl_boundary = cmu_syl_boundary;
     cmu_time_awb_lex.lts_rule_set = NULL;
+    cmu_time_awb_lex.phone_hufftable = cmu_time_awb_lex_phones_huff_table;
+    cmu_time_awb_lex.entry_hufftable = cmu_time_awb_lex_entries_huff_table;
+    
     feat_set(v->features,"lexicon",lexicon_val(&cmu_time_awb_lex));
 
     /* Waveform synthesis */

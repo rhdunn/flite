@@ -44,9 +44,7 @@ ALL =
 
 include $(TOP)/config/common_make_rules
 
-doc: flite.html flite.ps flite.pdf
-	cp -p flite.ps html
-	(cd html; rm -f flite.ps.gz; gzip flite.ps)
+doc: flite.html flite.pdf
 	cp -p flite.pdf html
 
 flite.html: flite.texi
@@ -61,11 +59,8 @@ flite.html: flite.texi
 	@ cat stuff.ed | ed html/flite_toc.html
 	@ (cd html; rm -f index.html; ln flite_toc.html index.html)
 
-flite.ps:  flite.texi
-	@ tex flite.texi
-	@ dvips -f flite.dvi >flite.ps
+flite.pdf:  flite.texi
+	@ texi2pdf flite.texi
 
-flite.pdf: flite.ps
-	ps2pdf flite.ps flite.pdf
 
 

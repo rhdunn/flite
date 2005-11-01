@@ -39,14 +39,17 @@ DIRNAME=lang/cmu_us_kal
 BUILD_DIRS = 
 ALL_DIRS= 
 H = voxdefs.h
-SRCS = cmu_us_kal_diphone.c cmu_us_kal.c
+SRCS = cmu_us_kal_diphone.c cmu_us_kal.c \
+       cmu_us_kal_lpc.c \
+       cmu_us_kal_res.c \
+       cmu_us_kal_residx.c
 OBJS = $(SRCS:.c=.o)
 SCM=
 FILES = Makefile $(SCM) $(SRCS) $(H)
 LIBNAME = flite_cmu_us_kal
-LOCAL_INCLUDES = -I$(TOP)/lang/usenglish -I$(TOP)/lang/cmulex
+LOCAL_INCLUDES = -I$(TOP)/lang/usenglish -I$(TOP)/lang/cmulex $(VOXDEFS)
 
-ALL = .build_lib
+ALL = 
 
 include $(TOP)/config/common_make_rules
 

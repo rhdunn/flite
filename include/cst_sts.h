@@ -40,10 +40,8 @@
 #ifndef _CST_STS_H__
 #define _CST_STS_H__
 
-#include <stdio.h>
-
 /* The short term signal (sts) structure is the basic unit data info  */
-/* it may be diphones of general units, indexes and names are held    */
+/* it may be diphones or general units.  Indexes and names are held   */
 /* else where, this information plus the indexes in the Unit relation */
 /* allow reconstruction of the signal itself                          */
 struct cst_sts_struct {
@@ -57,11 +55,10 @@ typedef struct cst_sts_struct cst_sts;
 struct cst_sts_list_struct {
     /* If the sts are compiled in, this will point to them. */
     const cst_sts *sts;
-    /* Otherwise they will be loaded in these (not going to bother
-       with union initialization here).  Note that frames/residuals
-       are (ab)used to mean "shorts" and "bytes" in the case of
-       mel-cep vectors for clunits voices. */
-    cst_filemap *frames, *residuals, *resoffs;
+    /* Or we could have these set (or set later) */
+    const unsigned short *frames;
+    const unsigned char *residuals;
+    const unsigned int *resoffs;
 
     int num_sts;          /* But I don't think you need that number */
     int num_channels;     /* typically lpc order */

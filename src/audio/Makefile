@@ -44,13 +44,13 @@ include $(TOP)/config/config
 BASESRCS = auclient.c auserver.c audio.c 
 SRCS = $(BASESRCS) $(AUDIODRIVER:%=au_%.c)
 OBJS = $(SRCS:.c=.o)
-FILES = Makefile $(H) $(BASESRCS) au_alsa.c au_command.c au_none.c \
-	au_oss.c au_sun.c au_wince.c
+FILES = Makefile $(H) $(BASESRCS) au_command.c au_none.c \
+	au_oss.c au_sun.c au_wince.c au_palmos.c
 LIBNAME = flite
 
 LOCAL_INCLUDES = -I. $(AUDIODEFS)
 
-ALL = .build_lib
+ALL = 
 
 include $(TOP)/config/common_make_rules
 

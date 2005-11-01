@@ -1,12 +1,21 @@
 
-Flite is free software.  As a collection it is distributed under the
-following license.  Note a few files in this distribution have a
-different but equally free licence, see below.
+Flite is free software.
 
+We have kept the core code to BSD-like copyright, thus the system is
+free to use in commercial products, with commercial extensions.  GPL
+code is only include as part of the build process and does not
+taint any of the run-time code.  
+
+Note the PalmOS code uses BSD code that requires acknowledgements in
+any distribution documentation.
+
+As a collection it is distributed under the following license.  Note
+a few files in this distribution have a different but equally free
+non-conflicting licence, see below.
 
                   Language Technologies Institute                      
                      Carnegie Mellon University                        
-                      Copyright (c) 1999-2003                          
+                      Copyright (c) 1999-2005                          
                         All Rights Reserved.                           
                                                                        
   Permission is hereby granted, free of charge, to use and distribute  
@@ -112,6 +121,52 @@ mkinstalldirs
    and therefore do not impose any GPL restrctions on the rest of the
    system.  But as they are standard methods for configuration they 
    are included.
+
+palm/include/peal.h
+palm/include/pealstub.h
+palm/arm_flite/pealstub.c
+palm/m68k_flite/peal.c
+
+/**********
+ * Copyright (c) 2004 Greg Parker.  All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY GREG PARKER ``AS IS'' AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **********/
+
+The whole Sun Microsystems math library was ported to Palm
+for this but its not actually needed, though the include file is
+to allow bits of the system to compile that currently linked in
+to the system, so we just have the include file here
+
+palm/include/fdlibm.h
+
+ * ====================================================
+ * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
+ *
+ * Developed at SunSoft, a Sun Microsystems, Inc. business.
+ * Permission to use, copy, modify, and distribute this
+ * software is freely granted, provided that this notice 
+ * is preserved.
+ * ====================================================
+
 
 
 

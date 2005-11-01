@@ -40,8 +40,6 @@
 #ifndef _CST_FEATURES_H__
 #define _CST_FEATURES_H__
 
-#include <stdio.h>
-
 #include "cst_alloc.h"
 #include "cst_val.h"
 #include "cst_string.h"
@@ -86,6 +84,6 @@ int feat_length(const cst_features *f);
 CST_VAL_USER_TYPE_DCLS(features,cst_features)
 
 int feat_copy_into(const cst_features *from,cst_features *to);
-int feat_print(FILE *fd,const cst_features *f);
+int feat_print(cst_file fd,const cst_features *f);
 
 #endif

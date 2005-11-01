@@ -63,6 +63,7 @@ int main(int argc, char **argv)
 {
     cst_wave *w;
     cst_relation *r;
+    cst_utterance *u;
 
     if (argc != 3)
     {
@@ -73,7 +74,8 @@ int main(int argc, char **argv)
     w = new_wave();
     if (cst_wave_load_riff(w,argv[1]) != CST_OK_FORMAT)
 	return -1;
-    r = new_relation("FOO", NULL);
+    u = new_utterance();
+    r = utt_relation_create(u,"FOO");
     if (relation_load(r,argv[2]) != CST_OK_FORMAT)
 	return -1;
     

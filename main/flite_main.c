@@ -47,6 +47,8 @@
 #include "flite_version.h"
 #include "voxdefs.h"
 
+void cst_alloc_debug_summary();
+
 cst_voice *REGISTER_VOX(const char *voxdir);
 cst_voice *UNREGISTER_VOX(cst_voice *vox);
 
@@ -57,7 +59,7 @@ static void flite_version()
 	   FLITE_PROJECT_VERSION,
 	   FLITE_PROJECT_STATE,
 	   FLITE_PROJECT_DATE);
-    printf("  CMU Copyright 1999-2003, all rights reserved\n");
+    printf("  CMU Copyright 1999-2005, all rights reserved\n");
 }
 
 static void flite_usage()
@@ -85,8 +87,28 @@ static void flite_usage()
            "  --sets F=V  Set string feature\n"
 	   "  -b          Benchmark mode\n"
 	   "  -l          Loop endlessly\n"
+	   "  -pw         Print words\n"
+	   "  -ps         Print segments\n"
+	   "  -pr RelName  Print relation RelName\n"
            "  -v          Verbose mode\n");
     exit(0);
+}
+
+static cst_utterance *print_info(cst_utterance *u)
+{
+    cst_item *item;
+    const char *relname;
+
+    relname = utt_feat_string(u,"print_info_relation");
+    for (item=relation_head(utt_relation(u,relname)); 
+	 item; 
+	 item=item_next(item))
+    {
+	printf("%s ",item_feat_string(item,"name"));
+    }
+    printf("\n");
+
+    return u;
 }
 
 static void ef_set(cst_features *f,const char *fv,const char *type)
@@ -173,6 +195,25 @@ int main(int argc, char **argv)
 	{
 	    filename = argv[i+1];
 	    explicit_filename = TRUE;
+	    i++;
+	}
+	else if (cst_streq(argv[i],"-pw"))
+	{
+	    feat_set_string(extra_feats,"print_info_relation","Word");
+	    feat_set(extra_feats,"post_synth_hook_func",
+		     uttfunc_val(&print_info));
+	}
+	else if (cst_streq(argv[i],"-ps"))
+	{
+	    feat_set_string(extra_feats,"print_info_relation","Segment");
+	    feat_set(extra_feats,"post_synth_hook_func",
+		     uttfunc_val(&print_info));
+	}
+	else if (cst_streq(argv[i],"-pr") && (i+1 < argc))
+	{
+	    feat_set_string(extra_feats,"print_info_relation",argv[i+1]);
+	    feat_set(extra_feats,"post_synth_hook_func",
+		     uttfunc_val(&print_info));
 	    i++;
 	}
 	else if ((cst_streq(argv[i],"-set") || cst_streq(argv[i],"-s"))

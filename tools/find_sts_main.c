@@ -40,6 +40,10 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+
+/* To allow some normally const fields to manipulated during building */
+#define const
+
 #include "cst_wave.h"
 #include "cst_track.h"
 #include "cst_sigpr.h"
@@ -49,17 +53,11 @@ float lpc_range;
 
 void inv_lpc_filterd(short *sig, float *a, int order, double *res, int size)
 {
+    /* Note this address bytes before sig, up to order shorts back */
     int i, j;
     double r;
-    for (i = 0; i < order; i++)
-    {
-	r = sig[i];
-	for (j = 1; j < order; j++)
-/*	    if (i-j >= 0)  */
-		r -= a[j] * (double)sig[i - j];
-	res[i] = r;
-    }
-    for (i = order; i < size; i++)
+
+    for (i = 0; i < size; i++)
     {
 	r = sig[i];
 	for (j = 1; j < order; j++)
@@ -77,13 +75,21 @@ cst_sts *find_sts(cst_wave *sig, cst_track *lpc)
     short *sigplus;
 
     sts = cst_alloc(cst_sts,lpc->num_frames);
-    start = 0;
     sigplus = cst_alloc(short,sig->num_samples+lpc->num_channels);
     memset(sigplus,0,sizeof(short)*lpc->num_channels);
-    memmove(&sigplus[lpc->num_channels],sig->samples,sizeof(short)*sig->num_samples);
+    memmove(&sigplus[lpc->num_channels],
+	    sig->samples,
+	    sizeof(short)*sig->num_samples);
+    /* EST LPC Windows are centered around the point */
+    /* so offset things by a have period */
+    start = (int)((float)sig->sample_rate * lpc->times[0]/2);
     for (i=0; i<lpc->num_frames; i++)
     {
-	end = (int)((float)sig->sample_rate * lpc->times[i]);
+	if (i+1 == lpc->num_frames)
+	    end = (int)((float)sig->sample_rate * lpc->times[i]);
+	else
+	    end = (int)((float)sig->sample_rate *
+			(lpc->times[i]+lpc->times[i+1]))/2;
 	size = end - start;
 	if (size == 0)
 	    printf("frame size at %f is 0\n",lpc->times[i]);
@@ -112,7 +118,7 @@ cst_wave *reconstruct_wave(cst_wave *sig, cst_sts *sts, cst_track *lpc)
 {
     cst_lpcres *lpcres;
     int i,j,r;
-    int start, end;
+    int start;
     int num_samples;
 /*    FILE *ofd; */
 
@@ -122,24 +128,23 @@ cst_wave *reconstruct_wave(cst_wave *sig, cst_sts *sts, cst_track *lpc)
     lpcres = new_lpcres();
     lpcres_resize_frames(lpcres,lpc->num_frames);
     lpcres->num_channels = lpc->num_channels-1;
-    start = 0;
+    start = (int)((float)sig->sample_rate * lpc->times[0]/2);
+    num_samples += start;
     for (i=0; i<lpc->num_frames; i++)
     {
-	lpcres->times[i] = lpc->times[i]*sig->sample_rate;
 	lpcres->frames[i] = sts[i].frame;
-	end = start + sts[i].size;
 	lpcres->sizes[i] = sts[i].size;
-	start = end;
     }
     lpcres_resize_samples(lpcres,num_samples);
     lpcres->lpc_min = lpc_min;
     lpcres->lpc_range = lpc_range;
     lpcres->sample_rate = sig->sample_rate;
-    for (r=i=0; i<lpc->num_frames; i++)
+    for (r=start,i=0; i<lpc->num_frames; i++)
 	for (j=0; j<sts[i].size; j++,r++)
 	    lpcres->residual[r] = sts[i].residual[j];
 
 #if 0
+    /* Debug dump */
     ofd = fopen("lpc_resid.lpc","w");
     for (s=0,i=0; i<lpcres->num_frames; i++)
     {
@@ -157,6 +162,7 @@ cst_wave *reconstruct_wave(cst_wave *sig, cst_sts *sts, cst_track *lpc)
 	fprintf(ofd,"%d\n",cst_ulaw_to_short(lpcres->residual[i]));
     fclose(ofd);
 #endif
+
     return lpc_resynth(lpcres);
 }
 
@@ -167,8 +173,6 @@ void compare_waves(cst_wave *a, cst_wave *b)
 
     if (a->num_samples != b->num_samples)
     {
-/*	printf("different length a %d b %d\n",
-	a->num_samples, b->num_samples); */
 	if (a->num_samples > b->num_samples)
 	{
 	    compare_waves(b,a);
@@ -197,22 +201,6 @@ void save_sts(cst_sts *sts, cst_track *lpc, cst_wave *sig, const char *fn)
     fprintf(fd,"( %d %d %d %f %f)\n", lpc->num_frames, 
 	    lpc->num_channels-1, sig->sample_rate,
 	    lpc_min, lpc_range);
-#if 0
-    fprintf(fd,"( ");
-    for (i=0; i<lpc->num_frames; i++)
-	for (j=0; j < sts[i].size; j++)
-	    fprintf(fd," %d",sts[i].residual[j]);
-    fprintf(fd,")\n");
-    for (m=i=0; i<lpc->num_frames; i++)
-    {
-	fprintf(fd,"( %f (",lpc->times[i]);
-	for (j=1; j < lpc->num_channels; j++)
-	    fprintf(fd," %d",sts[i].frame[j-1]);
-	fprintf(fd," ) %d %d )\n",
-		sts[i].size, m);
-	m += sts[i].size;
-    }
-#endif
     for (m=i=0; i<lpc->num_frames; i++)
     {
 	fprintf(fd,"( %f (",lpc->times[i]);
@@ -259,7 +247,7 @@ int main(int argc, char **argv)
     sig2 = reconstruct_wave(sig,sts,lpc);
 
     compare_waves(sig,sig2);
-/*    cst_wave_save_riff(sig2,"sig2.wav"); */
+    cst_wave_save_riff(sig2,"sig2.wav");
 
     save_sts(sts,lpc,sig,argv[5]);
 

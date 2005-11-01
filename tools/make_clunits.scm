@@ -254,14 +254,18 @@ compilable single C file."
     (format cofdidx "#include \"%s_cltrees.h\"\n" name)
 
     (format cofdidx "\n\n")
-    (set! phone_count 0)
+    (set! unitbase_count 0)
+    (set! unitbases nil)
     (mapcar
      (lambda (p)
-       (if (not (string-matches (car p) ".*#.*"))
-	   (format cofdidx "#define phoneme_%s %d\n" 
-		   (car p) phone_count))
-       (set! phone_count (+ 1 phone_count)))
-     (cadr (car (PhoneSet.description '(phones)))))
+       (if (and (not (string-matches (car p) ".*#.*"))
+		(not (member_string (string-before (car p) "_") unitbases)))
+	   (begin
+	     (format cofdidx "#define unitbase_%s %d\n" 
+		     (string-before (car p) "_") unitbase_count)
+	     (set! unitbases (cons (string-before (car p) "_") unitbases))
+	     (set! unitbase_count (+ 1 unitbase_count)))))
+     clunits_entries)
     (format cofdidx "\n\n")
 
     (format cofdidx "const cst_clunit %s_units[] = { \n" name)
@@ -283,7 +287,7 @@ compilable single C file."
        (format cofdh "#define unit_%s %d\n" (nth 0 e) num_entries)
        (set! num_entries (+ 1 num_entries))
        (set! this_ut_count (+ 1 this_ut_count))
-       (format cofdidx "   { /* %s */ unit_type_%s, phoneme_%s, %d,%d, %s, %s },\n"
+       (format cofdidx "   { /* %s */ unit_type_%s, unitbase_%s, %d,%d, %s, %s },\n"
                (nth 0 e)
                (unit_type (nth 0 e))
 	       (string-before (nth 0 e) "_")
@@ -342,6 +346,7 @@ as short term signal."
 	    (> (absdiff start_time (car (car sts_coeffs)))
 	      (absdiff start_time (car (cadr sts_coeffs)))))
      (set! ltime (car (car sts_coeffs)))
+     (set! mcep_coeffs (cdr mcep_coeffs))
      (set! sts_coeffs (cdr sts_coeffs)))
     (set! sample_rate (nth 2 sts_info))
     (set! lpc_order (nth 1 sts_info))
@@ -353,6 +358,7 @@ as short term signal."
 	       (absdiff phoneboundary_time (car (cadr sts_coeffs)))))
      (output_mcep name (car mcep_coeffs) mofdsts mofdh)
      (output_sts name (car sts_coeffs) (nth 1 entry) lofdsts lofdh)
+     (set! mcep_coeffs (cdr mcep_coeffs))
      (set! sts_coeffs (cdr sts_coeffs)))
     (set! pb_pm pm_pos)
     (while (and sts_coeffs (cdr sts_coeffs)
@@ -360,6 +366,7 @@ as short term signal."
 	       (absdiff end_time (car (cadr sts_coeffs)))))
      (output_mcep name (car mcep_coeffs) mofdsts mofdh)
      (output_sts name (car sts_coeffs) (nth 1 entry) lofdsts lofdh)
+     (set! mcep_coeffs (cdr mcep_coeffs))
      (set! sts_coeffs (cdr sts_coeffs)))
     (set! end_pm pm_pos)
 

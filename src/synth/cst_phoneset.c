@@ -37,8 +37,6 @@
 /*    Voice definition                                                   */
 /*                                                                       */
 /*************************************************************************/
-#include <stdio.h>
-#include <stdlib.h>
 #include "cst_val.h"
 #include "cst_utterance.h"
 #include "cst_item.h"

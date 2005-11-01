@@ -103,6 +103,7 @@ int val_int(const cst_val *v);
 float val_float(const cst_val *v);
 const char *val_string(const cst_val *v);
 void *val_void(const cst_val *v);
+void *val_generic(const cst_val *v, int type, const char *stype);
 const cst_val *val_car(const cst_val *v);
 const cst_val *val_cdr(const cst_val *v);
 

@@ -37,9 +37,6 @@
 /*  Item features and paths                                              */
 /*                                                                       */
 /*************************************************************************/
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "cst_alloc.h"
 #include "cst_item.h"
 #include "cst_relation.h"
@@ -87,11 +84,8 @@ static const void *internal_ff(const cst_item *item,
     const cst_val *ff;
     cst_ffunction ffunc;
 
-    ts = ts_open_string(featpath);
-    ts->whitespacesymbols = ":.";
-    ts->singlecharsymbols = "";
-    ts->prepunctuationsymbols = "";
-    ts->postpunctuationsymbols = "";
+    /* using strcpsn would be faster */
+    ts = ts_open_string(featpath,":.","","","");
 
     for (tk = ts_get(ts), pitem=item;
 	 pitem && 
@@ -131,7 +125,10 @@ static const void *internal_ff(const cst_item *item,
 	    pitem = item_as(pitem,relation);
 	}
 	else
+	{
 	    cst_errmsg("ffeature: unknown directive \"%s\" ignored\n",tk);
+	    return NULL;
+	}
     }
 
     if (type == 0)

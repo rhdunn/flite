@@ -38,12 +38,10 @@
  * Beware that some of this code is subtly aware of the way operator
  * precedence is structured in regular expressions.  Serious changes in
  * regular-expression syntax might require a total rethink.  */
-#include <stdio.h>
 #include <ctype.h>
-#include <stdlib.h>
-#include <string.h>
 #include "cst_alloc.h"
 #include "cst_string.h"
+#include "cst_file.h"
 #include "cst_error.h"
 #include "cst_regex.h"
 
@@ -1250,7 +1248,7 @@ regprop(char *op)
 	case OPEN+7:
 	case OPEN+8:
 	case OPEN+9:
-		sprintf(buf+strlen(buf), "OPEN%d", OP(op)-OPEN);
+	    cst_sprintf(buf+strlen(buf), "OPEN%d", OP(op)-OPEN);
 		p = NULL;
 		break;
 	case CLOSE+1:
@@ -1262,7 +1260,7 @@ regprop(char *op)
 	case CLOSE+7:
 	case CLOSE+8:
 	case CLOSE+9:
-		sprintf(buf+strlen(buf), "CLOSE%d", OP(op)-CLOSE);
+	    cst_sprintf(buf+strlen(buf), "CLOSE%d", OP(op)-CLOSE);
 		p = NULL;
 		break;
 	case STAR:
