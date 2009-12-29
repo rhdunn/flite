@@ -141,20 +141,20 @@ void cst_regex_init();
 
 /* Regexps used in text processing (these are latin-alphabet specific
    and to some extent US English-specific) */
-extern const cst_regex *cst_rx_white;
-extern const cst_regex *cst_rx_alpha;
-extern const cst_regex *cst_rx_uppercase;
-extern const cst_regex *cst_rx_lowercase;
-extern const cst_regex *cst_rx_alphanum;
-extern const cst_regex *cst_rx_identifier;
-extern const cst_regex *cst_rx_int;
-extern const cst_regex *cst_rx_double;
-extern const cst_regex *cst_rx_commaint;
-extern const cst_regex *cst_rx_digits;
-extern const cst_regex *cst_rx_dotted_abbrev;
+extern const cst_regex * const cst_rx_white;
+extern const cst_regex * const cst_rx_alpha;
+extern const cst_regex * const cst_rx_uppercase;
+extern const cst_regex * const cst_rx_lowercase;
+extern const cst_regex * const cst_rx_alphanum;
+extern const cst_regex * const cst_rx_identifier;
+extern const cst_regex * const cst_rx_int;
+extern const cst_regex * const cst_rx_double;
+extern const cst_regex * const cst_rx_commaint;
+extern const cst_regex * const cst_rx_digits;
+extern const cst_regex * const cst_rx_dotted_abbrev;
 
 /* Table of regexps used in CART trees (only one so far) */
-extern const cst_regex *cst_regex_table[];
+extern const cst_regex * const cst_regex_table[];
 #define CST_RX_dotted_abbrev_NUM 0
 
 #endif

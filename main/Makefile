@@ -2,7 +2,7 @@
 ##                                                                       ##
 ##                  Language Technologies Institute                      ##
 ##                     Carnegie Mellon University                        ##
-##                        Copyright (c) 2001                             ##
+##                       Copyright (c) 2001-2008                         ##
 ##                        All Rights Reserved.                           ##
 ##                                                                       ##
 ##  Permission is hereby granted, free of charge, to use and distribute  ##
@@ -38,31 +38,88 @@ TOP=..
 DIRNAME=main
 BUILD_DIRS = 
 ALL_DIRS= 
-SRCS = flite_main.c flite_time_main.c t2p_main.c
-OBJS = $(SRCS:.c=.o)
+SRCS = flite_main.c flite_time_main.c t2p_main.c compile_regexes.c
+OBJS = $(SRCS:.c=.o) flite_voice_list.o
 FILES = Makefile $(SRCS)
-LOCAL_INCLUDES = -I$(TOP)/lang/$(FL_VOX)
-LOCAL_CLEAN = $(BINDIR)/flite$(EXEEXT) $(BINDIR)/flite_time$(EXEEXT) \
-              $(BINDIR)/t2p$(EXEEXT)
+LOCAL_INCLUDES = 
 
-ALL = $(BINDIR)/flite$(EXEEXT) $(BINDIR)/flite_time$(EXEEXT) \
-      $(BINDIR)/t2p$(EXEEXT)
+ALL = shared_libs \
+      $(BINDIR)/flite$(EXEEXT) \
+      $(BINDIR)/t2p$(EXEEXT) $(BINDIR)/compile_regexes$(EXEEXT) \
+      flite_voice_list.c each $(EXTRABINS)
 
-flite_LIBS = flite_$(FL_VOX) flite_$(FL_LANG) flite_$(FL_LEX) 
+VOICES=$(VOXES)
+VOICELIBS=$(VOICES:%=flite_%)
+
+flite_LIBS = $(VOICELIBS) $(LANGS:%=flite_%) $(LEXES:%=flite_%) flite
+
 flite_LIBS_flags = -L$(LIBDIR) $(flite_LIBS:%=-l%)
 flite_LIBS_deps = $(flite_LIBS:%=$(LIBDIR)/lib%.a)
 
-flite_time_LIBS = flite_cmu_time_awb flite_$(FL_LANG) flite_$(FL_LEX)
+include $(TOP)/config/common_make_rules
+
+# We need to set these vars, even if we're not going to build them
+# so make clean can remove them
+SHAREDARLIBS= $(flite_LIBS:%=$(LIBDIR)/lib%.shared.a)
+SHAREDLIBS = $(SHAREDARLIBS:%.shared.a=%.so)
+VERSIONSHAREDLIBS = $(SHAREDLIBS:%=%.${PROJECT_VERSION}) \
+                    $(SHAREDLIBS:%=%.${PROJECT_SHLIB_VERSION})
+
+flite_time_LIBS = flite_cmu_time_awb flite_usenglish flite_cmulex
 flite_time_LIBS_flags = -L$(LIBDIR) $(flite_time_LIBS:%=-l%)
 flite_time_LIBS_deps = $(flite_time_LIBS:%=$(LIBDIR)/lib%.a)
 
-include $(TOP)/config/common_make_rules
+LOCAL_CLEAN = $(BINDIR)/flite$(EXEEXT) $(BINDIR)/flite_time$(EXEEXT) \
+              $(BINDIR)/t2p$(EXEEXT) \
+              $(SHAREDARLIBS) $(SHAREDLIBS) $(VERSIONSHAREDLIBS) \
+              $(flite_LIBS_deps) $(VOICES:%=$(BINDIR)/flite_%)
 
-$(BINDIR)/flite$(EXEEXT): flite_main.o $(FLITELIBS) $(flite_LIBS_deps)
-	$(CC) $(CFLAGS) -o $@ flite_main.o $(flite_LIBS_flags) $(LDFLAGS)
+ifdef SHFLAGS
+flite_LIBS_flags += -Wl,-rpath $(LIBDIR) 
+shared_libs: $(SHAREDLIBS)
+else
+shared_libs: nothing
+endif
 
-$(BINDIR)/flite_time$(EXEEXT): flite_time_main.o $(FLITELIBS) $(flite_time_LIBS_deps)
-	$(CC) $(CFLAGS) -o $@ flite_time_main.o $(flite_time_LIBS_flags) $(LDFLAGS) 
+$(BINDIR)/flite$(EXEEXT): flite_main.o $(flite_LIBS_deps)
+	$(TOP)/tools/make_voice_list $(VOICES)
+	rm -f flite_voice_list.o
+	$(MAKE) flite_voice_list.o
+	$(CC) $(CFLAGS) -o $@ flite_main.o flite_voice_list.o $(flite_LIBS_flags) $(LDFLAGS)
 
-$(BINDIR)/t2p$(EXEEXT): t2p_main.o $(FLITELIBS) $(flite_LIBS_deps)
+$(BINDIR)/flite_time$(EXEEXT): flite_time_main.o $(flite_time_LIBS_deps)
+	$(CC) $(CFLAGS) -o $@ flite_time_main.o $(flite_time_LIBS_flags) $(FLITELIBFLAGS) $(LDFLAGS) 
+
+$(BINDIR)/t2p$(EXEEXT): t2p_main.o $(flite_LIBS_deps)
 	$(CC) $(CFLAGS) -o $@ t2p_main.o $(flite_LIBS_flags) $(LDFLAGS)
+
+
+$(BINDIR)/compile_regexes$(EXEEXT): compile_regexes.o $(FLITELIBS)
+	$(CC) $(CFLAGS) -o $@ compile_regexes.o $(FLITELIBFLAGS) $(LDFLAGS)
+
+each:
+	@ for i in $(VOICES) ; \
+	do \
+	   $(MAKE) VOICE=$$i $(BINDIR)/flite_$$i ; \
+	done
+
+$(BINDIR)/flite_${VOICE}: flite_main.o $(flite_LIBS_deps)
+	$(TOP)/tools/make_voice_list $(VOICE)
+	rm -f flite_voice_list.o
+	$(MAKE) flite_voice_list.o
+	$(CC) $(CFLAGS) -o $@ flite_main.o flite_voice_list.o $(flite_LIBS_flags) $(LDFLAGS)
+
+install:
+#       The basic binaries
+	@ $(INSTALL) -m 755 $(BINDIR)/flite $(INSTALLBINDIR)
+	@ for i in $(VOICES) ; \
+	do \
+	   $(INSTALL) $(BINDIR)/flite_$$i $(INSTALLBINDIR); \
+	done
+	$(INSTALL) -m 755 $(BINDIR)/flite_time $(INSTALLBINDIR)
+#       The libraries: static and shared (if built)
+	cp -pd $(flite_LIBS_deps) $(INSTALLLIBDIR)
+ifdef SHFLAGS
+	cp -pd $(SHAREDLIBS) $(VERSIONSHAREDLIBS) $(INSTALLLIBDIR)
+endif
+

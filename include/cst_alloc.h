@@ -62,17 +62,17 @@ void delete_alloc_context(cst_alloc_context ctx);
 
 void *cst_local_alloc(cst_alloc_context ctx, int size);
 void cst_local_free(cst_alloc_context ctx, void *p);
-#else /* ! UNDER_CE */
+#else /* not UNDER_CE */
 typedef void * cst_alloc_context;
 #define new_alloc_context(size)   (NULL)
 #define delete_alloc_context(ctx)
 #define cst_local_alloc(ctx,size) cst_safe_alloc(size)
 #define cst_local_free(cst,p)     cst_free(p)
-#endif /* ! UNDER_CE */
+#endif /* UNDER_CE */
 
 /* The public interface to the alloc functions */
 
-/* Note we actually underying call calloc so everything is zero'd */
+/* Note the underlying call is calloc, so everything is zero'd */
 #define cst_alloc(TYPE,SIZE) ((TYPE *)cst_safe_alloc(sizeof(TYPE)*(SIZE)))
 #define cst_calloc(TYPE,SIZE) ((TYPE *)cst_safe_calloc(sizeof(TYPE)*(SIZE)))
 #define cst_realloc(P,TYPE,SIZE) ((TYPE *)cst_safe_realloc((void *)(P),sizeof(TYPE)*(SIZE)))

@@ -87,7 +87,7 @@ const char * const cmu_time_awb_lex_phone_table[36] =
     NULL
 };
 
-const unsigned char * const cmu_time_awb_lex_phones_huff_table[257] = 
+const char * const cmu_time_awb_lex_phones_huff_table[257] = 
 {
     NULL, /* reserved */
    "\002" , /* 0.013158 */ 
@@ -143,7 +143,7 @@ const unsigned char * const cmu_time_awb_lex_phones_huff_table[257] =
     NULL
 };
 
-const unsigned char * const cmu_time_awb_lex_entries_huff_table[257] = 
+const char * const cmu_time_awb_lex_entries_huff_table[257] = 
 {
     NULL, /* reserved */
    "afte" , /* 0.009259 */ 

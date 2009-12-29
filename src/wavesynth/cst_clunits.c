@@ -77,9 +77,9 @@ static cst_vit_path *cl_path(cst_vit_path *p,
 static const cst_cart *clunit_get_tree(cst_clunit_db *cludb, const char *name);
 static void clunit_set_unit_name(cst_item *s,cst_clunit_db *clunit_db);
 
-typedef int (*cst_distfunc)(const cst_clunit_db *, int, int, const int *, int);
+typedef int (*cst_distfunc)(const cst_clunit_db *, int, int, const int *, int, int);
 static int optimal_couple_frame(cst_clunit_db *cludb, int u0, int u1,
-				cst_distfunc dfunc);
+				cst_distfunc dfunc, int bestsofar);
 static int optimal_couple(cst_clunit_db *cludb,
 			  int u0, int u1,
 			  int *u0_move, int *u1_move,
@@ -87,11 +87,13 @@ static int optimal_couple(cst_clunit_db *cludb,
 static int frame_distance(const cst_clunit_db *cludb,
 			  int a, int b,
 			  const int *join_weights,
-			  int order);
+			  int order,
+                          int best);
 static int frame_distanceb(const cst_clunit_db *cludb,
 			   int a, int b,
 			   const int *join_weights,
-			   int order);
+			   int order,
+                           int best);
 
 
 cst_utterance *clunits_synth(cst_utterance *utt)
@@ -168,6 +170,9 @@ static cst_utterance *clunits_select(cst_utterance *utt)
 	/* Get stuff from unit_db */
 	item_set(u,"unit_entry",item_feat(s,"selected_unit"));
 	item_set(u,"clunit_name",item_feat(s,"clunit_name"));
+#if 0
+        printf("awb_debug %s\n",item_feat_string(u,"clunit_name"));
+#endif
 
 	/* Use optimal join points if available */
 	if (item_feat_present(s, "unit_this_move"))
@@ -182,10 +187,10 @@ static cst_utterance *clunits_select(cst_utterance *utt)
 
 	if (item_feat_int(u,"unit_start") > item_feat_int(u, "unit_end"))
 	{
-	    feat_print(stdout,s->contents->features);
+            /*	    feat_print(stdout,s->contents->features); */
 	    cst_errmsg("start %d end %d\n",
 		    item_feat_int(u,"unit_start"), item_feat_int(u, "unit_end"));
-	    feat_print(stdout,u->contents->features);
+	    /* feat_print(stdout,u->contents->features); */
 	}
 
 	DPRINTF(0, ("selected %d=%s_%d %d/%d\n",
@@ -270,16 +275,14 @@ static cst_vit_path *cl_path(cst_vit_path *p,
     int u0,u1;
     int u0_move = -1, u1_move = -1;
 
-    np = new_vit_path(vd);
+    np = new_vit_path();
     cludb = val_clunit_db(feat_val(vd->f,"clunit_db"));	
-    if ((cludb->mcep->sts == NULL
-	 && cludb->mcep->frames == NULL)
-	|| (cludb->mcep->sts
-	    && cludb->mcep->sts[0].frame == NULL))
-	dfunc = frame_distanceb;
+    if (cludb->mcep->sts)
+        dfunc = frame_distance;
+    else if (cludb->mcep->sts_paged)
+        dfunc = frame_distance;
     else
-	dfunc = frame_distance;
-
+	dfunc = frame_distanceb;
 
     np->cand = c;
     np->from = p;
@@ -299,7 +302,7 @@ static cst_vit_path *cl_path(cst_vit_path *p,
 	    if (u1_move != -1)
 		    feat_set(np->f, "unit_this_move", int_val(u1_move));
 	} else if (cludb->optimal_coupling == 2)
-	    cost = optimal_couple_frame(cludb, u0, u1, dfunc);
+	    cost = optimal_couple_frame(cludb, u0, u1, dfunc, INT_MAX);
 	else
 	    cost = 0;
     }
@@ -315,7 +318,8 @@ static cst_vit_path *cl_path(cst_vit_path *p,
 }
 
 static int optimal_couple_frame(cst_clunit_db *cludb, int u0, int u1,
-				cst_distfunc dfunc)
+				cst_distfunc dfunc,
+                                int bestsofar)
 {
     int a,b;
 
@@ -330,7 +334,7 @@ static int optimal_couple_frame(cst_clunit_db *cludb, int u0, int u1,
 
     return (*dfunc)(cludb, a, b,
 		    cludb->join_weights,
-		    cludb->mcep->num_channels)
+		    cludb->mcep->num_channels,bestsofar)
 	    + abs(get_frame_size(cludb->sts, a)
 		  - get_frame_size(cludb->sts,b)) * cludb->f0_weight;
 }
@@ -352,7 +356,7 @@ static int optimal_couple(cst_clunit_db *cludb,
     if (u1_p == u0)
 	return 0;
     if (u1_p == CLUNIT_NONE || cludb->units[u0].phone != cludb->units[u1_p].phone)
-	return 10 * optimal_couple_frame(cludb, u0, u1, dfunc); /* laziness */
+	return 10 * optimal_couple_frame(cludb, u0, u1, dfunc,INT_MAX); /* laziness */
 
     DPRINTF(1,("optimal_coupling %s_%d (%d,%d) %s_%d (%d,%d)\n",
 	       UNIT_TYPE(cludb,u0),
@@ -395,7 +399,8 @@ static int optimal_couple(cst_clunit_db *cludb,
 	dist = 
 	    (*dfunc)(cludb, a, b,
 		     cludb->join_weights,
-		     cludb->mcep->num_channels)
+		     cludb->mcep->num_channels,
+                     best_val)
 	    + abs(get_frame_size(cludb->sts, a)
 		  - get_frame_size(cludb->sts,b)) * cludb->f0_weight;
 
@@ -427,7 +432,8 @@ static int optimal_couple(cst_clunit_db *cludb,
 static int frame_distance(const cst_clunit_db *cludb,
 			  int a, int b,
 			  const int *join_weights,
-			  int order)
+			  int order,
+                          int bestsofar)
 {
     int r,diff;
     int i;
@@ -456,10 +462,9 @@ static int frame_distance(const cst_clunit_db *cludb,
     {
 	diff = av[i]-bv[i];
 	r += abs(diff) * join_weights[i] / 65536;
+        if (r > bestsofar)
+            return r; /* already worse than best */
     }
-
-    release_sts_frame(cludb->mcep, a, av);
-    release_sts_frame(cludb->mcep, b, bv);
 
     return r;
 }
@@ -467,7 +472,8 @@ static int frame_distance(const cst_clunit_db *cludb,
 static int frame_distanceb(const cst_clunit_db *cludb,
 			   int a, int b,
 			   const int *join_weights,
-			   int order)
+			   int order,
+                           int bestsofar)
 {
     int r,diff;
     int i;
@@ -496,10 +502,9 @@ static int frame_distanceb(const cst_clunit_db *cludb,
     {
 	diff = (av[i]-bv[i]) * 256;
 	r += abs(diff) * join_weights[i] / 65536;
+        if (r > bestsofar)
+            return r; /* already worse than best */
     }
-
-    release_sts_residual(cludb->mcep, a, av);
-    release_sts_residual(cludb->mcep, b, bv);
 
     return r;
 }
@@ -572,7 +577,7 @@ char *clunits_ldom_phone_word(cst_item *s)
     if (cst_streq(name,silence))
     {
 	pname = ffeature_string(s,"p.name");
-	clname = cst_alloc(char, strlen(silence)+1+strlen(pname)+1);
+	clname = cst_alloc(char, cst_strlen(silence)+1+cst_strlen(pname)+1);
 	cst_sprintf(clname,"%s_%s",silence,pname);
     }
     else
@@ -583,7 +588,7 @@ char *clunits_ldom_phone_word(cst_item *s)
 	for (q=p=dname; *p != '\0'; p++)
 	    if (*p != '\'') *p = *q++;
 	*q = '\0';
-	clname = cst_alloc(char, strlen(name)+1+strlen(dname)+1);
+	clname = cst_alloc(char, cst_strlen(name)+1+cst_strlen(dname)+1);
 	cst_sprintf(clname,"%s_%s",name,dname);
 	cst_free(dname);
     }

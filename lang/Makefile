@@ -36,7 +36,8 @@
 ###########################################################################
 TOP=..
 DIRNAME=lang
-BUILD_DIRS = usenglish cmulex cmu_us_kal cmu_time_awb cmu_us_kal16
+# But only the build the ones we are interested in in this configuration
+BUILD_DIRS = $(LEXES) $(LANGS) $(VOXES)
 ALL_DIRS= $(BUILD_DIRS)
 FILES = Makefile $(SCM) $(SRCS) 
 

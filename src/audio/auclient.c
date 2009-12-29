@@ -49,6 +49,10 @@
 #include "cst_wave.h"
 #include "cst_audio.h"
 
+#ifndef CST_NO_SOCKETS
+
+#include <unistd.h>
+
 int play_wave_client(cst_wave *w,const char *servername,int port,
 		     const char *encoding)
 {
@@ -130,3 +134,5 @@ int play_wave_client(cst_wave *w,const char *servername,int port,
 
     return CST_OK_FORMAT;
 }
+
+#endif

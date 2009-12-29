@@ -77,6 +77,13 @@ cst_val *lts_apply_val(const cst_val *wlist,const char *feats,const cst_lts_rule
 		word[i] = j;
 		break;
 	    }
+        if (!r->letter_table[j])
+        {
+#if 0
+            printf("awb_debug unknown letter >%s<\n",val_string(val_car(v)));
+#endif
+            i--;  /* can't find this letter so skip it */
+        }
     }
 
     p = lts_apply(word,feats,r);
@@ -103,11 +110,12 @@ cst_val *lts_apply(const char *word,const char *feats,const cst_lts_rules *r)
     /* Buffer with added contexts */
     full_buff = cst_alloc(cst_lts_letter,
 			  (r->context_window_size*2)+
-			  strlen(word)+1); /* TBD assumes single POS feat */
+			  cst_strlen(word)+1); /* TBD assumes single POS feat */
     if (r->letter_table)
     {
 	for (i=0; i<8; i++) zeros[i] = 2;
-	cst_sprintf(full_buff,"%.*s%c%s%c%.*s",
+	cst_sprintf((char *)full_buff,
+                    "%.*s%c%s%c%.*s",
 		    r->context_window_size-1, zeros,
 		    1,
 		    word,
@@ -118,7 +126,8 @@ cst_val *lts_apply(const char *word,const char *feats,const cst_lts_rules *r)
     else
     {
 	/* Assumes l_letter is a char and context < 8 */
-	cst_sprintf(full_buff,"%.*s#%s#%.*s",
+	cst_sprintf((char *)full_buff,
+                    "%.*s#%s#%.*s",
 		    r->context_window_size-1, "00000000",
 		    word,
 		    r->context_window_size-1, "00000000");
@@ -126,12 +135,13 @@ cst_val *lts_apply(const char *word,const char *feats,const cst_lts_rules *r)
     }
 
     /* Do the prediction backwards so we don't need to reverse the answer */
-    for (pos = r->context_window_size + strlen(word) - 1;
+    for (pos = r->context_window_size + cst_strlen(word) - 1;
 	 full_buff[pos] != hash;
 	 pos--)
     {
 	/* Fill the features buffer for the predictor */
-	cst_sprintf(fval_buff,"%.*s%.*s%s",
+	cst_sprintf((char *)fval_buff,
+                    "%.*s%.*s%s",
 		    r->context_window_size,
 		    full_buff+pos-r->context_window_size,
 		    r->context_window_size,
@@ -159,10 +169,10 @@ cst_val *lts_apply(const char *word,const char *feats,const cst_lts_rules *r)
 	else if ((p=strchr(r->phone_table[phone],'-')) != NULL)
 	{
 	    left = cst_substr(r->phone_table[phone],0,
-			      strlen(r->phone_table[phone])-strlen(p));
+			      cst_strlen(r->phone_table[phone])-cst_strlen(p));
 	    right = cst_substr(r->phone_table[phone],
-			       (strlen(r->phone_table[phone])-strlen(p))+1,
-			       (strlen(p)-1));
+			       (cst_strlen(r->phone_table[phone])-cst_strlen(p))+1,
+			       (cst_strlen(p)-1));
 	    phones = cons_val(string_val(left),
 			      cons_val(string_val(right),phones));
 	    cst_free(left);

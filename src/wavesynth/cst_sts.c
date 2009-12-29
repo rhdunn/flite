@@ -1,7 +1,8 @@
 /*************************************************************************/
 /*                                                                       */
-/*                           Cepstral, LLC                               */
-/*                        Copyright (c) 2001                             */
+/*                  Language Technologies Institute                      */
+/*                     Carnegie Mellon University                        */
+/*                         Copyright (c) 2008                            */
 /*                        All Rights Reserved.                           */
 /*                                                                       */
 /*  Permission is hereby granted, free of charge, to use and distribute  */
@@ -18,28 +19,32 @@
 /*      derived from this software without specific prior written        */
 /*      permission.                                                      */
 /*                                                                       */
-/*  CEPSTRAL, LLC AND THE CONTRIBUTORS TO THIS WORK DISCLAIM ALL         */
-/*  WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED       */
-/*  WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL         */
-/*  CEPSTRAL, LLC NOR THE CONTRIBUTORS BE LIABLE FOR ANY SPECIAL,        */
-/*  INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER          */
-/*  RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION    */
-/*  OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  */
-/*  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.          */
+/*  CARNEGIE MELLON UNIVERSITY AND THE CONTRIBUTORS TO THIS WORK         */
+/*  DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING      */
+/*  ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT   */
+/*  SHALL CARNEGIE MELLON UNIVERSITY NOR THE CONTRIBUTORS BE LIABLE      */
+/*  FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    */
+/*  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN   */
+/*  AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,          */
+/*  ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF       */
+/*  THIS SOFTWARE.                                                       */
 /*                                                                       */
 /*************************************************************************/
-/*             Author:  David Huggins-Daines (dhd@cepstral.com)          */
-/*               Date:  October 2001                                     */
+/*             Author:  Alan W Black (awb@cs.cmu.edu)                    */
+/*               Date:  May 2008                                         */
 /*************************************************************************/
 /*                                                                       */
-/* cst_sts.c: audio database (short-term-signals) management code.       */
+/*  Removed the Cepstral copyrighted version (which was also free) and   */
+/*  reverted to the flite-1.0-beta version, the other code had support   */
+/*  for things not in flite and the original is sufficient               */
 /*                                                                       */
 /*************************************************************************/
 
-#include "cst_string.h"
-#include "cst_val.h"
+#include "cst_math.h"
+#include "cst_hrg.h"
+#include "cst_wave.h"
+#include "cst_sigpr.h"
 #include "cst_sts.h"
-#include "cst_file.h"
 
 CST_VAL_REGISTER_TYPE_NODEL(sts_list,cst_sts_list)
 
@@ -53,49 +58,10 @@ void delete_sts_list(cst_sts_list *l)
 {
     if (l)
     {
+	/* sub data is always const so can't free it */
 	cst_free(l);
     }
     return;
-}
-
-const unsigned short * get_sts_frame(const cst_sts_list *sts_list, int frame)
-{
-    
-    if (sts_list->sts == NULL)
-    {
-	return (const unsigned short *)sts_list->frames
-	    + (frame * sts_list->num_channels);
-    }
-    else
-	return sts_list->sts[frame].frame;
-}
-
-const unsigned char * get_sts_residual_fixed(const cst_sts_list *sts_list, int frame)
-{   /* Actually for mceps */
-    if (sts_list->sts == NULL)
-	return (const unsigned char *)sts_list->residuals
-	    + (frame * sts_list->num_channels);
-    else
-	return sts_list->sts[frame].residual;
-}
-
-const unsigned char * get_sts_residual(const cst_sts_list *sts_list, int frame)
-{
-    if (sts_list->sts == NULL)
-    {
-        return &sts_list->residuals[sts_list->resoffs[frame]];
-    }
-    else
-	return sts_list->sts[frame].residual;
-}
-
-int get_frame_size(const cst_sts_list *sts_list, int frame)
-{
-    if (sts_list->sts == NULL) {
-	return sts_list->resoffs[frame+1] - sts_list->resoffs[frame];
-    } else {
-	return sts_list->sts[frame].size;
-    }
 }
 
 int get_unit_size(const cst_sts_list *s,int start, int end)
@@ -109,18 +75,51 @@ int get_unit_size(const cst_sts_list *s,int start, int end)
     return size;
 }
 
-void release_sts_frame(const cst_sts_list *sts_list, int frame,
-		       const unsigned short *data)
+int get_frame_size(const cst_sts_list *sts_list, int frame)
 {
-    return;
-/*    if (sts_list->sts == NULL && sts_list->frames->mem == NULL)
-      cst_free((void *)data); */
+    if (sts_list->sts) 
+	return sts_list->sts[frame].size;
+    else if (sts_list->sts_paged)
+	return sts_list->sts_paged[frame].res_size;
+    else 
+    {
+	/* This assumes that the voice compiler has generated an extra
+           offset at the end of the array. */
+	return sts_list->resoffs[frame+1] - sts_list->resoffs[frame];
+    } 
 }
 
-void release_sts_residual(const cst_sts_list *sts_list, int frame,
-			  const unsigned char *data)
+const unsigned short * get_sts_frame(const cst_sts_list *sts_list, int frame)
 {
-    return;
-/*    if (sts_list->sts == NULL && sts_list->residuals->mem == NULL)
-      cst_free((void *)data); */
+    if (sts_list->sts)
+        return sts_list->sts[frame].frame;
+    else if (sts_list->sts_paged)
+        return &sts_list->sts_paged[frame].frame_page[sts_list->num_channels * sts_list->sts_paged[frame].frame_offset];
+    else
+        return sts_list->frames + (frame * sts_list->num_channels);
 }
+
+const unsigned char * get_sts_residual(const cst_sts_list *sts_list, int frame)
+{
+    if (sts_list->sts)
+        return sts_list->sts[frame].residual;
+    else if (sts_list->sts_paged)
+        return &sts_list->sts_paged[frame].res_page[sts_list->sts_paged[frame].res_offset];
+    else 
+        return sts_list->residuals + sts_list->resoffs[frame];
+}
+
+const unsigned char *get_sts_residual_fixed(const cst_sts_list *sts_list, int frame)
+{
+    /* Actually for mceps */
+    if (sts_list->sts)
+	return sts_list->sts[frame].residual;
+    else if (sts_list->sts_paged)
+        return &sts_list->sts_paged[frame].res_page[sts_list->sts_paged[frame].res_offset];
+    else
+	return 
+            (const unsigned char *)sts_list->residuals
+	    + (frame * sts_list->num_channels);
+
+}
+

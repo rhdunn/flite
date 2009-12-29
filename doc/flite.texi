@@ -11,15 +11,15 @@
 @c world example, but many others too.  I happily acknowledge their
 @c aid in producing this document -- awb
 
-@set EDITION 1.3
-@set VERSION 1.3
-@set UPDATED 3rd January 2005
+@set EDITION 1.4
+@set VERSION 1.4
+@set UPDATED 4th January 2009
 
 @ifinfo
 This file documents @code{Flite}, a small, fast run-time speech
 synthesis engine.
 
-Copyright (C) 2001-2005 Carnegie Mellon University
+Copyright (C) 2001-2009 Carnegie Mellon University
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -52,7 +52,7 @@ by the authors.
 
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 2001-2005 Carnegie Mellon University, all rights
+Copyright @copyright{} 2001-2009 Carnegie Mellon University, all rights
 reserved.
 
 Permission is granted to make and distribute verbatim copies of
@@ -96,7 +96,7 @@ It is designed for embedded systems like PDAs as well large server
 installation which must serve synthesis to many ports.  Flite is part
 of the suite of free speech synthesis tools which include Edinburgh
 University's Festival Speech Synthesis System
-@url{http://www.cstr.ed.ac.uk/projects/festival} and Carnegie
+@url{http://www.festvox.org/festival} and Carnegie
 Mellon University's FestVox project @url{http://festvox.org}, which
 provides tools, scripts, and documentation for building new synthetic
 voices.
@@ -124,9 +124,9 @@ Flite is free software.  It is distributed under an X11-like license.
 Apart from the few exceptions noted below (which still have
 similarly open lincenses) the general license is
 @example
-                 Language Technologies Institute                      
+                  Language Technologies Institute                      
                     Carnegie Mellon University                        
-                     Copyright (c) 1999-2005                          
+                     Copyright (c) 1999-2009                          
                        All Rights Reserved.                           
                                                                       
  Permission is hereby granted, free of charge, to use and distribute  
@@ -169,17 +169,23 @@ the actual voice itself).
 
 Other contributions are:
 @itemize @bullet
-@item David Huggins-Daines (dhd@@cepstral.com):
-much of the clunits code, porting to multiple platforms, substantial
-code tidy up and configure/autoconf guidance.
+@item Nagoya Institute of Technology
+The MLSA, MLPG code comes directly NITECH's hts engine code, though we
+have done some optimizations.
+@item Marcela Charfuelan (DFKI)
+For the mixed-excitation techniques (but no direct code).  These
+originally came from NITECH but we understood the technqiues from
+Marcela's Open Mary Java code and implemented them in our optimized
+version of MLSA.
+@item David Huggins-Daines:
+much of the very early clunits code, porting to multiple platforms,
+substantial code tidy up and configure/autoconf guidance (up to 2001).
 @item Cepstral, LLC (@url{http://cepstral.com}):
 For supporting DHD to spend time on flite and passing back the important
-fixes and enhancements including SAPI support
+fixes and enhancements while on a project funded by the 
+Portuguese Foundation for Science and Technology (FCT) Praxis XXI program.
 @item Willie Walker <william.walker@@sun.com> and the Sun Speech Group:
 lots of low level bugs (and fixes).
-@item Portuguese Foundation for Science and Technology (FCT) Praxis XXI program
-The SAPI interface provided by Cepstral, LLC was partially funded by
-the above program.
 @item Henry Spencer:
 For the regex code
 @item University of Edinburgh:
@@ -188,9 +194,10 @@ a practical project, much of the design of flite relies on the
 architecture decisions made in the Festival Speech Synthesis Systems and
 the Edinburgh Speech Tools.
 
-The duration cart tree and intonation (accent and F0) models were
-derived from the models in the Festival distribution. which in turn
-were trained from the Boston University FM Radio Data Corpus.
+The duration cart tree and intonation (accent and F0) models for the
+US English voice were derived from the models in the Festival
+distribution. which in turn were trained from the Boston University FM
+Radio Data Corpus.
 
 @item Carnegie Mellon University
 The included lexicon is derived from CMULEX and the letter to sound
@@ -241,24 +248,75 @@ need to install the libraries in a place that your dynamic linker will
 find them (cf. /etc/ld.so.conf) or set @var{LD_LIBRARY_PATH}
 appropriately.
 
+@example
+make install
+@end example
+Will installe the binaries (@file{bin/flite*}), include files and
+libraries in appropriate subdirectories of the defined install
+directory, @file{/usr/local} by default.  You can change this at configure
+time with
+@example
+./configure --prefix=/opt
+@end example
+
 @section Windows Support
 
 @section Window CE Support
 
-Flite has been successfully compile by a number of different groups
+Flite has been successfully compiled by a number of different groups
 under Windows CE.  The system should compile under Embedded Visual
 Studio but we not have the full details.
 
-If you look are the net it is possible to find precompiled versions
-for Windows CE including @url{http://www.viksoe.dk/code/flite.htm}
-which includes full sources.
+The system as distributed does compile under the gcc @file{mingw32ce}
+toolchain available from @url{http://cegcc.sourceforge.net/}.  The
+current version can be compiled and run under WinCE with a primitive
+application called @file{flowm}.  @file{flowm} is a simple application
+that allows playing of typed-in text, or full text to speech on
+a file.  Files should be a simple ascii text files @code{*.txt}.  The
+application allows the setting of the byte position to start synthesis
+from.
 
-The system as distributed does compile under the gcc arm-wince-pe
-toolchain available from
-@url{http://win-ce.voxware.com:28575/Development%20Tools/}, but Flite
-is currently not properly integrated with the WinCE audio device so
-although the binary runs, it can't play any audio, only generate it to
-files.
+Assuming you have @file{mingw32ce} installed you can configure as
+@example
+./configure --target=arm-wince
+make
+@end example
+The resulting binary is given in @file{wince/flowm.exe}.  If you copy
+this onto your Windows Mobile device and run it, it should allow you
+to speak typed-in text and any @file{*.txt} files you have on your
+device.
+
+The application uses @code{cmu_us_kal} as the voice for default.
+Although it is possible to include the clustergen voices, they may be
+too slow to be really practical.  An 8KHz clustergen voice with a
+reduced order to 13 gives a voices that runs acceptably on an hp2755
+(624MHz) but still marginal on an AT&T Tilt (400MHz).
+
+Building 8KHz clustergen voices is currently a bit of hack.  We take the
+standard waveforms and resample them to 8KHz, then relabel the sample
+rate to be 16KHz.  Then build the voice as normal (as if the speaker
+spoke twice as fast.  You may need to have tune the F0 parameters in
+@file{etc/f0.params}.  This seems to basically work.  Then after the
+waveform is synthesized (still in the "chipmunk'' domain) we then
+playit back at 8KHz.  This effectively means we generate half the
+number of samples and the frames are really at 10ms.  A second
+reduction is an option on the basic @file{build_flite} command.  A
+second argument can specify order reduction, thus instead of the
+standard 25 static parameters (plus its deltas) we can reduce this to
+13 and still get acceptable results
+@example
+./bin/build_flite cg 13
+cd flite
+make
+@end example
+Importantly this uses less space, and uses less time to synthesis.
+These @code{SPEECH_HACKS} in @file{src/cg/cst_mlsa.c} are switched on
+by default when @code{UNDER_CE} is defined.
+
+The reduced order properly extracts the statics (and stddev) and
+deltas (and stddev) from the predicted parameter clusters and makes it
+as if those were the sizes of parameters that were used to the train
+the voice. 
 
 @section PalmOS Support
 
@@ -275,10 +333,9 @@ get all this work properly.
 The user app is called @code{flop} (FLite on Palm) and like most apps
 written by awb, is functional, but ugly.  You should not let a
 short-sighted Scotsman, who still thinks command line interfaces are
-cool, design a graphical app.  But it does work and can read typed in
-text, memos and text files.  The @file{armflite.ro} resources are
-designed with the idea that proper applications will be written using it
-as a library.
+cool, design a graphical app.  But it does work and can read typed-in
+text.  The @file{armflite.ro} resources are designed with the idea
+that proper applications will be written using it as a library.
 
 The @file{flop.prc} application is distributed separately so it can be used
 without having to install all these tools.  But if you want to PalmOS
@@ -559,16 +616,17 @@ such a background and that Flite is to be compatible with voices and
 models developed in Festival, Flite uses HRGs as its basic utterance
 representation structure.
 
-Most of a synthesizer is in its data (lexicons, unit database etc), the
-actual synthesis code it pretty small.  In Festival most of that data
-exists in external files which are loaded on demand.  This is obviously
-slow and memory expensive (you need both a copy on the data on disk and
-in memory).  As one of the principal targets for Flite is very small
-machines we wanted to allow that core data to be in ROM, and be
-appropriately mapped into RAM without any explicit loading.  This can be
-done by various memory mapping functions (in Unix its called mmap) and
-is the core technique used in shared libraries (called DLLs in some parts
-of the world).  Thus the data should be in a format that it can be
+Most of a synthesizer is in its data (lexicons, unit database etc),
+the actual synthesis code it pretty small.  In Festival most of that
+data exists in external files which are loaded on demand.  This is
+obviously slow and memory expensive (you need both a copy on the data
+on disk and in memory).  As one of the principal targets for Flite is
+very small machines we wanted to allow that core data to be in ROM,
+and be appropriately mapped into RAM without any explicit loading
+(some OS's call this XIP -- execute in place).  This can be done by
+various memory mapping functions (in Unix its called mmap) and is the
+core technique used in shared libraries (called DLLs in some parts of
+the world).  Thus the data should be in a format that it can be
 directly accessed.  If you are going to directly access data you need
 to ensure the byte layout is appropriate for the architecture you are
 running on, byte order and address width become crucial if you want to
@@ -639,7 +697,7 @@ the lexicon lookup function that returns a list of phonemes).
 Everything that is added to an utterance will be deleted (and/or
 dereferenced) when the utterance is deleted.
 
-Like Festival user types can be added to the @code{cst_val}s.  In
+Like Festival, user types can be added to the @code{cst_val}s.  In
 Festival this can be done on the fly but because this requires the
 updating of some list when each new type is added, this wouldn't be
 thread safe.  Thus an explicit method of defining user types is done in
@@ -691,12 +749,30 @@ specified text is read from standard input.
 The second argument @code{OUTPUTTYPE} is the name of a file the output
 is written to, or if it is @code{play} then it is played to the audio
 device directly.  If it is @code{none} then the audio is created but
-discarded, this is used for benchmarking.  If @code{OUTPUTTYPE} is
-omitted, @code{play} is assumed.  You can also explicitly set the
+discarded, this is used for benchmarking.  If it is @code{stream} then
+the audio is streamed through a call back function (though this is not
+particularly useful in the command line version.  If @code{OUTPUTTYPE}
+is omitted, @code{play} is assumed.  You can also explicitly set the
 outputtype with the @code{-o} flag.
 @example
 flite -f doc/alice -o alice.wav
 @end example
+
+@section Voice selection
+
+All the voices in the distribution are collected into a single simple
+list in the global variable @code{flite_voice_list}.  You can select a
+voice from this list from the command line
+@example
+flite -voice awb -f doc/alice -o alice.wav
+@end example
+And list which voices are currently supported in the binary with
+@example
+flite -lv
+@end example
+The voices which get linked together are those listed in the
+@code{VOICES} in the @file{main/Makefile}.  You can change that as you
+require.
 
 @section C example
 
@@ -708,25 +784,25 @@ Here is a simple C program that uses the flite library
 @example
 #include "flite.h"
 
-cst_voice *register_cmu_us_kal();
+register_cmu_us_kal();
 
 int main(int argc, char **argv)
-{
+@{
     cst_voice *v;
 
     if (argc != 2)
-    {
+    @{
         fprintf(stderr,"usage: flite_test FILE\n");
         exit(-1);
-    }
+    @}
 
     flite_init();
 
-    v = register_cmu_us_kal();
+    v = register_cmu_us_kal(NULL);
 
     flite_file_to_speech(argv[1],v,"play");
 
-}
+@}
 @end example
 Assuming the shell variable FLITEDIR is set to the flite directory
 the following will compile the system (with appropriate changes for
@@ -750,9 +826,10 @@ that this will remain true.
 Returns a waveform (as defined in @file{include/cst_wave.h}) synthesized
 from the given text string by the given voice.
 @item float flite_file_to_speech(const char *filename, cst_voice *voice, const char *outtype);
-synthesizes all the sentences in the file @file{filename} with 
-given voice.  Output (at present) can only reasonably be, @code{play}
-or @code{none}.
+synthesizes all the sentences in the file @file{filename} with given
+voice.  Output (at present) can only reasonably be, @code{play} or
+@code{none}.  If the feature @code{file_start_position} with an
+integer, that point is used as start position in the file to be synthesized.
 @item float flite_text_to_speech(const char *text, cst_voice *voice, const char *outtype);
 synthesizes the text in string point to by @code{text}, with the given
 voice.  @code{outtype} may be a filename where the generated waveform is
@@ -765,7 +842,87 @@ from it for further processing and access.
 @item cst_utterance *flite_synth_phones(const char *phones,cst_voice *voice);
 synthesize the given phones with the given voice and returns an utterance
 from it for further processing and access.
+@item cst_voice *flite_voice_select(const char *name);
+returns a pointer to the voice named @code{name}.  Will retrurn
+@code{NULL} if there is not match, if @code{name == NULL} then the
+first voice in the voice list is returned.
+@item int flite_voice_add_lex_addenda(cst_voice *v, const cst_string *lexfile);
+loads the pronunciations from @code{lexfile} into the lexicon
+identified in the given voice (which will cause all other voices using
+that lexicon to also get this new addenda list.  An example lexicon
+file is given in @file{flite/tools/examples.lex}.  Words may be in
+double quotes, an optional part of speech tag may be give.  A colon
+separates the headword/postag from the list of phonemes.  Stress
+values (if used in the lexicon) must be specified.  Bad phonemes will
+be complained about on standard out.
 @end table
+
+@section Streaming Synthesis
+
+In 1.4 support was added for streaming synthesis.  Basically you may
+provided a call back function that will be called with waveform data
+immediately when it is available.  This potentially can reduce the
+dealy bewteen sending text to the synthesized and having audio
+available.
+
+The support is through a call back function of type
+@example
+int audio_stream_chunk(const cst_wave *w, int start, int size, 
+                       int last, void *user)
+@end example
+If the utterance feature @code{streaming_info} is set (which can
+be set in a voice or in an utterance).  The LPC or MLSA resynthesis
+functions will call the provided function as buffers become available.
+The LPC and MLSA waveform synthesis functions are used for diphones,
+limited domain, unit selection and clustergen voices.  Note explicit
+support is required for streaming so new waveform synthesis function
+may not have the functionality.
+
+An example streaming function is provided in
+@file{src/audio/au_streaming.c} and is used by the example flite main
+program when @code{stream} is given as the playing option.  (Though in
+the command line program the function it isn't really useful.)
+
+In order to use streaming you must provide call back function in your
+particualr thread.  This is done bay adding features to the voice in
+your thread.  Suppose your function was declrared as
+
+@example
+int example_audio_stream_chunk(const cst_wave *w, int start, int size, 
+                       int last, void *user)
+@end example
+You can add this function as the streaming function through the statement
+@example
+     cst_audio_streaming_info *asi;
+...
+     asi = new_audio_streaming_info();
+     asi->asc = example_audio_stream_chunk;
+     feat_set(voice->features,
+             "streaming_info",
+             audio_streaming_info_val(asi));
+@end example
+You may also optionally include your own pointer to any information
+you additionally want to pass to your function.  For example
+@example
+typedef my_callback_struct @{
+   cst_audiodev *fd;
+   int count;
+@};
+cst_audio_streaming_info *asi;
+
+...
+
+mcs = cst_alloc(my_callback_struct,1);
+mcs->fd=NULL;
+mcs->count=1;
+
+asi = new_audio_streaming_info();
+asi->asc = example_audio_stream_chunk;
+asi->userdata = mcs;
+feat_set(voice->features,
+         "streaming_info",
+         audio_streaming_info_val(asi));
+@end example
 
 @node Converting FestVox Voices, , APIs, top
 @chapter Converting FestVox Voices
@@ -776,10 +933,14 @@ For example all specific Scheme code written for a voice needs to be
 hand converted to C to work in Flite, this can be a major task.
 
 Simple conversion scripts are given as examples of the stages you need
-to go through.  These are designed to work on standard (English) diphone
-sets, and simple limited domain voices.  The conversion technique will
-almost certainly fail for large unit selection voices due to
-limitations in the C compiler (more discussion below).
+to go through.  These are designed to work on standard (English)
+diphone sets, and simple limited domain voices.  The conversion
+technique will almost certainly fail for large unit selection voices
+due to limitations in the C compiler (more discussion below).  In 1.4
+we have also added support for converting clustergen voices too (which
+is a little easier, see section below).
+
+@section Cocantenative Voice Building
 
 Conversion is basically taking the description of units (clunit
 catalogue or diphone index) and constructing some C files that can be
@@ -961,6 +1122,44 @@ about 100k pitch periods the files get too big to handle.  There are
 probably solutions to this but we have not yet investigated them.  This
 limitation doesn't seem to be an issue with the diphone voices as they
 are typically much smaller than unit selection voices.
+
+@section Statistical Voice Building
+
+The process of building from a clustergen (cg) voice is also
+supported.  It is assumed the environment variable @code{FLITEDIR} is
+set
+@example
+   export FLITEDIR=/home/awb/projects/flite/
+@end example
+After you build the clustergen voice you can convert by first setting
+up the skeleton files in the @file{flite/} directory
+@example
+   $FLITEDIR/tools/setup_flite
+@end example
+Assuming @file{etc/voice.defs} properly identifies the voice the cg
+templates will be compied in.
+
+The conversion itself is actually much faster than a clunit build
+(there is less to actually convert).
+@example
+   ./bin/build_flite cg
+@end example
+Will convert then necessary models into files in the @file{flite/}
+directory.  The you can compile it with
+@example
+   cd flite
+   make
+   ./flite_cmu_us_awb "Hello world"
+@end example
+Note that the voice that is to be converted *must* be a standard
+clustergen voice with f0, mceps, delta mceps and voicing in its
+combined coeffs files.  The method could be changed to deal with other
+possibilities but it will only work for default build method.
+
+The generated library @file{libflite_cmu_us_awb.a} may be linked with
+other programs linkle any other flite voice.  The binary generated
+@code{flite_cmu_us_awb} links in only one voice (unlike the flite binary in
+the full flite distribution.
 
 @section Lexicon Conversion
 

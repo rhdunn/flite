@@ -64,8 +64,8 @@ void add_to_free_queue(cst_audiodev *ad, void *datum)
         pd->fq = (void **)realloc(pd->fq, pd->fqmaxlen * sizeof(void *));
         if (!pd->fq)
         {
-            fprintf(stderr, "Out of memory\n");
-            exit(1);
+            cst_errmsg("Out of memory\n");
+            cst_error();
         }
     }
     pd->fq[pd->fqlen++] = datum;
@@ -99,7 +99,6 @@ void CALLBACK sndbuf_done(HWAVEOUT drvr, UINT msg,
         if (c == 7)
             SetEvent(pd->wevt);
         if (pd->in_reset) add_to_free_queue(ad, hdr);
-        else finish_header(drvr, hdr);
     }
 }
 
@@ -119,6 +118,7 @@ cst_audiodev *audio_open_wince(int sps, int channels, int fmt)
     memset(&wfx,0,sizeof(wfx));
     wfx.nChannels = channels;
     wfx.nSamplesPerSec = sps;
+
     switch (fmt)
     {
     case CST_AUDIO_LINEAR16:

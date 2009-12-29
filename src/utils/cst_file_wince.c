@@ -34,9 +34,12 @@
 /*                                                                       */
 /*  File I/O wrappers for defective platforms.                           */
 /*                                                                       */
+/*  fread and fwrite corrected to return count not numbytes              */
+/*       awb@cs.cmu.edu 20090124                                         */
+/*                                                                       */
 /*************************************************************************/
 
-#include <winbase.h>
+#include <windows.h>
 #include <string.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -51,7 +54,8 @@ cst_file cst_fopen(const char *path, int mode)
 	size_t count = mbstowcs(NULL,path,0)+1;
 	wchar_t *wpath = cst_alloc(wchar_t,count);
 	cst_file fh;
-	long access,creation;
+	long access = GENERIC_READ|GENERIC_WRITE;
+        long creation = OPEN_ALWAYS;
 
 	if (((mode & CST_OPEN_READ) && (mode & CST_OPEN_WRITE))
 		|| ((mode & CST_OPEN_READ) && (mode & CST_OPEN_APPEND)))
@@ -84,6 +88,7 @@ cst_file cst_fopen(const char *path, int mode)
 	cst_free(wpath);
 	if (fh == INVALID_HANDLE_VALUE) {
 		long foo = GetLastError();
+                (void)foo;
 		return NULL;
 	}
 
@@ -95,21 +100,21 @@ cst_file cst_fopen(const char *path, int mode)
 
 long cst_fwrite(cst_file fh, const void *buf, long size, long count)
 {
-	long rv;
+    unsigned long rv;
 
 	if (!WriteFile(fh,buf,size*count,&rv,NULL))
 		return -1;
 
-	return rv;
+	return rv/size;
 }
 
 long cst_fread(cst_file fh, void *buf, long size, long count)
 {
-	long rv;
+    unsigned long rv;
 
 	if (!ReadFile(fh,buf,size*count,&rv,NULL))
 		return -1;
-	return rv;
+	return rv/size;
 }
 
 int cst_fgetc(cst_file fh)
@@ -134,7 +139,7 @@ long cst_fseek(cst_file fh, long pos, int whence)
 {
 	int w = 0;
 
-	if (whence = CST_SEEK_ABSOLUTE)
+	if (whence == CST_SEEK_ABSOLUTE)
 		w = FILE_BEGIN;
 	else if (whence == CST_SEEK_RELATIVE)
 		w = FILE_CURRENT;
@@ -156,10 +161,9 @@ int cst_fprintf(cst_file fh, char *fmt, ...)
 	return cst_fwrite(fh,outbuf,1,count);
 }
 
-int cst_sprintf(cst_file fh, char *fmt, ...)
+int cst_sprintf(char *outbuf, const char *fmt, ...)
 {
 	va_list args;
-	char outbuf[512];
 	int count;
 
 	va_start(args,fmt);

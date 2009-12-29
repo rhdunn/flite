@@ -4,7 +4,7 @@
 ##                                                                       ##
 ##                  Language Technologies Institute                      ##
 ##                     Carnegie Mellon University                        ##
-##                      Copyright (c) 2001-2002                          ##
+##                      Copyright (c) 2001-2008                          ##
 ##                        All Rights Reserved.                           ##
 ##                                                                       ##
 ##  Permission is hereby granted, free of charge, to use and distribute  ##
@@ -80,13 +80,32 @@ then
    exit 1
 fi
 
-mkdir flite
-mkdir sts
+mkdir -p flite
 
 . ./etc/voice.defs
 
+if [ "$FV_LANG" = "us" ]
+then
+   # I showed have been more consistent
+   FV_FLITE_LANG=usenglish
+   FV_FLITE_LEX=cmu_lex
+   FV_FLITE_LEX_DIR=cmulex
+else
+   FV_FLITE_LANG=cmu_${FV_LANG}_lang
+   FV_FLITE_LEX=cmu_${FV_LANG}_lex
+   FV_FLITE_LEX_DIR=${FV_FLITE_LEX}
+fi
+
+if [ $# = 1 ]
+then
+   FV_TYPE=$1
+fi
+
 cat $FLITEDIR/tools/Makefile.flite |
   sed 's%__FLITEDIR__%'$FLITEDIR'%' $i |
+  sed 's%__VOICETYPE__%'$FV_TYPE'%' |
+  sed 's%__FLITELANG__%'$FV_FLITE_LANG'%' |
+  sed 's%__FLITELEX__%'$FV_FLITE_LEX_DIR'%' |
   sed 's%__VOICETYPE__%'$FV_TYPE'%' |
   sed 's%__VOICENAME__%'$FV_VOICENAME'%' >flite/Makefile
 
@@ -102,16 +121,30 @@ else
    if [ "$FV_TYPE" = "diphone" ]
    then
       cat $FLITEDIR/tools/VOICE_diphone.c |
+        sed 's%__NICKNAME__%'$FV_NAME'%' |
+        sed 's%__FLITELANG__%'$FV_FLITE_LANG'%' |
+        sed 's%__FLITELEX__%'$FV_FLITE_LEX'%' |
         sed 's%__VOICENAME__%'$FV_VOICENAME'%g' >flite/$FV_VOICENAME.c
-   else 
-      if [ "$FV_TYPE" = "ldom" ]
-      then
-         cat $FLITEDIR/tools/VOICE_ldom.c |
-           sed 's%__VOICENAME__%'$FV_VOICENAME'%g' >flite/$FV_VOICENAME.c
-      else
-         cat $FLITEDIR/tools/VOICE_clunits.c |
-           sed 's%__VOICENAME__%'$FV_VOICENAME'%g' >flite/$FV_VOICENAME.c
-      fi
+   elif [ "$FV_TYPE" = "ldom" ]
+   then
+      cat $FLITEDIR/tools/VOICE_ldom.c |
+        sed 's%__NICKNAME__%'$FV_NAME'%' |
+        sed 's%__FLITELANG__%'$FV_FLITE_LANG'%' |
+        sed 's%__FLITELEX__%'$FV_FLITE_LEX'%' |
+        sed 's%__VOICENAME__%'$FV_VOICENAME'%g' >flite/$FV_VOICENAME.c
+   elif [ "$FV_TYPE" = "cg" ]
+   then
+      cat $FLITEDIR/tools/VOICE_cg.c |
+        sed 's%__NICKNAME__%'$FV_NAME'%' |
+        sed 's%__FLITELANG__%'$FV_FLITE_LANG'%' |
+        sed 's%__FLITELEX__%'$FV_FLITE_LEX'%' |
+        sed 's%__VOICENAME__%'$FV_VOICENAME'%g' >flite/$FV_VOICENAME.c
+   else
+      cat $FLITEDIR/tools/VOICE_clunits.c |
+        sed 's%__NICKNAME__%'$FV_NAME'%' |
+        sed 's%__FLITELANG__%'$FV_FLITE_LANG'%' |
+        sed 's%__FLITELEX__%'$FV_FLITE_LEX'%' |
+        sed 's%__VOICENAME__%'$FV_VOICENAME'%g' >flite/$FV_VOICENAME.c
    fi
 fi
 
@@ -120,10 +153,10 @@ cp -p $FLITEDIR/main/flite_main.c flite/flite_main.c
 echo "#define VOXNAME" $FV_VOICENAME >flite/voxdefs.h
 echo "#define REGISTER_VOX register_"$FV_VOICENAME >>flite/voxdefs.h
 echo "#define UNREGISTER_VOX unregister_"$FV_VOICENAME >>flite/voxdefs.h
-echo "#define VOXHUMAN \"Name\"" >>flite/voxdefs.h
+echo "#define VOXHUMAN \"$FV_NAME\"" >>flite/voxdefs.h
 echo "#define VOXGENDER \"unknown\"" >>flite/voxdefs.h
 echo "#define VOXVERSION 1.0" >>flite/voxdefs.h
 
-echo "Setup flite build for "$FV_VOICENAME" complete"
+echo "Setup flite build for "$FV_VOICENAME" "$FV_TYPE" complete"
 
 exit 0

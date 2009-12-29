@@ -43,6 +43,7 @@ H = cst_alloc.h  \
 	cst_audio.h \
 	cst_cart.h \
 	cst_clunits.h \
+	cst_cg.h \
 	cst_diphone.h \
 	cst_endian.h \
 	cst_error.h \
@@ -74,6 +75,8 @@ H = cst_alloc.h  \
 	cst_voice.h \
 	cst_wave.h \
 	cst_ss.h \
+        cst_ffeatures.h \
+        cst_wchar.h \
 	flite.h
 
 FILES = Makefile $(H)

@@ -11,14 +11,19 @@ HOST_CPU   = @HOST_CPU@
 CC       = @CC@
 CFLAGS   = @CFLAGS@
 CPPFLAGS = @CPPFLAGS@
-#DEFS     = @DEFS@  # we don't use these anywhere
 SHFLAGS  = @SHFLAGS@
 
 AR       = @AR@
 RANLIB   = @RANLIB@
 INSTALL  = @INSTALL@
+NM       = @NM@
 
 M68KCC   = @M68KCC@
+WINDRES  = @WINDRES@
+DLLTOOL  = @DLLTOOL@
+DLLWRAP  = @DLLWRAP@
+SIZE     = @SIZE@
+STRIP    = @STRIP@
 
 AUDIODRIVER = @AUDIODRIVER@
 AUDIODEFS   = @AUDIODEFS@
@@ -35,6 +40,11 @@ STDIOTYPE   = @STDIOTYPE@
 FL_LANG  = @FL_LANG@
 FL_VOX   = @FL_VOX@
 FL_LEX   = @FL_LEX@
+
+# The list of which languages, lexicons and voices have to be included 
+langvox = @FL_LANGVOX@
+
+include $(TOP)/config/$(langvox).lv
 
 prefix        = @prefix@
 exec_prefix   = @exec_prefix@

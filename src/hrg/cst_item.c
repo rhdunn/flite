@@ -153,13 +153,18 @@ cst_item_contents *new_item_contents(cst_item *i)
 cst_item *item_as(const cst_item *i,const char *rname)
 {
     /* return i as relation rname or null */
+    const cst_val *v;
 
     if (i == NULL)
 	return NULL;
-    else if (feat_present(i->contents->relations,rname))
-	return val_item(feat_val(i->contents->relations,rname));
-    else
-	return NULL;
+    else 
+    {
+        v = feat_val(i->contents->relations,rname);
+        if (v != NULL)
+            return val_item(v);
+        else
+            return NULL;
+    }
 }
 
 /********************************************************************/

@@ -66,10 +66,11 @@ int cst_errmsg(const char *fmt, ...)
 
     wmsg[255]=L'\0';
     cst_free(wfmt);
-    OutputDebugString(wmsg);
+    MessageBoxW(0,wmsg,L"Error",0);
 #endif
     return 0;
 }
+jmp_buf *cst_errjmp = 0;
 
 #elif defined(__palmos__)
 #ifdef __ARM_ARCH_4T__

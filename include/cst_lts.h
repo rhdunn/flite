@@ -61,6 +61,7 @@ typedef struct cst_lts_rules_struct {
     const char * const * letter_table;
 } cst_lts_rules;
 
+/* Note this is designed to be 6 bytes */
 typedef struct cst_lts_rule_struct {
     cst_lts_feat   feat;
     cst_lts_letter val;

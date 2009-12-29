@@ -141,7 +141,9 @@ const cst_val *val_int_n(int n)
 /* are actually used as floats and as int/strings                  */
 const cst_val *val_string_n(int n)
 {
-    if (n < val_int_const_max) /* yes I mean *int*, its the table size */
+    if (n < 0)
+	return val_string_const[0];
+    else if (n < val_int_const_max) /* yes I mean *int*, its the table size */
 	return val_string_const[n];
     else
 	return val_string_const[val_int_const_max-1];

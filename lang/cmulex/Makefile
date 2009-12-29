@@ -38,17 +38,19 @@ TOP=../..
 DIRNAME=lang/cmulex
 BUILD_DIRS = 
 ALL_DIRS= 
-H = cmu_lts_model.h cmulex.h
+H = cmu_lts_model.h cmu_lex.h
 SRCS = cmu_lts_rules.c cmu_lts_model.c \
-       cmu_lex.c cmu_lex_entries.c cmu_lex_data.c
+       cmu_lex.c cmu_lex_entries.c cmu_lex_data.c cmu_postlex.c
+
 LEX_DATA_INCLUDES = cmu_lex_data_raw.c cmu_lex_num_bytes.c \
-     cmu_lex_phones_huff_table.c cmu_lex_entries_huff_table.c
+     cmu_lex_phones_huff_table.c cmu_lex_entries_huff_table.c \
 
 OBJS = $(SRCS:.c=.o)
 SCRIPTS=make_cmulex  
 
 SCM=
-FILES = Makefile $(SCM) $(SRCS) $(H) $(SCRIPTS) $(LEX_DATA_INCLUDES)
+WINDOWS = libflite-cmulex.vcproj
+FILES = Makefile $(SCM) $(SRCS) $(H) $(SCRIPTS) $(LEX_DATA_INCLUDES) $(WINDOWS)
 LIBNAME = flite_cmulex
 LOCAL_INCLUDES = $(LEXDEFS)
 

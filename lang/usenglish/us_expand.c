@@ -118,7 +118,7 @@ static const char * const ord2enty[] = {
 cst_val *en_exp_number(const char *numstring)
 {
     /* Expand given token to list of words pronouncing it as a number */
-    int num_digits = strlen(numstring);
+    int num_digits = cst_strlen(numstring);
     char part[4];
     cst_val *p;
     int i;
@@ -178,7 +178,7 @@ cst_val *en_exp_number(const char *numstring)
 					 en_exp_number(numstring+i)));
     }
     else if (num_digits < 13)
-    {   /* If there are pendantic brits out there, tough! */
+    {   /* If there are pedantic brits out there, tough!, 10^9 is a billion */
 	for (i=0; i < num_digits-9; i++)
 	    part[i] = numstring[i];
 	part[i]='\0';
@@ -206,7 +206,7 @@ cst_val *en_exp_ordinal(const char *rawnumstring)
     int i,j;
 
     numstring = cst_strdup(rawnumstring);
-    for (j=i=0; i < strlen(rawnumstring); i++)
+    for (j=i=0; i < cst_strlen(rawnumstring); i++)
 	if (rawnumstring[i] != ',')
 	{
 	    numstring[j] = rawnumstring[i];
@@ -249,7 +249,7 @@ cst_val *en_exp_id(const char *numstring)
     /* Expand numstring as pairs as in years or ids */
     char aaa[3];
 
-    if ((strlen(numstring) == 4) && 
+    if ((cst_strlen(numstring) == 4) && 
 	(numstring[2] == '0') &&
 	(numstring[3] == '0'))
     {
@@ -264,14 +264,26 @@ cst_val *en_exp_id(const char *numstring)
 			      cons_val(string_val("hundred"),0));
 	}
     }
-    else if ((strlen(numstring) == 2) && (numstring[0] == '0'))
+    else if ((cst_strlen(numstring) == 3) && 
+             (numstring[0] != '0') &&
+             (numstring[1] == '0') && 
+             (numstring[2] == '0'))
+    {
+        return cons_val(string_val(digit2num[numstring[0]-'0']),
+                        cons_val(string_val("hundred"),0));
+    }
+    else if ((cst_strlen(numstring) == 2) && (numstring[0] == '0')
+             && (numstring[1] == '0'))
+	return cons_val(string_val("zero"),
+                        cons_val(string_val("zero"),NULL));
+    else if ((cst_strlen(numstring) == 2) && (numstring[0] == '0'))
 	return cons_val(string_val("oh"),
 			en_exp_digits(&numstring[1]));
-    else if (((strlen(numstring) == 4) && 
+    else if (((cst_strlen(numstring) == 4) && 
 	 ((numstring[1] == '0'))) ||
-	(strlen(numstring) < 3))
+	(cst_strlen(numstring) < 3))
 	return en_exp_number(numstring);
-    else if (strlen(numstring)%2 == 1)
+    else if (cst_strlen(numstring)%2 == 1)
     {
 	return cons_val(string_val(digit2num[numstring[0]-'0']),
 			en_exp_id(&numstring[1]));
@@ -300,7 +312,7 @@ cst_val *en_exp_real(const char *numstring)
 	     ((p=strchr(numstring,'E')) != 0))
     {
 	aaa = cst_strdup(numstring);
-	aaa[strlen(numstring)-strlen(p)] = '\0';
+	aaa[cst_strlen(numstring)-cst_strlen(p)] = '\0';
 	r = val_append(en_exp_real(aaa),
 		       cons_val(string_val("e"),
 				en_exp_real(p+1)));
@@ -309,7 +321,7 @@ cst_val *en_exp_real(const char *numstring)
     else if ((p=strchr(numstring,'.')) != 0)
     {
 	aaa = cst_strdup(numstring);
-	aaa[strlen(numstring)-strlen(p)] = '\0';
+	aaa[cst_strlen(numstring)-cst_strlen(p)] = '\0';
 	r = val_append(en_exp_number(aaa),
 		       cons_val(string_val("point"),
 				en_exp_digits(p+1)));

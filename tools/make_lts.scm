@@ -80,16 +80,19 @@ $idir/[a-z].tree.wfst to compile from."
     (format ofdm "const cst_lts_model %s_lts_model[] = \n" name)
     (format ofdm "{\n")
 
+    (set! ln 0)
     (mapcar
      (lambda (l)
        (let ((ifd (fopen (path-append idir 
 			  (string-append l ".tree.wfst")) "r")))
 	 (format t "doing: %s\n" l)
-	 (format ofdm "   /** letter %s **/\n" l)
-	 (format ofdh "   /** letter %s **/\n" l)
-	 (set! rule_index (cons (list l lts_pos) rule_index))
-	 (set! lts_pos (dump_lts_wfst l ifd ofdm ofdh lts_pos))
-	 (fclose ifd)))
+	 (format ofdm "   /** letter \"%s\" **/\n" l)
+	 (format ofdh "   /** letter \"%s\" **/\n" l)
+	 (set! rule_index (cons (list l lts_pos ln) rule_index))
+	 (set! lts_pos (dump_lts_wfst ln ifd ofdm ofdh lts_pos))
+	 (fclose ifd)
+         (set! ln (+ 1 ln))
+         ))
      (cdr (cddr letter_table))
      )
     (format ofdm "    0, 0, 0,0, 0,0\n")
@@ -144,7 +147,7 @@ $idir/[a-z].tree.wfst to compile from."
     (fclose ofdm)
     ))
 
-(define (dump_lts_wfst l ifd ofde ofdh lts_pos)
+(define (dump_lts_wfst ln ifd ofde ofdh lts_pos)
   "(dump_lts_wfst ifd ofde ofdh lts_pos)
 Dump the WFST as a byte table to ifd.  Jumps are dumped as
 #define's to ofdh so forward references work.  lts_pos is the 
@@ -157,8 +160,8 @@ Feature and value are single bytes, which addrs are double bytes."
        (if (equal? state (eof-val))
 	   (error "eof in lts regex file")))
     (while (not (equal? (set! state (readfp ifd)) (eof-val)))
-      (format ofdh "#define LTS_STATE_%s_%d %s\n" 
-	      l (car (car state)) 
+      (format ofdh "#define LTS_STATE_%d_%d %s\n" 
+	      ln (car (car state)) 
 	      (lts_bytify lts_pos))
       (cond 
        ((string-equal "final" (car (cdr (car state))))
@@ -169,9 +172,9 @@ Feature and value are single bytes, which addrs are double bytes."
 		(lts_feat (car (car (cdr state))))
 		(lts_val (car (car (cdr state))))
 ;		(lts_phone (lts_letter (car (car (cdr state)))) 0 letter_table)
-		(format nil "LTS_STATE_%s_%d" l 
+		(format nil "LTS_STATE_%d_%d" ln
 			(car (cdr (cdr (car (cdr (cdr state)))))))
-		(format nil "LTS_STATE_%s_%d" l 
+		(format nil "LTS_STATE_%d_%d" ln 
 			(car (cdr (cdr (car (cdr state))))))))
        (t ;; its a letter output state
 	(format ofde "   255, %s, 0,0 , 0,0 , \n"

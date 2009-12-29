@@ -42,7 +42,7 @@
 #include "flite.h"
 #include "cst_diphone.h"
 #include "usenglish.h"
-#include "cmulex.h"
+#include "cmu_lex.h"
 
 static cst_utterance *__VOICENAME___postlex(cst_utterance *u);
 
@@ -52,7 +52,14 @@ cst_voice *__VOICENAME___diphone = NULL;
 
 cst_voice *register___VOICENAME__(const char *voxdir)
 {
-    cst_voice *v = new_voice();
+    cst_voice *v;
+    cst_lexicon *lex;
+
+    if (__VOICENAME___diphone)
+        return __VOICENAME___diphone;  /* Already registered */
+
+    v = new_voice();
+    v->name = "__NICKNAME__";
 
     /* Sets up language specific parameters in the __VOICENAME__. */
     usenglish_init(v);
@@ -65,9 +72,9 @@ cst_voice *register___VOICENAME__(const char *voxdir)
     feat_set_float(v->features,"duration_stretch",1.0); 
 
     /* Lexicon */
-    cmu_lex_init();
-    feat_set(v->features,"lexicon",lexicon_val(&cmu_lex));
-    feat_set(v->features,"postlex_func",uttfunc_val(&__VOICENAME___postlex));
+    lex = cmu_lex_init();
+    feat_set(v->features,"lexicon",lexicon_val(lex));
+    feat_set(v->features,"postlex_func",uttfunc_val(lex->postlex));
 
     /* Waveform synthesis */
     feat_set(v->features,"wave_synth_func",uttfunc_val(&diphone_synth));
@@ -94,6 +101,6 @@ void unregister___VOICENAME__(cst_voice *vox)
 static cst_utterance *__VOICENAME___postlex(cst_utterance *u)
 {
     /* Post lexical rules */
-
+    cmu_lex.postlex(u);
     return u;
 }

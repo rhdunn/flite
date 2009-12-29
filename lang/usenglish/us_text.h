@@ -60,10 +60,5 @@ cst_val *us_tokentowords(cst_item *token);
 
 int us_aswd(const char *w);
 
-extern const char *us_english_punctuation;
-extern const char *us_english_prepunctuation;
-extern const char *us_english_singlecharsymbols;
-extern const char *us_english_whitespace;
-
 #endif
 

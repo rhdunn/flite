@@ -46,7 +46,6 @@ CST_VAL_REGISTER_TYPE(lpcres,cst_lpcres)
 cst_lpcres *new_lpcres()
 {
     cst_lpcres *l = cst_alloc(struct cst_lpcres_struct,1);
-    l->residual_fold = 1;
     return l;
 }
 

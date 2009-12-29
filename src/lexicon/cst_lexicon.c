@@ -40,6 +40,7 @@
 
 #include "cst_features.h"
 #include "cst_lexicon.h"
+#include "cst_tokenstream.h"
 
 CST_VAL_REGISTER_TYPE_NODEL(lexicon,cst_lexicon)
 
@@ -71,6 +72,121 @@ void delete_lexicon(cst_lexicon *lex)
     }
 }
 
+cst_val *cst_lex_load_addenda(const cst_lexicon *lex, const char *lexfile)
+{   /* Load an addend from given file, check its phones wrt lex */
+    cst_tokenstream *lf;
+    const cst_string *line;
+    cst_val *e = NULL;
+    cst_val *na = NULL;
+    int i;
+
+    lf = ts_open(lexfile,"\n","","","");
+    if (lf == NULL)
+    {
+	cst_errmsg("lex_add_addenda: cannot open lexicon file\n");
+        return NULL;;
+    }
+
+    while (!ts_eof(lf))
+    {
+        line = ts_get(lf);
+        if (line[0] == '#')
+            continue;  /* a comment */
+        for (i=0; line[i]; i++)
+        {
+            if (line[i] != ' ')
+                break;
+        }
+        if (line[i])
+        {
+            e = cst_lex_make_entry(lex,line);
+            if (e)
+                na = cons_val(e,na);
+        }
+        else
+            continue;  /* a blank line */
+    }
+
+    ts_close(lf);
+    return val_reverse(na);
+}
+
+cst_val *cst_lex_make_entry(const cst_lexicon *lex, const cst_string *entry)
+{   /* if replace then replace entry in addenda of lex with entry */
+    /* else append entry to addenda of lex                        */
+    cst_tokenstream *e;
+    cst_val *phones = NULL;
+    cst_val *ventry;
+    const cst_string *w, *p;
+    cst_string *word;
+    cst_string *pos;
+    int i;
+
+    e = ts_open_string(entry,
+                       cst_ts_default_whitespacesymbols,
+                       "","","");
+
+    w = ts_get(e);
+    if (w[0] == '"') /* it was a quoted entry */
+    {                   /* so reparse it */
+        ts_close(e);
+        e = ts_open_string(entry,
+                           cst_ts_default_whitespacesymbols,
+                           "","","");
+        w = ts_get_quoted_token(e,'"','\\');
+    }
+
+    word = cst_strdup(w);
+    p = ts_get(e);
+    if (!cst_streq(":",p)) /* there is a real pos */
+    {
+        pos = cst_strdup(p);
+        p = ts_get(e);
+        if (!cst_streq(":",p)) /* there is a real pos */
+        {
+            cst_fprintf(stdout,"add_addenda: lex %s: expected \":\" in %s\n",
+                        lex->name,
+                        word);
+            cst_free(word); cst_free(pos); ts_close(e);
+            return NULL;
+        }
+    }
+    else
+        pos = cst_strdup("nil");
+
+    while (!ts_eof(e))
+    {
+        p = ts_get(e);
+        /* Check its a legal phone */
+        for (i=0; lex->phone_table[i]; i++)
+            if (cst_streq(p,lex->phone_table[i]))
+                break;
+        if (cst_streq("#",p)) /* comment to end of line */
+            break;
+        else if (lex->phone_table[i])
+            /* Only add it if its a valid phone */
+            phones = cons_val(string_val(p),phones);
+        else
+        {
+            cst_fprintf(stdout,"add_addenda: lex: %s word %s phone %s not in lexicon phoneset\n",
+                        lex->name,
+                        word,
+                        p);
+        }
+    }
+
+    ventry = cons_val(string_val(word),cons_val(string_val(pos),
+                                                val_reverse(phones)));
+    cst_free(word); cst_free(pos); ts_close(e);
+#if 0
+    printf("entry: ");
+    val_print(stdout,ventry);
+    printf("\n");
+#endif
+
+    return ventry;
+ }
+
 #if 0
 void lexicon_register(cst_lexicon *lex)
 {
@@ -100,7 +216,7 @@ cst_lexicon *lexicon_select(const char *name)
 
 static int no_syl_boundaries(const cst_item *i, const cst_val *p)
 {
-    /* This is a default function that will normally be replace */
+    /* This is a default function that will normally be replaced */
     /* for each lexicon                                         */
     (void)i;
     (void)p;
@@ -113,10 +229,10 @@ int in_lex(const cst_lexicon *l, const char *word, const char *pos)
     int r = FALSE, i;
     char *wp;
 
-    wp = cst_alloc(char,strlen(word)+2);
+    wp = cst_alloc(char,cst_strlen(word)+2);
     cst_sprintf(wp,"%c%s",(pos ? pos[0] : '0'),word);
 
-    for (i=0; l->addenda[i]; i++)
+    for (i=0; l->addenda && l->addenda[i]; i++)
     {
 	if (((wp[0] == '0') || (wp[0] == l->addenda[i][0][0])) &&
 	    (cst_streq(wp+1,l->addenda[i][0]+1)))
@@ -137,12 +253,12 @@ cst_val *lex_lookup(const cst_lexicon *l, const char *word, const char *pos)
 {
     int index;
     int p;
-    const unsigned char *q;
+    const char *q;
     char *wp;
     cst_val *phones = 0;
     int found = FALSE;
 
-    wp = cst_alloc(char,strlen(word)+2);
+    wp = cst_alloc(char,cst_strlen(word)+2);
     cst_sprintf(wp,"%c%s",(pos ? pos[0] : '0'),word);
 
     if (l->addenda)
@@ -158,7 +274,7 @@ cst_val *lex_lookup(const cst_lexicon *l, const char *word, const char *pos)
 	    {
 		for (p=index-2; l->data[p]; p--)
 		    for (q=l->phone_hufftable[l->data[p]]; *q; q++)
-			phones = cons_val(string_val(l->phone_table[*q]),
+			phones = cons_val(string_val(l->phone_table[(unsigned char)*q]),
 				  phones);
 	    }
 	    else  /* no compression -- should we still support this ? */
@@ -169,15 +285,15 @@ cst_val *lex_lookup(const cst_lexicon *l, const char *word, const char *pos)
 	    }
 	    phones = val_reverse(phones);
 	}
+	else if (l->lts_function)
+	{
+	    phones = (l->lts_function)(l,word,"");
+	}
 	else if (l->lts_rule_set)
 	{
 	    phones = lts_apply(word,
 			       "",  /* more features if we had them */
 			       l->lts_rule_set);
-	}
-	else if (l->lts_function)
-	{
-	    phones = (l->lts_function)(l,word,"");
 	}
     }
 
@@ -224,7 +340,7 @@ static int lex_uncompress_word(char *ucword,int max_size,
 	cword = &l->data[p];
 	for (i=0,j=0; cword[i]; i++)
 	{
-	    length = strlen(l->entry_hufftable[cword[i]]);
+	    length = cst_strlen(l->entry_hufftable[cword[i]]);
 	    if (j+length+1<max_size)
 	    {
 		memmove(ucword+j,l->entry_hufftable[cword[i]],length);
