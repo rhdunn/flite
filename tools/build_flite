@@ -43,7 +43,7 @@ FESTIVAL=$ESTDIR/../festival/bin/festival
 
 if [ "$PROMPTFILE" = "" ]
 then
-   if [ $# = 2 ]
+   if [ $# -ge 2 ]
    then
       export PROMPTFILE=$2
    else
@@ -124,14 +124,85 @@ then
    fi
    . ./lpc/lpc.params
 
+   CODEC=ulaw
+   if [ "$#" = "3" ]
+   then
+      CODEC=$3
+   fi
+
    cat $PROMPTFILE |
    awk '{print $2}' |
    while read i
    do
       fname=$i
       echo $fname STS
-      $FIND_STS $LPC_MIN $LPC_RANGE lpc/$fname.lpc wav/$fname.wav sts/$fname.sts
+      if [ $CODEC = "g721vuv" -o $CODEC = "vuv" ]      
+      then
+         $ESTDIR/bin/ch_track -itype ascii -otype est_binary -s 0.005 -o v.v v/$fname.v
+         $FIND_STS -lpcmin $LPC_MIN -lpcrange $LPC_RANGE -lpc lpc/$fname.lpc -wave wav/$fname.wav -o sts/$fname.sts -codec $CODEC -vuv v.v
+      else
+         $FIND_STS -lpcmin $LPC_MIN -lpcrange $LPC_RANGE -lpc lpc/$fname.lpc -wave wav/$fname.wav -o sts/$fname.sts -codec $CODEC
+      fi
    done
+   echo $CODEC >flite/codec
+
+   exit 0
+fi
+
+if [ "$1" = "voxdata" ]
+then  # for clunits external data
+    echo converting ${FV_VOICENAME}_ressize
+    grep "^ " flite/${FV_VOICENAME}_ressize.c |
+    tr -d "," |
+    awk '{for (i=1; i<=NF; i++) 
+          {
+             if ($i > 255)
+                print 255;
+             else
+                print $i;}}' |
+    $FLITEDIR/tools/a2byte.pl >flite/${FV_VOICENAME}_ressize.raw
+
+    echo converting ${FV_VOICENAME}_lpc
+    grep "^ " flite/${FV_VOICENAME}_lpcall.c |
+    tr -d "," | sed 's/^ //;s/  */\n/g' |
+    $FLITEDIR/tools/a2short.pl >flite/${FV_VOICENAME}_lpc.raw
+
+    echo converting ${FV_VOICENAME}_mcep
+    grep "^ " flite/${FV_VOICENAME}_mcepall.c |
+    tr -d "," | sed 's/^ //;s/  */\n/g' | 
+    $FLITEDIR/tools/a2short.pl >flite/${FV_VOICENAME}_mcep.raw
+
+    echo converting ${FV_VOICENAME}_residual
+    grep "^ " flite/${FV_VOICENAME}_resall.c |
+    tr -d "," | sed 's/^ //;s/  */\n/g' |
+    $FLITEDIR/tools/a2byte.pl >flite/${FV_VOICENAME}_res.raw
+
+    echo converting ${FV_VOICENAME}_residx
+    grep "^ " flite/${FV_VOICENAME}_residx.c |
+    tr -d "," | sed 's/^  *//;s/  */\n/g' |
+    $FLITEDIR/tools/a2int.pl >flite/${FV_VOICENAME}_residx.raw
+
+    wc flite/${FV_VOICENAME}_residx.raw \
+       flite/${FV_VOICENAME}_lpc.raw \
+       flite/${FV_VOICENAME}_mcep.raw \
+       flite/${FV_VOICENAME}_res.raw \
+       flite/${FV_VOICENAME}_ressize.raw
+
+    printf "CMUFLITE\0"             >flite/${FV_VOICENAME}.voxdata
+    printf "%54s\0" ${FV_VOICENAME} >>flite/${FV_VOICENAME}.voxdata
+    wc flite/${FV_VOICENAME}_residx.raw \
+       flite/${FV_VOICENAME}_lpc.raw \
+       flite/${FV_VOICENAME}_mcep.raw \
+       flite/${FV_VOICENAME}_res.raw \
+       flite/${FV_VOICENAME}_ressize.raw |
+    awk '{if ($4 != "total") print $3}' |
+    $FLITEDIR/tools/a2int.pl >>flite/${FV_VOICENAME}.voxdata
+    # Order goes from 4 bytes, 2 bytes, 1 byte info to ensure alignment
+    cat flite/${FV_VOICENAME}_residx.raw >>flite/${FV_VOICENAME}.voxdata
+    cat flite/${FV_VOICENAME}_lpc.raw >>flite/${FV_VOICENAME}.voxdata
+    cat flite/${FV_VOICENAME}_mcep.raw >>flite/${FV_VOICENAME}.voxdata
+    cat flite/${FV_VOICENAME}_res.raw >>flite/${FV_VOICENAME}.voxdata
+    cat flite/${FV_VOICENAME}_ressize.raw >>flite/${FV_VOICENAME}.voxdata
 
    exit 0
 fi
@@ -251,6 +322,7 @@ then
 
    rm -f flite/$FV_VOICENAME"_lpc"*
    rm -f flite/$FV_VOICENAME"_mcep"*
+   rm -f flite/$FV_VOICENAME"_res"*
    $FESTIVAL --heap $HEAPSIZE -b $FLITEDIR/tools/make_clunits.scm \
           $FLITEDIR/tools/make_cart.scm \
           $FLITEDIR/tools/make_vallist.scm \
@@ -328,6 +400,7 @@ then
 
       rm -f flite/$FV_VOICENAME"_lpc"*
       rm -f flite/$FV_VOICENAME"_mcep"*
+      rm -f flite/$FV_VOICENAME"_res"*
       $FESTIVAL --heap $HEAPSIZE -b $FLITEDIR/tools/make_clunits.scm \
              $FLITEDIR/tools/make_cart.scm \
              $FLITEDIR/tools/make_vallist.scm \

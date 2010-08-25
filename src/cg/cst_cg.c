@@ -143,7 +143,7 @@ static cst_utterance *cg_make_params(cst_utterance *utt)
     cst_item *s, *mcep_parent, *mcep_frame;
     int num_frames;
     float start, end;
-    float dur_stretch;
+    float dur_stretch, tok_stretch;
 
     cg_db = val_cg_db(utt_feat_val(utt,"cg_db"));
     mcep = utt_relation_create(utt,"mcep");
@@ -155,7 +155,10 @@ static cst_utterance *cg_make_params(cst_utterance *utt)
     for (s = utt_rel_head(utt,"HMMstate"); s; s=item_next(s))
     {
         start = end;
-        end = start + (dur_stretch*cg_state_duration(s,cg_db));
+        tok_stretch = ffeature_float(s,"R:segstate.parent.R:SylStructure.parent.parent.R:Token.parent.local_duration_stretch");
+        if (tok_stretch == 0)
+            tok_stretch = 1.0;
+        end = start + (tok_stretch*dur_stretch*cg_state_duration(s,cg_db));
         item_set_float(s,"end",end);
         mcep_parent = relation_append(mcep_link, s);
         for ( ; (num_frames * cg_db->frame_advance) <= end; num_frames++ )
@@ -249,10 +252,17 @@ static void cg_smooth_F0(cst_utterance *utt,cst_cg_db *cg_db,
     for (i=0,mcep=utt_rel_head(utt,"mcep"); mcep; i++,mcep=item_next(mcep))
     {
         if (voiced_frame(mcep))
+        {
             /* scale the F0 -- which normally wont change it at all */
             param_track->frames[i][0] = 
                 (((param_track->frames[i][0]-cg_db->f0_mean)/cg_db->f0_stddev) 
                  *stddev)+mean;
+            /* Some safety checks */
+            if (param_track->frames[i][0] < 50)
+                param_track->frames[i][0] = 50;
+            if (param_track->frames[i][0] > 700)
+                param_track->frames[i][0] = 700;
+        }
         else /* Unvoice it */
             param_track->frames[i][0] = 0.0;
     }
@@ -389,7 +399,10 @@ static cst_utterance *cg_resynth(cst_utterance *utt)
 
     streaming_info_val=get_param_val(utt->features,"streaming_info",NULL);
     if (streaming_info_val)
+    {
         asi = val_audio_streaming_info(streaming_info_val);
+        asi->utt = utt;
+    }
 
     cg_db = val_cg_db(utt_feat_val(utt,"cg_db"));
     param_track = val_track(utt_feat_val(utt,"param_track"));

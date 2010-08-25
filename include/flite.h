@@ -81,9 +81,12 @@ float flite_text_to_speech(const char *text,
 float flite_phones_to_speech(const char *text, 
 			     cst_voice *voice,
 			     const char *outtype);
-float flite_ssml_to_speech(const char *filename,
-                           cst_voice *voice,
-                           const char *outtype);
+float flite_ssml_file_to_speech(const char *filename,
+                                cst_voice *voice,
+                                const char *outtype);
+float flite_ssml_text_to_speech(const char *text,
+                                cst_voice *voice,
+                                const char *outtype);
 int flite_voice_add_lex_addenda(cst_voice *v, const cst_string *lexfile);
 
 /* Lower lever user functions */
@@ -97,6 +100,10 @@ cst_utterance *flite_do_synth(cst_utterance *u,
 float flite_process_output(cst_utterance *u,
                            const char *outtype,
                            int append);
+
+/* for voices with external voxdata */
+int flite_mmap_clunit_voxdata(const char *voxdir, cst_voice *voice);
+int flite_munmap_clunit_voxdata(cst_voice *voice);
 
 /* flite public export wrappers for features access */
 int flite_get_param_int(const cst_features *f, const char *name,int def);

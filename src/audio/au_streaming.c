@@ -67,7 +67,7 @@ void delete_audio_streaming_info(cst_audio_streaming_info *asi)
 }
 
 int audio_stream_chunk(const cst_wave *w, int start, int size, 
-                       int last, void *user)
+                       int last, cst_audio_streaming_info *asi)
 {
     /* Called with new samples from start for size samples */
     /* last is true if this is the last segment. */

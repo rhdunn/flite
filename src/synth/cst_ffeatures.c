@@ -586,15 +586,15 @@ static const cst_val *cg_break(const cst_item *syl)
     ss = item_as(syl,"SylStructure");
 
     if (ss == NULL)
-	return VAL_INT_0;  /* hmm, no sylstructure */
+	return VAL_STRING_0;  /* hmm, no sylstructure */
     else if (item_next(ss) != NULL)
-	return VAL_INT_0;  /* word internal */
+	return VAL_STRING_0;  /* word internal */
     else if (path_to_item(ss,"R:SylStructure.parent.R:Word.n") == NULL)
-        return VAL_INT_4;  /* utterance final */
+        return VAL_STRING_4;  /* utterance final */
     else if (path_to_item(ss,"R:SylStructure.parent.R:Phrase.n") == NULL)
-        return VAL_INT_3;  /* phrase final */
+        return VAL_STRING_3;  /* phrase final */
     else
-	return VAL_INT_1;  /* word final */
+	return VAL_STRING_1;  /* word final */
 }
 
 static const cst_val *syl_codasize(const cst_item *syl)

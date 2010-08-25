@@ -12,11 +12,12 @@ extern const unsigned int cmu_us_kal_resi[];
 cst_sts_list cmu_us_kal_sts = {
     0,0,
 #ifdef CST_NO_STATIC_VOX
-  0,0,0,
+    0,0,0,0,
 #else
   cmu_us_kal_lpc,
   cmu_us_kal_res,
   cmu_us_kal_resi,
+    0,
 #endif
   17614,
   10,

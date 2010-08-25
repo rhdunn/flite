@@ -40,6 +40,8 @@
 
 #include "cst_tokenstream.h"
 #include "flite.h"
+#include "cst_alloc.h"
+#include "cst_clunits.h"
 
 /* This is a global, which isn't ideal, this may change */
 /* It is set when flite_set_voice_list() is called which happens in */
@@ -66,7 +68,10 @@ cst_voice *flite_voice_select(const char *name)
     for (v=flite_voice_list; v; v=val_cdr(v))
     {
         voice = val_voice(val_car(v));
-        if (cst_streq(name,voice->name))
+        if (cst_streq(name,voice->name))  /* short name */
+            return voice;
+        if (cst_streq(name,get_param_string(voice->features,"name","")))
+            /* longer name */
             return voice;
     }
 
@@ -338,17 +343,15 @@ void flite_feat_set(cst_features *f, const char *name,const cst_val *v)
 {
     feat_set(f,name,v);
 }
-
 int flite_feat_remove(cst_features *f, const char *name)
 {
-	return feat_remove(f,name);
+    return feat_remove(f,name);
 }
 
 const char *flite_ffeature_string(const cst_item *item,const char *featpath)
 {
     return ffeature_string(item,featpath);
 }
-
 int flite_ffeature_int(const cst_item *item,const char *featpath)
 {
     return ffeature_int(item,featpath);
@@ -361,8 +364,95 @@ const cst_val *flite_ffeature(const cst_item *item,const char *featpath)
 {
     return ffeature(item,featpath);
 }
+
 cst_item* flite_path_to_item(const cst_item *item,const char *featpath)
 {
     return path_to_item(item,featpath);
+}
+
+int flite_mmap_clunit_voxdata(const char *voxdir, cst_voice *voice)
+{   
+    /* Map clunit_db in voice data for giveb voice */
+    char *path;
+    const char *name;
+    const char *x;
+    int *indexes;
+    cst_filemap *vd;
+    cst_clunit_db *clunit_db;
+    int i;
+
+    name = get_param_string(voice->features,"name","voice");
+    path = cst_alloc(char,cst_strlen(voxdir)+1+cst_strlen(name)+1+cst_strlen("voxdata")+1);
+    cst_sprintf(path,"%s/%s.voxdata",voxdir,name);
+
+    vd = cst_mmap_file(path);
+    
+    flite_feat_set_string(voice->features,"voxdir",path);
+    cst_free(path);
+
+    if (vd == NULL)
+        return -1;
+
+    x = (const char *)vd->mem;
+    if (!cst_streq("CMUFLITE",x))
+    {   /* Not a Flite voice data file */
+        cst_munmap_file(vd);
+        return -1;
+    }
+
+    for (i=9; x[i] &&i<64; i++)
+        if (x[i] != ' ')
+            break;
+
+    if (!cst_streq(name,&x[i]))
+    {   /* Not a voice data file for this voice */
+        cst_munmap_file(vd);
+        return -1;
+    }
+
+    /* This uses a hack to put in a void pointer to the cst_filemap */
+    flite_feat_set(voice->features,"voxdata",userdata_val(vd));
+    indexes = (int *)&x[64];
+    
+    clunit_db = val_clunit_db(feat_val(voice->features,"clunit_db"));
+
+    clunit_db->sts->resoffs = 
+        (const unsigned int *)&x[64+20];
+    clunit_db->sts->frames = 
+        (const unsigned short *)&x[64+20+indexes[0]];
+    clunit_db->mcep->frames = 
+        (const unsigned short *)&x[64+20+indexes[0]+indexes[1]];
+    clunit_db->sts->residuals = 
+        (const unsigned char *)&x[64+20+indexes[0]+indexes[1]+indexes[2]];
+    clunit_db->sts->ressizes = 
+        (const unsigned char *)&x[64+20+indexes[0]+indexes[1]+indexes[2]+indexes[3]];
+    
+    return 0;
+}
+
+int flite_munmap_clunit_voxdata(cst_voice *voice)
+{
+
+    cst_filemap *vd;
+    const cst_val *val_vd;
+    const cst_val *val_clunit_database;
+    cst_clunit_db *clunit_db;
+
+    val_vd = flite_get_param_val(voice->features,"voxdata",NULL);
+    val_clunit_database = flite_get_param_val(voice->features,"clunit_db",NULL);
+
+    if (val_vd && val_clunit_database)
+    {    
+        clunit_db = val_clunit_db(val_clunit_database);
+        clunit_db->sts->resoffs = NULL;
+        clunit_db->sts->frames = NULL;
+        clunit_db->mcep->frames = NULL;
+        clunit_db->sts->residuals = NULL;
+        clunit_db->sts->ressizes = NULL;
+        vd = val_userdata(val_vd);
+        cst_munmap_file(vd);
+    }
+    
+    return 0;
 }
 
