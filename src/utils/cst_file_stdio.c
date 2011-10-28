@@ -112,7 +112,7 @@ long cst_fseek(cst_file fh, long pos, int whence)
     return fseek(fh, pos, w);
 }
 
-int cst_fprintf(cst_file fh, char *fmt, ...)
+int cst_fprintf(cst_file fh, const char *fmt, ...)
 {
     va_list args;
     int rv;

@@ -564,6 +564,9 @@ static void clunit_set_unit_name(cst_item *s,cst_clunit_db *clunit_db)
 	char *cname;
 	cname = (clunit_db->unit_name_func)(s);
 	item_set_string(s,"clunit_name",cname);
+
+        printf("awb_debug clunit_name %s\n",cname);
+
 	cst_free(cname);
     }
     else
