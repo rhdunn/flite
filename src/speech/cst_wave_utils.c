@@ -160,7 +160,7 @@ unsigned char *cst_g721_decode(int *actual_size,int size,
     {
         xcode = packed_residual[ur/2];
         if (ur % 2 == 0)
-            code = (xcode & 0xF0) >> 4;
+            code = (xcode & 0xF0) >> dec_bits;
         else
             code = (xcode & 0x0F);
         sample_short = g721_decoder(code,AUDIO_ENCODING_LINEAR,&state);
@@ -193,7 +193,7 @@ unsigned char *cst_g721_encode(int *packed_size,int actual_size,
         if (ur % 2 == 0)
         {
             xcode = 0;
-            xcode = code << 4;
+            xcode = code << dec_bits;
         }
         else
         {

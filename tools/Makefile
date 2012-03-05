@@ -41,7 +41,7 @@ ALL_DIRS=
 SRCS = find_sts_main.c flite_sort_main.c
 OBJS = $(SRCS:.c=.o)
 TMPLTS = VOICE_ldom.c VOICE_clunits.c VOICE_diphone.c \
-         VOICE_cg.c Makefile.flite cg_dump_voxdata.c
+         VOICE_cg.c Makefile.flite 
 SCRIPTS = build_flite setup_flite huff_table flite_test \
           make_voice_list wfst2c build_lex clunit_prune \
           a2byte.pl a2short.pl a2int.pl flite_rename_voice
@@ -61,7 +61,7 @@ endif
 
 include $(TOP)/config/common_make_rules
 
-LOCAL_CLEAN = $(BINDIR)/find_sts $(BINDIR)/flite_sort
+LOCAL_CLEAN = $(BINDIR)/find_sts $(BINDIR)/flite_sort $(TOP)/bin
 
 $(BINDIR)/find_sts: find_sts_main.o $(FLITELIBS) 
 	$(CC) $(CFLAGS) -o $@ find_sts_main.o $(FLITELIBFLAGS) $(LDFLAGS)

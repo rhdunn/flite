@@ -275,8 +275,11 @@ const cst_val *set_cdr(cst_val *v1, const cst_val *v2)
     }
     else
     {
-	val_dec_refcount(CST_VAL_CDR(v1));
-	val_inc_refcount(v1);
+        if (CST_VAL_CDR(v1))
+        {
+            val_dec_refcount(CST_VAL_CDR(v1));
+            val_inc_refcount(v1);
+        }
 	CST_VAL_CDR(v1) = (cst_val *)v2;
     }
     return v1;
@@ -284,7 +287,7 @@ const cst_val *set_cdr(cst_val *v1, const cst_val *v2)
 
 const cst_val *set_car(cst_val *v1, const cst_val *v2)
 {
-    /* destructive set car, be careful you have a pointer to current cdr */
+    /* destructive set car, be careful you have a pointer to current car */
     
     if (!cst_val_consp(v1))
     {
@@ -477,7 +480,7 @@ cst_val *cst_utf8_explode(const cst_string *utf8string)
     /* return a list of utf-8 characters as strings */
     const unsigned char *xxx = (const unsigned char *)utf8string;
     cst_val *chars=NULL;
-    int i, l=0;
+    int i;
     char utf8char[5];
 
     for (i=0; xxx[i]; i++)
@@ -485,25 +488,21 @@ cst_val *cst_utf8_explode(const cst_string *utf8string)
         if (xxx[i] < 0x80)  /* one byte */
         {
             sprintf(utf8char,"%c",xxx[i]);
-            l = 1;
         }
         else if (xxx[i] < 0xe0) /* two bytes */
         {
             sprintf(utf8char,"%c%c",xxx[i],xxx[i+1]);
             i++;
-            l = 2;
         }
         else if (xxx[i] < 0xff) /* three bytes */
         {
             sprintf(utf8char,"%c%c%c",xxx[i],xxx[i+1],xxx[i+2]);
             i++; i++;
-            l = 3;
         }
         else
         {
             sprintf(utf8char,"%c%c%c%c",xxx[i],xxx[i+1],xxx[i+2],xxx[i+3]);
             i++; i++; i++;
-            l = 4;
         }
         chars = cons_val(string_val(utf8char),chars);
     }

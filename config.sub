@@ -1143,6 +1143,10 @@ case $os in
                 ## added (awb) March 27.
 		os=-android
 		;;
+	-chrome*)
+                ## added (aup) Nov 06 2011.
+		os=-chrome
+		;;
 	-osfrose*)
 		os=-osfrose
 		;;

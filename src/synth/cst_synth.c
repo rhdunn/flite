@@ -459,6 +459,8 @@ cst_utterance *default_lexical_insertion(cst_utterance *u)
     const char *pos;
     cst_val *phones;
     cst_item *ssword, *sssyl, *segitem, *sylitem, *seg_in_syl;
+    const cst_val *vpn;
+    int dp = 0;
 
     lex = val_lexicon(feat_val(u->features,"lexicon"));
     if (lex->lex_addenda)
@@ -475,6 +477,7 @@ cst_utterance *default_lexical_insertion(cst_utterance *u)
         pos = ffeature_string(word,"pos");
 	phones = NULL;
         wp = NULL;
+        dp = 0;  /* should the phones get deleted or not */
         
         /*        printf("awb_debug word %s pos %s gpos %s\n",
                item_feat_string(word,"name"),
@@ -486,7 +489,6 @@ cst_utterance *default_lexical_insertion(cst_utterance *u)
            propagate such to words, then we can remove the path here) */
 	if (item_feat_present(item_parent(item_as(word, "Token")), "phones"))
         {
-            const cst_val *vpn;
             vpn = item_feat(item_parent(item_as(word, "Token")), "phones");
             if (cst_val_consp(vpn))
             {   /* for SAPI ?? */
@@ -496,6 +498,7 @@ cst_utterance *default_lexical_insertion(cst_utterance *u)
             }
             else
             {
+                dp = 1;
                 if (cst_streq(val_string(vpn),
                               ffeature_string(word,"p.R:Token.parent.phones")))
                     phones = NULL; /* Already given these phones */
@@ -509,7 +512,10 @@ cst_utterance *default_lexical_insertion(cst_utterance *u)
             if (wp)
                 phones = (cst_val *)val_cdr(val_cdr(wp));
             else
+            {
+                dp = 1;
 		phones = lex_lookup(lex,item_feat_string(word,"name"),pos);
+            }
 	}
 
 	for (sssyl=NULL,sylitem=NULL,p=phones; p; p=val_cdr(p))
@@ -548,8 +554,7 @@ cst_utterance *default_lexical_insertion(cst_utterance *u)
 	    }
 	    cst_free(phone_name);
 	}
-	if (!item_feat_present(item_parent(item_as(word, "Token")), "phones")
-            && ! wp)
+	if (dp)
         {
 	    delete_val(phones);
             phones = NULL;

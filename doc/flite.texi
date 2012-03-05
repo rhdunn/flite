@@ -11,15 +11,15 @@
 @c world example, but many others too.  I happily acknowledge their
 @c aid in producing this document -- awb
 
-@set EDITION 1.4
-@set VERSION 1.4
-@set UPDATED 4th January 2009
+@set EDITION 1.5
+@set VERSION 1.5
+@set UPDATED 9th December 2011
 
 @ifinfo
 This file documents @code{Flite}, a small, fast run-time speech
 synthesis engine.
 
-Copyright (C) 2001-2009 Carnegie Mellon University
+Copyright (C) 2001-2011 Carnegie Mellon University
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -52,7 +52,7 @@ by the authors.
 
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 2001-2009 Carnegie Mellon University, all rights
+Copyright @copyright{} 2001-2011 Carnegie Mellon University, all rights
 reserved.
 
 Permission is granted to make and distribute verbatim copies of
@@ -126,7 +126,7 @@ similarly open licenses) the general license is
 @example
                   Language Technologies Institute                      
                     Carnegie Mellon University                        
-                     Copyright (c) 1999-2009                          
+                     Copyright (c) 1999-2011
                        All Rights Reserved.                           
                                                                       
  Permission is hereby granted, free of charge, to use and distribute  
@@ -181,9 +181,10 @@ version of MLSA.
 much of the very early clunits code, porting to multiple platforms,
 substantial code tidy up and configure/autoconf guidance (up to 2001).
 @item Cepstral, LLC (@url{http://cepstral.com}):
-For supporting DHD to spend time on flite and passing back the important
-fixes and enhancements while on a project funded by the 
-Portuguese Foundation for Science and Technology (FCT) Praxis XXI program.
+For supporting DHD to spend time (in early 2001) on flite and passing
+back the important fixes and enhancements while on a project funded by
+the Portuguese Foundation for Science and Technology (FCT) Praxis XXI
+program specifically to produce an open source synthesizer.
 @item Willie Walker <william.walker@@sun.com> and the Sun Speech Group:
 lots of low level bugs (and fixes).
 @item Henry Spencer:
@@ -774,6 +775,21 @@ The voices which get linked together are those listed in the
 @code{VOICES} in the @file{main/Makefile}.  You can change that as you
 require.
 
+Voices may also be dynamically loaded from files as well as built in.
+The argument to the @code{-voice} option may be pathname to a dumped
+(Clustergen) voice.  This may be a Unix pathname or a URL (only protocols @file{http} and @file{file} are supported.  For example
+@example
+flite -voice file://cmu_us_awb.vox -f doc/alice -o alice.wav
+flite -voice http://cmufestvox,org/voices/cmu_us_ksp.vox -f doc/alice -o alice.wav
+@end example
+Voices will be loaded once and added to @code{flite_voice_list}.
+Although these voices are often small (a few megabytes) there will
+still be some time required to read them in.  The voices are not
+mapped, they are read into newly created structures.
+
+This loading function is currently only supported for Clustergen
+voices.
+
 @section C example
 
 Each voice in Flite is held in a structure, a pointer to which is
@@ -845,7 +861,16 @@ from it for further processing and access.
 @item cst_voice *flite_voice_select(const char *name);
 returns a pointer to the voice named @code{name}.  Will retrurn
 @code{NULL} if there is not match, if @code{name == NULL} then the
-first voice in the voice list is returned.
+first voice in the voice list is returned.  If @code{name} is a url
+(starting with @file{file:} or @file{http:}, that file will be
+accessed and the voice will be downloaded from there.
+@item float flite_ssml_file_to_speech(const char *filename, cst_voice *voice, const char *outtype);
+Will read the file as ssml, not all ssml tags are supported but many
+are, unsupported ones are ignored.  Voice selection works by naming
+the internal name of the voice, or the name may be a url and the voice
+will be loaded.  The audio tag is supported for loading waveform files, again urls are supported.
+@item float flite_ssml_text_to_speech(const char *text, cst_voice *voice, const char *outtype);
+Will treat the text as ssml.
 @item int flite_voice_add_lex_addenda(cst_voice *v, const cst_string *lexfile);
 loads the pronunciations from @code{lexfile} into the lexicon
 identified in the given voice (which will cause all other voices using

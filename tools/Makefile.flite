@@ -69,6 +69,9 @@ else
 # Single model
 CSRCS += $(VOICENAME)_cg_single_mcep_trees.c $(VOICENAME)_cg_single_params.c
 endif
+ifeq ($(SPAMF0),true)
+CSRCS += $(VOICENAME)_spamf0_phrase.c $(VOICENAME)_spamf0_accent.c $(VOICENAME)_spamf0_accent_params.c
+endif
 MCEPOBJS =
 LPCOBJS =
 else
@@ -113,7 +116,6 @@ flite_$(VOICENAME): flite_main.o flite_voice_list.o $(FLITELIBS) lib$(VOICENAME)
 flite_voice_list.c:
 	$(TOP)/tools/make_voice_list $(VOICES)
 
-voxdata : cg_dump_voxdata.c .build_lib lib$(VOICENAME).a
-	$(CC) $(CFLAGS) -I$(FLITEDIR)/include -DVOICE_DB_NAME=$(VOICENAME)_cg_db -o cg_dump_voxdata cg_dump_voxdata.c $(LOCAL_LIBS)
-	./cg_dump_voxdata $(VOICENAME).cg.voxdata
+voxdata : flite_$(VOICENAME)
+	./flite_$(VOICENAME) -voicedump $(VOICENAME).flitevox
 

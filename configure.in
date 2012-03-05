@@ -65,6 +65,20 @@ M68KCC=
 M68KCLAGS=
 WINDRES=
 
+CHROMEBIN_PREFIX=
+
+if test "$target_os" = "chrome" ; then
+    case "$TARGET_CPU" in
+	i386*)
+	    CFLAGS="$CFLAGS -m32"
+	    CHROMEBIN_PREFIX=" $CHROME_NDK/toolchain/linux_x86_newlib/bin/i686-nacl"
+	    ;;
+	x86_64*)
+	    CFLAGS="$CFLAGS -m64"
+	    CHROMEBIN_PREFIX=" $CHROME_NDK/toolchain/linux_x86_newlib/bin/x86_64-nacl"
+esac
+fi
+
 case "$target_os" in
         palmos*)
 		shared=false
@@ -150,14 +164,12 @@ dnl         ;;
                 NM="${ANDROIDBIN}/arm-eabi-nm"
         ;;
         chrome*)
-                # For Android with Android NDK
-                # http://developer.android.com/sdk/ndk/index.html
 		shared=false
-                CHROMEBIN="$CHROME_NDK/toolchain/linux_x86/bin/"
-                CC="${CHROMEBIN}/nacl-gcc"
-                RANLIB="${CHROMEBIN}/nacl-ranlib"
-                AR="${CHROMEBIN}/nacl-ar"
-                NM="${CHROMEBIN}/nacl-nm"
+		CFLAGS="$CFLAGS -DCST_NO_SOCKETS"
+                CC="${CHROMEBIN_PREFIX}-gcc"
+                RANLIB="${CHROMEBIN_PREFIX}-ranlib"
+                AR="${CHROMEBIN_PREFIX}-ar"
+                NM="${CHROMEBIN_PREFIX}-nm"
         ;;
         uclinux*)
                 LDFLAGS="$LDFLAGS -Wl,-elf2flt"
@@ -270,6 +282,12 @@ dnl read-only mappings work.
 dnl
 AC_CHECK_FUNC(mmap,MMAPTYPE=posix)
 
+dnl Force no mmap for chrome
+if test "$target_os" = "chrome"
+then
+    MMAPTYPE=none
+fi
+
 dnl AC_CHECK_FUNC doesn't seem to work for Win32 API calls...
 if test "x$MMAPTYPE" = x; then
    case "$target_os" in
@@ -346,6 +364,11 @@ case "$target_os" in
         AUDIODEFS=-DCST_AUDIO_NONE
         AUDIOLIBS=
      ;;
+     chrome*)
+	AUDIODRIVER="none"
+	AUDIODEFS=-DCST_AUDIO_NONE
+	AUDIOLIBS=
+     ;;	
      *)
      ;;
 esac
@@ -368,6 +391,11 @@ if test "x$AUDIODEFS" = x; then
             AUDIODRIVER="alsa"
 	    AUDIODEFS=-DCST_AUDIO_ALSA
             AUDIOLIBS=-lasound
+	    ;;
+	pa|pulseaudio)
+            AUDIODRIVER="pulseaudio"
+	    AUDIODEFS=-DCST_AUDIO_PULSEAUDIO
+            AUDIOLIBS='-lpulse-simple -lpulse'
 	    ;;
 	*bsd)
 	    AUDIODRIVER=oss

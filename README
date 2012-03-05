@@ -1,6 +1,6 @@
 
          Flite: a small run-time speech synthesis engine
-                      version 1.4.1-current
+                      version 1.5.4-current
           Copyright Carnegie Mellon University 1999-2010
                       All rights reserved
                       http://cmuflite.org
@@ -107,6 +107,11 @@ a new archiecture.
 News
 ----
 
+New in 1.5.4 (??? 2012)
+    o CG voices as files accessilble by file:/// and http://
+    o Kal diphone 500K smaller
+    o Fixed lots of API issues
+
 New in 1.4.1 (March 2010)
     o better ssml support (actually does something)
     o better clunit support (smaller)
@@ -151,8 +156,8 @@ Compilation
 
 In general
 
-    tar zxvf flite-1.4-release.tar.gz
-    cd flite-1.4-release
+    tar zxvf flite-1.5.4-release.tar.gz
+    cd flite-1.5.4-release
     ./configure 
     make
 
@@ -254,8 +259,8 @@ So you've eagerly downloaded flite, compiled it and run it, now you
 are disappointed that is doesn't sound wonderful, sure its fast and
 small but what you really hoped for was the dulcit tones of a deep
 baritone voice that would make you desperately hang on every phrase it
-sang.  But instead you get an 8Khz diphone voice that sounds like it
-came from the last millenium.
+mellifluously produces.  But instead you get an 8Khz diphone voice that
+sounds like it came from the last millenium.
 
 Well, first, you are right, it is an 8KHz diphone voice from the last
 millenium, and that was actually deliberate.  As we developed flite we
@@ -264,7 +269,7 @@ that very same voice in Festival.  Flite is an *engine*.  We want to
 be able take voices built with the FestVox process and compile them
 for flite, the result should be exactly the same quality (though of
 course trading the size for quality in flite is also an option).  The
-included voice is just an sample voice that was used in the testing
+included voice is just a sample voice that was used in the testing
 process.  We have better voices in Festival and are working on the
 coversion process to make it both more automatic and more robust and
 tunable, but we haven't done that yet, so in this first beta release.

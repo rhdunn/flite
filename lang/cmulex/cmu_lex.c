@@ -356,7 +356,7 @@ cst_lexicon *cmu_lex_init()
 #ifdef CST_NO_STATIC_LEX
     /* cmu_lex.data will be set elsewhere */
 #else
-    /* as the data is const, we cats it through void * */
+    /* as the data is const, we cast it through void * */
     cmu_lex.data = (unsigned char *)(void *)cmu_lex_data;
 #endif
     cmu_lex.num_bytes = cmu_lex_num_bytes;
