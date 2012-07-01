@@ -1,8 +1,8 @@
-###########################################################################
+#!/bin/sh
+#####################################################-*-mode:shell-script-*-
 ##                                                                       ##
 ##                  Language Technologies Institute                      ##
-##                     Carnegie Mellon University                        ##
-##                        Copyright (c) 2000                             ##
+##                         Copyright (c) 2012                            ##
 ##                        All Rights Reserved.                           ##
 ##                                                                       ##
 ##  Permission is hereby granted, free of charge, to use and distribute  ##
@@ -31,21 +31,35 @@
 ##                                                                       ##
 ###########################################################################
 ##                                                                       ##
-##  The basic modules                                                    ##
+##  Build a compilable C file with a list of the available languages     ##
 ##                                                                       ##
 ###########################################################################
-TOP=../..
-DIRNAME=src/synth
-BUILD_DIRS = 
-ALL_DIRS= 
-SRCS = cst_synth.c cst_utt_utils.c cst_voice.c cst_phoneset.c \
-       cst_ffeatures.c cst_ssml.c cst_grapheme.c \
-       flite.c 
-OBJS = $(SRCS:.c=.o)
-FILES = Makefile $(SRCS)
-LIBNAME = flite
 
-ALL = 
+rm -f flite_lang_list.c
 
-include $(TOP)/config/common_make_rules
+echo "/* Generated automatically from make_lang_list */" >flite_lang_list.c
+echo >>flite_lang_list.c
+echo '#include "flite.h"' >>flite_lang_list.c
+echo >>flite_lang_list.c
+echo $* |
+awk '{n = NF/2;
+      printf("void utf8_grapheme_lang_init(cst_voice *v);\n");
+      printf("cst_lexicon *utf8_grapheme_lex_init(void);\n\n");
+      for (i=1; i<=n; i++)
+      {
+         printf("void %s_init(cst_voice *v);\n",$i);
+         printf("cst_lexicon *%s_init(void);\n\n",$(i+n));
+      }}' >>flite_lang_list.c
+echo >>flite_lang_list.c
+echo "void flite_set_lang_list(void)" >>flite_lang_list.c
+echo "{" >>flite_lang_list.c
+echo $* |
+awk '{n = NF/2;
+      printf("   flite_add_lang(\"utf8_grapheme\",utf8_grapheme_lang_init,utf8_grapheme_lex_init);\n");
+      for (i=1; i<=n; i++)
+      {
+         printf("   flite_add_lang(\"%s\",%s_init,%s_init);\n",$i,$i,$(i+n));
+      }}' >>flite_lang_list.c
+echo "}" >>flite_lang_list.c
+echo >>flite_lang_list.c
 

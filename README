@@ -1,6 +1,6 @@
 
          Flite: a small run-time speech synthesis engine
-                      version 1.5.4-current
+                      version 1.5.5-current
           Copyright Carnegie Mellon University 1999-2010
                       All rights reserved
                       http://cmuflite.org
@@ -107,10 +107,13 @@ a new archiecture.
 News
 ----
 
-New in 1.5.4 (??? 2012)
+New in 1.5.5 (??? 2012)
+    o SSML support
     o CG voices as files accessilble by file:/// and http://
     o Kal diphone 500K smaller
     o Fixed lots of API issues
+    o Generalized tokenstreams
+    o simple-Pulseaudio support
 
 New in 1.4.1 (March 2010)
     o better ssml support (actually does something)
@@ -156,8 +159,8 @@ Compilation
 
 In general
 
-    tar zxvf flite-1.5.4-release.tar.gz
-    cd flite-1.5.4-release
+    tar zxvf flite-1.5.5-release.tar.gz
+    cd flite-1.5.5-release
     ./configure 
     make
 

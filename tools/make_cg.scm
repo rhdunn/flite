@@ -606,7 +606,12 @@ Output cg selection carts into odir/name_carts.c"
 )
 
 (define (cg_normal_phone_name x)
-  ;; Some phonenames aren't valid C labels
+  (cg_normal_phone_name_base
+   (cg_normal_phone_name_base
+    (cg_normal_phone_name_base x))))
+
+(define (cg_normal_phone_name_base x)
+  ;; Some phone names aren't valid C labels
   (cond
    ((string-matches x ".*@.*" x) 
     (intern
@@ -620,6 +625,12 @@ Output cg selection carts into odir/name_carts.c"
       (string-before x ":")
       "sc"
       (string-after x ":"))))
+   ((string-matches x ".*~.*")
+    (intern
+     (string-append
+      (string-before x "~")
+      "tilde"
+      (string-after x "~"))))
    (t x)))
 
 (provide 'make_cg)
