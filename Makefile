@@ -2,7 +2,7 @@
 ##                                                                       ##
 ##                  Language Technologies Institute                      ##
 ##                     Carnegie Mellon University                        ##
-##                      Copyright (c) 1999-2011                          ##
+##                      Copyright (c) 1999-2014                          ##
 ##                        All Rights Reserved.                           ##
 ##                                                                       ##
 ##  Permission is hereby granted, free of charge, to use and distribute  ##
@@ -37,15 +37,15 @@
 ##       Authors:  Alan W Black (awb@cs.cmu.edu)                         ##
 ##                 Kevin A. Lenzo (lenzo@cs.cmu.edu)                     ##
 ##                 and others see ACKNOWLEDGEMENTS                       ##
-##          Date:  Jan 2011                                              ##
-##       Version:  1.5 release                                           ##
+##          Date:  Jul 2014                                              ##
+##       Version:  1.9.0 release                                         ##
 ##                                                                       ## 
 ###########################################################################
 TOP=.
 DIRNAME=
 BUILD_DIRS = include src lang doc
 ALL_DIRS=config $(BUILD_DIRS) testsuite sapi \
-         palm wince windows android \
+         wince windows android \
          tools main 
 CONFIG=configure configure.in config.sub config.guess \
        missing install-sh mkinstalldirs
@@ -66,20 +66,11 @@ ifeq ($(TARGET_OS),wince)
 BUILD_DIRS += wince
 endif
 
-ifeq ($(TARGET_OS),palmos)
-INCLUDES += -I$(TOP)/palm/include
-endif
-
 config/config: config/config.in config.status
 	./config.status
 
 configure: configure.in
 	autoconf
-
-flop:
-	./configure --target=arm-palmos
-	$(MAKE)
-	ls -al palm/flop/flop.prc
 
 backup: time-stamp
 	@ $(RM) -f $(TOP)/FileList
@@ -125,6 +116,13 @@ time-stamp :
 	@ echo $(LOGNAME) >>.time-stamp
 	@ hostname >>.time-stamp
 	@ date >>.time-stamp
+
+# Convinience command, to generate cg dumped voices
+voices: ./bin/flite_cmu_us_awb ./bin/flite_cmu_us_rms ./bin/flite_cmu_us_rms
+	mkdir -p voices
+	./bin/flite_cmu_us_awb -voicedump voices/cmu_us_awb.flitevox
+	./bin/flite_cmu_us_rms -voicedump voices/cmu_us_rms.flitevox
+	./bin/flite_cmu_us_slt -voicedump voices/cmu_us_slt.flitevox
 
 test:
 	@ $(MAKE) --no-print-directory -C testsuite test

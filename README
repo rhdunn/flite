@@ -1,7 +1,7 @@
 
          Flite: a small run-time speech synthesis engine
-                      version 1.5.5-current
-          Copyright Carnegie Mellon University 1999-2010
+                      version 1.9.0-current
+          Copyright Carnegie Mellon University 1999-2014
                       All rights reserved
                       http://cmuflite.org
 
@@ -28,7 +28,7 @@ Flite is the answer to the complaint that Festival is too big, too slow,
 and not portable enough.
 
 o Flite is designed for very small devices, such as PDAs, and also
-  for large server machines with lots of ports.
+  for large server machines which need to serve lots of ports.
 o Flite is not a replacement for Festival but an alternative run time
   engine for voices developed in the FestVox framework where size and
   speed is crucial.
@@ -93,7 +93,7 @@ o Solaris 5.7, and Solaris 9
 o Initial support for Mac OS X
 o Windows 2000/XP under Cygwin 1.3.5 and later
 o Support for WinCE (2.11 and 3.0) WM (5.x plus) is included 
-o PalmOS 5.x devices (Treo 600, Zire 31 and Tungsten C)
+o PalmOS 5.x devices (Treo 600, Zire 31 and Tungsten C) [Discontinued]
 o Successfully compiles and runs under 64Bit Linux architectures
 o OSF1 V4.0 (gives an unimportant warning about sizes when compiled cst_val.c)
 
@@ -107,13 +107,16 @@ a new archiecture.
 News
 ----
 
-New in 1.5.5 (??? 2012)
+New in 1.9.0 (??? 2014)
+    o Indic language support
     o SSML support
     o CG voices as files accessilble by file:/// and http://
+    o Supports diffrent sample rates/mgc order to tune for speed
     o Kal diphone 500K smaller
     o Fixed lots of API issues
-    o Generalized tokenstreams
+    o Generalized tokenstreams (used in Bard Storyeller)
     o simple-Pulseaudio support
+    o Removed PalmOS support from distribution
 
 New in 1.4.1 (March 2010)
     o better ssml support (actually does something)
@@ -159,8 +162,8 @@ Compilation
 
 In general
 
-    tar zxvf flite-1.5.5-release.tar.gz
-    cd flite-1.5.5-release
+    tar zxvf flite-1.9.0-release.tar.gz
+    cd flite-1.9.0-release
     ./configure 
     make
 

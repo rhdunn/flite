@@ -105,8 +105,8 @@ $(VOICENAME)_lpc.o: $(VOICENAME)_lpc.c
 $(VOICENAME)_mcep.o: $(VOICENAME)_mcep.c
 	$(CC) $(CFLAGS) -I. -I$(FLITEDIR)/include -c -o $@ $<
 
-flite_$(VOICENAME): flite_main.o flite_voice_list.o $(FLITELIBS) lib$(VOICENAME).a
-	$(CC) $(CFLAGS) -o $@ flite_main.o flite_voice_list.o $(LOCAL_LIBS)  $(LOCAL_LANGLEX_LIBS) $(FLITELIBFLAGS) $(LDFLAGS)
+flite_$(VOICENAME): flite_main.o flite_voice_list.o flite_lang_list.o $(FLITELIBS) lib$(VOICENAME).a
+	$(CC) $(CFLAGS) -o $@ flite_main.o flite_voice_list.o flite_lang_list.o $(LOCAL_LIBS)  $(LOCAL_LANGLEX_LIBS) $(FLITELIBFLAGS) $(LDFLAGS)
 
 .build_lib: $(OBJS)
 	@ $(AR) cruv $(LIBDIR)/lib$(VOICENAME).a $(OBJS)
@@ -115,6 +115,9 @@ flite_$(VOICENAME): flite_main.o flite_voice_list.o $(FLITELIBS) lib$(VOICENAME)
 
 flite_voice_list.c:
 	$(TOP)/tools/make_voice_list $(VOICES)
+
+flite_lang_list.c:
+	$(TOP)/tools/make_lang_list $(FLITE_LANG) $(FLITE_LEX)
 
 voxdata : flite_$(VOICENAME)
 	./flite_$(VOICENAME) -voicedump $(VOICENAME).flitevox

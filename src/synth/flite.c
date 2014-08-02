@@ -139,10 +139,12 @@ cst_voice *flite_voice_select(const char *name)
             return voice;
     }
 
-    if (cst_urlp(name))  /* naive check if its a url */
+    if (cst_urlp(name) || /* naive check if its a url */
+        cst_strchr(name,'/'))
     {
         voice = flite_voice_load(name);
-        flite_add_voice(voice);
+        if (!voice)
+            cst_errmsg("Error load voice: failed to load voice from %s\n",name);        flite_add_voice(voice);
         return voice;
     }
 
@@ -329,8 +331,7 @@ float flite_ts_to_speech(cst_tokenstream *ts,
                                    cst_strlen(ts->postpunctuation)));
 	item_set_int(t,"line_number",ts->line_number);
     }
-
-    delete_utterance(utt);
+    if (utt) delete_utterance(utt);
     ts_close(ts);
     return durs;
 }

@@ -1,8 +1,9 @@
-###########################################################################
+#!/bin/sh
+#####################################################-*-mode:shell-script-*-
 ##                                                                       ##
 ##                  Language Technologies Institute                      ##
 ##                     Carnegie Mellon University                        ##
-##                         Copyright (c) 2004                            ##
+##                         Copyright (c) 2013                            ##
 ##                        All Rights Reserved.                           ##
 ##                                                                       ##
 ##  Permission is hereby granted, free of charge, to use and distribute  ##
@@ -31,31 +32,45 @@
 ##                                                                       ##
 ###########################################################################
 ##                                                                       ##
-##  PalmOS support for Flite                                             ##
-##                                                                       ##
-##  Provides a M68K interface to an ARM compiled Flite shared library    ##
-##  and support in the ARM domain for accessing PalmOS system fuctions   ##
-##                                                                       ##
-##  FLOP: a demonstration program to show Flite speaking on a PalmOS     ##
-##        device with PalmOS 5.0 , ARM and audio                         ##
-##        Tested on a Treo 600 and a Zire 31                             ##
-##                                                                       ##
-##  fdlibm is a port of Sun's floating point library but we don't        ##
-##  actually need it at present, so removed it from the compilation,     ##
-##  but its still in CVS                                                 ##
+##  Make empty lang and lex directories for a new language               ##
 ##                                                                       ##
 ###########################################################################
-TOP = ..
-DIRNAME = palm
-BUILD_DIRS = pocore arm_flite m68k_flite flop 
-#ORPHANED = fdlibm
-ALL_DIRS = $(BUILD_DIRS) include $(ORPHANED)
-FILES = Makefile 
-INCLUDES += -I$(TOP)/palm/include
 
-ALL = 
+export LANG=C;
 
-include $(TOP)/config/common_make_rules
+if [ $# = 0 ]
+then
+   echo ./tools/make_new_lang_lex LANGNAME
+   echo Will make:
+   echo    lang/cmu_${LANGNAME}_lex/cmu_${LANGNAME}_lex.h
+   echo    lang/cmu_${LANGNAME}_lex/cmu_${LANGNAME}_lex.c
+   echo    lang/cmu_${LANGNAME}_lang/cmu_${LANGNAME}_lang.h
+   echo    lang/cmu_${LANGNAME}_lang/cmu_${LANGNAME}_lang.c
+   echo You may want to use tools/build_lex to make a more complete
+   echo set of files for lang/cmu_${LANGNAME}_lex/
+   echo
+   echo "Note this doesn't add anything to CVS, nor does it add the"
+   echo "lang to the langlist (add them to config/default.lv) by hand"
+fi
 
+LANGNAME=$1
+
+mkdir lang/cmu_${LANGNAME}_lex
+cat tools/Makefile.lex |
+sed 's/LANGNAME/'${LANGNAME}'/g' >lang/cmu_${LANGNAME}_lex/Makefile
+cat tools/LANGNAME_lex.h |
+sed 's/LANGNAME/'${LANGNAME}'/g' >lang/cmu_${LANGNAME}_lex/cmu_${LANGNAME}_lex.h
+cat tools/LANGNAME_lex.c |
+sed 's/LANGNAME/'${LANGNAME}'/g' >lang/cmu_${LANGNAME}_lex/cmu_${LANGNAME}_lex.c
+echo made lang/cmu_${LANGNAME}_lex/ and skeleton files
+
+mkdir lang/cmu_${LANGNAME}_lang
+cat tools/Makefile.lang |
+sed 's/LANGNAME/'${LANGNAME}'/g' >lang/cmu_${LANGNAME}_lang/Makefile
+cat tools/LANGNAME_lang.h |
+sed 's/LANGNAME/'${LANGNAME}'/g' >lang/cmu_${LANGNAME}_lang/cmu_${LANGNAME}_lang.h
+cat tools/LANGNAME_lang.c |
+sed 's/LANGNAME/'${LANGNAME}'/g' >lang/cmu_${LANGNAME}_lang/cmu_${LANGNAME}_lang.c
+echo made lang/cmu_${LANGNAME}_lang/ and skeleton files
 
 

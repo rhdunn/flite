@@ -2,7 +2,7 @@
 /*                                                                       */
 /*                  Language Technologies Institute                      */
 /*                     Carnegie Mellon University                        */
-/*                        Copyright (c) 2004                             */
+/*                         Copyright (c) 2013                            */
 /*                        All Rights Reserved.                           */
 /*                                                                       */
 /*  Permission is hereby granted, free of charge, to use and distribute  */
@@ -30,38 +30,30 @@
 /*  THIS SOFTWARE.                                                       */
 /*                                                                       */
 /*************************************************************************/
-/*             Author:  Alan W Black (awb@cs.cmu.edu)                    */
-/*               Date:  December 2004                                    */
+/*  LANGNAME lang public functions                                       */
 /*************************************************************************/
-/*                                                                       */
-/*  PalmOS Callbacks to System Functions                                 */
-/*                                                                       */
-/*************************************************************************/
-#include <PalmOS.h>
-#include <PceNativeCall.h>
-#include <CoreTraps.h>
-#include <MemoryMgr.h>
-#include "pocore.h"
 
-void *Large_Alloc_Callback_m68k = NULL;
+#ifndef _cmu_LANGNAME_lang_h_
+#define _cmu_LANGNAME_lang_h_
 
-MemPtr MemPtrNew(UInt32 size)
-{
-    /* Actually calls MemGluePtrNew in m68k land in order to get >65K chunks */
-    MemPtr r;
-    unsigned char stack[4];
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
-    *(int *)&stack[0] = SWAPLONG(size);
+#include "cst_utterance.h"
+#include "cst_cart.h"
+#include "cst_val.h"
+#include "cst_phoneset.h"
+#include "cst_lexicon.h"
+#include "cst_synth.h"
 
-    r = (MemPtr)(*gCall68KFuncP)(gEmulStateP,
-				 (unsigned long)Large_Alloc_Callback_m68k,
-				 stack,
-				 4 );
+void cmu_LANGNAME_lang_init(cst_voice *v);
+extern const cst_phoneset cmu_LANGNAME_phoneset;
+    /* extern const cst_cart cmu_LANGNAME_phrasing_cart; */
 
-    return r;
-}
+#ifdef __cplusplus
+} /* extern "C" */
+#endif /* __cplusplus */
 
-
-
-
+#endif
 

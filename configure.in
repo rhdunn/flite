@@ -150,18 +150,51 @@ dnl         ;;
                 # For Android with Android NDK
                 # http://developer.android.com/sdk/ndk/index.html
 		shared=false
-                ANDROIDBIN="$ANDROID_NDK/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin"
-		# Use the line below to compile for ARMv5 (default)
-		CFLAGS="$CFLAGS -march=armv5te -mtune=xscale -msoft-float -fpic -mthumb-interwork -ffunction-sections -funwind-tables -fstack-protector -fno-short-enums -D__ARM_ARCH_5__ -D__ARM_ARCH_5T__ -D__ARM_ARCH_5E__ -D__ARM_ARCH_5TE__ -mthumb -Os -fomit-frame-pointer -fno-strict-aliasing -finline-limit=64 -DANDROID -I$ANDROID_NDK/platforms/android-8/arch-arm/usr/include/ "
 
-		# Use the two lines below to compile for ARMv7-A (Nexus one, Droid, etc.)
-		#CFLAGS="$CFLAGS -fpic -mthumb-interwork -ffunction-sections -funwind-tables -fstack-protector -fno-short-enums -D__ARM_ARCH_5__ -D__ARM_ARCH_5T__ -D__ARM_ARCH_5E__ -D__ARM_ARCH_5TE__  -Wno-psabi -march=armv7-a -mfloat-abi=softfp -mfpu=vfp -fno-exceptions -mthumb -Os -fomit-frame-pointer -fno-strict-aliasing -finline-limit=64  -I$ANDROID_NDK/platforms/android-8/arch-arm/usr/include/ -DANDROID  -Wa,--noexecstack -O2 -DNDEBUG "
-		#LDFLAGS="$LDFLAGS -Wl,--fix-cortex-a8"
+		# We target our compilation to android-14 (4.0) platform
+		ANDROID_NDK_PLATFORM_PATH="$ANDROID_NDK/platforms/android-14"
 
-                CC="${ANDROIDBIN}/arm-linux-androideabi-gcc"
-                RANLIB="${ANDROIDBIN}/arm-linux-androideabi-ranlib"
-                AR="${ANDROIDBIN}/arm-linux-androideabi-ar"
-                NM="${ANDROIDBIN}/arm-linux-androideabi-nm"
+		ANDROID_GCC_VERSION=4.6
+
+		if test "$target_cpu" = "armeabi" 
+                then
+		   ANDROID_TOOLCHAIN="arm-linux-androideabi-$ANDROID_GCC_VERSION"
+		   ANDROID_NDK_SYSROOT="$ANDROID_NDK_PLATFORM_PATH/arch-arm"
+		   ANDROIDBIN="$ANDROID_NDK/toolchains/arm-linux-androideabi-$ANDROID_GCC_VERSION/prebuilt/linux-x86/bin/arm-linux-androideabi"
+      		   CFLAGS="$CFLAGS -fpic -mthumb -O3 -DANDROID --sysroot=$ANDROID_NDK_SYSROOT"
+                fi
+
+		if test "$target_cpu" = "armeabiv7a" 
+                then
+		   ANDROID_TOOLCHAIN="arm-linux-androideabi-$ANDROID_GCC_VERSION"
+		   ANDROID_NDK_SYSROOT="$ANDROID_NDK_PLATFORM_PATH/arch-arm"
+		   ANDROIDBIN="$ANDROID_NDK/toolchains/arm-linux-androideabi-$ANDROID_GCC_VERSION/prebuilt/linux-x86/bin/arm-linux-androideabi"
+      		   CFLAGS="$CFLAGS -fpic -march=armv7-a -mfloat-abi=softfp -O3 -DANDROID --sysroot=$ANDROID_NDK_SYSROOT"
+		   LDFLAGS="$LDFLAGS -Wl,--fix-cortex-a8"
+                fi
+
+		if test "$target_cpu" = "x86"
+		then
+		   ANDROID_TOOLCHAIN="x86-$ANDROID_GCC_VERSION"
+		   ANDROID_NDK_SYSROOT="$ANDROID_NDK_PLATFORM_PATH/arch-x86"
+		   ANDROIDBIN="$ANDROID_NDK/toolchains/x86-$ANDROID_GCC_VERSION/prebuilt/linux-x86/bin/i686-linux-android"
+      		   CFLAGS="$CFLAGS -fpic -O3 -DANDROID --sysroot=$ANDROID_NDK_SYSROOT"
+		fi
+
+		if test "$target_cpu" = "mips"
+		then
+		   ANDROID_TOOLCHAIN="mipsel-linux-android-$ANDROID_GCC_VERSION"
+		   ANDROID_NDK_SYSROOT="$ANDROID_NDK_PLATFORM_PATH/arch-mips"
+		   ANDROIDBIN="$ANDROID_NDK/toolchains/mipsel-linux-android-$ANDROID_GCC_VERSION/prebuilt/linux-x86/bin/mipsel-linux-android"
+      		   CFLAGS="$CFLAGS -fpic -O3 -DANDROID --sysroot=$ANDROID_NDK_SYSROOT"
+		fi
+
+		# Common to all android variants
+                CC="${ANDROIDBIN}-gcc"
+                RANLIB="${ANDROIDBIN}-ranlib"
+                AR="${ANDROIDBIN}-ar"
+                NM="${ANDROIDBIN}-nm"
+
         ;;
         chrome*)
 		shared=false
@@ -206,6 +239,12 @@ AC_SUBST(HOST_CPU)
 
 SHFLAGS=
 OTHERLIBS=
+
+dnl For OpenPandora and other (sorftfloat) ARMS with neon
+if grep -q Pandora /proc/cpuinfo
+then
+   CFLAGS="$CFLAGS -DPANDORA -mcpu=cortex-a8 -mfpu=neon -mfloat-abi=softfp"
+fi
 
 withpic=false
 AC_ARG_WITH( pic, [  --with-pic           with pic ],
@@ -302,6 +341,14 @@ if test "x$MMAPTYPE" = x; then
 	;;
    esac
 fi
+
+dnl
+dnl allow the user to override the one detected above
+dnl
+AC_ARG_WITH( mmap,
+	[  --with-mmap          with specific mmap support (none posix win32) ],
+        MMAPTYPE=$with_mmap )
+
 AC_SUBST(MMAPTYPE)
 
 dnl stdio type, palmos/wince are different

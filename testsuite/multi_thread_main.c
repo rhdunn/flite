@@ -2,7 +2,7 @@
 /*                                                                       */
 /*                  Language Technologies Institute                      */
 /*                     Carnegie Mellon University                        */
-/*                        Copyright (c) 2004                             */
+/*                        Copyright (c) 2013                             */
 /*                        All Rights Reserved.                           */
 /*                                                                       */
 /*  Permission is hereby granted, free of charge, to use and distribute  */
@@ -30,34 +30,52 @@
 /*  THIS SOFTWARE.                                                       */
 /*                                                                       */
 /*************************************************************************/
-/*             Author:  Alan W Black (awb@cs.cmu.edu)                    */
-/*               Date:  December 2004                                    */
+/*             Author:  Alok Parlikar (aup@cs.cmu.edu)                   */
+/*               Date:  January 2013                                     */
 /*************************************************************************/
 /*                                                                       */
-/*  PalmOS Callbacks to System Functions                                 */
+/*  Multiple-thread test, do 50 synthesis calls over OMP_NUM_THREADS     */
+/*                                                                       */
+/*  This particular test uses OMP to do the threads                      */
 /*                                                                       */
 /*************************************************************************/
-#include <PalmOS.h>
-#include <PceNativeCall.h>
-#include <CoreTraps.h>
-#include <FileStream.h>
-#include "pocore.h"
+#include <stdio.h>
+#include <omp.h>
 
-Err FileClose(FileHand stream)
+#include <flite.h>
+
+cst_voice *voice;
+
+cst_voice *register_cmu_us_slt(const char *voxdir);
+
+cst_val *flite_set_voice_list(const char *voxdir)
 {
-    Err r;
-    unsigned char stack[4];
-
-    *(int *)&stack[0] = SWAPINT(stream);
-
-    r = (Err)(*gCall68KFuncP)(gEmulStateP,
-			      PceNativeTrapNo(sysTrapFileClose),
-			      stack,
-			      4 | kPceNativeWantA0);
-    return r;
+    flite_voice_list = cons_val(voice_val(register_cmu_us_slt(voxdir)),flite_voice_list);
+    flite_voice_list = val_reverse(flite_voice_list);
+    return flite_voice_list;
 }
 
+void init() {
+  flite_init();
+  flite_set_voice_list(NULL);
+  voice = flite_voice_select("cmu_us_slt");
+  
+}
 
+float synth_text(char* text) {
+  float dur;
+  dur = flite_text_to_speech(text, voice, "none");
+  return dur;
+}
 
-
-
+int main() {
+  init();
+  int i;
+#pragma omp parallel for 
+    for (i=0; i<50; i++) {
+      printf("%d %d %f\n", omp_get_thread_num(), i, synth_text("Hello"));
+    }
+    
+    return 0;
+}
+      

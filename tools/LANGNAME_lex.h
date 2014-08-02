@@ -2,7 +2,7 @@
 /*                                                                       */
 /*                  Language Technologies Institute                      */
 /*                     Carnegie Mellon University                        */
-/*                        Copyright (c) 2004                             */
+/*                         Copyright (c) 2013                            */
 /*                        All Rights Reserved.                           */
 /*                                                                       */
 /*  Permission is hereby granted, free of charge, to use and distribute  */
@@ -30,35 +30,22 @@
 /*  THIS SOFTWARE.                                                       */
 /*                                                                       */
 /*************************************************************************/
-/*             Author:  Alan W Black (awb@cs.cmu.edu)                    */
-/*               Date:  December 2004                                    */
+/*  LANGNAME Lexicon public functions                                    */
 /*************************************************************************/
-/*                                                                       */
-/*************************************************************************/
-#include <PalmOS.h>
-#include <string.h>
 
-void *malloc(int s)
-{
-    return MemPtrNew(s);
-}
+#ifndef _cmu_LANGNAME_lex_h_
+#define _cmu_LANGNAME_lex_h_
 
-void free(void *p)
-{
-    if (p) MemPtrFree(p);
-}
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
-void *calloc(int s)
-{
-    void *p;
-    p = MemPtrNew(s);
-    memset(p,0,s);
-    return p;
-}
+#include "cst_lexicon.h"
+cst_lexicon *cmu_LANGNAME_lex_init(void);
 
-void *realloc(void *oldp, int s)
-{
-    free(oldp);
-    return calloc(s);
-}
+#ifdef __cplusplus
+} /* extern "C" */
+#endif /* __cplusplus */
+
+#endif
 

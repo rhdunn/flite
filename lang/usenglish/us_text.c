@@ -217,6 +217,8 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
     cst_val *r, *s, *ss;
     const cst_val *rr;
     const char *nsw = "";
+    const char *ssml_alias = "";
+    const char *token_name = "";
     cst_lexicon *lex;
     cst_utterance *utt;
     /* printf("token_name %s name %s\n",item_name(token),name); */
@@ -230,6 +232,23 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
     
     if (item_feat_present(token,"nsw"))
 	nsw = item_feat_string(token,"nsw");
+
+    token_name = item_name(token);
+
+    if ((item_feat_present(token,"ssml_alias")) &&
+        (!cst_streq(token_name,name)))  /* and we are not recursing */
+    {
+        /* SSML has given a substitute for this (and more) tokens */
+        /* NOTE: the alias is not put through text normalization */
+        ssml_alias = item_feat_string(token,"ssml_alias");
+        if (cst_streq(ssml_alias,ffeature_string(token,"p.ssml_alias")))
+            /* The first token gets the substitution */
+            return NULL;
+        else
+        {
+            return cons_val(string_val(ssml_alias),NULL);
+        }
+    }
 
     utt = item_utt(token);
     lex = val_lexicon(feat_val(utt->features,"lexicon"));
@@ -614,7 +633,7 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
     }
     else if ((p=(cst_strrchr(name,'\''))))
     {
-	static const char *pc[] = { "'s", "'ll", "'ve", "'d", NULL };
+	static const char * const pc[] = { "'s", "'ll", "'ve", "'d", NULL };
 
 	bbb = cst_downcase(p);
 	if (cst_member_string(bbb, pc))
@@ -740,7 +759,7 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
     }
     else if ((cst_strlen(name) > 1) && 
 	     (cst_regex_match(cst_rx_alpha,name)) &&
-             (!in_lex(lex,name,NULL)) &&
+             (!in_lex(lex,name,NULL,NULL)) &&  // AUP: Added 4th argument (voice feats) as NULL, needs to be revisited later.
 	     (!us_aswd(name)))
         /* Still not quiet right, if there is a user_lex we need to check */
         /* it too -- but user_lex isn't user setable yet */

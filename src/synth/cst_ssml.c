@@ -47,8 +47,9 @@
 /*  <audio ...> </audio>                                                 */
 /*  <!-- ... -->                                                         */
 /*  <break .../>                                                         */
-/*  <prosody ...> </prosody>  pitch rate duration volume                 */
+/*  <prosody ...> </prosody>  rate volume (no pitch yet)                 */
 /*  <emphasis ...> </emphasis>                                           */
+/*  <sub alias="World Wide Web Consortium">W3C</sub>                     */
 /*  <phoneme ph="x x x"> </phoneme>                                      */
 /*                                                                       */
 /*  <...> ignore all others                                              */
@@ -61,8 +62,8 @@
 #include "flite.h"
 #include "cst_tokenstream.h"
 
-static const char *ssml_singlecharsymbols_general = "<>&/\";";
-static const char *ssml_singlecharsymbols_inattr = "=>;/\"";
+static const char * const ssml_singlecharsymbols_general = "<>&/\";";
+static const char * const ssml_singlecharsymbols_inattr = "=>;/\"";
 
 #define SSML_DEBUG 0
 
@@ -79,6 +80,8 @@ static cst_features *ssml_get_attributes(cst_tokenstream *ts)
 {
     cst_features *a = new_features();
     const char* name, *val;
+    const char *fnn,*vnn;
+    int i=0;
 
     set_charclasses(ts,
                     ts->p_whitespacesymbols,
@@ -89,16 +92,25 @@ static cst_features *ssml_get_attributes(cst_tokenstream *ts)
     name = ts_get(ts);
     while (!cst_streq(">",name))
     {
+        /* I want names and values to be const */
+        if (i == 0)
+        {
+            fnn="_name0"; vnn="_val0";
+        }
+        else
+        {
+            fnn="_name1"; vnn="_val1";
+        }
 	if (cst_streq(name,"/"))
 	    feat_set_string(a,"_type","startend");
 	else
 	{
 	    feat_set_string(a,"_type","start");
-	    feat_set_string(a,"_name0",name);
+	    feat_set_string(a,fnn,name);
 	    if (cst_streq("=",ts_get(ts)))
 	    {
                 val = ts_get_quoted_remainder(ts);
-                feat_set_string(a,"_val0",val);
+                feat_set_string(a,vnn,val);
             }
 	}
 	if (ts_eof(ts))
@@ -108,6 +120,7 @@ static cst_features *ssml_get_attributes(cst_tokenstream *ts)
 	    return 0;
 	}
         name = ts_get(ts);
+        i++;
     }
 	
     set_charclasses(ts,
@@ -152,9 +165,11 @@ static cst_utterance *ssml_apply_tag(const char *tag,
                 {
                     feat_set_string(word_feats,"ssml_comment","1");
                 }
-                feat_set(word_feats,"ssml_play_audio",userdata_val(wave));
-                return NULL; /* Cause eou */
+                feat_set(word_feats,"ssml_play_audio",wave_val(wave));
             }
+            else
+                delete_wave(wave);
+            return NULL; /* Cause eou */
         }
         else if (cst_streq("end",feat_string(attributes,"_type")))
         {
@@ -188,10 +203,17 @@ static cst_utterance *ssml_apply_tag(const char *tag,
             if (cst_streq("rate",get_param_string(attributes,"_name1","")))
                 feat_set_float(word_feats,"local_duration_stretch",
                                1.0/feat_float(attributes,"_val1"));
+            if (cst_streq("volume",get_param_string(attributes,"_name0","")))
+                feat_set_float(word_feats,"local_gain",
+                               feat_float(attributes,"_val0")/100.0);
+            if (cst_streq("volume",get_param_string(attributes,"_name1","")))
+                feat_set_float(word_feats,"local_gain",
+                               feat_float(attributes,"_val1")/100.0);
         }
         else if (cst_streq("end",feat_string(attributes,"_type")))
         {
             feat_remove(word_feats,"local_duration_stretch");
+            feat_remove(word_feats,"local_gain");
         }
 
     }
@@ -209,6 +231,23 @@ static cst_utterance *ssml_apply_tag(const char *tag,
         else if (cst_streq("end",feat_string(attributes,"_type")))
         {
             feat_remove(word_feats,"phones");
+        }
+
+    }
+    else if (cst_streq("SUB",tag))
+    {
+        if (cst_streq("start",feat_string(attributes,"_type")))
+        {
+            if (cst_streq("alias",get_param_string(attributes,"_name0","")))
+            {
+                const char *alias;
+                alias = feat_string(attributes,"_val0");
+                feat_set_string(word_feats,"ssml_alias",alias);
+            }
+        }
+        else if (cst_streq("end",feat_string(attributes,"_type")))
+        {
+            feat_remove(word_feats,"ssml_alias");
         }
 
     }
@@ -266,7 +305,8 @@ static float flite_ssml_to_speech_ts(cst_tokenstream *ts,
     cst_item *t;
     cst_voice *current_voice; 
     int ssml_eou = 0;
-    cst_wave *wave, *w;
+    const cst_wave *wave;
+    cst_wave *w;
 
     ssml_feats = new_features();
     feat_set(ssml_feats,"current_voice",userdata_val(voice));
@@ -371,11 +411,11 @@ static float flite_ssml_to_speech_ts(cst_tokenstream *ts,
 
         if (feat_present(ssml_word_feats,"ssml_play_audio"))
         {
-            wave = (cst_wave *)val_userdata(feat_val(ssml_word_feats,"ssml_play_audio"));
+            wave = val_wave(feat_val(ssml_word_feats,"ssml_play_audio"));
             /* Should create an utterances with the waveform in it */
             /* Have to stream it if there is streaming */
             if (utt) delete_utterance(utt);
-            utt = utt_synth_wave(wave,current_voice);
+            utt = utt_synth_wave(copy_wave(wave),current_voice);
             if (utt_user_callback)
                 utt = (utt_user_callback)(utt);
             durs += flite_process_output(utt,outtype,TRUE);
