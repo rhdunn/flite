@@ -64,8 +64,10 @@ Udhyakumar N
 Brian Langner
    redid the Visual Studio support
 Alok Parlikar
-   Android support, and cg voice dumping (and loading)
+   Android support, and cg voice dumping (and loading), indic support
 Gopala Anumanchipalli
-   spanf0 support
+   spamf0 support, unitran integration
+Richard Sproat and Kyoung-young Kim (UIUC)
+   Unitran: unicode to sampa grapheme mapping tables
 Sun Microsystems
    g72x code

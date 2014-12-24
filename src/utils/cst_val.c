@@ -502,40 +502,6 @@ cst_val *cst_utf8_explode(const cst_string *utf8string)
   return val_reverse(chars);
 }
 
-cst_val *cst_utf8_explode_old(const cst_string *utf8string)
-{
-    /* return a list of utf-8 characters as strings */
-    const unsigned char *xxx = (const unsigned char *)utf8string;
-    cst_val *chars=NULL;
-    int i;
-    char utf8char[5];
-
-    for (i=0; xxx[i]; i++)
-    {
-        if (xxx[i] < 0x80)  /* one byte */
-        {
-            sprintf(utf8char,"%c",xxx[i]);
-        }
-        else if (xxx[i] < 0xe0) /* two bytes */
-        {
-            sprintf(utf8char,"%c%c",xxx[i],xxx[i+1]);
-            i++;
-        }
-        else if (xxx[i] < 0xff) /* three bytes */
-        {
-            sprintf(utf8char,"%c%c%c",xxx[i],xxx[i+1],xxx[i+2]);
-            i++; i++;
-        }
-        else
-        {
-            sprintf(utf8char,"%c%c%c%c",xxx[i],xxx[i+1],xxx[i+2],xxx[i+3]);
-            i++; i++; i++;
-        }
-        chars = cons_val(string_val(utf8char),chars);
-    }
-    return val_reverse(chars);
-}
-
 static int utf8_ord(const char *utf8_seq) {
   unsigned int len;
   int ord;
@@ -593,6 +559,10 @@ static int utf8_ord(const char *utf8_seq) {
 cst_val *cst_utf8_ord(const cst_val *utf8_char) {
   const char *ch=(const char *)val_string(utf8_char);
   return int_val(utf8_ord(ch));
+}
+int cst_utf8_ord_string(const char *utf8_char)
+{
+    return utf8_ord(utf8_char);
 }
 
 static int utf8_chr(int ord, char* utf8char) {

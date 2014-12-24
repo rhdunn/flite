@@ -196,3 +196,11 @@ src/speech/g723_40.c
  * 2550 Garcia Avenue
  * Mountain View, California  94043
  */
+
+lang/cmu_grapheme_lex/grapheme_unitran_tables.c
+/* Copyright 2008-2012, University of Illinois at Urbana-Champaign          */
+/* distributed under the Apache License, Version (2.0)                      */
+/* http://www.apache.org/licenses/LICENSE-2.0                               */
+/* Original table developed by Richard Sproat and Kyoung-young Kim          */
+/* Ported for Festvox by Gopala Anumachipalli gopalakr@cs.cmu.edu Sep 2012  */
+/* Then converted to C for CMU Flite (cmuflite.org)                         */

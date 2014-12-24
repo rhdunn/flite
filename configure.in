@@ -240,7 +240,7 @@ AC_SUBST(HOST_CPU)
 SHFLAGS=
 OTHERLIBS=
 
-dnl For OpenPandora and other (sorftfloat) ARMS with neon
+dnl For OpenPandora and other (softfloat) ARMs with neon
 if grep -q Pandora /proc/cpuinfo
 then
    CFLAGS="$CFLAGS -DPANDORA -mcpu=cortex-a8 -mfpu=neon -mfloat-abi=softfp"

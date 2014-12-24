@@ -209,6 +209,45 @@ static cst_val *add_break(cst_val *l)
     return l;
 }
 
+static int contains_unicode_single_quote(const char *name)
+{
+    static const char *unicode_single_quote = "’";
+    int i;
+
+    for (i=0; name[i]; i++)
+    {
+        /* No check if name is long enough as it'll have NULL before end */
+        if ((name[i] == unicode_single_quote[0]) &&
+            (name[i+1] == unicode_single_quote[1]) &&
+            (name[i+2] == unicode_single_quote[2]))
+            return TRUE;
+    }
+    return FALSE;
+}
+
+static char *map_unicode_single_quote(const char *name)
+{
+    static const char *unicode_single_quote = "’";
+    int i,j;
+    char *aaa = cst_strdup(name);  /* it'll always get shorter */
+
+    for (i=0,j=0; name[i]; i++,j++)
+    {
+        if ((name[i] == unicode_single_quote[0]) &&
+            (name[i+1] == unicode_single_quote[1]) &&
+            (name[i+2] == unicode_single_quote[2]))
+        {
+            aaa[j] = '\'';
+            i+=2;
+        }
+        else
+            aaa[j] = name[i];
+    }
+    aaa[j] = '\0';
+
+    return aaa;
+}
+
 static cst_val *us_tokentowords_one(cst_item *token, const char *name)
 {
     /* Return list of words that expand token/name */
@@ -630,6 +669,15 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
 	r = val_append(us_tokentowords_one(token,aaa),
 		       cons_val(string_val("'s"),0));
 	cst_free(aaa);
+    }
+    else if (contains_unicode_single_quote(name))
+    {
+        /* A single quote is sometimes rendered as unicode "’" */
+        /* so we map it back to an ascii single quote ' */
+        aaa = map_unicode_single_quote(name);
+        r = us_tokentowords_one(token, aaa);
+        cst_free(aaa);
+        return r;
     }
     else if ((p=(cst_strrchr(name,'\''))))
     {

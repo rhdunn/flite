@@ -52,7 +52,7 @@ cst_utterance *cst_spamf0(cst_utterance *utt)
     cst_item *s;
     cst_cg_db *cg_db;
     const cst_cart *acc_tree, *phrase_tree;
-    float start,end,f0val, syldur;
+    float end,f0val, syldur;
     int num_frames,f,i;
     cg_db = val_cg_db(utt_feat_val(utt,"cg_db"));
 
@@ -66,7 +66,6 @@ cst_utterance *cst_spamf0(cst_utterance *utt)
     num_frames = 0;
     for (s = utt_rel_head(utt,"Segment"); s; s=item_next(s))
     {
-        start = end;
         end = ffeature_float(s,"end");
         if(cst_streq("pau",ffeature_string(s,"name")))
         {

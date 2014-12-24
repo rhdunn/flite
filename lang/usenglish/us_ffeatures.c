@@ -180,12 +180,20 @@ const cst_val *content_words_out(const cst_item *p)
     int i=0;
     p=item_as(p,"Word");
     s=item_as(path_to_item(p,"R:SylStructure.R:Phrase.parent.daughtern"),"Word");
+#if 1 /* fix by uratec */
+  for (;s && !item_equal(p,s);s=item_prev(s))
+    {
+      if (!strcmp(ffeature_string(s,"gpos"),"content"))
+        {i++;}
+    }
+#else
     for (;s && !item_equal(p,s);p=item_next(p))
     {
         if (!strcmp(ffeature_string(p,"gpos"),"content"))
         {i++;}
     }
     if(!strcmp(ffeature_string(s,"gpos"), "content")){i++;}
+#endif
     return val_string_n(i);
 }
 
