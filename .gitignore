@@ -3,9 +3,7 @@
 *.o
 *.a
 
-config.cache
-config.log
-config.status
+config.*
 
 config/config
 config/system.mak
