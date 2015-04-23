@@ -8,17 +8,22 @@ with clause 2 of the project's [BSD license](COPYING).
 Add and modernize the standard project files:
 
   * Added a CHANGELOG.md file to track the project changes.
-  * Added the COPYING file from the 1.1 upstream release.
-  * Support the standard GNU project files: AUTHORS, NEWS, INSTALL.
+  * Convert the README file to markdown.
   * Added a .gitignore file to ignore the build output.
   * Renamed configure.in to configure.ac.
   * Support building HTML versions of the markdown files with `kramdown`.
+
+Support the GNU standard project layout:
+
+  * Added the COPYING file from the 1.1 upstream release.
+  * Add an AUTHORS file.
+  * Link NEWS and README to other files in the project.
 
 Generate the autotools files instead of using old versions:
 
   * Added an autogen.sh script to setup the configure script.
   * Link to the automake files: config.{guess,sub}, install-sh, missing,
-    mkinstalldirs.
+    mkinstalldirs and INSTALL.
   * Use `autoconf` to generate the configure script.
 
 ## [1.0]
