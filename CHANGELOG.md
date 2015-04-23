@@ -12,6 +12,7 @@ Add and modernize the standard project files:
   * Support the standard GNU project files: AUTHORS, NEWS, INSTALL.
   * Added a .gitignore file to ignore the build output.
   * Renamed configure.in to configure.ac.
+  * Support building HTML versions of the markdown files with `kramdown`.
 
 Generate the autotools files instead of using old versions:
 
