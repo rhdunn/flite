@@ -252,7 +252,7 @@ the next version.
 The flite project is released under a [4-clause BSD license](COPYING) with
 the following copyright:
 
-    Copyright Carnegie Mellon University 1999-2009
+    Copyright Carnegie Mellon University 1999-2010
     All rights reserved
 
 The changes to the project are described in the [CHANGELOG.md](CHANGELOG.md)

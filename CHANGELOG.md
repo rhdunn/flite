@@ -3,6 +3,18 @@
 This file documents the changes made to the flite project in order to comply
 with clause 2 of the project's [BSD license](COPYING).
 
+## [1.4.2-1]
+
+  * Build improvements from [1.0-1](#1.0-1).
+
+## [1.4.2]
+
+Upstream version 1.4.2:
+
+  * Better SSML support (actually does something).
+  * Better clunit support (smaller).
+  * Android support.
+
 ## [1.4-1]
 
   * Build improvements from [1.0-1](#1.0-1).
@@ -21,7 +33,7 @@ Upstream version 1.4:
   * Windows support with Visual Studio (specifically for the Olympus
     Spoken Dialog System).
   * WinCE support is redone with cegcc/mingw32ce with example
-    example TTS app: Fluwm: Flite on Windows Mobile.
+    example TTS app: Flowm: Flite on Windows Mobile.
   * Speed-ups in feature interpretation limiting calls to alloc.
   * Speed-ups (and fixes) for converting clunits festvox voices.
 
@@ -35,7 +47,7 @@ Upstream version 1.4:
 Upstream version 1.3:
 
   * Fixes to lpc residual extraction to give better quality output
-  * An updated lexicon (`festlex_CMU` from festival-2.0) and better
+  * An updated lexicon (`festlex_CMU` from festival-2.0.95) and better
     compression its about 30% of the previous size, with about
     the same accuracy.
   * Fairly substantial code movements to better support PalmOS and
