@@ -15,10 +15,6 @@ System and Carnegie Mellon University's FestVox project, tools, scripts
 and documentation for building synthetic voices.  However, flite itself
 does not require either of these systems to compile and run.
 
-This is the first beta release of the code, although the system is
-basically functional it is not complete.  An example voice is
-included but deserves much more work.
-
 The core Flite library was developed by [Alan W. Black](mailto:awb@cs.cmu.edu)
 (mostly in his so-called spare time) while employed in the Language
 Technologies Institute at Carnegie Mellon University.  The name
@@ -68,7 +64,7 @@ with Festival using basically the same 8KHz diphone voice
 
 |           | Flite | Festival |
 |-----------|-------|----------|
-| core code | 50K   | 2.6M     |
+| core code | 100K  | 2.6M     |
 | USEnglish | 35K   | ??       |
 | lexicon   | 1.6M  | 5M       |
 | diphone   | 2.1M  | 2.1M     |
@@ -83,9 +79,11 @@ flite synthesizes 9.79 time faster than real time.
 
 Requirements:
 
-* A good C compiler, some of these files are quite large and some
-  C compilers might choke on these, gcc is fine.  Sun CC 3.01 has been
-  tested too.  We have not yet tested the compiled under Visual C
+* A good C compiler, some of these files are quite large and some C
+  compilers might choke on these, gcc is fine.  Sun CC 3.01 has been
+  tested too.  Visual C++ 6.0 is known to fail on the large diphone
+  database files.  We recommend you use GCC under Cygwin or mingw32
+  instead.
 * GNU Make
 * An audio device isn't required as flite can write its output to
   a waveform file.
@@ -96,9 +94,8 @@ Supported platforms:
 * FreeBSD 3.x and 4.x
 * Solaris 5.7
 * OSF1 V4.0 (gives an unimportant warning about sizes when compiled `cst_val.c`)
-* Windows (current only crossed compiled from Linux, and may need a little
-  work to get running again)
-* WinCE (2.11 and 3.0) (probably)
+* Windows 2000 under Cygwin 1.3.5
+* Some support for WinCE (2.11 and 3.0) is included but is not complete
 
 Other similar platforms should just work, we have also cross compiled
 on a Linux machine for StrongARM.  However note that new byte order
@@ -113,6 +110,7 @@ The project supports an autogen-style autotools build system. You can build the
 project by running:
 
     ./autogen.sh
+    ./configure
     make
 
 Configuration should be automatic, but maybe doesn't work in all cases
@@ -140,12 +138,21 @@ set up yet.  Thus:
          arm-linux-strip bin/flite
 
   *  copy `bin/flite` to the ipaq.  This binary is also available from
-     [flite-1.0_bin_arm-linux.tar.gz](http://cmuflite.org/packed/flite-1.0/flite-1.0_bin_arm-linux.tar.gz).
+     [flite-1.1_bin16KHz_arm-linux.tar.gz](http://cmuflite.org/packed/flite-1.1/flite-1.1_bin16KHz_arm-linux.tar.gz).
      Because the Linux ipaq audio driver only supports 16KHz (and more)
-     we include this larger voice.  This voice also used fixed point
-     rather floating point as the StrongARM doesn't have floating
-     point instructions.  We are working on a much smaller voice for
-     the ipaq hopefully small enough to fit in the flash.
+     we include this larger voice.  
+
+The Sharp Zaurus SL-5000D is a very similar machine, however it 
+does support 8KHz sampling and a smaller binary is provided.  The
+Zaurus typicall has less free memory so there is an advantage to
+using this
+[flite-1.1_bin8KHz_arm-linux.tar.gz](http://cmuflite.org/packed/flite-1.1/flite-1.1_bin8KHz_arm-linux.tar.gz)
+file.
+
+This voice also used fixed point rather floating point as the
+StrongARM doesn't have floating point instructions.  We are working on
+a much smaller voice for the ipaq hopefully small enough to fit in the
+flash.
 
 # Usage
 
@@ -190,7 +197,7 @@ Some typical examples are:
 
      Print sentences as they are said.
 
-  *  `./bin/flite --setf Duration_Stretch=1.5 doc/alice`
+  *  `./bin/flite --setf duration_stretch=1.5 doc/alice`
 
      Make it speak slower.
 
