@@ -3,6 +3,14 @@
 This file documents the changes made to the flite project in order to comply
 with clause 2 of the project's [BSD license](COPYING).
 
+## [1.5.1-1]
+
+  * Build improvements from [1.0-1](#1.0-1).
+
+## [1.5.1]
+
+Upstream version 1.5.1.
+
 ## [1.4.2-1]
 
   * Build improvements from [1.0-1](#1.0-1).
