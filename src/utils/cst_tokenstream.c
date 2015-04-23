@@ -45,14 +45,9 @@ const cst_string * const cst_ts_default_prepunctuationsymbols = "\"'`({[";
 const cst_string * const cst_ts_default_postpunctuationsymbols = "\"'`.,:;!?(){}[]";
 
 #define TS_BUFFER_SIZE 256
-#define TS_EOF -1
 
 static cst_string ts_getc(cst_tokenstream *ts);
-
-cst_string private_ts_getc(cst_tokenstream *ts)
-{
-    return ts_getc(ts);
-}
+static cst_string internal_ts_getc(cst_tokenstream *ts);
 
 static void set_charclass_table(cst_tokenstream *ts)
 {
@@ -111,6 +106,7 @@ static cst_tokenstream *new_tokenstream(const cst_string *whitespace,
     ts->fd = NULL;
     ts->file_pos = 0;
     ts->line_number = 0;
+    ts->eof_flag = 0;
     ts->string_buffer = NULL;
     ts->token_pos = 0;
     ts->whitespace = cst_alloc(cst_string,TS_BUFFER_SIZE);
@@ -138,6 +134,7 @@ void delete_tokenstream(cst_tokenstream *ts)
 {
     cst_free(ts->whitespace);
     cst_free(ts->token);
+    if (ts->tags) delete_features(ts->tags);
     if (ts->prepunctuation) cst_free(ts->prepunctuation);
     if (ts->postpunctuation) cst_free(ts->postpunctuation);
     cst_free(ts);
@@ -257,7 +254,7 @@ static void get_token_sub_part(cst_tokenstream *ts,
 {
     int p;
 
-    for (p=0; ((ts->current_char != TS_EOF) &&
+    for (p=0; ((!ts_eof(ts)) &&
                (ts_charclass(ts->current_char,charclass,ts)) &&
 	       (!ts_charclass(ts->current_char,
 			      TS_CHARCLASS_SINGLECHAR,ts))); p++)
@@ -269,7 +266,16 @@ static void get_token_sub_part(cst_tokenstream *ts,
     (*buffer)[p] = '\0';
 }
 
-/* Can't afford dynamically generate this char class so have separater func */
+inline int ts_utf8_sequence_length(char c0)
+{
+    // Get the expected length of UTF8 sequence given its most
+    // significant byte
+    return (( 0xE5000000 >> (( c0 >> 3 ) & 0x1E )) & 3 ) + 1;
+}
+
+/* Can't afford dynamically generate this char class so have separated func */
+/* so do the core token part -- this goes while not givenlass (while the    */
+/* above function oes while is givenclass */
 static void get_token_sub_part_2(cst_tokenstream *ts,
 				 int endclass1,
 				 cst_string **buffer,
@@ -277,7 +283,7 @@ static void get_token_sub_part_2(cst_tokenstream *ts,
 {
     int p;
 
-    for (p=0; ((ts->current_char != TS_EOF) &&
+    for (p=0; ((!ts_eof(ts)) &&
                (!ts_charclass(ts->current_char,endclass1,ts)) &&
 	       (!ts_charclass(ts->current_char,
 			      TS_CHARCLASS_SINGLECHAR,ts)));
@@ -285,6 +291,16 @@ static void get_token_sub_part_2(cst_tokenstream *ts,
     {
 	if (p+1 >= *buffer_max) extend_buffer(buffer,buffer_max);
 	(*buffer)[p] = ts->current_char;
+        /* If someone sets tags we end the token */
+        /* This can't happen in standard tokenstreams, but can in user */
+        /* defined ones */
+        if (ts->tags) break;  
+
+        /* In the special utf8 char by char mode we end at end of a utf8 char */
+        if ((ts->utf8_explode_mode) &&
+            (p == ts_utf8_sequence_length((*buffer)[0])))
+            break;
+
 	ts_getc(ts);
     }
     (*buffer)[p] = '\0';
@@ -314,7 +330,7 @@ static void get_token_postpunctuation(cst_tokenstream *ts)
 
 int ts_eof(cst_tokenstream *ts)
 {
-    if (ts->current_char == TS_EOF)
+    if (ts->eof_flag)
 	return TRUE;
     else
 	return FALSE;
@@ -326,7 +342,11 @@ int ts_set_stream_pos(cst_tokenstream *ts, int pos)
     int new_pos, l;
 
     if (ts->fd)
+    {
         new_pos = (int)cst_fseek(ts->fd,(long)pos,CST_SEEK_ABSOLUTE);
+        if (new_pos == pos)
+            ts->eof_flag = FALSE;
+    }
     else if (ts->string_buffer)
     {
         l = cst_strlen(ts->string_buffer);
@@ -336,9 +356,14 @@ int ts_set_stream_pos(cst_tokenstream *ts, int pos)
             new_pos = 0;
         else
             new_pos = pos;
+        ts->eof_flag = FALSE;
     }
     else if (ts->open)
+    {
         new_pos = (ts->seek)(ts,pos);
+        if (new_pos == pos)
+            ts->eof_flag = FALSE;
+    }
     else
         new_pos = pos;  /* not sure it can get here */
     ts->file_pos = new_pos;
@@ -372,23 +397,40 @@ int ts_get_stream_size(cst_tokenstream *ts)
         return 0;
 }
 
+cst_string private_ts_getc(cst_tokenstream *ts)
+{
+    return internal_ts_getc(ts);
+}
+
 static cst_string ts_getc(cst_tokenstream *ts)
+{
+    if (ts->open)
+        ts->current_char = (ts->getc)(ts);
+    else
+        ts->current_char = internal_ts_getc(ts);
+    return ts->current_char;
+}
+
+static cst_string internal_ts_getc(cst_tokenstream *ts)
 {
     if (ts->fd)
     {
 	ts->current_char = cst_fgetc(ts->fd);
+        if (ts->current_char == -1)
+	    ts->eof_flag = TRUE;
     }
     else if (ts->string_buffer)
     {
 	if (ts->string_buffer[ts->file_pos] == '\0')
-	    ts->current_char = TS_EOF;
+        {
+	    ts->eof_flag = TRUE;
+	    ts->current_char = '\0';
+        }
 	else
 	    ts->current_char = ts->string_buffer[ts->file_pos];
     }
-    else if (ts->open)
-        ts->current_char = (ts->getc)(ts);
     
-    if (ts->current_char != TS_EOF)
+    if (!ts_eof(ts))
 	ts->file_pos++;
     if (ts->current_char == '\n')
 	ts->line_number++;
@@ -416,7 +458,7 @@ const cst_string *ts_get_quoted_token(cst_tokenstream *ts,
     if (ts->current_char == quote)
     {   /* go until quote */
 	ts_getc(ts);
-        for (p=0; ((ts->current_char != TS_EOF) &&
+        for (p=0; ((!ts_eof(ts)) &&
                    (ts->current_char != quote));
              p++)
         {
@@ -468,6 +510,12 @@ const cst_string *ts_get(cst_tokenstream *ts)
 {
     /* Get next token */
 
+    if (ts->tags)
+    {  /* Someone didn't delete them before -- so we delete them now */
+        delete_features(ts->tags);
+        ts->tags = NULL;
+    }
+
     /* Skip whitespace */
     get_token_sub_part(ts,
 		       TS_CHARCLASS_WHITESPACE,
@@ -478,7 +526,7 @@ const cst_string *ts_get(cst_tokenstream *ts)
     ts->token_pos = ts->file_pos - 1;
 	
     /* Get prepunctuation */
-    if (ts->current_char != TS_EOF &&
+    if (!ts_eof(ts) &&
         ts_charclass(ts->current_char,TS_CHARCLASS_PREPUNCT,ts))
 	get_token_sub_part(ts,
 			   TS_CHARCLASS_PREPUNCT,
@@ -487,7 +535,7 @@ const cst_string *ts_get(cst_tokenstream *ts)
     else if (ts->prepunctuation)
 	ts->prepunctuation[0] = '\0';
     /* Get the symbol itself */
-    if (ts->current_char != TS_EOF &&
+    if (!ts_eof(ts) &&
         ts_charclass(ts->current_char,TS_CHARCLASS_SINGLECHAR,ts))
     {
 	if (2 >= ts->token_max) extend_buffer(&ts->token,&ts->token_max);

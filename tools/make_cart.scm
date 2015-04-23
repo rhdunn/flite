@@ -125,13 +125,16 @@ want multiple trees in the same file."
       (carttoC_feat_num f)))))
 
 (define (carttoC_val_table ofdh f operator)
-  (let ((fn (assoc_string
-	     (if (string-equal operator "is")
-		 (format nil "is_%s" f)
-		 f)
-	     val_table)))
+  (let ((fn (if (number? f)
+                nil  ;; if its a number don't try to share it
+                (assoc_string
+                 (if (string-equal operator "is")
+                     (format nil "is_%s" f)
+                     f)
+                 val_table))))
     (cond
      (fn
+;      (format t "awb_debug reused_val %l\n" fn)
       (cadr fn))
      (t
       (let ((nname (format nil "val_%04d" (length val_table))))
@@ -159,6 +162,7 @@ want multiple trees in the same file."
 		       (format ofdh "DEF_STATIC_CONST_VAL_STRING(%s,\"%s\");\n"
 			       nname f))))
 		    val_table))
+;        (format t "awb_debug new_val %l\n" (car val_table))
         (cadr (car val_table)))))))
 
 (define (carttoC_tree_nodes tree ofdc ofdh)

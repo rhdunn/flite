@@ -227,7 +227,8 @@ static int no_syl_boundaries(const cst_item *i, const cst_val *p)
     return FALSE;
 }
 
-int in_lex(const cst_lexicon *l, const char *word, const char *pos)
+int in_lex(const cst_lexicon *l, const char *word, const char *pos,
+           const cst_features *feats)
 {
     /* return TRUE is its in the lexicon */
     int r = FALSE, i;
@@ -253,7 +254,8 @@ int in_lex(const cst_lexicon *l, const char *word, const char *pos)
     return r;
 }
 
-cst_val *lex_lookup(const cst_lexicon *l, const char *word, const char *pos)
+cst_val *lex_lookup(const cst_lexicon *l, const char *word, const char *pos,
+                    const cst_features *feats)
 {
     int index;
     int p;
@@ -291,7 +293,7 @@ cst_val *lex_lookup(const cst_lexicon *l, const char *word, const char *pos)
 	}
 	else if (l->lts_function)
 	{
-	    phones = (l->lts_function)(l,word,"");
+	    phones = (l->lts_function)(l,word,"",feats);
 	}
 	else if (l->lts_rule_set)
 	{

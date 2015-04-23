@@ -54,7 +54,7 @@ extern const int cmu_time_awb_lex_entry[];
 extern const unsigned char cmu_time_awb_lex_data[];
 extern const int cmu_time_awb_num_entries;
 extern const int cmu_time_awb_num_bytes;
-extern const char * const cmu_time_awb_lex_phone_table[54];
+extern const char * const cmu_time_awb_lex_phone_table[36];
 extern const char * const cmu_time_awb_lex_phones_huff_table[];
 extern const char * const cmu_time_awb_lex_entries_huff_table[];
 

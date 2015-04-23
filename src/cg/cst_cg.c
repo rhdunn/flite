@@ -228,7 +228,7 @@ static cst_utterance *cg_make_params(cst_utterance *utt)
     cst_item *s, *mcep_parent, *mcep_frame;
     int num_frames;
     float start, end;
-    float dur_stretch, tok_stretch;
+    float dur_stretch, tok_stretch, rdur;
 
     cg_db = val_cg_db(utt_feat_val(utt,"cg_db"));
     mcep = utt_relation_create(utt,"mcep");
@@ -243,7 +243,12 @@ static cst_utterance *cg_make_params(cst_utterance *utt)
         tok_stretch = ffeature_float(s,"R:segstate.parent.R:SylStructure.parent.parent.R:Token.parent.local_duration_stretch");
         if (tok_stretch == 0)
             tok_stretch = 1.0;
-        end = start + (tok_stretch*dur_stretch*cg_state_duration(s,cg_db));
+        rdur = tok_stretch*dur_stretch*cg_state_duration(s,cg_db);
+        /* Guarantee duration to be alt least one frame */
+        if (rdur < cg_db->frame_advance)
+            end = start + cg_db->frame_advance;
+        else
+            end = start + rdur;
         item_set_float(s,"end",end);
         mcep_parent = relation_append(mcep_link, s);
         for ( ; (num_frames * cg_db->frame_advance) <= end; num_frames++ )
@@ -300,14 +305,89 @@ static int voiced_frame(cst_item *m)
         return 0; /* unvoiced */
 }
 
-static void cg_smooth_F0(cst_utterance *utt,cst_cg_db *cg_db,
-                         cst_track *param_track)
+static float catmull_rom_spline(float p,float p0,float p1,float p2,float p3)
+/* http://www.mvps.org/directx/articles/ */
 {
-    /* Smooth F0 and mark unnoived frames as 0.0 */
-    cst_item *mcep;
-    int i, c;
-    float l, s;
-    float mean, stddev;
+    float q;
+
+    q = ( 0.5 * 
+          ( ( 2.0 * p1 ) +
+            ( p * (-p0 + p2) ) +
+            ( (p*p) * (((2.0 * p0) - (5.0 * p1)) +
+                       ((4.0 * p2) - p3))) +
+            ( (p*p*p) * (-p0 +
+                         ((3.0 * p1) - (3.0 * p2)) +
+                         p3))));
+     /*    (set! q (* 0.5 (+ (* 2 p1) 
+           (* (+ (* -1 p0) p2) p)
+            (* (+ (- (* 2 p0) (* 5 p1)) (- (* 4 p2) p3)) (* p p))
+            (* (+ (* -1 p0) (- (* 3 p1) (* 3 p2)) p3) (* p p p)))))
+     */
+    return q;
+}
+
+static void cg_F0_interpolate_spline(cst_utterance *utt,
+                                     cst_track *param_track)
+{
+    float start_f0, mid_f0, end_f0;
+    int start_index, end_index, mid_index;
+    int nsi, nei, nmi;  /* next syllable indices */
+    float nmid_f0, pmid_f0;
+    cst_item *syl;
+    int i;
+    float m;
+
+    start_f0 = mid_f0 = end_f0 = -1.0;
+
+    for (syl=utt_rel_head(utt,"Syllable"); syl; syl=item_next(syl))
+    {
+        start_index = ffeature_int(syl,"R:SylStructure.daughter1.R:segstate.daughter1.R:mcep_link.daughter1.frame_number");
+        end_index = ffeature_int(syl,"R:SylStructure.daughtern.R:segstate.daughtern.R:mcep_link.daughtern.frame_number");
+        mid_index = (int)((start_index + end_index)/2.0);
+        
+        start_f0 = param_track->frames[start_index][0];
+        if (end_f0 > 0.0)
+            start_f0 = end_f0;  /* not first time through */
+        if (mid_f0 < 0.0)
+            pmid_f0 = start_f0;  /* first time through */
+        else
+            pmid_f0 = mid_f0;
+        mid_f0 =  param_track->frames[mid_index][0];
+        if (item_next(syl)) /* not last syllable */
+            end_f0 = (param_track->frames[end_index-1][0]+
+                      param_track->frames[end_index][0])/2.0;
+        else
+            end_f0 = param_track->frames[end_index-1][0];
+        nmid_f0=end_f0; /* in case there is no next syl */
+
+        if (item_next(syl))
+        {
+            nsi = ffeature_int(syl,"n.R:SylStructure.daughter1.R:segstate.daughter1.R:mcep_link.daughter1.frame_number");
+            nei = ffeature_int(syl,"n.R:SylStructure.daughtern.R:segstate.daughtern.R:mcep_link.daughtern.frame_number");
+            nmi = (int)((nsi + nei)/2.0);
+            nmid_f0 = param_track->frames[nmi][0];
+        }
+        /* start to mid syl */
+        m = 1.0 / (mid_index - start_index);
+        for (i=0; ((start_index+i)<mid_index); i++)
+            param_track->frames[start_index+i][0] = 
+                 catmull_rom_spline(i*m,pmid_f0,start_f0,mid_f0,end_f0);
+        
+        /* mid syl to end */
+        m = 1.0 / (end_index - mid_index);
+        for (i=0; ((mid_index+i)<end_index); i++)
+            param_track->frames[mid_index+i][0] = 
+                catmull_rom_spline(i*m,start_f0,mid_f0,end_f0,nmid_f0);
+    }
+
+    return;
+}
+
+#if 0
+static void cg_smooth_F0_naive(cst_track *param_track)
+{
+    float l,s;
+    int i,c;
 
     l = 0.0;
     for (i=0; i<param_track->num_frames-1; i++)
@@ -328,6 +408,23 @@ static void cg_smooth_F0(cst_utterance *utt,cst_cg_db *cg_db,
             param_track->frames[i][0] = s/c;
         }
     }
+
+    return;
+}
+#endif
+
+static void cg_smooth_F0(cst_utterance *utt,
+                         cst_cg_db *cg_db,
+                         cst_track *param_track)
+{
+    /* Smooth F0 and mark unvoice frames as 0.0 */
+    cst_item *mcep;
+    int i;
+    float mean, stddev;
+
+    /* cg_smooth_F0_naive(param_track); */
+    
+    cg_F0_interpolate_spline(utt,param_track);
 
     mean = get_param_float(utt->features,"int_f0_target_mean", cg_db->f0_mean);
     mean *= get_param_float(utt->features,"f0_shift", 1.0);
@@ -365,6 +462,7 @@ static cst_utterance *cg_predict_params(cst_utterance *utt)
     int i,j,f,p,fd,o;
     const char *mname;
     float f0_val;
+    float local_gain;
     int fff;
     int extra_feats = 0;
 
@@ -392,10 +490,12 @@ static cst_utterance *cg_predict_params(cst_utterance *utt)
     for (i=0,mcep=utt_rel_head(utt,"mcep"); mcep; i++,mcep=item_next(mcep))
     {
         mname = item_feat_string(mcep,"name");
+        local_gain = ffeature_float(mcep,"R:mcep_link.parent.R:segstate.parent.R:SylStructure.parent.parent.R:Token.parent.local_gain");
+        if (local_gain == 0.0) local_gain = 1.0;
         for (p=0; cg_db->types[p]; p++)
             if (cst_streq(mname,cg_db->types[p]))
                 break;
-        if (cg_db->types[0] == NULL)
+        if (cg_db->types[p] == NULL)
             p=0; /* if there isn't a matching tree, use the first one */
 
         /* Predict F0 */
@@ -418,6 +518,9 @@ static cst_utterance *cg_predict_params(cst_utterance *utt)
                 param_track->frames[i][j] = 
                     (CG_MODEL_VECTOR(cg_db,model_vectors0,f,(j)*fff)+
                      CG_MODEL_VECTOR(cg_db,model_vectors1,fd,(j)*fff))/2.0;
+            /* Apply local gain */
+            param_track->frames[i][2] *= local_gain;
+
             if (cg_db->mixed_excitation)
             {
                 o = j;
@@ -443,6 +546,8 @@ static cst_utterance *cg_predict_params(cst_utterance *utt)
             for (j=2; j<param_track->num_channels; j++)
                 param_track->frames[i][j] =
                     CG_MODEL_VECTOR(cg_db,model_vectors0,f,(j)*fff);
+            /* Apply local gain */
+            param_track->frames[i][2] *= local_gain;
 
             if (cg_db->mixed_excitation)
             {
@@ -509,6 +614,17 @@ static cst_utterance *cg_resynth(cst_utterance *utt)
         utt_set_feat_int(utt,"Interrupted",1);
         w = new_wave();
     }
+
+#if 0
+    /* Apply local gain */
+    for (i=0,tok=utt_rel_head(utt,"Token"); tok; i++,tok=item_next(tok))
+    {
+        if (item_feat_present(tok,"local_gain"))
+            local_gain = item_feat_float(tokget_param_fffeature_float(tok,"R:mcep_link.parent.R:segstate.parent.R:SylStructure.parent.parent.R:Token.parent.local_gain");
+
+    }
+#endif
+    
 
     utt_set_wave(utt,w);
 

@@ -184,7 +184,7 @@ typedef struct cst_val_atom_struct_float {
     short ref_count;
     short type;  /* order is here important */
 #else
-#if _M_X64
+#if (defined(__x86_64__) || defined(_M_X64))
     int type;  /* order is here important */
     int ref_count;
 #else
@@ -192,7 +192,7 @@ typedef struct cst_val_atom_struct_float {
     short ref_count;
 #endif
 #endif
-#if _M_X64
+#if (defined(__x86_64__) || defined(_M_X64))
     double fval;
 #else
     float fval;
@@ -204,7 +204,7 @@ typedef struct cst_val_atom_struct_int {
     short ref_count;
     short type;  /* order is here important (and unintuitive) */
 #else
-#if _M_X64
+#if (defined(__x86_64__) || defined(_M_X64))
     int type;  /* order is here important */
     int ref_count;
 #else
@@ -212,7 +212,7 @@ typedef struct cst_val_atom_struct_int {
     short ref_count;
 #endif
 #endif
-#if _M_X64
+#if (defined(__x86_64__) || defined(_M_X64))
     long long fval;
 #else
     int ival;
@@ -224,7 +224,7 @@ typedef struct cst_val_atom_struct_void {
     short ref_count;
     short type;  /* order is here important */
 #else
-#if _M_X64
+#if (defined(__x86_64__) || defined(_M_X64))
     int type;  /* order is here important */
     int ref_count;
 #else

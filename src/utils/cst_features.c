@@ -98,7 +98,12 @@ void delete_features(cst_features *f)
 
 int feat_present(const cst_features *f, const char *name)
 {
-    return (feat_find_featpair(f,name) != NULL);
+    if (feat_find_featpair(f,name) != NULL)
+        return 1;
+    else if (f && f->linked)
+        return feat_present(f->linked,name);
+    else 
+        return 0;
 }
 
 int feat_length(const cst_features *f)
@@ -158,7 +163,15 @@ const cst_val *feat_val(const cst_features *f, const char *name)
     n = feat_find_featpair(f,name);
 
     if (n == NULL)
-	return NULL;
+    {
+        if (f && f->linked)
+        {   /* Search the linked features too if there are any */
+            /* We assume the linked features haven't been deleted, and */
+            return feat_val(f->linked,name);
+        }
+        else
+            return NULL; /* its really not there at all */
+    }
     else
 	return n->val;
 }
@@ -252,11 +265,19 @@ int feat_copy_into(const cst_features *from,cst_features *to)
     /* Copy all features in from into to */
     cst_featvalpair *p;
     int i;
-    
+
     for (i=0,p=from->head; p; p=p->next,i++)
 	feat_set(to,p->name,p->val);
     
     return i;
+}
+
+int feat_link_into(const cst_features *from,cst_features *to)
+{
+    /* Thus allows more global features to be linked, without a copy */
+    /* This is used to make things thread safe(r)                    */
+    to->linked = from;
+    return 1;
 }
 
 const char *feat_own_string(cst_features *f,const char *n)

@@ -48,7 +48,7 @@ SRCS = token_test_main.c hrg_test_main.c \
        lpc_test2_main.c combine_waves_main.c \
        bin2ascii_main.c record_in_noise_main.c \
        compare_wave_main.c rfc_main.c lpc_resynth_main.c \
-       by_word_main.c
+       by_word_main.c multi_thread_main.c
 OTHERS = kal_test_main.c
 
 FILES = Makefile $(SRCS) $(DATAFILES) $(OTHERS)
@@ -75,4 +75,14 @@ $(MAIN_O) : %_main.o : %_main.c
 	$(CC) $(CFLAGS) -o $@ $< 
 $(ALL) : %$(EXEEXT) : %_main.o $(FLITELIBS)
 	$(CC) $(CFLAGS) -o $@ $@_main.o $($(@:=_LIBS)) $(FLITELIBFLAGS) $(LDFLAGS)
+
+multi_thread_test: multi_thread_main.c
+	gcc -fopenmp -o multi_thread_test multi_thread_main.c \
+		$(CFLAGS) -I$(TOP)/include $(FLITELIBFLAGS) $(LDFLAGS) \
+		-l flite_cmu_us_slt -lflite_cmulex -lflite_usenglish \
+		-lflite -lm -lasound -lgomp
+do_thread_test: multi_thread_test
+#	This shouldn't segfault
+	export OMP_NUM_THREADS=100 && ./multi_thread_test
+
 

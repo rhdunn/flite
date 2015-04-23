@@ -43,11 +43,13 @@
 #include "cst_alloc.h"
 #include "cst_string.h"
 #include "cst_file.h"
+#include "cst_features.h"
 
 typedef struct  cst_tokenstream_struct {
     cst_file fd;
     int file_pos;
     int line_number;
+    int eof_flag;
     cst_string *string_buffer;
 
     int current_char;
@@ -62,6 +64,10 @@ typedef struct  cst_tokenstream_struct {
     int postp_max;
     cst_string *postpunctuation;
 
+    cst_features *tags;  /* e.g xml tags */
+    /* if set will find token boundaries at every utf8 character */
+    int utf8_explode_mode;  
+
     void *streamtype_data;
 
     /* Should only be set through set_charclasses as charclass table needs */
@@ -73,7 +79,7 @@ typedef struct  cst_tokenstream_struct {
 
     cst_string charclass[256];
 
-    /* To allow externally specified reading functions e.g. epub */
+    /* To allow externally specified reading functions e.g. epub/xml */
     int (*open)(struct cst_tokenstream_struct *ts, const char *filename);
     void (*close)(struct cst_tokenstream_struct *ts);
     int (*eof)(struct cst_tokenstream_struct *ts);

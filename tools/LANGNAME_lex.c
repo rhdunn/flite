@@ -2,7 +2,7 @@
 /*                                                                       */
 /*                  Language Technologies Institute                      */
 /*                     Carnegie Mellon University                        */
-/*                        Copyright (c) 2004                             */
+/*                         Copyright (c) 2013                            */
 /*                        All Rights Reserved.                           */
 /*                                                                       */
 /*  Permission is hereby granted, free of charge, to use and distribute  */
@@ -30,31 +30,34 @@
 /*  THIS SOFTWARE.                                                       */
 /*                                                                       */
 /*************************************************************************/
-/*             Author:  Alan W Black (awb@cs.cmu.edu)                    */
-/*               Date:  December 2004                                    */
-/*************************************************************************/
 /*                                                                       */
-/*  PalmOS Callbacks to System Functions                                 */
+/*  LANGNAME Lexical function                                            */
 /*                                                                       */
 /*************************************************************************/
-#include <PalmOS.h>
-#include <PceNativeCall.h>
-#include <CoreTraps.h>
-#include <MemoryMgr.h>
-#include "pocore.h"
+#include "flite.h"
+#include "cst_val.h"
+#include "cst_voice.h"
+#include "cst_lexicon.h"
+#include "cst_ffeatures.h"
+#include "cmu_LANGNAME_lex.h"
 
-Err MemChunkFree(MemPtr chunkDataP)
+cst_val *cmu_LANGNAME_lex_lts_function(const struct lexicon_struct *l, 
+                                   const char *word, const char *pos)
 {
-    Err r;
-    unsigned char stack[4];
-
-    *(int *)&stack[0] = SWAPINT(chunkDataP);
-
-    r = (Err)(*gCall68KFuncP)(gEmulStateP,
-			      PceNativeTrapNo(sysTrapMemChunkFree),
-			      stack,
-			      4 | kPceNativeWantA0);
-    return r;
-
+    return NULL;
 }
 
+cst_lexicon *cmu_LANGNAME_lex_init(void)
+{
+    /* Should it be global const or dynamic */
+    /* Can make lts_rules just a cart tree like others */
+    cst_lexicon *l;
+
+    l = cst_alloc(cst_lexicon,1);
+    l->name = "cmu_LANGNAME_lex";
+
+    l->lts_function = cmu_LANGNAME_lex_lts_function;
+
+    return l;
+
+}

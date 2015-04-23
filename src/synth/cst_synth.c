@@ -169,8 +169,12 @@ cst_utterance *apply_synth_method(cst_utterance *u,
 
 cst_utterance *utt_init(cst_utterance *u, cst_voice *vox)
 {
-    feat_copy_into(vox->features,u->features);
-    feat_copy_into(vox->ffunctions,u->ffunctions);
+    /* Link the vox features into the utterance features so the voice  */
+    /* features will be searched too (after the utt ones)              */
+    feat_link_into(vox->features,u->features);
+    feat_link_into(vox->ffunctions,u->ffunctions);
+
+    /* Do the initialization function, if there is one */
     if (vox->utt_init)
 	vox->utt_init(u, vox);
 
@@ -282,7 +286,10 @@ cst_utterance *default_phrasing(cst_utterance *u)
     cst_cart *phrasing_cart;
 
     r = utt_relation_create(u,"Phrase");
-    phrasing_cart = val_cart(feat_val(u->features,"phrasing_cart"));
+    if (feat_present(u->features,"phrasing_cart"))
+        phrasing_cart = val_cart(feat_val(u->features,"phrasing_cart"));
+    else
+        phrasing_cart = NULL;
 
     for (p=NULL,w=relation_head(utt_relation(u,"Word")); w; w=item_next(w))
     {
@@ -293,9 +300,12 @@ cst_utterance *default_phrasing(cst_utterance *u)
             item_set_string(p,"name","B");
 	}
 	item_add_daughter(p,w);
-	v = cart_interpret(w,phrasing_cart);
-	if (cst_streq(val_string(v),"BB"))
-	    p = NULL;
+        if (phrasing_cart)
+        {
+            v = cart_interpret(w,phrasing_cart);
+            if (cst_streq(val_string(v),"BB"))
+                p = NULL;
+        }
     }
 
     if (lp && item_prev(lp)) /* follow festival */
@@ -514,7 +524,8 @@ cst_utterance *default_lexical_insertion(cst_utterance *u)
             else
             {
                 dp = 1;
-		phones = lex_lookup(lex,item_feat_string(word,"name"),pos);
+		phones = lex_lookup(lex,item_feat_string(word,"name"),pos,
+                                    u->features);
             }
 	}
 

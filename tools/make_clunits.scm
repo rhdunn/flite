@@ -47,7 +47,7 @@
 (defvar mcep_max 4.540220)
 
 (defvar page_size 500) ;; number of frames per page
-;(set! page_size 1000000) ;; 1^6 means we do mmap
+(set! page_size 1000000) ;; 1^6 means we do mmap
 
 (define (clunits_convert name clcatfnfileordered clcatfnunitordered 
 			 cltreesfn festvoxdir odir)
@@ -122,19 +122,25 @@ Convert a festvox clunits (processed) voice into a C file."
        "_")))))
 
 (define (sort_clentries entries clcatfnunitorder)
-  (let ((neworder nil) (unittype nil))
+  (let ((neworder nil) (unittype nil) (q nil))
     (mapcar
      (lambda (unit)
        (set! unittype (string-before (car unit) "_"))
-       (set! nnentry (assoc_string
-               (car unit)
-               (cdr (assoc_string unittype entries))))
+       (set! q (assoc_string unittype entries))
+       ;; only keep this unit if there is an actually tree --
+       ;; in build3 (or other methods) it might have been pruned
+       (if q
+           (begin
+             (set! nnentry (assoc_string
+                            (car unit)
+                            (cdr (assoc_string unittype entries))))
 ;       (format t "%s %l %l\n" unittype nnentry (assoc_string unittype entries))
-       (set! neworder 
-             (cons 
-              nnentry
-              neworder)))
+             (set! neworder 
+                   (cons 
+                    nnentry
+                    neworder)))))
      (load clcatfnunitorder t))
+    (format t "new order %d\n" (length neworder))
     (reverse neworder))
   )
 
@@ -276,8 +282,10 @@ compilable single C file."
 ;    (format t "%l\n" (car t_entries))
     (set! clunits_entries 
           (sort_clentries t_entries clcatfnunitordered))
-    (format t "End Sorting cl entries\n")
-
+    (format t "End Sorting cl entries %d %d\n"
+            (length clunits_entries)
+            (length clcatfnunitordered)
+            )
     (format lofdidx "\n\n")
     (format mofdidx "\n\n")
 
@@ -706,7 +714,9 @@ Output clunit selection carts into odir/name_carts.c"
 
  (set! val_table nil)
 
+ (format t "new order3 %d\n" (length clunits_selection_trees))
  (set! clunits_selection_trees (sort_cltrees clunits_selection_trees clcatfn))
+ (format t "new order4 %d\n" (length clunits_selection_trees))
 
  (mapcar
   (lambda (cart)
@@ -739,6 +749,7 @@ Output clunit selection carts into odir/name_carts.c"
  (format cofd "\n\n")
  (format cofd "const cst_clunit_type %s_unit_types[] = {\n" name)
  (set! n 0)
+ (format t "new order2 %d\n" (length clunits_selection_trees))
  (mapcar
   (lambda (cart)
     (format ofdh "#define unit_type_%s %d\n" 

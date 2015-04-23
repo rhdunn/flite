@@ -2,7 +2,7 @@
 ##                                                                       ##
 ##                  Language Technologies Institute                      ##
 ##                     Carnegie Mellon University                        ##
-##                         Copyright (c) 2004                            ##
+##                        Copyright (c) 2013                             ##
 ##                        All Rights Reserved.                           ##
 ##                                                                       ##
 ##  Permission is hereby granted, free of charge, to use and distribute  ##
@@ -30,50 +30,24 @@
 ##  THIS SOFTWARE.                                                       ##
 ##                                                                       ##
 ###########################################################################
-##  FLOP -- FLite On PalmOS                                              ##
-##  Author:  Alan W Black (awb@cs.cmu.edu)                               ##
-##           November 2004                                               ##
 ##                                                                       ##
-##  A demonstration program to show Flite speaking on a PalmOS device    ##
+##  LANGNAME lexicon and letter to sound rules                           ##
 ##                                                                       ##
 ###########################################################################
-TOP = ../..
-DIRNAME = palm/flop
+TOP=../..
+DIRNAME=lang/cmu_LANGNAME_lex
+BUILD_DIRS = 
+ALL_DIRS= 
+H = cmu_LANGNAME_lex.h
+SRCS = cmu_LANGNAME_lex.c
+SCRIPTS = 
+OBJS = $(SRCS:.c=.o)
+SCM=
+FILES = Makefile $(SCM) $(SRCS) $(H) $(SCRIPTS)
+LIBNAME = flite_cmu_LANGNAME_lex
+LOCAL_INCLUDES = 
 
-RCP = flop.rcp flop.def
-H = flop.h
-SRCS = flop.c 
-PRC = flop.prc
-BMPS = flop.bmp flopsmall.bmp
-OBJS := $(SRCS:.c=.o)
-FILES = Makefile $(H) $(SRCS) $(RCP) $(BMPS)
-
-LOCAL_CLEAN = *.[oa] flop *.bin *.stamp *.ro
-FLITE_INCLUDES = -I$(TOP)/include
-FLITE_LIBS = -L$(BUILDDIR)/lib -lm68k_flite
-
-FLITE_RO = ../arm_flite/armflite.ro \
-           ../arm_flite/clts.ro \
-           ../arm_flite/clex.ro \
-           ../arm_flite/clpc.ro \
-           ../arm_flite/cres.ro \
-           ../arm_flite/crsi.ro
+ALL = 
 
 include $(TOP)/config/common_make_rules
-
-all: flop.prc
-
-flop.prc: flop flop.ro $(FLITE_RO)
-	build-prc -o flop.prc flop.def flop flop.ro $(FLITE_RO)
-
-flop.ro: flop.rcp
-	pilrc -ro flop.rcp flop.ro
-
-flop: $(OBJS) $(BUILDDIR)/lib/libm68k_flite.a
-	$(M68KCC) $(CFLAGS) -o flop $(OBJS) $(FLITE_LIBS) -lPalmOSGlue
-
-flop.o: flop.c flop.h
-	$(M68KCC) $(CFLAGS) $(INCLUDES) -c flop.c
-peal.o: peal.c
-	$(M68KCC) $(CFLAGS) $(INCLUDES) -c peal.c
 
