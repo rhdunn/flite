@@ -48,7 +48,12 @@
 #ifdef UNDER_CE
 #include <winbase.h>
 typedef HANDLE cst_file;
+#elif __palmos__
+#include <PalmOS.h>
+#include <System/StdIOPalm.h>
+typedef FILE * cst_file;
 #else
+#include <unistd.h>
 #include <stdio.h>
 typedef FILE * cst_file;
 #endif
@@ -61,6 +66,13 @@ typedef struct cst_filemap_struct {
     cst_file fh;
     size_t mapsize;
     HANDLE h;
+} cst_filemap;
+#elif __palmos__
+typedef struct cst_filemap_struct {
+    void *mem;
+    cst_file fh;
+    unsigned int mapsize;
+    int fd;
 } cst_filemap;
 #else
 typedef struct cst_filemap_struct {
@@ -84,6 +96,11 @@ cst_file cst_fopen(const char *path, int mode);
 long cst_fwrite(cst_file fh, const void *buf, long size, long count);
 long cst_fread(cst_file fh, void *buf, long size, long count);
 int cst_fprintf(cst_file fh, char *fmt, ...);
+int cst_sprintf(char *s, const char *fmt, ...);
+#if defined(__palmos__)
+#include <stdarg.h>
+int cst_vsprintf(char *s, const char *fmt, va_list args);
+#endif
 int cst_fclose(cst_file fh);
 int cst_fgetc(cst_file fh);
 

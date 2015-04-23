@@ -38,8 +38,6 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <stdio.h>
-#include <string.h>
 #include "cst_synth.h"
 #include "cst_utt_utils.h"
 

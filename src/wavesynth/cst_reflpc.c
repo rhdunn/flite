@@ -37,7 +37,7 @@
 /*  reflection coefficients, algorithms from Festival                    */
 /*                                                                       */
 /*************************************************************************/
-#include <stdio.h>
+
 #include "cst_alloc.h"
 
 void lpc2ref(const float *lpc, float *rfc, int order)

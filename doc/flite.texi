@@ -11,15 +11,15 @@
 @c world example, but many others too.  I happily acknowledge their
 @c aid in producing this document -- awb
 
-@set EDITION 1.2
-@set VERSION 1.2
-@set UPDATED 19th February 2003
+@set EDITION 1.3
+@set VERSION 1.3
+@set UPDATED 3rd January 2005
 
 @ifinfo
 This file documents @code{Flite}, a small, fast run-time speech
 synthesis engine.
 
-Copyright (C) 2001-2003 Carnegie Mellon University
+Copyright (C) 2001-2005 Carnegie Mellon University
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -52,7 +52,7 @@ by the authors.
 
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 2001-2003 Carnegie Mellon University, all rights
+Copyright @copyright{} 2001-2005 Carnegie Mellon University, all rights
 reserved.
 
 Permission is granted to make and distribute verbatim copies of
@@ -126,7 +126,7 @@ similarly open lincenses) the general license is
 @example
                  Language Technologies Institute                      
                     Carnegie Mellon University                        
-                     Copyright (c) 1999-2003                          
+                     Copyright (c) 1999-2005                          
                        All Rights Reserved.                           
                                                                       
  Permission is hereby granted, free of charge, to use and distribute  
@@ -216,7 +216,7 @@ cd flite-XXX
 make
 @end example
 However you will need to explicitly call GNU make
-@code{gmake} if @code{code} make is not GNU make on your system.
+@code{gmake} if @code{make} is not GNU make on your system.
 
 The configuration process build a file @file{config/config} which under
 some circumstances may need to be edited, e.g. to add unusual options or
@@ -240,6 +240,200 @@ will link the executables to the @emph{shared} libraries thus you will
 need to install the libraries in a place that your dynamic linker will
 find them (cf. /etc/ld.so.conf) or set @var{LD_LIBRARY_PATH}
 appropriately.
+
+@section Windows Support
+
+@section Window CE Support
+
+Flite has been successfully compile by a number of different groups
+under Windows CE.  The system should compile under Embedded Visual
+Studio but we not have the full details.
+
+If you look are the net it is possible to find precompiled versions
+for Windows CE including @url{http://www.viksoe.dk/code/flite.htm}
+which includes full sources.
+
+The system as distributed does compile under the gcc arm-wince-pe
+toolchain available from
+@url{http://win-ce.voxware.com:28575/Development%20Tools/}, but Flite
+is currently not properly integrated with the WinCE audio device so
+although the binary runs, it can't play any audio, only generate it to
+files.
+
+@section PalmOS Support
+
+Starting with 1.3 we have initial support for PalmOS using the free
+development tools.  The compilation method assumes the target device
+is running PalmOS 5.0 (or later) on an ARM processor.  Following
+convention in the Palm world, the app that the user interacts with is
+actually a m68k application compiled with the m68 gcc cross compiler,
+the resulting code is interpreted by the PalmOS 5.0 device.  The core
+flite code is in native ARM, and hence uses the ARM gcc cross
+compiler.  An interesting amout of support code is required to 
+get all this work properly.
+
+The user app is called @code{flop} (FLite on Palm) and like most apps
+written by awb, is functional, but ugly.  You should not let a
+short-sighted Scotsman, who still thinks command line interfaces are
+cool, design a graphical app.  But it does work and can read typed in
+text, memos and text files.  The @file{armflite.ro} resources are
+designed with the idea that proper applications will be written using it
+as a library.
+
+The @file{flop.prc} application is distributed separately so it can be used
+without having to install all these tools.  But if you want to PalmOS
+development here is what you need to do to compile Flite for PalmOS and
+the flop application.
+
+There are number of different application development environments for
+Palm, here I only describe the Unix based one as this is what was
+used.  You will need the PalmOS SDK 5.0 from palmOne
+@url{http://www.palmone.com/us/developers/}.  This is
+free but does require registration.  Out of the lots of different
+files you can get for palmOne you will eventually find
+@file{palmos-sdk-5.0r3-1.noarch.rpm}, install that on your linux
+machine
+@example
+rpm -i palmos-sdk-5.0r3-1.noarch.rpm
+@end example
+You will also need the various gcc based cross compilers
+@url{http://prc-tools.sourceforge.net/}
+@example
+prc-tools-2.3-1.i386.rpm                
+prc-tools-arm-2.3-1.i386.rpm
+prc-tools-htmldocs-2.3-1.noarch.rpm
+@end example
+The Palm Resource compiler
+@url{http://pilrc.sourceforge.net/}
+@example
+pilrc-3.1-1.i386.rpm
+@end example
+And maybe the emulator 
+@url{http://www.palmos.com/dev/tools/emulator/}
+@example
+pose-3.5-2.i386.rpm
+pose-skins-1.9-1.noarch.rpm             
+pose-skins-handspring-3.1H4-1.noarch.rpm 
+@end example
+Though as POSE doesn't support ARM code, @file{Simulator} does but
+that only works under Windows, POSE is only useful for debugging the 
+m68k parts of the app.
+
+Install these
+@example
+rpm -i prc-tools-2.3-1.i386.rpm                
+rpm -i prc-tools-arm-2.3-1.i386.rpm
+rpm -i prc-tools-htmldocs-2.3-1.noarch.rpm
+rpm -i pilrc-3.1-1.i386.rpm
+rpm -i pose-3.5-2.i386.rpm
+rpm -i pose-skins-1.9-1.noarch.rpm             
+rpm -i pose-skins-handspring-3.1H4-1.noarch.rpm 
+@end example
+We also need the prc-tools to know which SDK is available
+@example
+palmdev-prep
+@end example
+In addition we use Greg Parker's PEAL
+@url{http://www.sealiesoftware.com/peal/} ELF ARM loader. You need to
+download this and compile and install it yourself, so that
+@code{peal-postlink} is in your path.  Greg was very helpful and even
+added support for large data segments for this work (though in the end
+we don't actually use them).  Some peal code is in our distribution
+(which is valid under his licence) but if you use a different version
+of peal you may need to ensure they are matched, by updating 
+the peal code in @file{palm/}.  We used version @file{peal-2004-12-29}.
+
+The other palm specific function we require is @code{par}
+@url{http://www.djw.org/product/palm/par/} which is part of the
+@code{prc.tgz} distribution.  We use @code{par} to construct resources
+from raw binary files.  There are other programs that can do this but
+we found this one adequate.  Again you must compile this and ensure
+@code{par} is in your path.  Note no part of @code{par} ends up
+in the distributed system.
+
+Given all of the above you should be able to compile the
+Palm code and the @code{flop} application.
+@example
+   ./configure --target=arm-palmos
+   make
+@end example
+The resulting application should be in @file{palm/flop/flop.prc}
+which can then be installed on your Plam device
+@example
+   pilot-xfer -i palm/flop/flop.prc
+@end example
+Setting up the tools, and getting a working Linux/Palm conduit is not
+particularly easy but it is possible.  Although some attempt was made
+to use the Simulator, (PalmOS 5.0/ARM simulator) under Windows, it
+never really contributed to the development.  The POSE (m68k) emulator
+though was use to develop the @code{flop} application itself.
+
+@subsection Some notes on the PalmOS port
+
+Throughout the PalmOS developer documentation they continually remind
+you that a Palm device is not a full computer, its an extention of the
+desktop.  But seeing devices like the Treo 600 can easily make one
+forget and want the device to do real computational work.  PalmOS is
+designed for small light weight devices so it is easy to start hitting
+the boundaries of its capabilities when trying to port larger
+aplications.
+
+PalmOS5.0 still has interesting limitations, in the m68k domain,
+@code{int}'s are 16 bit and using memory segments greater than 65K
+require special work.  Quaint as these are, they do significantly
+affect the port.  At first we thought that only the key
+computationally expensive parts would be in ARM (so-called
+@code{armlets}) but trying to compile the whole flite code in m68k
+with long/short distinctions and sub-64K code segment limitations was
+just too hard.
+
+Thus all the Flite code, USEnglish, Lexicon and diphone databases
+actually are compiled in the ARM domain.  There is however no system
+support in the ARM domain so call backs to m68k system functions are
+necessary.  With care calls to system functions can be significantly
+limited so only a few call backs needed to be written.  These are in
+@file{palm/pocore/}.  I believe CodeWarrior has better support for
+this, but in this case we rolled our own (though help from other open
+source examples was important).
+
+We manage the m68k/ARM interface through PEAL, which is basically a
+linker for ARM code and calling mechanism from m68k.  PEAL deals with
+globals and spliting the code into 65K chunks automatically.
+
+Flite does however have a number of large data segments, in the
+lexicon and the voice database itself.  PEAL can deal with this but it
+loads large segments by copying them into the dynamic heap, which on
+most Palm device is less than 2M.  This isn't big enough.
+
+Thus we changed Flite to restrict the number of large data sgements it
+used (and also did some new compression on them).  The five segments: the
+lts rules, the lexical entries, the voice LPC coefficients, the voice
+residuals and the voice residual index are now treated a data segments
+that are split into 65400 sized segments and loaded into feature
+memory space, which is in the storage heap and typically much bigger.
+This means we do need about 2-3 megabyte free on the device to run.
+We did look into just indexing the 65400 byte segments directly but
+that looked like being too much work, and we're only going to be able
+to run on 16M sized Palms anyway (there aren't any 8M ARM Palms with 
+audio, expect maybe some SmartPhones).
+
+Using Flite from m68k land involves getting a @code{flite_info}
+structure from @code{flite_init()}.  This contains a bunch of fields
+that be set and sent to the ARM domain Flite synthesizer proper within
+which other output fields may be set and returned.  This isn't a very
+general structure, but is adequate.  Note the necessary byte swapping
+(for the top level fileds) is done for the this structure, before
+calling the ARM native @code{arm_flite_synth_text} and swapped back
+again after returning.
+
+Display, playing audio, pointy-clicky event thingies are all done in
+the m68K domain.
+
+@subsection Using the PalmOS
+
+There are three basic functions that access the ARM flite
+functions: @code{flite_init()}, @code{flite_synth_text()} and
+@code{flite_end()}.
 
 @node Flite Design, APIs, Installation, Top
 @chapter Flite Design
@@ -277,7 +471,7 @@ Different C++ compilers are quite different and it takes significant
 amount of work to ensure compatibility of the code base over multiple
 compilers.  What makes this worse is that new versions of each compiler
 are incompatible and changes are required.  At first this looked like we
-were producing bad quality code but after 7 years it is clear that it is
+were producing bad quality code but after 10 years it is clear that it is
 also that the compilers are still maturing.  Thus it is clear that
 Festival and the Edinburgh Speech Tools will continue to require
 constant support as new versions of compilers are released.
@@ -305,7 +499,7 @@ core programmers a safe programming language seems very desirable.
 
 After taking into consideration all of the above it was decided to
 develop Flite as a new system written in ANSI C.  C is much more
-portable that C++ as well as offering much lower level control of the
+portable than C++ as well as offering much lower level control of the
 size of the objects and data structure it uses.  
 
 Flite is not intended as a research and development platform for speech
@@ -318,7 +512,7 @@ not even have a conventional operating system.
 
 The second community is for those running synthesis servers for many
 clients.  Here although large fixed databases are acceptable, the size
-of memory require per utterance and speed in which they can be
+of memory required per utterance and speed in which they can be
 synthesized is crucial.
 
 However in spite of the decision to build a new synthesis engine we see
@@ -347,10 +541,11 @@ output.  Defining that relationship is a research issue.
 
 We are also advocates of speech technology within other research areas
 and the ability to offer support on new platforms such as PDAs and
-wearables allows for more interesting speech applications that will
-prove new and interesting areas of research.  Thus having a platform
-that others around us can more easily integrate into their research
-makes our work more satisfying.
+wearables allows for more interesting speech applications such as
+speech-to-speech translation, robots, and interactive personal digital
+assistants, that will prove new and interesting areas of research.
+Thus having a platform that others around us can more easily integrate
+into their research makes our work more satisfying.
 
 @section Key Decisions
 
@@ -427,7 +622,7 @@ arbitrary trees and lists).
 
 The @code{cst_val} structure is carefully designed to take up only 8 bytes (or
 16 on a 64-bit machine).  The multiple union structure that it can
-contain are designed so there are no conflicts.  However it depends on
+contain is designed so there are no conflicts.  However it depends on
 the fact that a pointer to a @code{cst_val} is guaranteed to lie on a even
 address boundary (which is true for all architectures I know of).  Thus
 the distinction between between cons (i.e. list) objects and atomic
@@ -768,6 +963,15 @@ limitation doesn't seem to be an issue with the diphone voices as they
 are typically much smaller than unit selection voices.
 
 @section Lexicon Conversion
+
+As of 1.3 the script for converting the CMU lexicon (as distributed as
+part of Festival) is included.  @file{make_cmulex} will using the
+version of CMULEX unpacked in the current directory to build a new
+lexicon.  Also in 1.3. a more sophisticated compression technique is
+used to reduce the lexicon size.  The lexicon is pruned, removing
+those words which the letter to sound rule models get correct.  Also
+the letters and phones are separately huffman coded to produce a
+smaller lexicon.
 
 @section Language Conversion
 

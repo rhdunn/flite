@@ -43,16 +43,17 @@ include $(TOP)/config/config
 SRCS = cst_alloc.c cst_error.c cst_string.c \
        cst_tokenstream.c cst_val.c cst_features.c \
        cst_endian.c cst_socket.c cst_val_const.c \
-       cst_val_user.c cst_file_stdio.c cst_args.c 
-OBJS := $(SRCS:.c=.o) $(MMAPTYPE:%=cst_mmap_%.o)
+       cst_val_user.c cst_args.c 
+OBJS := $(SRCS:.c=.o) $(MMAPTYPE:%=cst_mmap_%.o) \
+        $(STDIOTYPE:%=cst_file_%.o)
 FILES = Makefile $(H) $(SRCS) \
 	cst_mmap_posix.c cst_mmap_win32.c cst_mmap_none.c \
-	cst_file_wince.c
+	cst_file_stdio.c cst_file_wince.c cst_file_palmos.c
 LIBNAME = flite
 
 LOCAL_INCLUDES = $(SOCKETS)
 
-ALL = .build_lib
+ALL = 
 
 include $(TOP)/config/common_make_rules
 

@@ -40,10 +40,7 @@
 #ifndef _CST_ERROR_H__
 #define _CST_ERROR_H__
 
-#include <setjmp.h>
 #include <stdlib.h>
-
-extern jmp_buf *cst_errjmp;
 
 #ifdef DIE_ON_ERROR
 # ifdef UNDER_CE
@@ -51,7 +48,23 @@ extern jmp_buf *cst_errjmp;
 # else
 #  define cst_error() abort()
 # endif
+#elif __palmos__
+#ifdef __ARM_ARCH_4T__
+
+typedef long *jmp_buf[10]; // V1-V8, SP, LR (see po_setjmp.c)
+extern jmp_buf *cst_errjmp;
+extern char cst_error_msg[];
+int setjmp(register jmp_buf env);
+void longjmp(register jmp_buf env, register int value);
+
+# define cst_error() (cst_errjmp ? longjmp(*cst_errjmp,1) : 0)
+#else  /* m68K */
+/* I've never tested this or even compiled it (Flite is ARM compiled) */
+#  define cst_error() ErrFatalDisplayIf(-1, "cst_error")
+#endif
 #else
+#include <setjmp.h>
+extern jmp_buf *cst_errjmp;
 # define cst_error() (cst_errjmp ? longjmp(*cst_errjmp,1) : exit(-1))
 #endif
 

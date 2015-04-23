@@ -39,7 +39,7 @@
 ###########################################################################
 
 FLITEDIR=__FLITEDIR__
-FIND_STS=$FLITEDIR/tools/find_sts
+FIND_STS=$FLITEDIR/bin/find_sts
 
 . ./etc/voice.defs
 
@@ -69,8 +69,9 @@ then
    # make lpc.params file
    for i in lpc/*.lpc
    do
-      $ESTDIR/bin/ch_track -otype est_ascii $i
-   done | sed '1,/EST_Header_End/d' |
+      $ESTDIR/bin/ch_track -otype est_ascii $i | 
+      sed '1,/EST_Header_End/d'
+   done |
    awk 'BEGIN {min=0; max=0;}
         {for (i=4; i<=NF; i++)
         {
@@ -106,8 +107,9 @@ then
    echo "Finding MCEP min max and range"
    for i in mcep/*.mcep
    do
-      $ESTDIR/bin/ch_track -otype est_ascii $i
-   done | sed '1,/EST_Header_End/d' |
+      $ESTDIR/bin/ch_track -otype est_ascii $i |
+      sed '1,/EST_Header_End/d'
+   done |
    awk 'BEGIN {min=0; max=0;}
         {for (i=4; i<=NF; i++)
         {
@@ -124,6 +126,7 @@ fi
 # build index file
 if [ "$1" = "idx" ]
 then
+   HEAPSIZE=10000000
    if [ "$FV_TYPE" != "diphone" ]  # clunits or ldom 
    then
       echo "Building clunits/ldom index"
@@ -156,14 +159,14 @@ then
                  } }' |
            cat >festival/clunits/$FV_VOICENAME.scm
            cat festival/clunits/$FV_VOICENAME.scm |
-	   $FLITEDIR/tools/flite_sort |
+	   $FLITEDIR/bin/flite_sort |
            sed 's/^.* -- //'  >festival/clunits/$FV_VOICENAME.unitordered.scm
            cat festival/clunits/$FV_VOICENAME.scm |
            sed 's/^.* -- //'  >festival/clunits/$FV_VOICENAME.fileordered.scm
 
       rm -f flite/$FV_VOICENAME"_lpc"*
       rm -f flite/$FV_VOICENAME"_mcep"*
-      festival --heap 5000000 -b $FLITEDIR/tools/make_clunits.scm \
+      festival --heap $HEAPSIZE -b $FLITEDIR/tools/make_clunits.scm \
              $FLITEDIR/tools/make_cart.scm \
              $FLITEDIR/tools/make_vallist.scm \
              mcep/mcep.params.scm \
@@ -179,10 +182,10 @@ then
       echo "Building diphone index"
       sed '1,/EST_Header_End/d' dic/*.est |
       awk '{printf("%s ( %s )\n",$1,$0)}' |
-      $FLITEDIR/tools/flite_sort |
+      $FLITEDIR/bin/flite_sort |
       sed 's/^.* (/(/' >dic/diphidx.scm
 
-      festival --heap 5000000 -b $FLITEDIR/tools/make_didb.scm \
+      festival --heap $HEAPSIZE -b $FLITEDIR/tools/make_didb.scm \
       '(diphtoC "dic/diphidx.scm" "'$FV_VOICENAME'" "sts" "flite")'
 
    fi

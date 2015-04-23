@@ -6,9 +6,8 @@ a
 <ADDRESS><A HREF="http://www.speech.cs.cmu.edu">Speech Group at Carnegie Mellon University</A></ADDRESS>
 <HR>
 Full distribution with sources and this document
-<A HREF="http://cmuflite.org/packed/flite-1.2/flite-1.2-release.tar.gz">flite-1.2-release.tar.gz</A><br>
-Postscript version of this document alone
-<A HREF="flite.ps.gz">flite.ps.gz</A>
+<A HREF="http://cmuflite.org/packed/flite-1.3/flite-1.3-release.tar.gz">flite-1.3-release.tar.gz</A><br>
+PDF version of this document alone
 <A HREF="flite.pdf">flite.pdf</A>
 <br>
 Updates and news on Flite will be posted on 

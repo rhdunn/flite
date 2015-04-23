@@ -39,8 +39,6 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <stdio.h>
-#include <string.h>
 #include <limits.h>
 
 #include "cst_hrg.h"
@@ -185,7 +183,7 @@ static cst_utterance *clunits_select(cst_utterance *utt)
 	if (item_feat_int(u,"unit_start") > item_feat_int(u, "unit_end"))
 	{
 	    feat_print(stdout,s->contents->features);
-	    fprintf(stdout,"start %d end %d\n",
+	    cst_errmsg("start %d end %d\n",
 		    item_feat_int(u,"unit_start"), item_feat_int(u, "unit_end"));
 	    feat_print(stdout,u->contents->features);
 	}
@@ -206,7 +204,8 @@ static cst_utterance *clunits_select(cst_utterance *utt)
 static cst_vit_cand *cl_cand(cst_item *i,cst_viterbi *vd)
 {
     const char *unit_type;
-    int nu, idx;
+    unsigned short nu;
+    int idx;
     int e;
     const cst_val *clist,*c;
     cst_vit_cand *p,*all,*gt,*lc;
@@ -574,7 +573,7 @@ char *clunits_ldom_phone_word(cst_item *s)
     {
 	pname = ffeature_string(s,"p.name");
 	clname = cst_alloc(char, strlen(silence)+1+strlen(pname)+1);
-	sprintf(clname,"%s_%s",silence,pname);
+	cst_sprintf(clname,"%s_%s",silence,pname);
     }
     else
     {
@@ -585,7 +584,7 @@ char *clunits_ldom_phone_word(cst_item *s)
 	    if (*p != '\'') *p = *q++;
 	*q = '\0';
 	clname = cst_alloc(char, strlen(name)+1+strlen(dname)+1);
-	sprintf(clname,"%s_%s",name,dname);
+	cst_sprintf(clname,"%s_%s",name,dname);
 	cst_free(dname);
     }
     return clname;

@@ -40,9 +40,8 @@
 /*  Client just sends (riff) headered waveform to named socket           */
 /*                                                                       */
 /*************************************************************************/
-#include <stdio.h>
+#include "cst_file.h"
 #include <stdlib.h>
-#include <unistd.h>
 #include "cst_socket.h"
 #include "cst_string.h"
 #include "cst_wave.h"

@@ -38,8 +38,6 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <stdio.h>
-#include <string.h>
 #include "cst_tokenstream.h"
 #include "flite.h"
 
@@ -95,36 +93,6 @@ cst_wave *flite_text_to_wave(const char *text, cst_voice *voice)
     return w;
 }
 
-static int utt_break(cst_tokenstream *ts,const char *token,cst_relation *tokens)
-{
-    /* This is English (and some other latin based languages) */
-    /* so it shouldn't be here                                */
-    const char *postpunct = item_feat_string(relation_tail(tokens), "punc");
-    const char *ltoken = item_name(relation_tail(tokens));
-
-    if (strchr(ts->whitespace,'\n') != cst_strrchr(ts->whitespace,'\n'))
-	 /* contains two new lines */
-	 return TRUE;
-    else if (strchr(postpunct,':') ||
-	     strchr(postpunct,'?') ||
-	     strchr(postpunct,'!'))
-	return TRUE;
-    else if (strchr(postpunct,'.') &&
-	     (strlen(ts->whitespace) > 1) &&
-	     strchr("ABCDEFGHIJKLMNOPQRSTUVWXYZ",token[0]))
-	return TRUE;
-    else if (strchr(postpunct,'.') &&
-	     /* next word starts with a capital */
-	     strchr("ABCDEFGHIJKLMNOPQRSTUVWXYZ",token[0]) &&
-	     /* last word isn't an abbreviation */
-	     !(strchr("ABCDEFGHIJKLMNOPQRSTUVWXYZ",ltoken[strlen(ltoken)-1])||
-	       ((strlen(ltoken) < 4) &&
-		strchr("ABCDEFGHIJKLMNOPQRSTUVWXYZ",ltoken[0]))))
-	return TRUE;
-    else
-	return FALSE;
-}
-
 float flite_file_to_speech(const char *filename, 
 			   cst_voice *voice,
 			   const char *outtype)
@@ -136,26 +104,22 @@ float flite_file_to_speech(const char *filename,
     cst_relation *tokrel;
     float d, durs = 0;
     int num_tokens;
+    cst_breakfunc breakfunc = default_utt_break;
 
-    if ((ts = ts_open(filename)) == NULL)
+    if ((ts = ts_open(filename,
+	      get_param_string(voice->features,"text_whitespace",NULL),
+	      get_param_string(voice->features,"text_singlecharsymbols",NULL),
+	      get_param_string(voice->features,"text_prepunctuation",NULL),
+	      get_param_string(voice->features,"text_postpunctuation",NULL)))
+	== NULL)
     {
 	cst_errmsg("failed to open file \"%s\" for reading\n",
 		   filename);
 	return 1;
     }
 
-    ts->whitespacesymbols = 
-	get_param_string(voice->features,"text_whitespace",
-			 ts->whitespacesymbols);
-    ts->singlecharsymbols = 
-	get_param_string(voice->features,"text_singlecharsymbols",
-			 ts->singlecharsymbols);
-    ts->prepunctuationsymbols = 
-	get_param_string(voice->features,"text_prepunctuation",
-			 ts->prepunctuationsymbols);
-    ts->postpunctuationsymbols = 
-	get_param_string(voice->features,"text_postpunctuation",
-			 ts->postpunctuationsymbols);
+    if (feat_present(voice->features,"utt_break"))
+	breakfunc = val_breakfunc(feat_val(voice->features,"utt_break"));
 
     /* If its a file to write to delete it as we're going to */
     /* incrementally append to it                            */
@@ -172,12 +136,13 @@ float flite_file_to_speech(const char *filename,
     num_tokens = 0;
     utt = new_utterance();
     tokrel = utt_relation_create(utt, "Token");
-    while (!ts_eof(ts))
+    while (!ts_eof(ts) || num_tokens > 0)
     {
 	token = ts_get(ts);
 	if ((strlen(token) == 0) ||
 	    (num_tokens > 500) ||  /* need an upper bound */
-	    (relation_head(tokrel) && utt_break(ts,token,tokrel)))
+	    (relation_head(tokrel) && 
+	     breakfunc(ts,token,tokrel)))
 	{
 	    /* An end of utt */
 	    d = flite_tokens_to_speech(utt,voice,outtype);
@@ -185,6 +150,9 @@ float flite_file_to_speech(const char *filename,
 	    if (d < 0)
 		goto out;
 	    durs += d;
+
+	    if (ts_eof(ts))
+		goto out;
 
 	    utt = new_utterance();
 	    tokrel = utt_relation_create(utt, "Token");

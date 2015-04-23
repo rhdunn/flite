@@ -37,12 +37,11 @@
 /*  Argument/usage command parser (like that in EST)                     */
 /*                                                                       */
 /*************************************************************************/
-#include <stdio.h>
 #include "cst_tokenstream.h"
 #include "cst_features.h"
 
 static void parse_description(const char *description, cst_features *f);
-static void parse_usage(FILE *fd,const char *progname,
+static void parse_usage(cst_file fd,const char *progname,
 			const char *s1, const char *s2,
 			const char *description);
 
@@ -100,7 +99,7 @@ cst_val *cst_args(char **argv, int argc,
     return val_reverse(files);
 }
 
-static void parse_usage(FILE *fd,const char *progname,
+static void parse_usage(cst_file fd,const char *progname,
 			const char *s1, const char *s2,
 			const char *description)
 {
@@ -113,19 +112,18 @@ static void parse_description(const char *description, cst_features *f)
 {
     /* parse the description into something more usable */
     cst_tokenstream *ts;
-    const char *arg;
-    char *op;
+    const unsigned char *arg;
+    unsigned char *op;
 
-    ts = ts_open_string(description);
-    ts->whitespacesymbols = " \t\r\n";
-    ts->singlecharsymbols = "{}[]|";
-    ts->prepunctuationsymbols = "";
-    ts->postpunctuationsymbols = "";
-
+    ts = ts_open_string((const unsigned char *)description,
+			" \t\r\n", /* whitespace */
+			"{}[]|",   /* singlecharsymbols */
+			"",        /* prepunctuation */
+			"");       /* postpunctuation */
     while (!ts_eof(ts))
     {
 	op = cst_strdup(ts_get(ts));
-	if ((op[0] == '-') && (strchr(ts->whitespace,'\n') != 0))
+	if ((op[0] == '-') && (cst_strchr(ts->whitespace,'\n') != 0))
 	{    /* got an option */
 	    arg = ts_get(ts);
 	    if (arg[0] == '<')

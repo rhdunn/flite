@@ -38,8 +38,6 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <stdio.h>
-#include <stdlib.h>
 #include "cst_regex.h"
 #include "cst_cart.h"
 
@@ -50,7 +48,9 @@ CST_VAL_REGISTER_TYPE_NODEL(cart,cst_cart)
 void delete_cart(cst_cart *cart)
 {
 #ifndef UNDER_CE
+#ifndef __palmos__
     printf("delete_cart function missing\n");
+#endif
 #endif
 }
 
@@ -67,6 +67,7 @@ static const cst_val *cart_interpret_questions(cst_item *item,
 void cart_print_node(int n, const cst_cart *tree)
 {
 #ifndef UNDER_CE
+#ifndef __palmos__
     printf("%s ",cst_cart_node_feat(n,tree));
     if (cst_cart_node_op(n,tree) == CST_CART_OP_IS)
 	printf("IS ");
@@ -82,6 +83,7 @@ void cart_print_node(int n, const cst_cart *tree)
 	printf("*%d* ",cst_cart_node_op(n,tree));
     val_print(stdout,cst_cart_node_val(n,tree));
     printf("\n");
+#endif
 #endif
 }
 

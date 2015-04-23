@@ -46,6 +46,9 @@ void usenglish_init(cst_voice *v)
 {
     us_text_init();
 
+    /* utterance break function */
+    feat_set(v->features,"utt_break",breakfunc_val(&default_utt_break));
+
     /* Phoneset */
     feat_set(v->features,"phoneset",phoneset_val(&us_phoneset));
     feat_set_string(v->features,"silence",us_phoneset.silence);

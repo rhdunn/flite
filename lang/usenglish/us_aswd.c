@@ -39,8 +39,6 @@
 /*  Uses FSMs for start to Vowel and end back to vowel                   */
 /*                                                                       */
 /*************************************************************************/
-#include <stdio.h>
-#include <string.h>
 #include <ctype.h>
 #include "flite.h"
 #include "usenglish.h"

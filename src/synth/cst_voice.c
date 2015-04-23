@@ -37,8 +37,6 @@
 /*    Voice definition                                                   */
 /*                                                                       */
 /*************************************************************************/
-#include <stdio.h>
-#include <stdlib.h>
 #include "cst_alloc.h"
 #include "cst_voice.h"
 

@@ -56,16 +56,7 @@ cst_val *NAME##_val(const TYPE v);
 #define CST_VAL_REGISTER_TYPE(NAME,TYPE)               \
 TYPE *val_##NAME(const cst_val *v)                     \
 {                                                      \
-    if (v && CST_VAL_TYPE(v) == cst_val_type_##NAME)   \
-	return (TYPE *)CST_VAL_VOID(v);                \
-    else                                               \
-    {                                                  \
-        cst_errmsg("VAL: tried to access %s in %d type val\n", \
-                       #NAME,                          \
-                       (v ? CST_VAL_TYPE(v) : -1));    \
-        cst_error();                                   \
-    }                                                  \
-    return NULL;                                       \
+    return (TYPE *)val_generic(v,cst_val_type_##NAME,#NAME);  \
 }                                                      \
 void val_delete_##NAME(void *v)                        \
 {                                                      \
@@ -87,16 +78,7 @@ void val_delete_##NAME(void *v);                       \
 #define CST_VAL_REGISTER_TYPE_NODEL(NAME,TYPE)         \
 TYPE *val_##NAME(const cst_val *v)                     \
 {                                                      \
-    if (v && CST_VAL_TYPE(v) == cst_val_type_##NAME)   \
-	return (TYPE *)CST_VAL_VOID(v);                \
-    else                                               \
-    {                                                  \
-        cst_errmsg("VAL: tried to access %s in %d type val\n", \
-                       #NAME,                          \
-                       (v ? CST_VAL_TYPE(v) : -1));    \
-        cst_error();                                   \
-    }                                                  \
-    return NULL;                                       \
+    return (TYPE *)val_generic(v,cst_val_type_##NAME,#NAME);  \
 }                                                      \
                                                        \
 cst_val *NAME##_val(const TYPE *v)                     \
@@ -113,16 +95,7 @@ void val_delete_##NAME(void *v) { (void)v; }           \
 #define CST_VAL_REGISTER_FUNCPTR(NAME,TYPE)            \
 TYPE val_##NAME(const cst_val *v)                      \
 {                                                      \
-    if (v && CST_VAL_TYPE(v) == cst_val_type_##NAME)   \
-	return (TYPE)CST_VAL_VOID(v);                  \
-    else                                               \
-    {                                                  \
-        cst_errmsg("VAL: tried to access %s in %d type val\n", \
-                       #NAME,                          \
-                       (v ? CST_VAL_TYPE(v) : -1));    \
-        cst_error();                                   \
-    }                                                  \
-    return NULL;                                       \
+    return (TYPE *)val_generic(v,cst_val_type_##NAME,#NAME);  \
 }                                                      \
                                                        \
 cst_val *NAME##_val(const TYPE v)                      \

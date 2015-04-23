@@ -39,8 +39,6 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <stdio.h>
-#include <string.h>
 #include "flite.h"
 
 static void apostrophe_s(cst_utterance *u)

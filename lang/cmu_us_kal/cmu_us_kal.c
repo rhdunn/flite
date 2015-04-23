@@ -61,8 +61,10 @@ cst_voice *register_cmu_us_kal(const char *voxdir)
     feat_set(v->features,"lexicon",lexicon_val(&cmu_lex));
 
     /* Intonation */
-    feat_set_float(v->features,"int_f0_target_mean",100.0);
+    feat_set_float(v->features,"int_f0_target_mean",95.0);
     feat_set_float(v->features,"int_f0_target_stddev",11.0);
+
+    feat_set_float(v->features,"duration_stretch",1.1); 
 
     /* Post lexical rules */
     feat_set(v->features,"postlex_func",uttfunc_val(&cmu_us_kal_postlex));

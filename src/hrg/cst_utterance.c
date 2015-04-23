@@ -37,8 +37,6 @@
 /*    Utterances                                                         */
 /*                                                                       */
 /*************************************************************************/
-#include <stdio.h>
-#include <stdlib.h>
 #include "cst_alloc.h"
 #include "cst_utterance.h"
 

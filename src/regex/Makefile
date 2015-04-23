@@ -49,7 +49,7 @@ LIBNAME = flite
 
 LOCAL_INCLUDES = -I.
 
-ALL = .build_lib
+ALL = 
 
 include $(TOP)/config/common_make_rules
 

@@ -38,13 +38,11 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <stdio.h>
-#include <string.h>
 #include "cst_features.h"
 #include "cst_lts.h"
 #include "cst_endian.h"
 
-static cst_lts_phone apply_model(char *vals,
+static cst_lts_phone apply_model(cst_lts_letter *vals,
 				 cst_lts_addr start,
 				 const cst_lts_model *model);
 
@@ -57,18 +55,47 @@ cst_lts_rules *new_lts_rules()
     lt->phone_table = 0;
     lt->context_window_size = 0;
     lt->context_extra_feats = 0;
+    lt->letter_table = 0;
     return lt;
+}
+
+cst_val *lts_apply_val(const cst_val *wlist,const char *feats,const cst_lts_rules *r)
+{
+    /* for symbol to symbol mapping */
+    const cst_val *v;
+    cst_val *p;
+    char *word;
+    int i,j;
+
+    word = cst_alloc(char,val_length(wlist)+1);
+
+    for (v=wlist,i=0; v; v=val_cdr(v),i++)
+    {
+	for (j=0; r->letter_table[j]; j++)
+	    if (cst_streq(val_string(val_car(v)),r->letter_table[j]))
+	    {
+		word[i] = j;
+		break;
+	    }
+    }
+
+    p = lts_apply(word,feats,r);
+    cst_free(word);
+
+    return p;
 }
 
 cst_val *lts_apply(const char *word,const char *feats,const cst_lts_rules *r)
 {
-    int pos;
+    int pos, index, i;
     cst_val *phones=0;
     cst_lts_letter *fval_buff;
     cst_lts_letter *full_buff;
     cst_lts_phone phone;
     char *left, *right, *p;
-
+    char hash;
+    char zeros[8];
+    
     /* For feature vals for each letter */
     fval_buff = cst_alloc(cst_lts_letter,
 			  (r->context_window_size*2)+
@@ -77,35 +104,54 @@ cst_val *lts_apply(const char *word,const char *feats,const cst_lts_rules *r)
     full_buff = cst_alloc(cst_lts_letter,
 			  (r->context_window_size*2)+
 			  strlen(word)+1); /* TBD assumes single POS feat */
-    /* Assumes l_letter is a char and context < 8 */
-    sprintf(full_buff,"%.*s#%s#%.*s",
-	    r->context_window_size-1, "00000000",
-	    word,
-	    r->context_window_size-1, "00000000");
+    if (r->letter_table)
+    {
+	for (i=0; i<8; i++) zeros[i] = 2;
+	cst_sprintf(full_buff,"%.*s%c%s%c%.*s",
+		    r->context_window_size-1, zeros,
+		    1,
+		    word,
+		    1,
+		    r->context_window_size-1, zeros);
+	hash = 1;
+    }
+    else
+    {
+	/* Assumes l_letter is a char and context < 8 */
+	cst_sprintf(full_buff,"%.*s#%s#%.*s",
+		    r->context_window_size-1, "00000000",
+		    word,
+		    r->context_window_size-1, "00000000");
+	hash = '#';
+    }
 
     /* Do the prediction backwards so we don't need to reverse the answer */
     for (pos = r->context_window_size + strlen(word) - 1;
-	 full_buff[pos] != '#';
+	 full_buff[pos] != hash;
 	 pos--)
     {
 	/* Fill the features buffer for the predictor */
-	sprintf(fval_buff,"%.*s%.*s%s",
-		r->context_window_size,
-		full_buff+pos-r->context_window_size,
-		r->context_window_size,
-		full_buff+pos+1,
-		feats);
-	if ((full_buff[pos] < 'a') ||
-	    (full_buff[pos] > 'z'))
-	{   /* English specific */
+	cst_sprintf(fval_buff,"%.*s%.*s%s",
+		    r->context_window_size,
+		    full_buff+pos-r->context_window_size,
+		    r->context_window_size,
+		    full_buff+pos+1,
+		    feats);
+	if ((!r->letter_table
+	     && ((full_buff[pos] < 'a') || (full_buff[pos] > 'z'))))
+	{   
 #ifdef EXCESSIVELY_CHATTY
 	    cst_errmsg("lts:skipping unknown char \"%c\"\n",
 		       full_buff[pos]);
 #endif
 	    continue;
 	}
+	if (r->letter_table)
+	    index = full_buff[pos] - 3;
+	else
+	    index = (full_buff[pos]-'a')%26;
 	phone = apply_model(fval_buff,
-			    r->letter_index[((full_buff[pos])-'a')%26],
+			    r->letter_index[index],
 			    r->models);
 	/* delete epsilons and split dual-phones */
 	if (cst_streq("epsilon",r->phone_table[phone]))
@@ -132,7 +178,15 @@ cst_val *lts_apply(const char *word,const char *feats,const cst_lts_rules *r)
     return phones;
 }
 
-static cst_lts_phone apply_model(char *vals,cst_lts_addr start, 
+static void cst_lts_get_state(cst_lts_rule *state,
+			      const cst_lts_model *model,
+			      unsigned short n,
+			      int rule_size)
+{   /* As some OS's require a more elaborate access than a simple lookup */
+    memmove(state,&model[n*rule_size],rule_size);
+}
+
+static cst_lts_phone apply_model(cst_lts_letter *vals,cst_lts_addr start, 
 				 const cst_lts_model *model)
 {
     /* because some machines (ipaq/mips) can't deal with addrs not on     */
@@ -141,14 +195,16 @@ static cst_lts_phone apply_model(char *vals,cst_lts_addr start,
     /* Hmm this still might be wrong on some machines that align the      */
     /* structure cst_lts_rules differently                                */
     cst_lts_rule state;
-    short nstate;
+    unsigned short nstate;
     static const int sizeof_cst_lts_rule = 6;
 
-    memmove(&state,&model[start*sizeof_cst_lts_rule],sizeof_cst_lts_rule);
+    cst_lts_get_state(&state,model,start,sizeof_cst_lts_rule);
     for ( ;
 	 state.feat != CST_LTS_EOR;
 	)
     {
+/*	printf("%s %c %c %d\n",vals,vals[state.feat],state.val,
+	(vals[state.feat] == state.val) ? 1 : 0); */
 	if (vals[state.feat] == state.val)
 	    nstate = state.qtrue;
 	else
@@ -157,7 +213,7 @@ static cst_lts_phone apply_model(char *vals,cst_lts_addr start,
 	if (CST_BIG_ENDIAN)
 	    nstate = SWAPSHORT(nstate);
 
-	memmove(&state,&model[nstate*sizeof_cst_lts_rule],sizeof_cst_lts_rule);
+	cst_lts_get_state(&state,model,nstate,sizeof_cst_lts_rule);
     }
 
     return (cst_lts_phone)state.val;

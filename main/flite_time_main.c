@@ -166,7 +166,7 @@ static const char *time_hour(int hour, int minute)
     int hh;
 
     hh = hour;
-    if (minute >= 32)
+    if (minute > 32)
 	hh += 1;
     if (hh == 24)
 	hh = 0;
