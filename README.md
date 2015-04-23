@@ -101,17 +101,15 @@ a new archiecture.
 
 ## Compilation
 
-In general
+The project supports an autogen-style autotools build system. You can build the
+project by running:
 
-    tar zxvf flite-1.0-beta.tar.gz
-    cd flite
+    ./autogen.sh
     make
 
-Where tar is gnu tar (gtar), and make is gnu make (gmake).
-
-Configuration should be automatic, but mayeb doesn't work in all cases
-especially if you have some new compiler.  You can explicitly set to
-compiler in config/config and add any options you see fit.   Configure
+Configuration should be automatic, but maybe doesn't work in all cases
+especially if you have a new compiler.  You can explicitly set to
+compiler in `config/config` and add any options you see fit.   Configure
 tries to guess these but it might be able for cross compilation cases
 Interesting options there are:
 
