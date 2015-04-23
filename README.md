@@ -245,5 +245,11 @@ future versions we will add
 
 # License
 
+The flite project is released under a [4-clause BSD license](COPYING) with
+the following copyright:
+
     Copyright Carnegie Mellon University 1999-2001
     All rights reserved
+
+The changes to the project are described in the [CHANGELOG.md](CHANGELOG.md)
+file in order to comply with clause 2 of the BSD license.
