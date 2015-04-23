@@ -5,6 +5,9 @@
 
 config.*
 
+autom4te.cache/
+configure
+
 config/config
 config/system.mak
 
