@@ -76,7 +76,7 @@ Do the tree dump, this section is split off for cases when we
 want multiple trees in the same file."
 
     (set! cart_name name)
-    (format ofdc "\n\n")
+    (format ofdc "\n")
     (format ofdc "static const cst_cart_node %s_cart_nodes[] = {\n" name)
     (carttoC_tree_nodes tree ofdc ofdh)
     (format ofdc "{ 255, CST_CART_OP_NONE, 0, 0}};\n\n")
@@ -86,7 +86,7 @@ want multiple trees in the same file."
 ;     (lambda (f)
 ;       (format ofdc "%s" (caddr f)))
 ;     (reverse val_table))
-    (format ofdc "\n\n")
+    (format ofdc "\n")
 
     (format ofdc "static const char * const %s_feat_table[] = {\n" name)
     (mapcar 
@@ -102,6 +102,7 @@ want multiple trees in the same file."
     (format ofdc "  %s_feat_table\n" name)
     (format ofdc "};\n")
 
+    t
 )
 
 (defvar cart_operators
@@ -158,7 +159,7 @@ want multiple trees in the same file."
 		       (format ofdh "DEF_STATIC_CONST_VAL_STRING(%s,\"%s\");\n"
 			       nname f))))
 		    val_table))
-	(carttoC_val_table ofdh f operator))))))
+        (cadr (car val_table)))))))
 
 (define (carttoC_tree_nodes tree ofdc ofdh)
   "(carttoC_tree_nodes tree ofdc ofdh)
@@ -191,5 +192,6 @@ behaviour)."
   (carttoC_val_table ofdh 
 		     (car (last (car tree)))
 		     'none))
+(set! basic_carttoC_extract_answer carttoC_extract_answer)
 
 (provide 'make_cart)

@@ -69,7 +69,7 @@ int phone_id(const cst_phoneset *ps,const char* phonename)
 	    return i;
     /* Wonder if I should print an error here or not */
 
-    return -1;
+    return 0;
 }
 
 int phone_feat_id(const cst_phoneset *ps,const char* featname)
@@ -81,7 +81,7 @@ int phone_feat_id(const cst_phoneset *ps,const char* featname)
 	    return i;
 
     /* Wonder if I should print an error here or not */
-    return -1;
+    return 0;
 }
 
 const cst_val *phone_feature(const cst_phoneset *ps,

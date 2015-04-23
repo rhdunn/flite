@@ -2,7 +2,7 @@
 ##                                                                       ##
 ##                  Language Technologies Institute                      ##
 ##                     Carnegie Mellon University                        ##
-##                      Copyright (c) 1999-2005                          ##
+##                      Copyright (c) 1999-2009                          ##
 ##                        All Rights Reserved.                           ##
 ##                                                                       ##
 ##  Permission is hereby granted, free of charge, to use and distribute  ##
@@ -32,20 +32,22 @@
 ###########################################################################
 ##                                                                       ##
 ##    Fast efficient small run-time speech synthesis system              ##
+##    http://cmuflite.org                                                ##
 ##                                                                       ##
 ##       Authors:  Alan W Black (awb@cs.cmu.edu)                         ##
 ##                 Kevin A. Lenzo (lenzo@cs.cmu.edu)                     ##
-##          Date:  October 2005                                          ##
-##       Version:  1.3-release                                           ## 
+##          Date:  May 2009                                              ##
+##       Version:  1.3.13 current                                        ##
 ##                                                                       ## 
 ###########################################################################
 TOP=.
 DIRNAME=
 BUILD_DIRS = include src lang doc
-ALL_DIRS=config $(BUILD_DIRS) testsuite sapi palm tools main
+ALL_DIRS=config $(BUILD_DIRS) testsuite sapi palm wince windows tools main
 CONFIG=configure configure.in config.sub config.guess \
        missing install-sh mkinstalldirs
-FILES = Makefile README ACKNOWLEDGEMENTS COPYING $(CONFIG)
+WINDOWS = Exports.def flite.sln fliteDll.vcproj
+FILES = Makefile README ACKNOWLEDGEMENTS COPYING $(CONFIG) $(WINDOWS)
 DIST_CLEAN = config.cache config.log config.status \
 		config/config config/system.mak FileList
 
@@ -57,13 +59,12 @@ config_dummy := $(shell test -f config/config || ( echo '*** '; echo '*** Making
 include $(TOP)/config/common_make_rules
 
 ifeq ($(TARGET_OS),wince)
-BUILD_DIRS += main
+BUILD_DIRS += wince
 endif
 
 ifeq ($(TARGET_OS),palmos)
 INCLUDES += -I$(TOP)/palm/include
 endif
-
 
 config/config: config/config.in config.status
 	./config.status
@@ -82,17 +83,17 @@ backup: time-stamp
 	@ echo .time-stamp >>FileList
 	@ ln -s . $(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE)
 	@ sed 's/^\.\///' <FileList | sed 's/^/'$(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE)'\//' >.file-list-all
-	@ tar zcvf $(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE).tar.gz `cat $(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE)/.file-list-all`
+	@ tar jcvf $(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE).tar.bz2 `cat $(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE)/.file-list-all`
 	@ $(RM) -f $(TOP)/.file-list-all
 	@ $(RM) $(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE) 
-	@ ls -l $(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE).tar.gz
+	@ ls -l $(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE).tar.bz2
 
 backupbz2: time-stamp
 	@ $(RM) -f $(TOP)/FileList
 	@ $(MAKE) file-list
 	@ echo .time-stamp >>FileList
 	@ ln -s . $(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE)
-	@ sed 's/^\.\///' <FileList | sed 's/^/'$(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE)'\//' | grep -v cmu_us_kal16 >.file-list-all
+	@ sed 's/^\.\///' <FileList | sed 's/^/'$(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE)'\//' | grep -v cmu_us_kal | grep -v cmu_us_awb | grep -v cmu_us_rms | grep -v cmu_us_slt | grep -v cmu_time_awb >.file-list-all
 	@ tar jcvf $(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE).tar.bz2 `cat $(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE)/.file-list-all`
 	@ $(RM) -f $(TOP)/.file-list-all
 	@ $(RM) $(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE) 
@@ -109,9 +110,7 @@ install:
 	mkdir -p $(INSTALLLIBDIR)
 	mkdir -p $(INSTALLINCDIR)
 	$(INSTALL) -m 644 include/*.h $(INSTALLINCDIR)
-	@ $(MAKE) -C lib --no-print-directory install
-	$(INSTALL) -m 755 bin/flite $(INSTALLBINDIR)
-	$(INSTALL) -m 755 bin/flite_time $(INSTALLBINDIR)
+	@ $(MAKE) -C main --no-print-directory install
 
 time-stamp :
 	@ echo $(PROJECT_NAME) >.time-stamp

@@ -47,300 +47,50 @@
 static int text_splitable(const char *s,int i);
 static cst_val *state_name(const char *name,cst_item *t);
 
-const char *us_english_punctuation = "\"'`.,:;!?(){}[]";
-const char *us_english_prepunctuation = "\"'`({[";
-const char *us_english_singlecharsymbols = "";
-const char *us_english_whitespace = " \t\n\r";
+/* compiled us regexes */
+#include "us_regexes.h"
 
-static const unsigned char numbertime_rxprog[] = {
-	156, 
-	6, 0, 67, 1, 0, 3, 6, 0, 9, 4, 
-	0, 9, 48, 49, 0, 6, 0, 3, 9, 0, 
-	3, 4, 0, 14, 48, 49, 50, 51, 52, 53, 
-	54, 55, 56, 57, 0, 8, 0, 5, 58, 0, 
-	4, 0, 10, 48, 49, 50, 51, 52, 53, 0, 
-	4, 0, 14, 48, 49, 50, 51, 52, 53, 54, 
-	55, 56, 57, 0, 2, 0, 3, 0, 0, 0
-};
-static const cst_regex numbertime_rx = {
-	0,
-	1,
-	NULL,
-	0,
-	71,
-	(char *) numbertime_rxprog
-};
-
-static const unsigned char fourdigits_rxprog[] = {
-	156, 
-	6, 0, 65, 1, 0, 3, 4, 0, 14, 48, 
-	49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 
-	4, 0, 14, 48, 49, 50, 51, 52, 53, 54, 
-	55, 56, 57, 0, 4, 0, 14, 48, 49, 50, 
-	51, 52, 53, 54, 55, 56, 57, 0, 4, 0, 
-	14, 48, 49, 50, 51, 52, 53, 54, 55, 56, 
-	57, 0, 2, 0, 3, 0, 0, 0
-};
-static const cst_regex fourdigits_rx = {
-	0,
-	1,
-	NULL,
-	0,
-	69,
-	(char *) fourdigits_rxprog
+static const char * const wandm_abbrevs[99][2] =
+{
+    { "LB", "pounds" },
+    { "LBS", "pounds" },
+    { "lb", "pounds" },
+    { "lbs", "pounds" },
+    { "ft", "feet" },
+    { "FT", "feet" },
+    { "kg", "kilograms" },
+    { "km", "kilometers" },
+    { "oz", "ounces" },
+    { "hz", "hertz" },
+    { "Hz", "hertz" },
+    { "HZ", "hertz" },
+    { "KHz", "kilohertz" },
+    { "MHz", "megahertz" },
+    { "GHz", "gigahertz" },
+    { NULL, NULL },
 };
 
-static const unsigned char threedigits_rxprog[] = {
-	156, 
-	6, 0, 51, 1, 0, 3, 4, 0, 14, 48, 
-	49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 
-	4, 0, 14, 48, 49, 50, 51, 52, 53, 54, 
-	55, 56, 57, 0, 4, 0, 14, 48, 49, 50, 
-	51, 52, 53, 54, 55, 56, 57, 0, 2, 0, 
-	3, 0, 0, 0
-};
-static const cst_regex threedigits_rx = {
-	0,
-	1,
-	NULL,
-	0,
-	55,
-	(char *) threedigits_rxprog
-};
-
-static const unsigned char romannums_rxprog[] = {
-	156, 
-	6, 0, 137, 1, 0, 3, 21, 0, 3, 6, 
-	0, 36, 8, 0, 5, 73, 0, 6, 0, 8, 
-	8, 0, 8, 73, 0, 6, 0, 3, 9, 0, 
-	3, 6, 0, 8, 8, 0, 8, 73, 0, 6, 
-	0, 3, 9, 0, 89, 6, 0, 9, 8, 0, 
-	83, 73, 86, 0, 6, 0, 50, 8, 0, 5, 
-	86, 0, 6, 0, 8, 8, 0, 8, 73, 0, 
-	6, 0, 3, 9, 0, 3, 6, 0, 8, 8, 
-	0, 8, 73, 0, 6, 0, 3, 9, 0, 3, 
-	6, 0, 8, 8, 0, 8, 73, 0, 6, 0, 
-	3, 9, 0, 30, 6, 0, 9, 8, 0, 24, 
-	73, 88, 0, 6, 0, 18, 8, 0, 5, 88, 
-	0, 10, 0, 10, 4, 0, 0, 86, 73, 88, 
-	0, 31, 0, 3, 2, 0, 3, 0, 0, 0
-};
-static const cst_regex romannums_rx = {
-	0,
-	1,
-	NULL,
-	0,
-	141,
-	(char *) romannums_rxprog
-};
-
-static const unsigned char digitsslashdigits_rxprog[] = {
-	156, 
-	6, 0, 74, 1, 0, 3, 4, 0, 13, 49, 
-	50, 51, 52, 53, 54, 55, 56, 57, 0, 10, 
-	0, 17, 4, 0, 0, 48, 49, 50, 51, 52, 
-	53, 54, 55, 56, 57, 0, 8, 0, 5, 47, 
-	0, 4, 0, 13, 49, 50, 51, 52, 53, 54, 
-	55, 56, 57, 0, 10, 0, 17, 4, 0, 0, 
-	48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 
-	0, 2, 0, 3, 0, 0, 0
-};
-static const cst_regex digitsslashdigits_rx = {
-	0,
-	1,
-	NULL,
-	0,
-	78,
-	(char *) digitsslashdigits_rxprog
-};
-
-static const unsigned char dottedabbrevs_rxprog[] = {
-	156, 
-	6, 0, 147, 1, 0, 3, 4, 0, 56, 97, 
-	98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 
-	108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 
-	118, 119, 120, 121, 122, 65, 66, 67, 68, 69, 
-	70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 
-	80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 
-	90, 0, 21, 0, 3, 6, 0, 64, 8, 0, 
-	5, 46, 0, 4, 0, 56, 97, 98, 99, 100, 
-	101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 
-	111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 
-	121, 122, 65, 66, 67, 68, 69, 70, 71, 72, 
-	73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 
-	83, 84, 85, 86, 87, 88, 89, 90, 0, 31, 
-	0, 3, 6, 0, 6, 7, 0, 73, 6, 0, 
-	3, 9, 0, 3, 2, 0, 3, 0, 0, 0
-};
-static const cst_regex dottedabbrevs_rx = {
-	0,
-	1,
-	NULL,
-	0,
-	151,
-	(char *) dottedabbrevs_rxprog
-};
-
-static const unsigned char usmoney_rxprog[] = {
-	156, 
-	6, 0, 72, 1, 0, 3, 8, 0, 5, 36, 
-	0, 11, 0, 18, 4, 0, 0, 48, 49, 50, 
-	51, 52, 53, 54, 55, 56, 57, 44, 0, 6, 
-	0, 34, 21, 0, 3, 6, 0, 25, 8, 0, 
-	5, 46, 0, 11, 0, 17, 4, 0, 0, 48, 
-	49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 
-	31, 0, 6, 6, 0, 3, 9, 0, 3, 2, 
-	0, 3, 0, 0, 0
-};
-static const cst_regex usmoney_rx = {
-	0,
-	1,
-	NULL,
-	0,
-	76,
-	(char *) usmoney_rxprog
-};
-
-static const unsigned char digits2dash_rxprog[] = {
-	156, 
-	6, 0, 105, 1, 0, 3, 11, 0, 17, 4, 
-	0, 0, 48, 49, 50, 51, 52, 53, 54, 55, 
-	56, 57, 0, 21, 0, 3, 6, 0, 39, 8, 
-	0, 5, 45, 0, 4, 0, 14, 48, 49, 50, 
-	51, 52, 53, 54, 55, 56, 57, 0, 10, 0, 
-	17, 4, 0, 0, 48, 49, 50, 51, 52, 53, 
-	54, 55, 56, 57, 0, 31, 0, 3, 6, 0, 
-	6, 7, 0, 48, 6, 0, 3, 9, 0, 3, 
-	8, 0, 5, 45, 0, 11, 0, 17, 4, 0, 
-	0, 48, 49, 50, 51, 52, 53, 54, 55, 56, 
-	57, 0, 2, 0, 3, 0, 0, 0
-};
-static const cst_regex digits2dash_rx = {
-	0,
-	1,
-	NULL,
-	0,
-	109,
-	(char *) digits2dash_rxprog
-};
-
-static const unsigned char sevenphonenumber_rxprog[] = {
-	156, 
-	6, 0, 112, 1, 0, 3, 4, 0, 14, 48, 
-	49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 
-	4, 0, 14, 48, 49, 50, 51, 52, 53, 54, 
-	55, 56, 57, 0, 4, 0, 14, 48, 49, 50, 
-	51, 52, 53, 54, 55, 56, 57, 0, 8, 0, 
-	5, 45, 0, 4, 0, 14, 48, 49, 50, 51, 
-	52, 53, 54, 55, 56, 57, 0, 4, 0, 14, 
-	48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 
-	0, 4, 0, 14, 48, 49, 50, 51, 52, 53, 
-	54, 55, 56, 57, 0, 4, 0, 14, 48, 49, 
-	50, 51, 52, 53, 54, 55, 56, 57, 0, 2, 
-	0, 3, 0, 0, 0
-};
-static const cst_regex sevenphonenumber_rx = {
-	0,
-	1,
-	NULL,
-	0,
-	116,
-	(char *) sevenphonenumber_rxprog
-};
-
-static const unsigned char illion_rxprog[] = {
-	156, 
-	6, 0, 25, 1, 0, 3, 10, 0, 6, 3, 
-	0, 0, 8, 0, 10, 105, 108, 108, 105, 111, 
-	110, 0, 2, 0, 3, 0, 0, 0
-};
-static const cst_regex illion_rx = {
-	0,
-	1,
-	NULL,
-	0,
-	29,
-	(char *) illion_rxprog
-};
-
-static const unsigned char drst_rxprog[] = {
-	156, 
-	6, 0, 45, 1, 0, 3, 21, 0, 3, 6, 
-	0, 15, 4, 0, 6, 100, 68, 0, 4, 0, 
-	21, 82, 114, 0, 6, 0, 15, 4, 0, 6, 
-	83, 115, 0, 4, 0, 6, 116, 84, 0, 31, 
-	0, 3, 2, 0, 3, 0, 0, 0
-};
-static const cst_regex drst_rx = {
-	0,
-	1,
-	NULL,
-	0,
-	49,
-	(char *) drst_rxprog
-};
-
-static const unsigned char numess_rxprog[] = {
-	156, 
-	6, 0, 31, 1, 0, 3, 11, 0, 17, 4, 
-	0, 0, 48, 49, 50, 51, 52, 53, 54, 55, 
-	56, 57, 0, 8, 0, 5, 115, 0, 2, 0, 
-	3, 0, 0, 0
-};
-static const cst_regex numess_rx = {
-	0,
-	1,
-	NULL,
-	0,
-	35,
-	(char *) numess_rxprog
-};
-
-static const unsigned char ordinal_number_rxprog[] = {
-	156, 
-	6, 0, 119, 1, 0, 3, 4, 0, 14, 48, 
-	49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 
-	10, 0, 18, 4, 0, 0, 48, 49, 50, 51, 
-	52, 53, 54, 55, 56, 57, 44, 0, 21, 0, 
-	3, 6, 0, 9, 8, 0, 69, 116, 104, 0, 
-	6, 0, 9, 8, 0, 60, 84, 72, 0, 6, 
-	0, 9, 8, 0, 51, 115, 116, 0, 6, 0, 
-	9, 8, 0, 42, 83, 84, 0, 6, 0, 9, 
-	8, 0, 33, 110, 100, 0, 6, 0, 9, 8, 
-	0, 24, 78, 68, 0, 6, 0, 9, 8, 0, 
-	15, 114, 100, 0, 6, 0, 9, 8, 0, 6, 
-	82, 68, 0, 31, 0, 3, 2, 0, 3, 0, 
-	0, 0
-};
-static const cst_regex ordinal_number_rx = {
-	0,
-	1,
-	NULL,
-	0,
-	123,
-	(char *) ordinal_number_rxprog
-};
-
-const cst_regex *numbertime = &numbertime_rx;
-const cst_regex *fourdigits = &fourdigits_rx;
-const cst_regex *threedigits = &threedigits_rx;
-const cst_regex *romannums = &romannums_rx;
-const cst_regex *digitsslashdigits = &digitsslashdigits_rx;
-const cst_regex *dottedabbrevs = &dottedabbrevs_rx;
-const cst_regex *usmoney = &usmoney_rx;
-const cst_regex *digits2dash = &digits2dash_rx;
-const cst_regex *sevenphonenumber = &sevenphonenumber_rx;
-const cst_regex *illion = &illion_rx;
-const cst_regex *drst = &drst_rx;
-const cst_regex *numess = &numess_rx;
-const cst_regex *ordinal_number = &ordinal_number_rx;
+static const char * const eedwords[] = {
+    "to",
+    "can",
+    "can't",
+    "cannot",
+    "cant",
+    "could",
+    "couldn't",
+    "couldnt",
+    "will",
+    "shall",
+    NULL};
 
 void us_text_init()
 {
+    /* Nothing */
 }
 
 void us_text_deinit()
 {
+    /* Nothing */
 }
 
 static int rex_like(const cst_item *t)
@@ -464,10 +214,12 @@ static cst_val *add_break(cst_val *l)
 static cst_val *us_tokentowords_one(cst_item *token, const char *name)
 {
     /* Return list of words that expand token/name */
-    char *p, *aaa, *bbb;
-    int i,j;
+    char *p, *aaa, *bbb, *ccc;
+    int i,j,k,l;
     cst_val *r, *s;
     const char *nsw = "";
+    cst_lexicon *lex;
+    cst_utterance *utt;
     /* printf("token_name %s name %s\n",item_name(token),name); */
     /* FIXME: For SAPI and friends, any tokens with explicit
        pronunciations need to be passed through as-is.  This should be
@@ -480,6 +232,9 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
     if (item_feat_present(token,"nsw"))
 	nsw = item_feat_string(token,"nsw");
 
+    utt = item_utt(token);
+    lex = val_lexicon(feat_val(utt->features,"lexicon"));
+
     if ((cst_streq("a",name) || cst_streq("A",name)) &&
         ((item_next(token) == 0) ||
          (!cst_streq(name,item_name(token))) ||
@@ -487,8 +242,10 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
     {   /* if A is a sub part of a token, then its ey not ah */
 	r = cons_val(string_val("_a"),0);
     }
+    else if (cst_strlen(name) == 0)
+        r = NULL;
     else if (cst_regex_match(dottedabbrevs,name))
-    {
+    {   /* X.X.X */
 	aaa = cst_strdup(name);
 	for (i=j=0; aaa[i]; i++)
 	    if (aaa[i] != '.')
@@ -503,7 +260,7 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
     else if (cst_regex_match(cst_rx_commaint,name))
     {   /* 99,999,999 */
 	aaa = cst_strdup(name);
-	for (j=i=0; i < strlen(name); i++)
+	for (j=i=0; i < cst_strlen(name); i++)
 	    if (name[i] != ',')
 	    {
 		aaa[j] = name[i];
@@ -517,7 +274,7 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
     {   /* 234-3434 telephone numbers */
 	p=strchr(name,'-');
 	aaa = cst_strdup(name);
-	aaa[strlen(name)-strlen(p)] = '\0';
+	aaa[cst_strlen(name)-cst_strlen(p)] = '\0';
 	bbb = cst_strdup(p+1);
 	r = val_append(add_break(en_exp_digits(aaa)),
 		       en_exp_digits(bbb));
@@ -547,7 +304,7 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
     {
 	p=strchr(name,':');
 	aaa = cst_strdup(name);
-	aaa[strlen(name)-strlen(p)] = '\0';
+	aaa[cst_strlen(name)-cst_strlen(p)] = '\0';
 	bbb = cst_strdup(p+1);
 
 	r = en_exp_number(aaa);
@@ -557,6 +314,27 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
 
 	cst_free(aaa);
 	cst_free(bbb);
+    }
+    else if (cst_regex_match(numbertimexm,name))
+    {
+	p=strchr(name,':');
+        if (!p) p=strchr(name,'.');
+	aaa = cst_strdup(name);
+	aaa[cst_strlen(name)-cst_strlen(p)] = '\0';
+	bbb = cst_strdup(p+1);
+	bbb[2] = '\0';
+        ccc = cst_strdup(p+3);
+
+	r = en_exp_number(aaa);
+	if (!cst_streq("00",bbb))
+	    r = val_append(r,en_exp_id(bbb));
+	/* r = add_break(r); */
+
+        r = val_append(r,en_exp_letters(ccc));
+
+	cst_free(aaa);
+	cst_free(bbb);
+	cst_free(ccc);
     }
     else if (cst_regex_match(digits2dash,name))
     {   /* 999-999-999 etc */
@@ -605,7 +383,7 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
 	}
     }
     else if (cst_regex_match(romannums,name))
-    {   /* Romain numerals */
+    {   /* Roman numerals */
 	if (cst_streq("",ffeature_string(token,"p.punc")))
 	{   /* no preceeding punc */
 	    char n[10];
@@ -671,7 +449,43 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
 	item_set_string(token,"punc","");
 	r = cons_val(string_val("missus"),NULL);
     }
-    else if ((strlen(name) == 1) &&
+    else if ((cst_streq(name,"read")) ||
+             (cst_streq(name,"lead")))
+    {   /* checking WSJ examples, this seems a quick and easy way to */
+        /* get manty of these correct */
+        const char *pname = ffeature_string(token,"p.name");
+
+        for (i=0; eedwords[i]; i++)
+            if (cst_streq(pname,eedwords[i]))
+                break;
+        
+        if (eedwords[i])
+        {  /* reed or leed */
+            if (name[0] == 'r')
+                r = cons_val(string_val("reed"),NULL);
+            else
+                r = cons_val(string_val("leed"),NULL);
+        }
+        else /* red or led */
+        {
+            if (name[0] == 'r')
+                r = cons_val(string_val("red"),NULL);
+            else
+                r = cons_val(string_val("led"),NULL);
+        }
+    }
+    else if (cst_streq(name,"am") || cst_streq(name,"AM"))
+    {
+        if (!cst_streq(name,item_name(token)))
+            r = en_exp_letters(name);
+        else if (item_prev(token) &&
+                 (cst_regex_match(numbertime,ffeature_string(token,"p.name")) ||
+                  cst_regex_match(cst_rx_digits,ffeature_string(token,"p.name"))))
+            r = en_exp_letters(name);
+        else 
+            r = cons_val(string_val(name),NULL);
+    }
+    else if ((cst_strlen(name) == 1) &&
 	     (name[0] >= 'A') &&
 	     (name[0] <= 'Z') &&
 	     (cst_streq(" ",ffeature_string(token,"n.whitespace"))) &&
@@ -693,7 +507,7 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
     else if (cst_regex_match(ordinal_number,name))
     {   /* explicit ordinals */
 	aaa = cst_strdup(name);
-	aaa[strlen(name)-2] = '\0';
+	aaa[cst_strlen(name)-2] = '\0';
 	r = en_exp_ordinal(aaa);
 	cst_free(aaa);
     }
@@ -723,7 +537,7 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
 	    r = val_append(us_tokentowords_one(token,aaa),r);
 	    cst_free(aaa);
 	}
-	else if ((strlen(p) == 1) || (strlen(p) > 3))
+	else if ((cst_strlen(p) == 1) || (cst_strlen(p) > 3))
 	{   /* simply read as mumble point mumble */
 	    r = val_append(en_exp_real(&name[1]),
 			   cons_val(string_val("dollars"),NULL));
@@ -731,7 +545,7 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
 	else
 	{
 	    aaa = cst_strdup(name);
-	    aaa[strlen(name)-strlen(p)] = '\0';
+	    aaa[cst_strlen(name)-cst_strlen(p)] = '\0';
 	    for (i=j=0; aaa[i] != '\0'; i++)
 	    {
 		if (aaa[i] != ',')
@@ -759,10 +573,10 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
 	    cst_free(aaa);
 	}
     }
-    else if (name[strlen(name)-1] == '%')
+    else if (name[cst_strlen(name)-1] == '%')
     {
 	aaa = cst_strdup(name);
-	aaa[strlen(aaa)-1] = '\0';
+	aaa[cst_strlen(aaa)-1] = '\0';
 	r = val_append(us_tokentowords_one(token,aaa),
 		       cons_val(string_val("per"),
 				cons_val(string_val("cent"),NULL)));
@@ -772,7 +586,7 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
     else if (cst_regex_match(numess,name)) 
     {   /* 60s and 7s and 9s */
 	aaa = cst_strdup(name);
-	aaa[strlen(name)-1] = '\0';
+	aaa[cst_strlen(name)-1] = '\0';
 	r = val_append(en_exp_number(aaa),
 		       cons_val(string_val("'s"),0));
 	cst_free(aaa);
@@ -785,7 +599,7 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
 	if (cst_member_string(bbb, pc))
 	{
 	    aaa = cst_strdup(name);
-	    aaa[strlen(name)-strlen(p)] = '\0';
+	    aaa[cst_strlen(name)-cst_strlen(p)] = '\0';
 	    r = val_append(us_tokentowords_one(token,aaa),
 			   cons_val(string_val(bbb),0));
 	    cst_free(aaa);
@@ -793,7 +607,7 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
 	else if (cst_streq(p,"'tve")) /* admittedly rare and weird */
 	{
 	    aaa = cst_strdup(name);
-	    aaa[strlen(name)-strlen(p)+2] = '\0';
+	    aaa[cst_strlen(name)-cst_strlen(p)+2] = '\0';
 	    r = val_append(us_tokentowords_one(token,aaa),
 			   cons_val(string_val("'ve"),0));
 	    cst_free(aaa);
@@ -801,7 +615,7 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
 	else
 	{
 	    aaa = cst_strdup(name);
-	    strcpy(&aaa[strlen(name)-strlen(p)],p+1);
+	    strcpy(&aaa[cst_strlen(name)-cst_strlen(p)],p+1);
 	    r = us_tokentowords_one(token,aaa);
 	    cst_free(aaa);
 	}
@@ -812,7 +626,7 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
     {   /* might be fraction, or not */
 	p=strchr(name,'/');
 	aaa = cst_strdup(name);
-	aaa[strlen(name)-strlen(p)] = '\0';
+	aaa[cst_strlen(name)-cst_strlen(p)] = '\0';
 	bbb = cst_strdup(p+1);
 	if ((cst_streq("1",aaa)) && (cst_streq("2",bbb)))
 	    r = cons_val(string_val("a"),
@@ -838,17 +652,19 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
     else if ((p=(strchr(name,'-'))))
     {   /* aaa-bbb */
 	aaa = cst_strdup(name);
-	aaa[strlen(name)-strlen(p)] = '\0';
+	aaa[cst_strlen(name)-cst_strlen(p)] = '\0';
 	bbb = cst_strdup(p+1);
 	if (cst_regex_match(cst_rx_digits,aaa) &&
 	    cst_regex_match(cst_rx_digits,bbb))
 	{
+            ccc = cst_strdup(name);
 	    item_set_string(token,"name",bbb);
 	    r = us_tokentowords_one(token,bbb);
 	    item_set_string(token,"name",aaa);
 	    r = val_append(us_tokentowords_one(token,aaa),
 			   cons_val(string_val("to"),r));
-	    item_set_string(token,"name",name);
+	    item_set_string(token,"name",ccc);
+            cst_free(ccc);
 	}
 	else
 	    r = val_append(us_tokentowords_one(token,aaa),
@@ -856,7 +672,35 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
 	cst_free(aaa);
 	cst_free(bbb);
     }
-    else if ((strlen(name) > 1) && (!cst_regex_match(cst_rx_alpha,name)))
+    else if (cst_regex_match(wandm,name))
+    {   /* weights and measures */
+
+        for (j=cst_strlen(name)-1; j > 0; j--)
+            if (cst_strchr("0123456789",name[j]))
+                break;
+        j += 1;
+        for (i=0; wandm_abbrevs[i][0]; i++)
+            if (cst_streq(name+j,wandm_abbrevs[i][0]))
+                break;
+        aaa = cst_strdup(name);
+        aaa[j] = '\0';
+        /* remove any commas */
+        for (k=0,l=0; aaa[l]; k++,l++)
+        {
+            if (aaa[l] == ',') l++;
+            aaa[k] = aaa[l];
+        }
+        aaa[k] = '\0';
+        if (!wandm_abbrevs[i][0]) /* didn't find an expansion */
+	    r = val_append(en_exp_number(aaa),
+			   us_tokentowords_one(token,name+j));
+        else
+            r = val_append(en_exp_number(aaa),
+                           cons_val(string_val(wandm_abbrevs[i][1]),NULL));
+
+        cst_free(aaa);
+    }
+    else if ((cst_strlen(name) > 1) && (!cst_regex_match(cst_rx_alpha,name)))
     {   /* its not just alphas */
 	for (i=0; name[i] != '\0'; i++)
 	    if (text_splitable(name,i))
@@ -874,9 +718,12 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
     {
 	r = s;
     }
-    else if ((strlen(name) > 1) && 
+    else if ((cst_strlen(name) > 1) && 
 	     (cst_regex_match(cst_rx_alpha,name)) &&
+             (!in_lex(lex,name,NULL)) &&
 	     (!us_aswd(name)))
+        /* Still not quiet right, if there is a user_lex we need to check */
+        /* it too -- but user_lex isn't user setable yet */
 	/* Need common exception list */
 	/* unpronouncable list of alphas */
 	r = en_exp_letters(name);
@@ -894,7 +741,7 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
 
 static int text_splitable(const char *s,int i)
 {
-    /* should token be split abter this */
+    /* should token be split after this */
 
     if (strchr("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",s[i]) &&
 	strchr("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",s[i+1]))
@@ -906,8 +753,7 @@ static int text_splitable(const char *s,int i)
 	return TRUE;
 }
 
-
-static const char *states[99][5] =
+static const char * const states[99][5] =
 {
   { "AL", "ambiguous", "alabama" , NULL, NULL },
   { "Al", "ambiguous", "alabama" , NULL, NULL },
@@ -1026,12 +872,12 @@ static cst_val *state_name(const char *name,cst_item *t)
 		const char *nname = ffeature_string(t,"n.name");
 		    /* previous name is capitalized */
 		if (((strchr("ABCDEFGHIJKLMNOPQRSTUVWXYZ",pname[0])) &&
-		     (strlen(pname) > 2) &&
+		     (cst_strlen(pname) > 2) &&
 		     (cst_regex_match(cst_rx_alpha,pname))) &&
 		    ((strchr("abcdefghijklmnopqrstuvwxyz",nname[0])) ||
 		     (item_next(t) == 0) ||
 		     (cst_streq(".",item_feat_string(t,"punc"))) ||
-		     (((strlen(nname) == 5 || (strlen(nname) == 10)) &&
+		     (((cst_strlen(nname) == 5 || (cst_strlen(nname) == 10)) &&
 		       cst_regex_match(cst_rx_digits,nname)))))
 		    do_it = 1;
 		else

@@ -37,7 +37,7 @@
 TOP=..
 DIRNAME=src
 BUILD_DIRS = audio utils regex hrg stats speech \
-             lexicon synth wavesynth
+             lexicon synth wavesynth cg
 ALL_DIRS= $(BUILD_DIRS)
 FILES = Makefile 
 

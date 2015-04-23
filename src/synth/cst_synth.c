@@ -64,7 +64,7 @@ static cst_utterance *tokentosegs(cst_utterance *u);
 static const cst_synth_module synth_method_text[] = {
     { "tokenizer_func", default_tokenization },
     { "textanalysis_func", default_textanalysis },
-    { "pos_tagger_func", NULL },
+    { "pos_tagger_func", default_pos_tagger },
     { "phrasing_func", default_phrasing },
     { "lexical_insertion_func", default_lexical_insertion },
     { "pause_insertion_func", default_pause_insertion },
@@ -80,7 +80,7 @@ static const cst_synth_module synth_method_text[] = {
 static const cst_synth_module synth_method_text2segs[] = {
     { "tokenizer_func", default_tokenization },
     { "textanalysis_func", default_textanalysis },
-    { "pos_tagger_func", NULL },
+    { "pos_tagger_func", default_pos_tagger },
     { "phrasing_func", default_phrasing },
     { "lexical_insertion_func", default_lexical_insertion },
     { "pause_insertion_func", default_pause_insertion },
@@ -89,7 +89,7 @@ static const cst_synth_module synth_method_text2segs[] = {
 
 static const cst_synth_module synth_method_tokens[] = {
     { "textanalysis_func", default_textanalysis },
-    { "pos_tagger_func", NULL },
+    { "pos_tagger_func", default_pos_tagger },
     { "phrasing_func", default_phrasing },
     { "lexical_insertion_func", default_lexical_insertion },
     { "pause_insertion_func", default_pause_insertion },
@@ -105,6 +105,7 @@ static const cst_synth_module synth_method_tokens[] = {
 static const cst_synth_module synth_method_phones[] = {
     { "tokenizer_func", default_tokenization },
     { "textanalysis_func", tokentosegs },
+    { "pos_tagger_func", default_pos_tagger },
     { "intonation_func", NULL },
     { "duration_model_func", cart_duration },
     { "f0_model_func", flat_prosody },
@@ -187,7 +188,7 @@ cst_utterance *default_tokenization(cst_utterance *u)
     while(!ts_eof(fd))
     {
 	token = ts_get(fd);
-	if (strlen(token) > 0)
+	if (cst_strlen(token) > 0)
 	{
 	    t = relation_append(r,NULL);
 	    item_set_string(t,"name",token);
@@ -249,7 +250,7 @@ cst_utterance *default_textanalysis(cst_utterance *u)
 cst_utterance *default_phrasing(cst_utterance *u)
 {
     cst_relation *r;
-    cst_item *w, *p;
+    cst_item *w, *p, *lp=NULL;
     const cst_val *v;
     cst_cart *phrasing_cart;
 
@@ -261,13 +262,17 @@ cst_utterance *default_phrasing(cst_utterance *u)
 	if (p == NULL)
 	{
 	    p = relation_append(r,NULL);
-	    item_set_string(p,"name","BB");
+            lp = p;
+            item_set_string(p,"name","B");
 	}
 	item_add_daughter(p,w);
 	v = cart_interpret(w,phrasing_cart);
 	if (cst_streq(val_string(v),"BB"))
 	    p = NULL;
     }
+
+    if (lp && item_prev(lp)) /* follow festival */
+        item_set_string(lp,"name","BB");
     
     return u;
 }
@@ -312,6 +317,9 @@ cst_utterance *cart_intonation(cst_utterance *u)
     cst_item *s;
     const cst_val *v;
 
+    if (feat_present(u->features,"no_intonation_accent_model"))
+        return u;  /* not all languages have intonation models */
+
     accents = val_cart(feat_val(u->features,"int_cart_accents"));
     tones = val_cart(feat_val(u->features,"int_cart_tones"));
     
@@ -331,7 +339,6 @@ cst_utterance *cart_intonation(cst_utterance *u)
 		   ffeature_string(s,"ssyl_out"),
 		   ffeature_string(s,"accent"),
 		   ffeature_string(s,"endtone")));
-
     }
 
     return u;
@@ -344,7 +351,7 @@ const dur_stat *phone_dur_stat(const dur_stats *ds,const char *ph)
     int i;
     for (i=0; ds[i]; i++)
 	if (cst_streq(ph,ds[i]->phone))
-	return ds[i];
+            return ds[i];
 
     return ds[0];
 }
@@ -359,6 +366,9 @@ cst_utterance *cart_duration(cst_utterance *u)
     const dur_stat *dur_stat;
 
     end = 0;
+
+    if (feat_present(u->features,"no_segment_duration_model"))
+        return u;  /* not all methods need segment durations */
 
     dur_tree = val_cart(feat_val(u->features,"dur_cart"));
     dur_stretch = get_param_float(u->features,"duration_stretch", 1.0);
@@ -389,21 +399,43 @@ cst_utterance *cart_duration(cst_utterance *u)
     return u;
 }
 
+cst_utterance *default_pos_tagger(cst_utterance *u)
+{
+    cst_item *word;
+    const cst_val *p;
+    const cst_cart *tagger;
+
+    p = get_param_val(u->features,"pos_tagger_cart",NULL);
+    if (p == NULL)
+        return u;
+    tagger = val_cart(p);
+
+    for (word=relation_head(utt_relation(u,"Word")); 
+	 word; word=item_next(word))
+    {
+        p = cart_interpret(word,tagger);
+        item_set_string(word,"pos",val_string(p));
+    }
+
+    return u;
+}
+
 cst_utterance *default_lexical_insertion(cst_utterance *u)
 {
     cst_item *word;
     cst_relation *sylstructure,*seg,*syl;
-    cst_lexicon *lex, *ulex = NULL;
-    const cst_val *p;
+    cst_lexicon *lex;
+    const cst_val *lex_addenda = NULL;
+    const cst_val *p, *wp = NULL;
     char *phone_name;
     char *stress = "0";
+    const char *pos;
     cst_val *phones;
     cst_item *ssword, *sssyl, *segitem, *sylitem, *seg_in_syl;
 
-
     lex = val_lexicon(feat_val(u->features,"lexicon"));
-    if (feat_present(u->features, "user_lexicon"))
-	ulex = val_lexicon(feat_val(u->features, "user_lexicon"));
+    if (lex->lex_addenda)
+	lex_addenda = lex->lex_addenda;
 
     syl = utt_relation_create(u,"Syllable");
     sylstructure = utt_relation_create(u,"SylStructure");
@@ -413,7 +445,14 @@ cst_utterance *default_lexical_insertion(cst_utterance *u)
 	 word; word=item_next(word))
     {
 	ssword = relation_append(sylstructure,word);
+        pos = ffeature_string(word,"pos");
 	phones = NULL;
+        wp = NULL;
+        
+        /*        printf("awb_debug word %s pos %s gpos %s\n",
+               item_feat_string(word,"name"),
+               pos,
+               ffeature_string(word,"gpos")); */
 
 	/* FIXME: need to make sure that textanalysis won't split
            tokens with explicit pronunciation (or that it will
@@ -422,10 +461,11 @@ cst_utterance *default_lexical_insertion(cst_utterance *u)
 	    phones = (cst_val *) item_feat(item_parent(item_as(word, "Token")), "phones");
 	else
 	{
-	    if (ulex)
-		phones = lex_lookup(ulex,item_feat_string(word, "name"),0);
-	    if (phones == NULL)
-		phones = lex_lookup(lex,item_feat_string(word,"name"),0);
+            wp = val_assoc_string(item_feat_string(word, "name"),lex_addenda);
+            if (wp)
+                phones = (cst_val *)val_cdr(val_cdr(wp));
+            else
+		phones = lex_lookup(lex,item_feat_string(word,"name"),pos);
 	}
 
 	for (sssyl=NULL,sylitem=NULL,p=phones; p; p=val_cdr(p))
@@ -438,27 +478,34 @@ cst_utterance *default_lexical_insertion(cst_utterance *u)
 	    }
 	    segitem = relation_append(seg,NULL);
 	    phone_name = cst_strdup(val_string(val_car(p)));
-	    if (phone_name[strlen(phone_name)-1] == '1')
+	    if (phone_name[cst_strlen(phone_name)-1] == '1')
 	    {
 		stress = "1";
-		phone_name[strlen(phone_name)-1] = '\0';
+		phone_name[cst_strlen(phone_name)-1] = '\0';
 	    }
-	    else if (phone_name[strlen(phone_name)-1] == '0')
+	    else if (phone_name[cst_strlen(phone_name)-1] == '0')
 	    {
 		stress = "0";
-		phone_name[strlen(phone_name)-1] = '\0';
+		phone_name[cst_strlen(phone_name)-1] = '\0';
 	    }
 	    item_set_string(segitem,"name",phone_name);
 	    seg_in_syl = item_add_daughter(sssyl,segitem);
+#if 0
+            printf("awb_debug ph %s\n",phone_name);
+#endif
 	    if ((lex->syl_boundary)(seg_in_syl,val_cdr(p)))
 	    {
+#if 0
+                printf("awb_debug SYL\n");
+#endif
 		sylitem = NULL;
 		if (sssyl)
 		    item_set_string(sssyl,"stress",stress);
 	    }
 	    cst_free(phone_name);
 	}
-	if (!item_feat_present(item_parent(item_as(word, "Token")), "phones"))
+	if (!item_feat_present(item_parent(item_as(word, "Token")), "phones")
+            && ! wp)
 	    delete_val(phones);
     }
 
@@ -524,15 +571,15 @@ static cst_utterance *tokentosegs(cst_utterance *u)
 	    sssyl = item_add_daughter(sylstructureitem,sylitem);
 	}
 	
-	if (name[strlen(name)-1] == '1')
+	if (name[cst_strlen(name)-1] == '1')
 	{
 	    item_set_string(sssyl,"stress","1");
-	    name[strlen(name)-1] = '\0';
+	    name[cst_strlen(name)-1] = '\0';
 	}
-	else if (name[strlen(name)-1] == '0')
+	else if (name[cst_strlen(name)-1] == '0')
 	{
 	    item_set_string(sssyl,"stress","0");
-	    name[strlen(name)-1] = '\0';
+	    name[cst_strlen(name)-1] = '\0';
 	}
 
 	if (cst_streq(name,"-"))
@@ -573,15 +620,15 @@ int default_utt_break(cst_tokenstream *ts,
 	     strchr(postpunct,'!'))
 	return TRUE;
     else if (strchr(postpunct,'.') &&
-	     (strlen(ts->whitespace) > 1) &&
+	     (cst_strlen(ts->whitespace) > 1) &&
 	     strchr("ABCDEFGHIJKLMNOPQRSTUVWXYZ",token[0]))
 	return TRUE;
     else if (strchr(postpunct,'.') &&
 	     /* next word starts with a capital */
 	     strchr("ABCDEFGHIJKLMNOPQRSTUVWXYZ",token[0]) &&
 	     /* last word isn't an abbreviation */
-	     !(strchr("ABCDEFGHIJKLMNOPQRSTUVWXYZ",ltoken[strlen(ltoken)-1])||
-	       ((strlen(ltoken) < 4) &&
+	     !(strchr("ABCDEFGHIJKLMNOPQRSTUVWXYZ",ltoken[cst_strlen(ltoken)-1])||
+	       ((cst_strlen(ltoken) < 4) &&
 		strchr("ABCDEFGHIJKLMNOPQRSTUVWXYZ",ltoken[0]))))
 	return TRUE;
     else

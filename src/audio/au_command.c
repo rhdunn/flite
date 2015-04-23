@@ -53,7 +53,7 @@ cst_audiodev * audio_open_command(int sps, int channels, int fmt)
 int audio_close_command(cst_audiodev *ad)
 {
     if (ad)
-	cst_free(ad)
+	cst_free(ad);
     return 0;
 }
 

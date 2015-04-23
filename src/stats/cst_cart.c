@@ -43,20 +43,16 @@
 
 CST_VAL_REGISTER_TYPE_NODEL(cart,cst_cart)
 
+/* Make this 1 if you want to debug som cart calls */
+#define CART_DEBUG 0
+
 #define cst_cart_node_n(P,TREE) ((TREE)->rule_table[P])
 
 void delete_cart(cst_cart *cart)
 {
-#ifndef UNDER_CE
-#ifndef __palmos__
-    printf("delete_cart function missing\n");
-#endif
-#endif
+    cst_errmsg("delete_cart function missing\n");
+    return;
 }
-
-static const cst_val *cart_interpret_questions(cst_item *item,
-					       const cst_cart *tree,
-					       int node);
 
 #define cst_cart_node_val(n,tree) (cst_cart_node_n(n,tree).val)
 #define cst_cart_node_op(n,tree) (cst_cart_node_n(n,tree).op)
@@ -64,10 +60,9 @@ static const cst_val *cart_interpret_questions(cst_item *item,
 #define cst_cart_node_yes(n,tree) (n+1)
 #define cst_cart_node_no(n,tree) (cst_cart_node_n(n,tree).no_node)
 
-void cart_print_node(int n, const cst_cart *tree)
+#if CART_DEBUG
+static void cart_print_node(int n, const cst_cart *tree)
 {
-#ifndef UNDER_CE
-#ifndef __palmos__
     printf("%s ",cst_cart_node_feat(n,tree));
     if (cst_cart_node_op(n,tree) == CST_CART_OP_IS)
 	printf("IS ");
@@ -83,46 +78,41 @@ void cart_print_node(int n, const cst_cart *tree)
 	printf("*%d* ",cst_cart_node_op(n,tree));
     val_print(stdout,cst_cart_node_val(n,tree));
     printf("\n");
-#endif
-#endif
 }
+#endif
 
 const cst_val *cart_interpret(cst_item *item, const cst_cart *tree)
 {
     /* Tree interpretation */
-    const cst_val *v;
-    
-    v = cart_interpret_questions(item,tree,0);
-
-    return v;
-}
-
-static const cst_val *cart_interpret_questions(cst_item *item,
-					       const cst_cart *tree,
-					       int node)
-{
     const cst_val *v=0;
     const cst_val *tree_val;
     const char *tree_feat = "";
     cst_features *fcache;
     int r=0;
+    int node=0;
 
     fcache = new_features_local(item_utt(item)->ctx);
 
     while (cst_cart_node_op(node,tree) != CST_CART_OP_LEAF)
     {
-/* 	cart_print_node(node,tree); */
+#if CART_DEBUG
+ 	cart_print_node(node,tree);
+#endif
 	tree_feat = cst_cart_node_feat(node,tree);
+
 	v = get_param_val(fcache,tree_feat,0);
 	if (v == 0)
 	{
 	    v = ffeature(item,tree_feat);
 	    feat_set(fcache,tree_feat,v);
 	}
-/*	val_print(stdout,v); printf("\n"); */
+
+#if CART_DEBUG
+	val_print(stdout,v); printf("\n");
+#endif
 	tree_val = cst_cart_node_val(node,tree);
 	if (cst_cart_node_op(node,tree) == CST_CART_OP_IS)
-	    r =  val_equal(v,tree_val);
+	    r = val_equal(v,tree_val);
 	else if (cst_cart_node_op(node,tree) == CST_CART_OP_LESS)
 	    r = val_less(v,tree_val);
 	else if (cst_cart_node_op(node,tree) == CST_CART_OP_GREATER)
@@ -141,16 +131,22 @@ static const cst_val *cart_interpret_questions(cst_item *item,
 
 	if (r)
 	{   /* Oh yes it is */
-/*	printf("   YES\n"); */
+#if CART_DEBUG
+            printf("   YES\n");
+#endif
 	    node = cst_cart_node_yes(node,tree);
 	}
 	else
-	{	/* Oh no it isn't */
-/*	printf("   NO\n"); */
+	{   /* Oh no it isn't */
+#if CART_DEBUG
+            printf("   NO\n");
+#endif
 	    node = cst_cart_node_no(node,tree);
 	}
     }
+
     delete_features(fcache);
+
     return cst_cart_node_val(node,tree);	
 
 }

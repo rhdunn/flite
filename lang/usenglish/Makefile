@@ -39,19 +39,28 @@ DIRNAME=lang/usenglish
 BUILD_DIRS = 
 ALL_DIRS= 
 H = usenglish.h us_int_accent_cart.h us_int_tone_cart.h us_durz_cart.h \
-    us_ffeatures.h us_phrasing_cart.h us_text.h us_f0.h us_nums_cart.h
+    us_ffeatures.h us_phrasing_cart.h us_text.h us_f0.h us_nums_cart.h \
+    us_regexes.h us_pos_cart.h
 SRCS = us_int_accent_cart.c us_int_tone_cart.c us_f0_model.c \
        us_dur_stats.c us_durz_cart.c us_f0lr.c \
        us_phoneset.c us_ffeatures.c us_phrasing_cart.c \
-       us_gpos.c us_text.c us_expand.c us_postlex.c \
-       us_nums_cart.c us_aswd.c usenglish.c 
+       us_gpos.c us_text.c us_expand.c \
+       us_nums_cart.c us_aswd.c usenglish.c us_pos_cart.c
+SCRIPTS = make_us_regexes us_pos.tree
 OBJS = $(SRCS:.c=.o)
 SCM=
-FILES = Makefile $(SCM) $(SRCS) $(H)
+WINDOWS = libflite-usenglish.vcproj
+FILES = Makefile $(SCM) $(SRCS) $(H) $(SCRIPTS) $(WINDOWS)
 LIBNAME = flite_usenglish
 LOCAL_INCLUDES = 
 
 ALL = 
 
 include $(TOP)/config/common_make_rules
+
+regexes:
+	./make_us_regexes $(BINDIR) >us_regexes.h
+
+us_pos_cart.c: us_pos.tree
+	$(ESTDIR)/../festival/bin/festival -b $(FLITEDIR)/tools/make_cart.scm $(FLITEDIR)/tools/make_pos.scm 
 

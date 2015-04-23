@@ -78,12 +78,18 @@ cst_utterance *join_units_simple(cst_utterance *utt)
     cst_wave *w = 0;
     cst_lpcres *lpcres;
     const char *resynth_type;
+    const cst_val *streaming_info_val;
+
     resynth_type = get_param_string(utt->features,"resynth_type", "fixed");
     
     asis_to_pm(utt);
     concat_units(utt);
 
     lpcres = val_lpcres(utt_feat_val(utt,"target_lpcres"));
+
+    streaming_info_val=get_param_val(utt->features,"streaming_info",NULL);
+    if (streaming_info_val)
+        lpcres->asi = val_audio_streaming_info(streaming_info_val);
 
     if (cst_streq(resynth_type, "fixed"))
 	w = lpc_resynth_fixedpoint(lpcres); 
@@ -103,13 +109,18 @@ cst_utterance *join_units_modified_lpc(cst_utterance *utt)
     cst_wave *w = 0;
     cst_lpcres *lpcres;
     const char *resynth_type;
-    resynth_type = get_param_string(utt->features,"resynth_type", "float");
+    const cst_val *streaming_info_val;
 
+    resynth_type = get_param_string(utt->features,"resynth_type", "float");
 
     f0_targets_to_pm(utt);
     concat_units(utt);
 
     lpcres = val_lpcres(utt_feat_val(utt,"target_lpcres"));
+
+    streaming_info_val=get_param_val(utt->features,"streaming_info",NULL);
+    if (streaming_info_val)
+        lpcres->asi = val_audio_streaming_info(streaming_info_val);
 
     if (cst_streq(resynth_type, "float"))
 	w = lpc_resynth(lpcres); 
@@ -249,8 +260,6 @@ cst_utterance *concat_units(cst_utterance *utt)
     target_lpcres->lpc_range = sts_list->coeff_range;
     target_lpcres->num_channels = sts_list->num_channels;
     target_lpcres->sample_rate = sts_list->sample_rate;
-    target_lpcres->post_emphasis = sts_list->post_emphasis;
-    target_lpcres->residual_fold = sts_list->residual_fold;
     lpcres_resize_samples(target_lpcres,
 			  target_lpcres->times[target_lpcres->num_frames-1]);
     
@@ -407,17 +416,48 @@ void add_residual(int targ_size, unsigned char *targ_residual,
     }
 }
 
+static double plus_or_minus_one()
+{
+    /* Randomly return 1 or -1 */
+    /* not sure rand() is portable */
+    if (rand() > RAND_MAX/2.0)
+        return 1.0;
+    else
+        return -1.0;
+}
+
 void add_residual_pulse(int targ_size, unsigned char *targ_residual,
 			int unit_size, const unsigned char *unit_residual)
 {
+    int p,i,m;
     /* Unit residual isn't a pointed its a number, the power for the 
        the sts, yes this is hackily casting the address to a number */
 
+    /* Need voiced and unvoiced model */
+    p = (int)unit_residual;
+
+    if (p > 7000)  /* voiced */
+    {
+        i = ((targ_size-unit_size)/2);
+	targ_residual[i-2] = cst_short_to_ulaw((short)(p/4));
+	targ_residual[i] = cst_short_to_ulaw((short)(p/2));
+	targ_residual[i+2] = cst_short_to_ulaw((short)(p/4));
+    }
+    else /* unvoiced */
+    {
+        m = p / targ_size;
+        for (i=0; i<targ_size; i++)
+            targ_residual[i] = 
+                cst_short_to_ulaw((short)(m*plus_or_minus_one()));
+    }
+
+#if 0
     if (unit_size < targ_size)
 	targ_residual[((targ_size-unit_size)/2)] 
 	    = cst_short_to_ulaw((short)(int)unit_residual);
     else
 	targ_residual[((unit_size-targ_size)/2)] 
 	    = cst_short_to_ulaw((short)(int)unit_residual);
+#endif
 }
 

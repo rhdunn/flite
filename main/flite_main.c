@@ -45,21 +45,19 @@
 
 #include "flite.h"
 #include "flite_version.h"
-#include "voxdefs.h"
+
+cst_val *flite_set_voice_list(void);
 
 void cst_alloc_debug_summary();
 
-cst_voice *REGISTER_VOX(const char *voxdir);
-cst_voice *UNREGISTER_VOX(cst_voice *vox);
-
 static void flite_version()
 {
-    printf("  version: %s-%s-%s %s\n",
+    printf("  Carnegie Mellon University, Copyright (c) 1999-2009, all rights reserved\n");
+    printf("  version: %s-%s-%s %s (http://cmuflite.org)\n",
 	   FLITE_PROJECT_PREFIX,
 	   FLITE_PROJECT_VERSION,
 	   FLITE_PROJECT_STATE,
 	   FLITE_PROJECT_DATE);
-    printf("  CMU Copyright 1999-2005, all rights reserved\n");
 }
 
 static void flite_usage()
@@ -85,13 +83,33 @@ static void flite_usage()
            "  --seti F=V  Set int feature\n"
            "  --setf F=V  Set float feature\n"
            "  --sets F=V  Set string feature\n"
+	   "  -ssml       Read input text/file in ssml mode\n"
 	   "  -b          Benchmark mode\n"
 	   "  -l          Loop endlessly\n"
+	   "  -voice NAME Use voice NAME\n"
+	   "  -lv         List voices available\n"
+	   "  -add_lex FILENAME add lex addenda from FILENAME\n"
 	   "  -pw         Print words\n"
 	   "  -ps         Print segments\n"
 	   "  -pr RelName  Print relation RelName\n"
            "  -v          Verbose mode\n");
     exit(0);
+}
+
+static void flite_voice_list_print(void)
+{
+    cst_voice *voice;
+    const cst_val *v;
+
+    printf("Voices available: ");
+    for (v=flite_voice_list; v; v=val_cdr(v))
+    {
+        voice = val_voice(val_car(v));
+        printf("%s ",voice->name);
+    }
+    printf("\n");
+
+    return;
 }
 
 static cst_utterance *print_info(cst_utterance *u)
@@ -126,7 +144,7 @@ static void ef_set(cst_features *f,const char *fv,const char *type)
     else
     {
 	feat = cst_strdup(fv);
-	feat[strlen(fv)-strlen(val)] = '\0';
+	feat[cst_strlen(fv)-cst_strlen(val)] = '\0';
 	val = val+1;
 	if ((type && cst_streq("int",type)) ||
 	    ((type == 0) && (cst_regex_match(cst_rx_int,val))))
@@ -147,14 +165,17 @@ int main(int argc, char **argv)
     cst_voice *v;
     const char *filename;
     const char *outtype;
+    cst_voice *desired_voice = 0;
     int i;
     float durs;
     double time_start, time_end;
     int flite_verbose, flite_loop, flite_bench;
-    int explicit_filename, explicit_text, explicit_phones;
+    int explicit_filename, explicit_text, explicit_phones, ssml_mode;
 #define ITER_MAX 3
     int bench_iter = 0;
     cst_features *extra_feats;
+    const char *lex_addenda_file = NULL;
+    cst_audio_streaming_info *asi;
 
     filename = 0;
     outtype = "play";   /* default is to play */
@@ -162,9 +183,11 @@ int main(int argc, char **argv)
     flite_loop = FALSE;
     flite_bench = FALSE;
     explicit_text = explicit_filename = explicit_phones = FALSE;
+    ssml_mode = FALSE;
     extra_feats = new_features();
 
     flite_init();
+    flite_voice_list = flite_set_voice_list();
 
     for (i=1; i<argc; i++)
     {
@@ -179,6 +202,11 @@ int main(int argc, char **argv)
 	    flite_usage();
 	else if (cst_streq(argv[i],"-v"))
 	    flite_verbose = TRUE;
+	else if (cst_streq(argv[i],"-lv"))
+        {
+            flite_voice_list_print();
+            exit(0);
+        }
 	else if (cst_streq(argv[i],"-l"))
 	    flite_loop = TRUE;
 	else if (cst_streq(argv[i],"-b"))
@@ -189,6 +217,16 @@ int main(int argc, char **argv)
 	else if ((cst_streq(argv[i],"-o")) && (i+1 < argc))
 	{
 	    outtype = argv[i+1];
+	    i++;
+	}
+	else if ((cst_streq(argv[i],"-voice")) && (i+1 < argc))
+	{
+            desired_voice = flite_voice_select(argv[i+1]);
+	    i++;
+	}
+	else if ((cst_streq(argv[i],"-add_lex")) && (i+1 < argc))
+	{
+            lex_addenda_file = argv[i+1];
 	    i++;
 	}
 	else if (cst_streq(argv[i],"-f") && (i+1 < argc))
@@ -209,6 +247,10 @@ int main(int argc, char **argv)
 	    feat_set(extra_feats,"post_synth_hook_func",
 		     uttfunc_val(&print_info));
 	}
+        else if (cst_streq(argv[i],"-ssml"))
+        {
+            ssml_mode = TRUE;
+        }
 	else if (cst_streq(argv[i],"-pr") && (i+1 < argc))
 	{
 	    feat_set_string(extra_feats,"print_info_relation",argv[i+1]);
@@ -256,9 +298,22 @@ int main(int argc, char **argv)
     }
 
     if (filename == NULL) filename = "-";  /* stdin */
-    v = REGISTER_VOX(NULL);
+    if (desired_voice == 0)
+        desired_voice = flite_voice_select(NULL);
+
+    v = desired_voice;
     feat_copy_into(extra_feats,v->features);
     durs = 0.0;
+
+    if (lex_addenda_file)
+        flite_voice_add_lex_addenda(v,lex_addenda_file);
+
+    if (cst_streq("stream",outtype))
+    {
+        asi = new_audio_streaming_info();
+        asi->asc = audio_stream_chunk;
+        feat_set(v->features,"streaming_info",audio_streaming_info_val(asi));
+    }
 
     if (flite_bench)
     {
@@ -273,6 +328,8 @@ loop:
 
     if (explicit_phones)
 	durs = flite_phones_to_speech(filename,v,outtype);
+    else if (ssml_mode)
+        durs = flite_ssml_to_speech(filename,v,outtype);
     else if ((strchr(filename,' ') && !explicit_filename) || explicit_text)
 	durs = flite_text_to_speech(filename,v,outtype);
     else
@@ -291,7 +348,8 @@ loop:
 	    goto loop;
 
     delete_features(extra_feats);
-    UNREGISTER_VOX(v);
+    delete_val(flite_voice_list); flite_voice_list=0;
+    /*    cst_alloc_debug_summary(); */
 
     return 0;
 }

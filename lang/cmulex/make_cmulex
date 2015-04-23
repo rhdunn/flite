@@ -78,25 +78,11 @@ fi
 if [ "$1" = "lex" ]
 then
    ( cd festival/lib/dicts/cmu;
+     # Find the words to prune from the built lexicon
+     # We will prune words that aren't homographs and the LTS gets correct
      # Use the lts_test.log to find the failed entries and only
      # include them in the list 
-     # this needs festival-1.96 or later to get the pos from the lts_test.log
-     grep "^failed " lts_test.log |
-     sed 's/(/( /g;s/)/ )/g;s/-/ /g' |
-     awk '{printf("( \"");
-           for (i=3; $i != ")"; i++)
-               printf("%s",$i);
-           i++;
-           printf("\" %s ( ",$i);
-           i++; i++
-           for ( ; $i != ")"; i++)
-              if (($i != "#") &&
-                ($i != "_epsilon_"))
-                 printf("%s ",$i);
-           printf("))\n");
-         }' >pruned_lex.scm
-     # And get the entries that didn't even align
-     grep "^align failed: " align.log | sed 's/align failed: //' >>pruned_lex.scm
+     festival -b cmulex.scm ~/projects/flite/tools/make_lex.scm '(remove_predictable_entries "cmudict-0.4.out" "pruned_lex.scm" "lex_lts_rules.scm")'
      festival --heap 10000000 -b '(lex.compile "pruned_lex.scm" "pruned_lex.out")'
      festival --heap 10000000 -b $FLITEDIR/tools/make_lex.scm '(lextoC "cmu" "pruned_lex.out" "c")' ;
    )

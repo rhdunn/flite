@@ -107,6 +107,16 @@
 
 #endif
 
+#ifdef CST_AUDIO_WIN32
+#define AUDIO_OPEN_NATIVE audio_open_wince
+#define AUDIO_CLOSE_NATIVE audio_close_wince
+#define AUDIO_SET_SAMPLE_RATE_NATIVE audio_set_sample_rate_wince
+#define AUDIO_WRITE_NATIVE audio_write_wince
+#define AUDIO_DRAIN_NATIVE audio_drain_wince
+#define AUDIO_FLUSH_NATIVE audio_flush_wince
+
+#endif
+
 #ifdef CST_AUDIO_PALMOS
 
 #define AUDIO_OPEN_NATIVE audio_open_palmos

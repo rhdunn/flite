@@ -122,6 +122,7 @@ const dur_stat * const us_dur_stats[] = {
     &dur_stat_th,
     &dur_stat_aa,
     &dur_stat_t,
+    NULL
 } ;
 
 

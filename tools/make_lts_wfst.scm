@@ -59,7 +59,7 @@
 		 (format nil "%s/%s.tree.rg" odir (car a)))
      (system 
       (format nil 
-	      "wfst_build -heap 10000000 -type rg -detmin -o %s/%s.tree.wfst %s/%s.tree.rg"
+	      "$ESTDIR/bin/wfst_build -heap 10000000 -type rg -detmin -o %s/%s.tree.wfst %s/%s.tree.rg"
 	      odir (car a)
 	      odir (car a)))
      t)

@@ -92,7 +92,7 @@ int audio_write(cst_audiodev *ad,void *buff,int num_bytes)
 	int insize, outsize, n;
 
 	insize = real_num_bytes / 2;
-	in = buff;
+	in = (short *)buff;
 
 	outsize = ad->rateconv->outsize;
 	nbuf = out = cst_alloc(short, outsize);
@@ -193,7 +193,7 @@ int audio_write(cst_audiodev *ad,void *buff,int num_bytes)
 	abuf = nbuf;
     }
     if (ad->byteswap && audio_bps(ad->real_fmt) == 2)
-	swap_bytes_short(abuf, real_num_bytes/2);
+	swap_bytes_short((short *)abuf, real_num_bytes/2);
 
     if (real_num_bytes)
 	rv = AUDIO_WRITE_NATIVE(ad,abuf,real_num_bytes);

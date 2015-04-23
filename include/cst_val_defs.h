@@ -95,7 +95,7 @@ void val_delete_##NAME(void *v) { (void)v; }           \
 #define CST_VAL_REGISTER_FUNCPTR(NAME,TYPE)            \
 TYPE val_##NAME(const cst_val *v)                      \
 {                                                      \
-    return (TYPE *)val_generic(v,cst_val_type_##NAME,#NAME);  \
+    return (TYPE)val_generic(v,cst_val_type_##NAME,#NAME);  \
 }                                                      \
                                                        \
 cst_val *NAME##_val(const TYPE v)                      \
