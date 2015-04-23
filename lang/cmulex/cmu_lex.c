@@ -93,6 +93,7 @@ static const char * const addenda35[] = { "n/","s","l","ae1","sh",NULL};
 static const char * const addenda36[] = { "nin","ih","n",NULL};
 static const char * const addenda37[] = { "nto","t","ax",NULL};
 static const char * const addenda38[] = { "n_a","ey",NULL};
+static const char * const addenda39[] = { "ncepstral","k","eh1", "p", "s", "t", "r", "ax", "l", NULL};
 
 static const char * const * const addenda[] = {
     addenda0,
@@ -135,6 +136,7 @@ static const char * const * const addenda[] = {
     addenda36,
     addenda37,
     addenda38,
+    addenda39,
     NULL };
 
 static int cmu_is_silence(const char *p)

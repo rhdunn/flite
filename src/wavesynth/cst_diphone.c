@@ -93,6 +93,7 @@ cst_utterance *get_diphone_units(cst_utterance *utt)
 		       diphone_name);
 	    unit_entry = 0;
 	}
+
 	/* first half of diphone */
 	u = relation_append(units,NULL);
 	item_add_daughter(s0,u);
@@ -129,17 +130,18 @@ static int get_diphone_entry_bsearch(const cst_diphone_entry *entries,
 {
     int mid,c;
 
-    while (start < end) {
-	    mid = (start+end)/2;
+    while (start < end) 
+    {
+	mid = (start+end)/2;
+	
+	c = strcmp(entries[mid].name,key);
 
-	    c = strcmp(entries[mid].name,key);
-
-	    if (c == 0)
-		    return mid;
-	    else if (c > 0)
-		    end = mid;
-	    else
-		    start = mid + 1;
+	if (c == 0)
+	    return mid;
+	else if (c > 0)
+	    end = mid;
+	else
+	    start = mid + 1;
     }
 
     return -1;  /* can't find it */

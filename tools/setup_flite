@@ -32,10 +32,8 @@
 ##                                                                       ##
 ###########################################################################
 ##                                                                       ##
-##  Builds the files for a diphone db                                    ##
-##  What this really assumes is that each file only has some small part  ##
-##  that is used as data.  Each unit is extracted on pm boundaries from  ##
-##  its real file and put in one big lpc and res file                    ##
+##  Setup the current directory for building a FLITE voice from a        ##
+##  a festvox voice                                                      ##
 ##                                                                       ##
 ###########################################################################
 
@@ -49,18 +47,76 @@ then
    exit 1
 fi
 
-mkdir diphone.db
-
-if [ ! ../dic/$1.est ]
+if [ ! "$FLITEDIR" ]
 then
-   echo "Can't find diphone index file ../dic/$1.est"
+   echo "environment variable FLITEDIR is unset"
+   echo "set it to your local festvox directory e.g."
+   echo '   bash$ export FLITEDIR=/home/awb/projects/flite/'
+   echo or
+   echo '   csh% setenv FLITEDIR /home/awb/projects/flite/'
    exit 1
-fi   
+fi
 
-sed '1,/EST_Header_End/d' ../dic/$1.est | sort >diphone.db/diphone.index
-cat diphone.db/diphone.index | awk '{printf("( %s )\n",$0)}' >diphone.db/diphindx.scm
-#cat diphnone.db/diphone.index | awk '{print $2}' | sort -u >config/fileids
+if [ ! -d wav ]
+then
+   echo "I'm expecting this directory to contain a festvox voice which"
+   echo "should at least contain a wav/ directory, but haven't found one "
+   echo "Are you sure this is the right directory to build in?"
+   echo -n "Answer y/n? "
+   read answer
+   if [ "$answer" != "y" ]
+   then
+       echo "setup aborted"
+       exit -1
+   fi
+fi
 
-#festival -b $FLITEDIR/tools/make_didb.scm '(diphtoC "'diphone.db/diphindx.scm'" "'diphone.db/'" "'../lpc'" "'cmu_us_kal'")'
+if [ ! -f etc/voice.defs ]
+then
+   echo "Can't find etc/voice.defs file"
+   echo "don't know what voice to convert"
+   echo "Setup for conversion of $1 to flite FAILED"
+   exit 1
+fi
+
+mkdir flite
+mkdir sts
+
+. ./etc/voice.defs
+
+cat $FLITEDIR/tools/Makefile.flite |
+  sed 's%__FLITEDIR__%'$FLITEDIR'%' $i |
+  sed 's%__VOICETYPE__%'$FV_TYPE'%' |
+  sed 's%__VOICENAME__%'$FV_VOICENAME'%' >flite/Makefile
+
+cat $FLITEDIR/tools/build_flite |
+  sed 's%__FLITEDIR__%'$FLITEDIR'%' >bin/build_flite
+chmod +x bin/build_flite
+
+if [ "$FV_TYPE" = "diphone" ]
+then
+   cat $FLITEDIR/tools/VOICE_diphone.c |
+     sed 's%__VOICENAME__%'$FV_VOICENAME'%g' >flite/$FV_VOICENAME.c
+else 
+   if [ "$FV_TYPE" = "ldom" ]
+   then
+      cat $FLITEDIR/tools/VOICE_ldom.c |
+        sed 's%__VOICENAME__%'$FV_VOICENAME'%g' >flite/$FV_VOICENAME.c
+   else
+      cat $FLITEDIR/tools/VOICE_clunits.c |
+        sed 's%__VOICENAME__%'$FV_VOICENAME'%g' >flite/$FV_VOICENAME.c
+   fi
+fi
+
+cp -p $FLITEDIR/main/flite_main.c flite/flite_main.c
+
+echo "#define VOXNAME" $FV_VOICENAME >flite/voxdefs.h
+echo "#define REGISTER_VOX register_"$FV_VOICENAME >>flite/voxdefs.h
+echo "#define UNREGISTER_VOX unregister_"$FV_VOICENAME >>flite/voxdefs.h
+echo "#define VOXHUMAN \"Name\"" >>flite/voxdefs.h
+echo "#define VOXGENDER \"unknown\"" >>flite/voxdefs.h
+echo "#define VOXVERSION 1.0" >>flite/voxdefs.h
+
+echo "Setup flite build for "$FV_VOICENAME" complete"
 
 exit 0

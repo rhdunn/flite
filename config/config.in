@@ -7,13 +7,17 @@ CC       = @CC@
 CFLAGS   = @CFLAGS@
 CPPFLAGS = @CPPFLAGS@
 DEFS     = @DEFS@
+SHFLAGS  = @SHFLAGS@
 
 AR       = @AR@
 RANLIB   = @RANLIB@
+INSTALL  = @INSTALL@
 
 AUDIODRIVER = @AUDIODRIVER@
 AUDIODEFS   = @AUDIODEFS@
 AUDIOLIBS   = @AUDIOLIBS@
+
+OTHELIBS = @OTHERLIBS@
 
 MMAPTYPE    = @MMAPTYPE@
 
@@ -21,8 +25,8 @@ FL_LANG  = @FL_LANG@
 FL_VOX   = @FL_VOX@
 FL_LEX   = @FL_LEX@
 
-exec_prefix   = @exec_prefix@
 prefix        = @prefix@
+exec_prefix   = @exec_prefix@
 EXEEXT	      = @EXEEXT@
 INSTALLBINDIR = @bindir@
 INSTALLLIBDIR = @libdir@

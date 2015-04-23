@@ -154,8 +154,20 @@ float flite_file_to_speech(const char *filename,
 	get_param_string(voice->features,"text_prepunctuation",
 			 ts->prepunctuationsymbols);
     ts->postpunctuationsymbols = 
-	get_param_string(voice->features,"text_pospunctuation",
+	get_param_string(voice->features,"text_postpunctuation",
 			 ts->postpunctuationsymbols);
+
+    /* If its a file to write to delete it as we're going to */
+    /* incrementally append to it                            */
+    if (!cst_streq(outtype,"play") && !cst_streq(outtype,"none"))
+    {
+	cst_wave *w;
+	w = new_wave();
+	cst_wave_resize(w,0,1);
+	cst_wave_set_sample_rate(w,16000);
+	cst_wave_save_riff(w,outtype);  /* an empty wave */
+	delete_wave(w);
+    }
 
     num_tokens = 0;
     utt = new_utterance();
@@ -206,6 +218,7 @@ float flite_text_to_speech(const char *text,
     u = flite_synth_text(text,voice);
     if (u == NULL)
 	return -1;
+
     w = utt_wave(u);
 
     durs = (float)w->num_samples/(float)w->sample_rate;
@@ -260,7 +273,7 @@ float flite_tokens_to_speech(cst_utterance *u,
     if (cst_streq(outtype,"play"))
 	play_wave(w);
     else if (!cst_streq(outtype,"none"))
-	cst_wave_save_riff(w,outtype);
+	cst_wave_append_riff(w,outtype);
     delete_utterance(u);
 
     return durs;

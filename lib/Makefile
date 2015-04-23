@@ -31,7 +31,7 @@
 ##                                                                       ##
 ###########################################################################
 ##                                                                       ##
-##    CST and FLITE libraries                                            ##
+##    FLITE libraries                                                    ##
 ##                                                                       ##
 ###########################################################################
 TOP=..
@@ -39,10 +39,26 @@ DIRNAME=lib
 BUILD_DIRS = 
 ALL_DIRS=
 FILES = Makefile
+LIBNAMES = flite flite_cmulex flite_usenglish \
+           flite_cmu_us_kal flite_cmu_us_kal16 flite_cmu_time_awb
+STATICLIBS= $(LIBNAMES:%=lib%.a)
+SHAREDARLIBS= $(LIBNAMES:%=lib%.shared.a)
+SHAREDLIBS = $(LIBNAMES:%=lib%.so)
+VERSIONSHAREDLIBS = $(SHAREDLIBS:%=%.${PROJECT_VERSION}) \
+                    $(SHAREDLIBS:%=%.${PROJECT_SHLIB_VERSION})
+ALL_LIBS = $(STATICLIBS) $(SHAREDLIBS) $(VERSIONSHAREDLIBS)
 
-ALL = 
+ALL = shared_libs
 
-LOCAL_CLEAN=*.a
+LOCAL_CLEAN=*.a *.so *.so.${PROJECT_VERSION} *.so.${PROJECT_SHLIB_VERSION}
 
 include $(TOP)/config/common_make_rules
 
+ifdef SHFLAGS
+shared_libs: $(SHAREDLIBS)
+else
+shared_libs: nothing
+endif
+
+install:
+	@ tar cvf - $(ALL_LIBS) | ( cd $(INSTALLLIBDIR) && tar xf -)

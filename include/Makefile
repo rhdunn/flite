@@ -52,6 +52,7 @@ H = cst_alloc.h  \
 	cst_item.h \
 	cst_lexicon.h \
 	cst_lts.h \
+	cst_lts_rewrites.h \
 	cst_phoneset.h \
 	cst_regex.h \
 	cst_relation.h \

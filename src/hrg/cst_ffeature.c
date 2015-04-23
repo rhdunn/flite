@@ -119,7 +119,8 @@ static const void *internal_ff(const cst_item *item,
 	}
 	else if (cst_streq(tk,"parent"))
 	    pitem = item_parent(pitem);
-	else if (cst_streq(tk,"daughter"))
+	else if ((cst_streq(tk,"daughter")) ||
+		 (cst_streq(tk,"daughter1")))
 	    pitem = item_daughter(pitem);
 	else if (cst_streq(tk,"daughtern"))
 	    pitem = item_last_daughter(pitem);

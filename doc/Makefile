@@ -38,13 +38,16 @@ TOP=..
 DIRNAME=doc
 BUILD_DIRS = 
 ALL_DIRS=
-FILES = Makefile flite.texi intro.txt alice
+FILES = Makefile flite.texi intro.txt alice stuff.ed
 
 ALL = 
 
 include $(TOP)/config/common_make_rules
 
-doc: flite.html flite.ps
+doc: flite.html flite.ps flite.pdf
+	cp -p flite.ps html
+	(cd html; rm -f flite.ps.gz; gzip flite.ps)
+	cp -p flite.pdf html
 
 flite.html: flite.texi
 	@ if [ ! -d html ] ; \
@@ -55,7 +58,14 @@ flite.html: flite.texi
 	    sed 's/<BODY>/<BODY bgcolor="#ffffff">/' $$i >ttt.html; \
 	    mv ttt.html $$i ; \
 	  done
+	@ cat stuff.ed | ed html/flite_toc.html
+	@ (cd html; rm -f index.html; ln flite_toc.html index.html)
 
 flite.ps:  flite.texi
 	@ tex flite.texi
 	@ dvips -f flite.dvi >flite.ps
+
+flite.pdf: flite.ps
+	ps2pdf flite.ps flite.pdf
+
+

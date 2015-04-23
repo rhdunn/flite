@@ -80,4 +80,15 @@ int play_wave_client(cst_wave *w,const char *servername,int port,
 			       const char *encoding);
 int auserver(int port);
 
+/* Play wave to specified device */
+int play_wave_device(cst_wave *w,cst_audiodev *ad);
+
+/* Output to a file as if its an audio device */
+cst_audiodev *audio_open_file(int sps, int channels, cst_audiofmt fmt,
+			      const char *filename);
+int audio_close_file(cst_audiodev *ad);
+int audio_write_file(cst_audiodev *ad,void *buff,int num_bytes);
+int audio_drain_file(cst_audiodev *ad);
+int audio_flush_file(cst_audiodev *ad);
+
 #endif

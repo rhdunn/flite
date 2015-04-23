@@ -44,6 +44,8 @@
 #include <stdio.h> 
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/ioctl.h>
+#include <sys/soundcard.h>
 #include <fcntl.h>
 #include "cst_wave.h"
 #include "cst_audio.h"
@@ -53,7 +55,42 @@ float desired_time = -1;
 int still_record = 1;
 
 static const char * const vw_audio_device = "/dev/dsp";
-int audio_set_sample_rate_vw(int afd,int sample_rate);
+static int audio_set_sample_rate_vw(int afd,int sample_rate)
+{
+    int fmt;
+    int sfmts;
+    int stereo=0;
+    int sstereo=0;
+    int osample_rate;
+    int channels=1;
+
+    ioctl(afd,SNDCTL_DSP_RESET,0);
+    sstereo = stereo;
+    ioctl(afd,SNDCTL_DSP_STEREO,&sstereo);
+    /* Some devices don't do mono even when you ask them nicely */
+    if (sstereo != stereo)
+	osample_rate = sample_rate / 2;
+    else
+	osample_rate = sample_rate;
+    ioctl(afd,SNDCTL_DSP_SPEED,&osample_rate);
+    ioctl(afd,SNDCTL_DSP_CHANNELS,&channels);
+    ioctl(afd,SNDCTL_DSP_GETFMTS,&sfmts);
+
+    if (sfmts == AFMT_U8)
+	fmt = AFMT_U8;         // its really an 8 bit only device
+    else if (CST_LITTLE_ENDIAN)
+	fmt = AFMT_S16_LE;  
+    else
+	fmt = AFMT_S16_BE;  
+    
+    ioctl(afd,SNDCTL_DSP_SETFMT,&fmt);
+
+    if (fmt == AFMT_U8)
+	return -1;
+    else
+	return 0;
+}
+
 
 void sigint_handler(int a)
 {
@@ -70,7 +107,7 @@ int main(int argc, char **argv)
 
     if (argc == 1)
     {
-	fprintf(stderr,"usage: record_wave -f FREQ WAVEFILE\n");
+	fprintf(stderr,"usage: record_wave -f FREQ -t TIME WAVEFILE\n");
 	return 1;
     }
 

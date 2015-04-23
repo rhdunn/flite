@@ -87,6 +87,78 @@ int cst_wave_save_raw_fd(cst_wave *w, cst_file fd)
 }
 
 
+int cst_wave_append_riff(cst_wave *w,const char *filename)
+{
+    /* Appends to wave in file if it already exists */
+    cst_file fd;
+    cst_wave_header hdr;
+    char info[4];
+    int d_int;
+    int rv, num_bytes, n, sample_rate;
+
+    if ((fd = cst_fopen(filename,CST_OPEN_WRITE|CST_OPEN_READ|CST_OPEN_BINARY)) == NULL)
+    {
+	cst_errmsg("cst_wave_append: can't open file \"%s\"\n",
+		   filename);
+	return -1;
+    }
+    
+    rv = cst_wave_load_riff_header(&hdr,fd);
+    if (rv != CST_OK_FORMAT)
+    {
+	cst_fclose(fd);
+	return rv;
+    }
+    /* We will assume this is one of my riff files so it has *ONE* data part */
+    cst_fread(fd,info,1,4);
+    cst_fread(fd,&d_int,4,1);
+    if (CST_BIG_ENDIAN) d_int = SWAPINT(d_int);
+    hdr.num_samples = d_int/sizeof(short);
+
+    cst_fseek(fd,
+	      cst_ftell(fd)+(hdr.hsize-16)+
+	      (hdr.num_samples*hdr.num_channels*sizeof(short)),
+	      CST_SEEK_ABSOLUTE);
+
+    if (CST_BIG_ENDIAN)
+    {
+	short *xdata = cst_alloc(short,cst_wave_num_channels(w)*
+				 cst_wave_num_samples(w));
+	memmove(xdata,cst_wave_samples(w),
+		sizeof(short)*cst_wave_num_channels(w)*
+		cst_wave_num_samples(w));
+	swap_bytes_short(xdata,
+			 cst_wave_num_channels(w)*
+			 cst_wave_num_samples(w));
+	n = cst_fwrite(fd,xdata,sizeof(short),
+		       cst_wave_num_channels(w)*cst_wave_num_samples(w));
+	cst_free(xdata);
+    }
+    else
+    {
+	n = cst_fwrite(fd,cst_wave_samples(w),sizeof(short),
+		       cst_wave_num_channels(w)*cst_wave_num_samples(w));
+    }
+
+    cst_fseek(fd,4,CST_SEEK_ABSOLUTE);
+    num_bytes = hdr.num_bytes + (n*sizeof(short));
+    if (CST_BIG_ENDIAN) num_bytes = SWAPINT(num_bytes);
+    cst_fwrite(fd,&num_bytes,4,1); /* num bytes in whole file */
+    cst_fseek(fd,4+4+4+4 +4+2+2 ,CST_SEEK_ABSOLUTE);
+    sample_rate = w->sample_rate;
+    if (CST_BIG_ENDIAN) sample_rate = SWAPINT(sample_rate);
+    cst_fwrite(fd,&sample_rate,4,1); /* sample rate */
+    cst_fseek(fd,4+4+4+4+4+2+2+4+4+2+2+4,CST_SEEK_ABSOLUTE); 
+    num_bytes = 
+	(sizeof(short) * cst_wave_num_channels(w) * cst_wave_num_samples(w)) +
+	(sizeof(short) * hdr.num_channels * hdr.num_samples);
+    if (CST_BIG_ENDIAN) num_bytes = SWAPINT(num_bytes);
+    cst_fwrite(fd,&num_bytes,4,1); /* num bytes in data */
+    cst_fclose(fd);
+
+    return rv;
+}
+
 int cst_wave_save_riff(cst_wave *w,const char *filename)
 {
     cst_file fd;
@@ -241,13 +313,11 @@ int cst_wave_load_riff(cst_wave *w,const char *filename)
     return r;
 }
 
-int cst_wave_load_riff_fd(cst_wave *w,cst_file fd)
+int cst_wave_load_riff_header(cst_wave_header *header,cst_file fd)
 {
     char info[4];
     short d_short;
-    int d_int, d;
-    int hsize;
-    int num_channels, samples, data_length;
+    int d_int;
 
     if (cst_fread(fd,info,1,4) != 4)
 	return CST_WRONG_FORMAT;
@@ -256,6 +326,7 @@ int cst_wave_load_riff_fd(cst_wave *w,cst_file fd)
 	
     cst_fread(fd,&d_int,4,1);
     if (CST_BIG_ENDIAN) d_int = SWAPINT(d_int);
+    header->num_bytes = d_int;
     
     if ((cst_fread(fd,info,1,4) != 4) ||
 	(strncmp(info,"WAVE",4) != 0))
@@ -267,7 +338,7 @@ int cst_wave_load_riff_fd(cst_wave *w,cst_file fd)
 
     cst_fread(fd,&d_int,4,1);
     if (CST_BIG_ENDIAN) d_int = SWAPINT(d_int);
-    hsize = d_int;
+    header->hsize = d_int;
     cst_fread(fd,&d_short,2,1);
     if (CST_BIG_ENDIAN) d_short = SWAPSHORT(d_short);
 
@@ -280,19 +351,35 @@ int cst_wave_load_riff_fd(cst_wave *w,cst_file fd)
     if (CST_BIG_ENDIAN) d_short = SWAPSHORT(d_short);
     if (d_short != 1)
     {
-	cst_errmsg("cst_load_wave_riff: can onlly support mono\n");
+	cst_errmsg("cst_load_wave_riff: can only support mono\n");
 	return CST_ERROR_FORMAT;
     }
-    num_channels = d_short;
+    header->num_channels = d_short;
 
     cst_fread(fd,&d_int,4,1);
     if (CST_BIG_ENDIAN) d_int = SWAPINT(d_int);
-    cst_wave_set_sample_rate(w,d_int);     /* sample rate */
+    header->sample_rate = d_int;
     cst_fread(fd,&d_int,4,1);              /* avg bytes per second */
     cst_fread(fd,&d_short,2,1);            /* block align */
     cst_fread(fd,&d_short,2,1);            /* bits per sample */
-    
-    cst_fseek(fd,cst_ftell(fd)+(hsize-16),CST_SEEK_ABSOLUTE); /* skip rest of header */
+
+    return CST_OK_FORMAT;
+}
+
+int cst_wave_load_riff_fd(cst_wave *w,cst_file fd)
+{
+    cst_wave_header hdr;
+    int rv;
+    char info[4];
+    int d_int, d;
+    int data_length;
+    int samples;
+
+    rv = cst_wave_load_riff_header(&hdr,fd);
+    if (rv != CST_OK_FORMAT)
+	return rv;
+	
+    cst_fseek(fd,cst_ftell(fd)+(hdr.hsize-16),CST_SEEK_ABSOLUTE); /* skip rest of header */
 
     /* Note there's a bunch of potential random headers */
     while (1)
@@ -321,8 +408,9 @@ int cst_wave_load_riff_fd(cst_wave *w,cst_file fd)
     }
 
     /* Now read the data itself */
-    data_length = samples * num_channels;
-    cst_wave_resize(w,samples,num_channels);
+    cst_wave_set_sample_rate(w,hdr.sample_rate);     /* sample rate */
+    data_length = samples * hdr.num_channels;
+    cst_wave_resize(w,samples,hdr.num_channels);
 
     if ((d = cst_fread(fd,w->samples,sizeof(short),data_length)) != data_length)
     {

@@ -52,7 +52,14 @@ BINDIR=$(shell test -d $(TOP)/bin || mkdir $(TOP)/bin; echo $(TOP)/bin; )
 LIBDIR=$(TOP)/lib
 
 FLITELIBS = $(TOP)/lib/libflite.a
-LDFLAGS += -L$(TOP)/lib -lflite -lm $(AUDIOLIBS)
+LDFLAGS += -L$(TOP)/lib -lflite -lm $(AUDIOLIBS) $(OTHERLIBS)
+
+ifdef SHFLAGS
+SOOBJS = $(OBJS:.o=.os)
+ifdef LIBNAME
+ALL += .build_so
+endif
+endif
 
 all: .make_build_dirs $(ALL) nothing
 
@@ -62,10 +69,29 @@ nothing:
 %.o : %.c
 	$(CC) $(DEFS) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
+%.os : %.c
+	$(CC) $(SHFLAGS) $(DEFS) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+
 .build_lib: $(OBJS)
 	$(AR) cruv $(LIBDIR)/lib$(LIBNAME).a $(OBJS)
 	$(RANLIB) $(LIBDIR)/lib$(LIBNAME).a
 	touch .build_lib
+
+.build_so: $(SOOBJS)
+	$(AR) cruv $(LIBDIR)/lib$(LIBNAME).shared.a $(SOOBJS)
+	$(RANLIB) $(LIBDIR)/lib$(LIBNAME).shared.a
+	touch .build_so
+
+# Used in the lib/ directory and in building new voices
+%.so: %.shared.a
+	@ echo making $@
+	@ rm -rf shared_os && mkdir shared_os
+	@ rm -f $@ $(LIBDIR)/$@.${PROJECT_VERSION} $(LIBDIR)/$@.${PROJECT_SHLIB_VERSION} 
+	@ (cd shared_os && ar x ../$<)
+	@ (cd shared_os && $(CC) -shared -Wl,-soname,$@.${PROJECT_SHLIB_VERSION} -o ../$@.${PROJECT_VERSION} *.os)
+	@ ln -s $(LIBDIR)/$@.${PROJECT_VERSION} $(LIBDIR)/$@.${PROJECT_SHLIB_VERSION}
+	@ ln -s $(LIBDIR)/$@.${PROJECT_SHLIB_VERSION} $(LIBDIR)/$@
+	@ rm -rf shared_os
 
 .make_build_dirs:
 	@ echo making in $(DIRNAME) ...
@@ -78,7 +104,7 @@ endif
 
 clean:
 	@ echo make clean in $(DIRNAME) ...
-	@ rm -rf .build_lib .build_shlib *.o *.os *.a *~ $(LOCAL_CLEAN)
+	@ rm -rf .build_lib .build_so *.o *.os *.a *~ $(LOCAL_CLEAN)
 ifdef ALL_DIRS
 	@ set -e; for i in $(ALL_DIRS) ; \
 	do \
@@ -97,22 +123,22 @@ endif
 	@ rm -rf .build_lib .build_shlib make.depend \
 		*.o *.os *.a *~ $(LOCAL_CLEAN) $(DIST_CLEAN)
 
-install: $(INSTALL_HEADERS) $(INSTALL_LIBS)
-	@ echo make install in $(DIRNAME) ...
-ifdef INSTALL_HEADERS
-	@ mkdir -p $(INSTALLINCDIR)
-	@ install -m644 $(INSTALL_HEADERS) $(INSTALLINCDIR)
-endif
-ifdef INSTALL_LIBS
-	@ mkdir -p $(INSTALLLIBDIR)
-	@ cp -fd $(INSTALL_LIBS) $(INSTALLLIBDIR)
-endif
-ifdef ALL_DIRS
-	@ set -e; for i in $(ALL_DIRS) ; \
-	do \
-	   $(MAKE) -C $$i --no-print-directory install; \
-	done
-endif
+# install: $(INSTALL_HEADERS) $(INSTALL_LIBS)
+# 	@ echo make install in $(DIRNAME) ...
+# ifdef INSTALL_HEADERS
+# 	@ mkdir -p $(INSTALLINCDIR)
+# 	@ $(INSTALL) -m644 $(INSTALL_HEADERS) $(INSTALLINCDIR)
+# endif
+# ifdef INSTALL_LIBS
+# 	@ mkdir -p $(INSTALLLIBDIR)
+# 	@ cp -fd $(INSTALL_LIBS) $(INSTALLLIBDIR)
+# endif
+# ifdef ALL_DIRS
+# 	@ set -e; for i in $(ALL_DIRS) ; \
+# 	do \
+# 	   $(MAKE) -C $$i --no-print-directory install; \
+# 	done
+# endif
 
 DEPEND=make.depend
 MAKE_DEPEND=$(CC) -MM $(CPPFLAGS) $(CFLAGS)

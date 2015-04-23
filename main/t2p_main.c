@@ -2,7 +2,7 @@
 /*                                                                       */
 /*                  Language Technologies Institute                      */
 /*                     Carnegie Mellon University                        */
-/*                        Copyright (c) 1999                             */
+/*                         Copyright (c) 2001                            */
 /*                        All Rights Reserved.                           */
 /*                                                                       */
 /*  Permission is hereby granted, free of charge, to use and distribute  */
@@ -31,51 +31,68 @@
 /*                                                                       */
 /*************************************************************************/
 /*             Author:  Alan W Black (awb@cs.cmu.edu)                    */
-/*               Date:  December 1999                                    */
+/*               Date:  January 2001                                     */
 /*************************************************************************/
 /*                                                                       */
-/*  Lexicon related functions                                            */
+/*  For text to phones                                                   */
 /*                                                                       */
 /*************************************************************************/
-#ifndef _CST_LEXICON_H__
-#define _CST_LEXICON_H__
 
 #include <stdio.h>
+#include <string.h>
+#include <sys/time.h>
+#include <unistd.h>
 
-#include "cst_item.h"
-#include "cst_lts.h"
+#include "cst_args.h"
+#include "flite.h"
+#include "voxdefs.h"
 
-typedef struct lexicon_entry_struct {
-    char *word_pos;
-    int phone_index;
-} lexicon_entry;
+cst_voice *REGISTER_VOX(const char *voxdir);
+cst_voice *UNREGISTER_VOX(cst_voice *vox);
 
-typedef struct lexicon_struct {
-    char *name;
-    int num_entries;
-    lexicon_entry *entry_index;
-    unsigned char *phones;
-    char **phone_table;
+int main(int argc, char **argv)
+{
+    cst_val *files;
+    cst_features *args=new_features();
+    cst_voice *v;
+    cst_utterance *u;
+    cst_item *s;
+    const char *text, *name;
 
-    cst_lts_rules *lts_rule_set;
+    files =
+        cst_args(argv,argc,
+                 "usage: t2p \"word word word\"\n"
+                 "Convert text to US English phonemes.",
+                 args);
 
-    int (*syl_boundary)(const cst_item *i,const cst_val *p);
+    if (files)
+	text = val_string(val_car(files));
+    else
+    {
+	fprintf(stderr,"no text specified\n");
+	exit(-1);
+    }
+
     
-    cst_val *(*lts_function)(const struct lexicon_struct *l, const char *word, const char *pos);
+    flite_init();
+    v = REGISTER_VOX(NULL);
 
-    char ***addenda;
-} cst_lexicon;
+    u = flite_synth_text(text,v);
 
-cst_lexicon *new_lexicon();
-void delete_lexicon(cst_lexicon *lex);
+    for (s=relation_head(utt_relation(u,"Segment"));
+	 s;
+	 s = item_next(s))
+    {
+	name = item_feat_string(s,"name");
+	printf("%s",name);
+	/* If its a vowel and is stessed output stress value */
+	if ((cst_streq("+",ffeature_string(s,"ph_vc"))) &&
+	    (cst_streq("1",ffeature_string(s,"R:SylStructure.parent.stress"))))
+	    printf("1");
+	printf(" ");
+    }
 
-lexicon_entry *lex_add_entry(cst_lexicon *l, const char *word, const char *pos,
-			     const unsigned char *phones);
-int lex_delete_entry(cst_lexicon *l, const char *word, const char *pos);
-
-cst_val *lex_lookup(const cst_lexicon *l, const char *word, const char *pos);
-int in_lex(const cst_lexicon *l, const char *word, const char *pos);
-
-CST_VAL_USER_TYPE_DCLS(lexicon,cst_lexicon)
-
-#endif
+    printf("\n");
+    
+    return 0;
+}

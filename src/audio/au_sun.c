@@ -58,12 +58,23 @@ cst_audiodev *audio_open_sun(int sps, int channels, cst_audiofmt fmt)
     audio_info_t ainfo;
     int fd;
     cst_audiodev *ad;
+    char *audio_device;
 
     if ((fd = open(sun_audio_device,O_WRONLY)) < 0)
     {
-	cst_errmsg("sun_audio: failed to open audio device %s: %s\n",
-		   sun_audio_device, strerror(errno));
-	cst_error();
+        /* the device might be a SunRay, so get the AUDIODEV env var */
+        audio_device = getenv("AUDIODEV");
+	
+	if (audio_device != NULL) {
+   	    if ((fd = open(audio_device,O_WRONLY)) < 0) {
+	        cst_errmsg("sun_audio: failed to open audio device %s: %s\n",
+			   audio_device, strerror(errno));
+	    }
+	} else {
+	    cst_errmsg("sun_audio: failed to open audio device %s: %s\n",
+		       sun_audio_device, strerror(errno));
+	    cst_error();
+	}
     }
     ioctl(fd,AUDIO_GETINFO,&ainfo);
 
@@ -160,3 +171,4 @@ int audio_drain_sun(cst_audiodev *ad)
 {
     return ioctl((int)ad->platform_data, AUDIO_DRAIN, 0);
 }
+

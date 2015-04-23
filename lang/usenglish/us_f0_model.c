@@ -77,7 +77,7 @@ static void apply_lr_model(cst_item *s,
 	(*end) += fv*f0_lr_terms[i].end;
 /*	printf("f %s start %f mid %f end %f\n",
 	       f0_lr_terms[i].feature,
-	       *start,*mid,*end); */
+	       *start,*mid,*end);  */
     }
 }
 
