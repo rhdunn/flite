@@ -8,7 +8,7 @@ and documentation for building synthetic voices.  However, flite itself
 does not require either of these systems to compile and run.
 
 This is the first beta release of the code, although the system is
-basically functional it ius not complete.  An example voice is
+basically functional it is not complete.  An example voice is
 included but deserves much more work.
 
 The core Flite library was developed by [Alan W. Black](mailto:awb@cs.cmu.edu)
@@ -33,9 +33,9 @@ and not portable enough.
   speed is crucial.
 * Flite is all in ANSI C, it contains no C++ or Scheme, thus requires
   more care in programming, and is harder to customize at run time.
-* It is thread safe
+* It is thread safe.
 * Voices, lexicons and language descriptions can be compiled
-  (mostly automatically) into C representations from their FestVox formats
+  (mostly automatically) into C representations from their FestVox formats.
 * All voices, lexicons and language model data are const and in the
   text segment (i.e. they may be put in ROM).  As they are linked in
   at compile time, there is virtually no startup delay.
@@ -84,8 +84,6 @@ Requirements:
 
 Supported platforms:
 
-We have successfully compiled and run on
-
 * Various Intel Linux systems (and iPaq Linux)
 * FreeBSD 3.x and 4.x
 * Solaris 5.7
@@ -115,85 +113,88 @@ Configuration should be automatic, but mayeb doesn't work in all cases
 especially if you have some new compiler.  You can explicitly set to
 compiler in config/config and add any options you see fit.   Configure
 tries to guess these but it might be able for cross compilation cases
-Interesting options there are
+Interesting options there are:
 
-| Option                        | Description                                      |
-|-------------------------------|--------------------------------------------------|
-| `-DWORDS_BIGENDIAN=1`         | for bigendian machines (e.g. Sparc, M68x)        |
-| `-DNO_UNION_INITIALIZATION=1` | For compilers without C 99 union inintialization |
-| `-DCST_AUDIO_NONE`            | if you don't need/want audio support             |
+  * `-DWORDS_BIGENDIAN=1` for bigendian machines (e.g. Sparc, M68x);
+  * `-DNO_UNION_INITIALIZATION=1` for compilers without C 99 union inintialization;
+  * `-DCST_AUDIO_NONE` if you don't need/want audio support.
 
 To compile for the ipaq Linux distribution (we've done this on Familiar
 and Intimate), no automatic cross compilation configuration is
-set up yet.  Thus configure on a Linux machine and
-edit config/config:
+set up yet.  Thus:
 
-  *  change `gcc` `ar` `ranlib` to their arm-linux equivalents
-  *  change `FL_VOX` to `cmu_us_kal16`,
-  *  `make clean`
-  *  `make`
-  *  `arm-linux-strip bin/flite`
+  *  run `configure` on a Linux machine;
+  *  edit `config/config`;
+  *  change `gcc`, `ar` and `ranlib` to their arm-linux equivalents;
+  *  change `FL_VOX` to `cmu_us_kal16`;
+  *  run:
 
-The copy `bin/flite` to the ipaq.  This binary is also available from
-[flite-1.0_bin_arm-linux.tar.gz](http://cmuflite.org/packed/flite-1.0/flite-1.0_bin_arm-linux.tar.gz)
-Because the Linux ipaq audio driver only supports 16KHz (and more)
-we include this larger voice.  This voice also used fixed point
-rather floating point as the StrongARM doesn't have floating
-point instructions.  We are working on a much smaller voice for
-the ipaq hopefully small enough to fit in the flash.
+         make clean
+         make
+         arm-linux-strip bin/flite
 
-# Usage:
+  *  copy `bin/flite` to the ipaq.  This binary is also available from
+     [flite-1.0_bin_arm-linux.tar.gz](http://cmuflite.org/packed/flite-1.0/flite-1.0_bin_arm-linux.tar.gz).
+     Because the Linux ipaq audio driver only supports 16KHz (and more)
+     we include this larger voice.  This voice also used fixed point
+     rather floating point as the StrongARM doesn't have floating
+     point instructions.  We are working on a much smaller voice for
+     the ipaq hopefully small enough to fit in the flash.
 
-If it compiles properly a binary will be put in `bin/`, note by
-default `-g` is one so it will be bigger that ios actually required
+# Usage
 
-    ./bin/flite "Flite is a small fast run-time synthesis engine" flite.wav
+If it compiles properly a binary will be put in `bin/`. By
+default the `-g` option is enabled, so it will be bigger that is actually required.
 
-Will produce an 8KHz riff headered waveform file (riff is Microsoft's
-wave format often called .WAV).
+  *  `./bin/flite "Flite is a small fast run-time synthesis engine" flite.wav`
 
-    ./bin/flite doc/alice
+     Will produce an 8KHz riff headered waveform file (riff is Microsoft's
+     wave format often called .WAV).
 
-Will play the text file [doc/alice](doc/alice).  If the first argument
-contains a space it is treated as text otherwise it is treated as a
-filename. If a second argument is given a waveform file is written to it,
-if no argument is given or `play` is given it will attempt to
-write directly to the audio device (if supported).  if `none`
-is given the audio is simply thrown away (used for benchmarking).
-Explicit options are also available.
+  *  `./bin/flite doc/alice`
 
-   ./bin/flite -v doc/alice none
+     Will play the text file [doc/alice](doc/alice).  If the first argument
+     contains a space it is treated as text otherwise it is treated as a
+     filename. If a second argument is given a waveform file is written to it,
+     if no argument is given or `play` is given it will attempt to
+     write directly to the audio device (if supported).  if `none`
+     is given the audio is simply thrown away (used for benchmarking).
+     Explicit options are also available.
 
-Will synthesize the file without playig the audio and give a summary
-of the speed.
+  *  `./bin/flite -v doc/alice none`
+
+     Will synthesize the file without playig the audio and give a summary
+     of the speed.
 
 An additional set of feature setting options are available, these are
 *debug* options, Voices are represented as sets of feature values (see
 `lang/cmu_us_kal/cmu_us_kal.c`) and you can override values on the
 command line.  This can stop flite from working if malicious values
-are set and therefor this facility is not intended to be made
+are set and therefore this facility is not intended to be made
 available for standard users.  But these are useful for
-debugging.  Some typical examples are
+debugging.
 
-    ./bin/flite --sets join_type=simple_join doc/intro
+Some typical examples are:
 
-Use simple concatenation of diphones without prosodic modification
+  *  `./bin/flite --sets join_type=simple_join doc/intro`
 
-    ./bin/flite --seti verbosity=1 doc/alice
+     Use simple concatenation of diphones without prosodic modification.
 
-Print sentences as ther are said
+  *  `./bin/flite --seti verbosity=1 doc/alice`
 
-    ./bin/flite --setf Duration_Stretch=1.5 doc/alice
+     Print sentences as they are said.
 
-Make it speak slower
+  *  `./bin/flite --setf Duration_Stretch=1.5 doc/alice`
 
-    ./bin/flite --setf int_f0_target_mean=145 doc/alice
+     Make it speak slower.
 
-Make it speak higher
+  *  `./bin/flite --setf int_f0_target_mean=145 doc/alice`
 
-The talking clock is an example talking clode as discussed on
-[ldom](http://festvox.org/ldom) it requires a single argument `HH:MM`
-under Unix you can call it
+     Make it speak higher.
+
+The talking clock is an example talking clock as discussed on
+[ldom](http://festvox.org/ldom). It requires a single argument in the
+format `HH:MM`. Under Unix you can call it as:
 
     ./bin/flite_time `date +%H:%M`
 
@@ -234,13 +235,13 @@ future versions we will add
 * A (default) compilation method from a FestVox built voice.
 * Streaming synthesis so no large buffers of waveforms need be held
   (we've got an initial pass at that in Cepstral but not read for this
-  release)
-* Better compression of the lexicon, and unit databases
+  release).
+* Better compression of the lexicon, and unit databases.
 * Better quality speech (we have better diphone databases which
   haven't been released yet but do give better quality synthesis).
 * Documentation to allow people to more easily integrate flite
   into applications.
-* Some reasonable voices based on our newer voice building work
+* Some reasonable voices based on our newer voice building work.
 
 # License
 

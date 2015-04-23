@@ -8,7 +8,8 @@ with clause 2 of the project's [BSD license](COPYING).
 Add and modernize the standard project files:
 
   * Added a CHANGELOG.md file to track the project changes.
-  * Convert the README file to markdown.
+  * Convert the README file to markdown and clean it up for typos and
+    readability.
   * Added a .gitignore file to ignore the build output.
   * Renamed configure.in to configure.ac.
   * Support building HTML versions of the markdown files with `kramdown`.
