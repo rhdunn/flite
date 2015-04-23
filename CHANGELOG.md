@@ -3,6 +3,11 @@
 This file documents the changes made to the flite project in order to comply
 with clause 2 of the project's [BSD license](COPYING).
 
+## [2.0-1]
+
+  * Removed the android directory as the android files are no longer there.
+  * Build improvements from [1.0-1](#1.0-1).
+
 ## [2.0]
 
 Upstream version 2.0.0:

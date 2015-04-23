@@ -4,6 +4,7 @@
 - [Usage](#usage)
 - [Voice Quality](#voice-quality)
 - [Bard Storyteller](#bard-storyteller)
+- [Android](#android)
 - [License](#license)
 
 ----------
@@ -283,7 +284,13 @@ a wide range of fonts, and flite voices, and books in text, html and
 epub format.  Bard is used as a evaluation of flites capabilities
 and an example of a serious application using flite.
 
-# License
+## Android
+
+The Android port is now in the
+[Flite-TTS-Engine-for-Android](https://github.com/happyalu/Flite-TTS-Engine-for-Android)
+project.
+
+## License
 
 The flite project is released under a [4-clause BSD license](COPYING) with
 the following copyright:
