@@ -99,9 +99,10 @@ AC_CHECK_HEADER(machine/soundcard.h,
 AC_CHECK_HEADER(sys/audioio.h,
               [AUDIODRIVER="sun"
                AUDIODEFS=-DCST_AUDIO_SUNOS])
-AC_CHECK_HEADER(sys/asoundlib.h,
+AC_CHECK_HEADER(alsa/asoundlib.h,
               [AUDIODRIVER="alsa"
-	       AUDIODEFS=-DCST_AUDIO_ALSA])
+	       AUDIODEFS=-DCST_AUDIO_ALSA
+	       AUDIOLIBS=-lasound])
 AC_CHECK_HEADER(mmsystem.h,
 	      [AUDIODRIVER="wince"
 	       AUDIODEFS=-DCST_AUDIO_WINCE
