@@ -25,3 +25,6 @@ make.depend
 
 include/flite_version.h
 bin/
+tools/find_sts
+tools/flite_sort
+tools/regexcomp
