@@ -30,7 +30,7 @@ Flite is the answer to the complaint that Festival is too big, too slow,
 and not portable enough.
 
 * Flite is designed for very small devices, such as PDAs, and also
-  for large server machines with lots of ports.
+  for large server machines which need to serve lots of ports.
 * Flite is not a replacement for Festival but an alternative run time
   engine for voices developed in the FestVox framework where size and
   speed is crucial.
@@ -96,7 +96,6 @@ Supported platforms:
 * Initial support for Mac OS X
 * Windows 2000/XP under Cygwin 1.3.5 and later
 * Support for WinCE (2.11 and 3.0) WM (5.x plus) is included
-* PalmOS 5.x devices (Treo 600, Zire 31 and Tungsten C)
 * Successfully compiles and runs under 64Bit Linux architectures
 * OSF1 V4.0 (gives an unimportant warning about sizes when compiled `cst_val.c`)
 
@@ -252,7 +251,7 @@ the next version.
 The flite project is released under a [4-clause BSD license](COPYING) with
 the following copyright:
 
-    Copyright Carnegie Mellon University 1999-2012
+    Copyright Carnegie Mellon University 1999-2014
     All rights reserved
 
 The changes to the project are described in the [CHANGELOG.md](CHANGELOG.md)

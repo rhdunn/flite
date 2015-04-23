@@ -3,6 +3,18 @@
 This file documents the changes made to the flite project in order to comply
 with clause 2 of the project's [BSD license](COPYING).
 
+## [1.9.0-1]
+
+  * Build improvements from [1.0-1](#1.0-1).
+
+## [1.9.0]
+
+Upstream version 1.9.0:
+
+  * Indic language support.
+  * Supports diffrent sample rates/mgc order to tune for speed.
+  * Removed PalmOS support from distribution.
+
 ## [1.5.6-1]
 
   * Build improvements from [1.0-1](#1.0-1).
@@ -12,7 +24,7 @@ with clause 2 of the project's [BSD license](COPYING).
 Upstream version 1.5.6:
 
   * SSML support.
-  * Generalized tokenstreams.
+  * Generalized tokenstreams (used in Bard Storyteller).
   * Simple-Pulseaudio support.
 
 ## [1.5.4-1]
