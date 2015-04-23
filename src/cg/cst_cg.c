@@ -81,17 +81,13 @@ void delete_cg_db(cst_cg_db *db)
         delete_cart((cst_cart *)(void *)db->f0_trees[i]);
     cst_free((void *)db->f0_trees);
 
-    for (i=0; db->param_trees0 && db->param_trees0[i]; i++)
-        delete_cart((cst_cart *)(void *)db->param_trees0[i]);
-    cst_free((void *)db->param_trees0);
-
-    for (i=0; db->param_trees1 && db->param_trees1[i]; i++)
-        delete_cart((cst_cart *)(void *)db->param_trees1[i]);
-    cst_free((void *)db->param_trees1);
-
-    for (i=0; db->param_trees2 && db->param_trees2[i]; i++)
-        delete_cart((cst_cart *)(void *)db->param_trees2[i]);
-    cst_free((void *)db->param_trees2);
+    for (j=0; j<db->num_param_models; j++)
+    {
+        for (i=0; db->param_trees[j] && db->param_trees[j][i]; i++)
+            delete_cart((cst_cart *)(void *)db->param_trees[j][i]);
+        cst_free((void *)db->param_trees[j]);
+    }
+    cst_free((void *)db->param_trees);
 
     if (db->spamf0)
     {
@@ -102,26 +98,31 @@ void delete_cg_db(cst_cg_db *db)
         cst_free((void *)db->spamf0_accent_vectors);
     }
 
-    for (i=0; i<db->num_frames0; i++)
-        cst_free((void *)db->model_vectors0[i]);
-    cst_free((void *)db->model_vectors0);
-    for (i=0; i<db->num_frames1; i++)
-        cst_free((void *)db->model_vectors1[i]);
-    cst_free((void *)db->model_vectors1);
-    for (i=0; i<db->num_frames2; i++)
-        cst_free((void *)db->model_vectors2[i]);
-    cst_free((void *)db->model_vectors2);
+    for (j=0; j<db->num_param_models; j++)
+    {
+        for (i=0; i<db->num_frames[j]; i++)
+            cst_free((void *)db->model_vectors[j][i]);
+        cst_free((void *)db->model_vectors[j]);
+    }
+    cst_free(db->num_channels);
+    cst_free(db->num_frames);
+    cst_free((void *)db->model_vectors);
 
     cst_free((void *)db->model_min);
     cst_free((void *)db->model_range);
 
-    for (i=0; db->dur_stats && db->dur_stats[i]; i++)
+    for (j = 0; j<db->num_dur_models; j++)
     {
-        cst_free((void *)db->dur_stats[i]->phone);
-        cst_free((void *)db->dur_stats[i]);
+        for (i=0; db->dur_stats[j] && db->dur_stats[j][i]; i++)
+        {
+            cst_free((void *)db->dur_stats[j][i]->phone);
+            cst_free((void *)db->dur_stats[j][i]);
+        }
+        cst_free((void *)db->dur_stats[j]);
+        delete_cart((void *)db->dur_cart[j]);
     }
     cst_free((void *)db->dur_stats);
-    delete_cart((void *)db->dur_cart);
+    cst_free((void *)db->dur_cart);
 
     for (i=0; db->phone_states && db->phone_states[i]; i++)
     {
@@ -162,23 +163,28 @@ static float cg_state_duration(cst_item *s, cst_cg_db *cg_db)
 {
     float zdur, dur;
     const char *n;
-    int i, x;
+    int i, x, dm;
 
-    zdur = val_float(cart_interpret(s,cg_db->dur_cart));
+    for (dm=0,zdur=0.0; dm < cg_db->num_dur_models; dm++)
+        zdur += val_float(cart_interpret(s,cg_db->dur_cart[dm]));
+    zdur /= dm;  /* get average zdur prediction from all dur models */
     n = item_feat_string(s,"name");
 
-    for (x=i=0; cg_db->dur_stats[i]; i++)
+    /* Note we only use the dur stats from the first model, that is */
+    /* correct, but wouldn't be if the dur tree was trained on different */
+    /* data */
+    for (x=i=0; cg_db->dur_stats[0][i]; i++)
     {
-        if (cst_streq(cg_db->dur_stats[i]->phone,n))
+        if (cst_streq(cg_db->dur_stats[0][i]->phone,n))
         {
             x=i;
             break;
         }
     }
-    if (!cg_db->dur_stats[i])  /* unknown type name */
+    if (!cg_db->dur_stats[0][i])  /* unknown type name */
         x = 0;
 
-    dur = (zdur*cg_db->dur_stats[x]->stddev)+cg_db->dur_stats[x]->mean;
+    dur = (zdur*cg_db->dur_stats[0][x]->stddev)+cg_db->dur_stats[0][x]->mean;
 
     /*    dur = 1.2 * (float)exp((float)dur); */
 
@@ -459,10 +465,10 @@ static cst_utterance *cg_predict_params(cst_utterance *utt)
     cst_track *str_track = NULL;
     cst_item *mcep;
     const cst_cart *mcep_tree, *f0_tree;
-    int i,j,f,p,fd,o;
+    int i,j,f,p,o,pm;
     const char *mname;
     float f0_val;
-    float local_gain;
+    float local_gain, voicing;
     int fff;
     int extra_feats = 0;
 
@@ -485,8 +491,9 @@ static cst_utterance *cg_predict_params(cst_utterance *utt)
     
     cst_track_resize(param_track,
                      utt_feat_int(utt,"param_track_num_frames"),
-                     (cg_db->num_channels0/fff)-
+                     (cg_db->num_channels[0]/fff)-
                        (2 * extra_feats));/* no voicing or str */
+    f = 0;
     for (i=0,mcep=utt_rel_head(utt,"mcep"); mcep; i++,mcep=item_next(mcep))
     {
         mname = item_feat_string(mcep,"name");
@@ -504,66 +511,50 @@ static cst_utterance *cg_predict_params(cst_utterance *utt)
         param_track->frames[i][0] = f0_val;
         /* what about stddev ? */
 
-        if (cg_db->multimodel)
-        {   /* MULTI model */
-            f = val_int(cart_interpret(mcep,cg_db->param_trees0[p]));
-            fd = val_int(cart_interpret(mcep,cg_db->param_trees1[p]));
-            item_set_int(mcep,"clustergen_param_frame",f);
-
-            param_track->frames[i][0] = 
-                (param_track->frames[i][0]+
-                 CG_MODEL_VECTOR(cg_db,model_vectors0,f,0)+
-                 CG_MODEL_VECTOR(cg_db,model_vectors1,fd,0))/3.0;
-            for (j=2; j<param_track->num_channels; j++)
-                param_track->frames[i][j] = 
-                    (CG_MODEL_VECTOR(cg_db,model_vectors0,f,(j)*fff)+
-                     CG_MODEL_VECTOR(cg_db,model_vectors1,fd,(j)*fff))/2.0;
-            /* Apply local gain */
-            param_track->frames[i][2] *= local_gain;
-
-            if (cg_db->mixed_excitation)
-            {
-                o = j;
-                for (j=0; j<5; j++)
-                {
-                    str_track->frames[i][j] =
-                        (CG_MODEL_VECTOR(cg_db,model_vectors0,f,(o+(2*j))*fff)+
-                         CG_MODEL_VECTOR(cg_db,model_vectors1,fd,(o+(2*j))*fff))/2.0;
-                }
-            }
-        }
-        else  
-        {   /* SINGLE model */
-            /* Predict Spectral */
-            mcep_tree = cg_db->param_trees0[p];
+        /* We only have multiple models now, but the default is one model */
+        /* Predict spectral coeffs */
+        voicing = 0.0;
+        for (pm=0; pm<cg_db->num_param_models; pm++)
+        {
+            mcep_tree = cg_db->param_trees[pm][p];
             f = val_int(cart_interpret(mcep,mcep_tree));
+            /* If there is one model this will be fine, if there are */
+            /* multiple models this will be the nth model */
             item_set_int(mcep,"clustergen_param_frame",f);
 
-            param_track->frames[i][0] = 
-                (param_track->frames[i][0]+
-                 CG_MODEL_VECTOR(cg_db,model_vectors0,f,0))/2.0;
+            /* Old code used to average in param[0] with F0 too (???) */
 
             for (j=2; j<param_track->num_channels; j++)
-                param_track->frames[i][j] =
-                    CG_MODEL_VECTOR(cg_db,model_vectors0,f,(j)*fff);
-            /* Apply local gain */
-            param_track->frames[i][2] *= local_gain;
+            {
+                if (pm == 0) param_track->frames[i][j] = 0.0;
+                param_track->frames[i][j] +=
+                    CG_MODEL_VECTOR(cg_db,model_vectors[pm],f,(j)*fff)/
+                    (float)cg_db->num_param_models;
+            }
 
             if (cg_db->mixed_excitation)
             {
                 o = j;
                 for (j=0; j<5; j++)
                 {
-                    str_track->frames[i][j] =
-                        CG_MODEL_VECTOR(cg_db,model_vectors0,f,(o+(2*j))*fff);
+                    if (pm == 0) str_track->frames[i][j] = 0.0;
+                    str_track->frames[i][j] +=
+                        CG_MODEL_VECTOR(cg_db,model_vectors[pm],f,
+                                        (o+(2*j))*fff) /
+                        (float)cg_db->num_param_models;
                 }
             }
-        }
 
-        /* last coefficient is average voicing for cluster */
-        item_set_float(mcep,"voicing",
-                       CG_MODEL_VECTOR(cg_db,model_vectors0,f,
-                                       cg_db->num_channels0-2));
+            /* last coefficient is average voicing for cluster */
+            voicing /= (float)(pm+1);
+            voicing +=
+                CG_MODEL_VECTOR(cg_db,model_vectors[pm],f,
+                                cg_db->num_channels[pm]-2) / 
+                (float)(pm+1);
+        }
+        item_set_float(mcep,"voicing",voicing);
+        /* Apply local gain to c0 */
+        param_track->frames[i][2] *= local_gain;
 
         param_track->times[i] = i * cg_db->frame_advance;
     }

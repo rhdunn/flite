@@ -47,7 +47,7 @@
 (defvar mcep_max 4.540220)
 
 (defvar page_size 500) ;; number of frames per page
-(set! page_size 1000000) ;; 1^6 means we do mmap
+;;(set! page_size 1000000) ;; 1^6 means we do mmap
 
 (define (clunits_convert name clcatfnfileordered clcatfnunitordered 
 			 cltreesfn festvoxdir odir)
@@ -824,6 +824,12 @@ Output clunit selection carts into odir/name_carts.c"
       (string-before x "@")
       "atsign"
       (string-after x "@"))))
+   ((string-matches x ".*#.*" x) 
+    (intern
+     (string-append
+      (string-before x "#")
+      "hash"
+      (string-after x "#"))))
    ((string-matches x ".*:.*")
     (intern
      (string-append

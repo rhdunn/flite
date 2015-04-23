@@ -678,6 +678,13 @@ int default_utt_break(cst_tokenstream *ts,
     if (cst_strchr(ts->whitespace,'\n') != cst_strrchr(ts->whitespace,'\n'))
 	 /* contains two new lines */
 	 return TRUE;
+    /* Well, this is a little specific isn't it. */
+    else if (((cst_streq(ltoken,"Yahoo")) ||
+              (cst_streq(ltoken,"YAHOO")) ||
+              (cst_streq(ltoken,"yahoo"))) &&
+             strchr(postpunct,'!') &&
+	     strchr("abcdefghijklmnopqrstuvwxyz",token[0]))
+        return FALSE;
     else if (strchr(postpunct,':') ||
 	     strchr(postpunct,'?') ||
 	     strchr(postpunct,'!'))

@@ -84,6 +84,7 @@ int phone_id(const cst_phoneset *ps,const char* phonename)
 	if (cst_streq(ps->phonenames[i],phonename))
 	    return i;
     /* Wonder if I should print an error here or not */
+    /* printf("awb_debug cst_phoneset.c phone_id unknown phone %s\n",phonename); */
 
     return 0;
 }

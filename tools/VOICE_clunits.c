@@ -107,7 +107,40 @@ void unregister___VOICENAME__(cst_voice *vox)
     __VOICENAME___clunits = NULL;
 }
 
+static const char *__VOICENAME___nextvoicing(cst_item *s)
+{
+    if (cst_streq("+",flite_ffeature_string(s,"n.ph_vc")))
+        return "V";
+    else if (cst_streq("+",flite_ffeature_string(s,"n.ph_cvox")))
+        return "CVox";
+    else
+        return "UV";
+}
+
 static char *__VOICENAME___unit_name(cst_item *s)
 {
-    return cst_strdup(flite_ffeature_string(s,"name"));
+    const char *name;
+    /* This *is* long enough as long as you don't change external things */
+    char cname[30];
+
+    name = flite_ffeature_string(s,"name");
+    /* Comment this out if you have more complex unit names */
+#if 1
+    if (1 == 1)
+        return cst_strdup(name);
+    else 
+#endif
+    if (cst_streq("+",flite_ffeature_string(s,"ph_vc")))
+    {
+        cst_sprintf(cname,"%s_%s_%s",name,
+                    flite_ffeature_string(s,"R:SylStructure.parent.stress"),
+                    __VOICENAME___nextvoicing(s));
+    }
+    else 
+    {
+        cst_sprintf(cname,"%s_%s",name,
+                    __VOICENAME___nextvoicing(s));
+    }
+
+    return cst_strdup(cname);
 }

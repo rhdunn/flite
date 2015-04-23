@@ -223,6 +223,7 @@ int cst_cg_dump_voice(const cst_voice *v,const cst_string *filename)
 {
     cst_file fd;
     const cst_cg_db* db;
+    int dm, pm;
 
     if ((fd = cst_fopen(filename,CST_OPEN_WRITE|CST_OPEN_BINARY)) == NULL)
         return 0;
@@ -244,10 +245,19 @@ int cst_cg_dump_voice(const cst_voice *v,const cst_string *filename)
                           get_param_string(v->features,"age","30"));
     cst_cg_write_voice_feature(fd, "gender", 
                           get_param_string(v->features,"gender","unknown"));
-    cst_cg_write_voice_feature(fd, "build_data", 
+    cst_cg_write_voice_feature(fd, "build_date", 
                           get_param_string(v->features,"build_date","unknown"));
     cst_cg_write_voice_feature(fd, "description", 
                           get_param_string(v->features,"description","unknown"));
+    cst_cg_write_voice_feature(fd, "copyright", 
+                          get_param_string(v->features,"copyright","unknown"));
+
+    /* These features define the number of mopdels to be read */
+    cst_cg_write_voice_feature(fd,"num_dur_models",
+                               val_string(val_string_n(db->num_dur_models)));
+    cst_cg_write_voice_feature(fd,"num_param_models",
+                               val_string(val_string_n(db->num_param_models)));
+
     cst_cg_write_voice_feature(fd, "end_of_features","end_of_features");
 
     /* db name */
@@ -260,9 +270,9 @@ int cst_cg_dump_voice(const cst_voice *v,const cst_string *filename)
     cst_fwrite(fd,&db->f0_stddev,sizeof(float),1); 
 
     cst_cg_write_tree_array(fd,db->f0_trees);
-    cst_cg_write_tree_array(fd,db->param_trees0);
-    cst_cg_write_tree_array(fd,db->param_trees1);
-    cst_cg_write_tree_array(fd,db->param_trees2);
+
+    for (pm=0; pm<db->num_param_models; pm++)
+        cst_cg_write_tree_array(fd,db->param_trees[pm]);
     
     cst_fwrite(fd,&db->spamf0,sizeof(int),1); 
     if (db->spamf0)
@@ -271,20 +281,14 @@ int cst_cg_dump_voice(const cst_voice *v,const cst_string *filename)
         cst_cg_write_tree(fd,db->spamf0_phrase_tree);
     }
   
-    cst_fwrite(fd,&db->num_channels0,sizeof(int),1); 
-    cst_fwrite(fd,&db->num_frames0,sizeof(int),1); 
-    cst_cg_write_2d_array(fd, (void *)db->model_vectors0, db->num_frames0, 
-                       db->num_channels0, sizeof(unsigned short));
-
-    cst_fwrite(fd,&db->num_channels1,sizeof(int),1); 
-    cst_fwrite(fd,&db->num_frames1,sizeof(int),1); 
-    cst_cg_write_2d_array(fd, (void *)db->model_vectors1, db->num_frames1, 
-                       db->num_channels1, sizeof(unsigned short));
-
-    cst_fwrite(fd,&db->num_channels2,sizeof(int),1); 
-    cst_fwrite(fd,&db->num_frames2,sizeof(int),1); 
-    cst_cg_write_2d_array(fd, (void *)db->model_vectors2, db->num_frames2, 
-                       db->num_channels2, sizeof(unsigned short));
+    for (pm=0; pm<db->num_param_models; pm++)
+    {
+        cst_fwrite(fd,&db->num_channels[pm],sizeof(int),1); 
+        cst_fwrite(fd,&db->num_frames[pm],sizeof(int),1); 
+        cst_cg_write_2d_array(fd, (void *)db->model_vectors[pm], 
+                              db->num_frames[pm], 
+                              db->num_channels[pm], sizeof(unsigned short));
+    }
 
     if (db->spamf0)
     {
@@ -296,13 +300,16 @@ int cst_cg_dump_voice(const cst_voice *v,const cst_string *filename)
                               sizeof(float));
     }
   
-    cst_cg_write_array(fd, db->model_min, sizeof(float)*db->num_channels0);
-    cst_cg_write_array(fd, db->model_range, sizeof(float)*db->num_channels0);
+    cst_cg_write_array(fd, db->model_min, sizeof(float)*db->num_channels[0]);
+    cst_cg_write_array(fd, db->model_range, sizeof(float)*db->num_channels[0]);
 
     cst_fwrite(fd,&db->frame_advance,sizeof(float),1); 
 
-    cst_cg_write_dur_stats(fd, db->dur_stats);
-    cst_cg_write_tree(fd, db->dur_cart);
+    for (dm=0; dm<db->num_dur_models; dm++)
+    {
+        cst_cg_write_dur_stats(fd, db->dur_stats[dm]);
+        cst_cg_write_tree(fd, db->dur_cart[dm]);
+    }
 
     cst_cg_write_phone_states(fd, db->phone_states);
 

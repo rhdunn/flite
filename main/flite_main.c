@@ -97,8 +97,8 @@ static void flite_usage()
 	   "  -add_lex FILENAME add lex addenda from FILENAME\n"
 	   "  -pw         Print words\n"
 	   "  -ps         Print segments\n"
-       "  -psdur      Print segments and their durations (end-time)\n"
-	   "  -pr RelName  Print relation RelName\n"
+           "  -psdur      Print segments and their durations (end-time)\n"
+	   "  -pr RelName Print relation RelName\n"
            "  -voicedump FILENAME Dump selected (cg) voice to FILENAME\n"
            "  -v          Verbose mode\n");
     exit(0);

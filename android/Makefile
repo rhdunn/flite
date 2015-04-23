@@ -35,75 +35,25 @@
 ##                                                                       ##
 ##  Android support for Flite                                            ##
 ##                                                                       ##
-##  Confirgure:                                                          ##
-##    Install Android NDK from                                           ##
-##       http://developer.android.com/sdk/ndk/index.html                 ##
-##    Install Android SDK from                                           ##
-##       http://developer.android.com/sdk/index.html                     ##
-##    Set environment variable ANDROID_NDK to your local installation    ## 
-##    export ANDROID_NDK=/opt/android-ndk-r3                             ##
-##    export ANDROID_SDK=/opt/android-sdk                                ##
-##    In Flite directory, run                                            ##
-##    ./configure --target=arm-android                                   ##
+##  Android support for Flite is now in a different project              ##
+##                                                                       ##
+##  git clone https://github.com/happyalu/Flite-TTS-Engine-for-Android   ##
+##                                                                       ##
+##  and follow instructions in Flite-TTS-Engine-for-Android/README.rst   ##
 ##                                                                       ##
 ###########################################################################
 TOP = ..
 DIRNAME = android
 BUILD_DIRS = 
 ALL_DIRS = $(BUILD_DIRS) 
-APP_CODE = app_code/LICENSE \
-	   app_code/res/layout/download_voice_data.xml \
-           app_code/res/layout/main.xml \
-	   app_code/res/xml/engine_settings.xml \
-           app_code/res/drawable/icon.png \
-           app_code/res/values/strings.xml \
-           app_code/default.properties \
-           app_code/src/edu/cmu/cs/speech/tts/flite/EngineSettings.java \
-           app_code/src/edu/cmu/cs/speech/tts/flite/FileDownloader.java \
-           app_code/src/edu/cmu/cs/speech/tts/flite/DownloadVoiceData.java \
-           app_code/src/edu/cmu/cs/speech/tts/flite/CheckVoiceData.java \
-           app_code/src/edu/cmu/cs/speech/tts/flite/GetSampleText.java \
-           app_code/src/edu/cmu/cs/speech/tts/flite/Flite.java \
-           app_code/src/edu/cmu/cs/speech/tts/flite/Utility.java \
-           app_code/build.xml \
-           app_code/AndroidManifest.xml \
-           app_code/jni/edu_cmu_cs_speech_tts_fliteVoices.hh \
-           app_code/jni/tts/tts.h \
-           app_code/jni/Android.mk \
-           app_code/jni/edu_cmu_cs_speech_tts_String.cpp \
-           app_code/jni/edu_cmu_cs_speech_tts_fliteVoices.cpp \
-           app_code/jni/edu_cmu_cs_speech_tts_String.hh \
-           app_code/jni/edu_cmu_cs_speech_tts_Common.hh \
-           app_code/jni/Application.mk \
-           app_code/jni/edu_cmu_cs_speech_tts_fliteEngine.cpp \
-           app_code/README
 H = 
 SRCS = 
 OBJS = $(SRCS:.c=.o)
 IMGS = 
 OTHER = 
-FILES = Makefile README $(APP_CODE)
+FILES = Makefile README 
 
 include $(TOP)/config/common_make_rules
 
-all: app
+all: 
 
-app: $(ANDROID_NDK)/ndk-build $(ANDROID_SDK)/tools/adb $(FLITEDIR)/android/Makefile
-	@ echo "Building Android app."
-	@ $(ANDROID_NDK)/ndk-build --directory=$(TOP)/android/app_code
-	@ cd $(TOP)/android/app_code; echo "sdk.dir=$(ANDROID_SDK)" > local.properties; ant debug
-	@ echo ""
-	@ echo "The built app is located at: $(TOP)/android/app_code/bin/FliteEngine-debug.apk"
-
-$(ANDROID_SDK)/tools/adb:
-	$(error Please set the ANDROID_SDK variable appropriately.)
-
-$(ANDROID_NDK)/ndk-build:
-	$(error Please set the ANDROID_NDK variable appropriately. You need release-4.)
-
-$(FLITEDIR)/android/Makefile:
-	$(error Please set the FLITEDIR variable to point to absolute path of the flite root directory)
-
-local_clean:
-	@ echo "Cleaning up app code directory"
-	@ cd $(TOP)/android/app_code; rm -f local.properties; rm -rf bin/ gen/ libs/

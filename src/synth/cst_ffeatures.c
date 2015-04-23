@@ -563,8 +563,13 @@ static const cst_val *ssyl_in(const cst_item *syl)
 
     fs = path_to_item(syl,"R:SylStructure.parent.R:Phrase.parent.daughter.R:SylStructure.daughter");
 
+#if 1 /* fix by uratec */
+    if(item_equal(ss,fs))
+      return val_string_n(0);
+#else
     /* This should actually include the first syllable, but Festival's
        doesn't. */
+#endif
     for (c=0, p=item_prev(ss); 
 	 p && (!item_equal(p,fs)) && (c < CST_CONST_INT_MAX);
 	 p=item_prev(p))
@@ -586,6 +591,10 @@ static const cst_val *ssyl_out(const cst_item *syl)
 
     fs = path_to_item(syl,"R:SylStructure.parent.R:Phrase.parent.daughtern.R:SylStructure.daughtern");
 
+#if 1 /* fix by uratec */
+    if(item_equal(ss,fs))
+      return val_string_n(0);
+#endif
     for (c=0, p=item_next(ss); 
 	 p && (c < CST_CONST_INT_MAX); 
 	 p=item_next(p))
@@ -715,7 +724,13 @@ static const cst_val *asyl_in(const cst_item *syl)
 
     fs = path_to_item(syl,"R:SylStructure.parent.R:Phrase.parent.daughter.R:SylStructure.daughter");
 
+#if 1 /* fix by uratec */
+    if(item_equal(ss,fs))
+      return val_string_n(0);
+    for (c=0, p=item_prev(ss); 
+#else
     for (c=0, p=ss; 
+#endif
 	 p && (c < CST_CONST_INT_MAX); 
 	 p=item_prev(p))
     {
@@ -739,7 +754,13 @@ static const cst_val *asyl_out(const cst_item *syl)
 
     fs = path_to_item(syl,"R:SylStructure.parent.R:Phrase.parent.daughtern.R:SylStructure.daughtern");
 
+#if 1 /* fix by uratec */
+    if(item_equal(ss,fs))
+      return val_string_n(0);
+    for (c=0, p=item_next(ss); 
+#else
     for (c=0, p=ss; 
+#endif
 	 p && (c < CST_CONST_INT_MAX); 
 	 p=item_next(p))
     {
