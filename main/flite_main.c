@@ -52,7 +52,7 @@ void cst_alloc_debug_summary();
 
 static void flite_version()
 {
-    printf("  Carnegie Mellon University, Copyright (c) 1999-2009, all rights reserved\n");
+    printf("  Carnegie Mellon University, Copyright (c) 1999-2011, all rights reserved\n");
     printf("  version: %s-%s-%s %s (http://cmuflite.org)\n",
 	   FLITE_PROJECT_PREFIX,
 	   FLITE_PROJECT_VERSION,
@@ -124,6 +124,11 @@ static cst_utterance *print_info(cst_utterance *u)
 	 item=item_next(item))
     {
 	printf("%s ",item_feat_string(item,"name"));
+#if 0
+        if (cst_streq("+",ffeature_string(item,"ph_vc")))
+            printf("%s",ffeature_string(item,"R:SylStructure.parent.stress"));
+        printf(" ");
+#endif
     }
     printf("\n");
 
@@ -205,6 +210,8 @@ int main(int argc, char **argv)
 	    flite_verbose = TRUE;
 	else if (cst_streq(argv[i],"-lv"))
         {
+            if (flite_voice_list == NULL)
+                flite_set_voice_list(voicedir);
             flite_voice_list_print();
             exit(0);
         }

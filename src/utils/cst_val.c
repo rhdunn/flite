@@ -41,6 +41,7 @@
 #include "cst_file.h"
 #include "cst_val.h"
 #include "cst_string.h"
+#include "cst_tokenstream.h"
 
 static cst_val *new_val()
 {
@@ -336,7 +337,7 @@ void val_print(cst_file fd,const cst_val *v)
 }
 
 cst_val *val_reverse(cst_val *l)
-{
+{   /* destructively reverse the list */
     cst_val *n,*np,*nl;
     for (nl=0,n=l; n; nl=n,n=np)
     {
@@ -554,6 +555,29 @@ cst_string *cst_implode(const cst_val *sl)
     }
 
     return s;
+}
+
+cst_val *val_readlist_string(const char *str)
+{   /* not fully general but a good start */
+    cst_tokenstream *ts;
+    cst_val *v = NULL;
+    const char *p;
+
+    ts = ts_open_string(str,
+                        cst_ts_default_whitespacesymbols,
+                        "",
+                        "",
+                        "");
+
+    while (!ts_eof(ts))
+    {
+        p = ts_get(ts);
+        v = cons_val(string_val(p),v);
+    }
+
+    ts_close(ts);
+
+    return val_reverse(v);
 }
 
 

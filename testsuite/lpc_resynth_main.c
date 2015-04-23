@@ -95,8 +95,8 @@ int main(int argc, char **argv)
     args = new_features();
     files =
         cst_args(argv,argc,
-                 "usage: rfc OPTIONS INTRACK OUTWAVE\n"
-                 "Resynth an rfc lpc trackFC\n"
+                 "usage: lpc_resynth OPTIONS INTRACK OUTWAVE\n"
+                 "Resynth an lpc track\n"
                  "-res <string> residual (as waveform)\n"
                  "-save_res Save the generated residual\n"
                  "-lpc_start <int> start of lpc params in lpc track {1}\n"
@@ -261,6 +261,7 @@ int main(int argc, char **argv)
         else if  ((t1->frames[i][0] == 0) ||
              (t1->frames[i][t1->num_channels-1] == 0))
         {   /* unvoiced */
+            printf("awb_debug unvoiced %d\n",i);
             m = sqrt(t1->frames[i][1]);
             for (j=0; j<frame_length; j++)
                 residual[j] = m*rand_zero_to_one()*plus_or_minus_one();
@@ -268,11 +269,13 @@ int main(int argc, char **argv)
         }
         else
         {   /* voiced */
+            printf("awb_debug voiced %d\n",i);
             period = w1->sample_rate/t1->frames[i][0];
             next_peak = last_peak + period;
             memset(residual,0,sizeof(float)*frame_length);
             if (next_peak < (s + frame_length))
             {
+                printf("awb_debug ping voiced %d\n",i);
                 power = sqrt(t1->frames[i][1])*frame_length;
                 if (next_peak-s < 2)
                     position=2;

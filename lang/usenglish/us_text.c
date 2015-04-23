@@ -50,6 +50,7 @@ static cst_val *state_name(const char *name,cst_item *t);
 /* compiled us regexes */
 #include "us_regexes.h"
 
+/* Note you need to also update the wandm regex in make_us_regeses too */
 static const char * const wandm_abbrevs[99][2] =
 {
     { "LB", "pounds" },
@@ -60,6 +61,9 @@ static const char * const wandm_abbrevs[99][2] =
     { "FT", "feet" },
     { "kg", "kilograms" },
     { "km", "kilometers" },
+    { "cm", "centimeters" },
+    { "mm", "millimeters" },
+    { "ml", "milliliters" },
     { "oz", "ounces" },
     { "hz", "hertz" },
     { "Hz", "hertz" },
@@ -67,6 +71,10 @@ static const char * const wandm_abbrevs[99][2] =
     { "KHz", "kilohertz" },
     { "MHz", "megahertz" },
     { "GHz", "gigahertz" },
+    { "KB", "kilobytes" },
+    { "GB", "gigabytes" },
+    { "MB", "megabytes" },
+    { "TB", "terabytes" },
     { NULL, NULL },
 };
 
@@ -600,7 +608,7 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
     {   /* 60s and 7s and 9s */
 	aaa = cst_strdup(name);
 	aaa[cst_strlen(name)-1] = '\0';
-	r = val_append(en_exp_number(aaa),
+	r = val_append(us_tokentowords_one(token,aaa),
 		       cons_val(string_val("'s"),0));
 	cst_free(aaa);
     }
@@ -687,7 +695,6 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
     }
     else if (cst_regex_match(wandm,name))
     {   /* weights and measures */
-
         for (j=cst_strlen(name)-1; j > 0; j--)
             if (cst_strchr("0123456789",name[j]))
                 break;

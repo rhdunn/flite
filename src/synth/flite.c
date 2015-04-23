@@ -449,7 +449,7 @@ int flite_munmap_clunit_voxdata(cst_voice *voice)
         clunit_db->mcep->frames = NULL;
         clunit_db->sts->residuals = NULL;
         clunit_db->sts->ressizes = NULL;
-        vd = val_userdata(val_vd);
+        vd = (cst_filemap *)val_userdata(val_vd);
         cst_munmap_file(vd);
     }
     

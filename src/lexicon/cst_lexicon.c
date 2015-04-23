@@ -159,7 +159,7 @@ cst_val *cst_lex_make_entry(const cst_lexicon *lex, const cst_string *entry)
         p = ts_get(e);
         /* Check its a legal phone */
         for (i=0; lex->phone_table[i]; i++)
-        {
+       {
             if (cst_streq(p,lex->phone_table[i]))
                 break;
         }

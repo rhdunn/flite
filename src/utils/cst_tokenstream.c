@@ -213,7 +213,7 @@ static void get_token_sub_part(cst_tokenstream *ts,
 	       (!ts_charclass(ts->current_char,
 			      TS_CHARCLASS_SINGLECHAR,ts))); p++)
     {
-	if (p >= *buffer_max) extend_buffer(buffer,buffer_max);
+	if (p+1 >= *buffer_max) extend_buffer(buffer,buffer_max);
 	(*buffer)[p] = ts->current_char;
 	ts_getc(ts);
     }
@@ -234,7 +234,7 @@ static void get_token_sub_part_2(cst_tokenstream *ts,
 			      TS_CHARCLASS_SINGLECHAR,ts)));
          p++)
     {
-	if (p >= *buffer_max) extend_buffer(buffer,buffer_max);
+	if (p+1 >= *buffer_max) extend_buffer(buffer,buffer_max);
 	(*buffer)[p] = ts->current_char;
 	ts_getc(ts);
     }
