@@ -10,6 +10,7 @@ Add and modernize the standard project files:
   * Added a CHANGELOG.md file to track the project changes.
   * Added the COPYING file from the 1.1 upstream release.
   * Added a .gitignore file to ignore the build output.
+  * Support the standard GNU project files: NEWS
 
 Generate the autotools files instead of using old versions:
 

@@ -4,6 +4,7 @@
 *.a
 
 config.*
+NEWS
 
 autom4te.cache/
 configure
