@@ -4,6 +4,9 @@
 *.a
 
 config.*
+install-sh
+missing
+mkinstalldirs
 NEWS
 
 autom4te.cache/
