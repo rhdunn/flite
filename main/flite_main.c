@@ -200,7 +200,7 @@ int main(int argc, char **argv)
     extra_feats = new_features();
 
     flite_init();
-    flite_add_lang("eng",usenglish_init,cmu_lex_init);
+    flite_set_lang_list(); /* defined at compilation time */
 
     for (i=1; i<argc; i++)
     {

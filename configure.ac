@@ -150,18 +150,18 @@ dnl         ;;
                 # For Android with Android NDK
                 # http://developer.android.com/sdk/ndk/index.html
 		shared=false
-                ANDROIDBIN="$ANDROID_NDK/build/prebuilt/linux-x86/arm-eabi-4.4.0/bin"
+                ANDROIDBIN="$ANDROID_NDK/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin"
 		# Use the line below to compile for ARMv5 (default)
-		CFLAGS="$CFLAGS -march=armv5te -mtune=xscale -msoft-float -fpic -mthumb-interwork -ffunction-sections -funwind-tables -fstack-protector -fno-short-enums -D__ARM_ARCH_5__ -D__ARM_ARCH_5T__ -D__ARM_ARCH_5E__ -D__ARM_ARCH_5TE__ -mthumb -Os -fomit-frame-pointer -fno-strict-aliasing -finline-limit=64 -DANDROID -I$ANDROID_NDK/build/platforms/android-4/arch-arm/usr/include/ "
+		CFLAGS="$CFLAGS -march=armv5te -mtune=xscale -msoft-float -fpic -mthumb-interwork -ffunction-sections -funwind-tables -fstack-protector -fno-short-enums -D__ARM_ARCH_5__ -D__ARM_ARCH_5T__ -D__ARM_ARCH_5E__ -D__ARM_ARCH_5TE__ -mthumb -Os -fomit-frame-pointer -fno-strict-aliasing -finline-limit=64 -DANDROID -I$ANDROID_NDK/platforms/android-8/arch-arm/usr/include/ "
 
 		# Use the two lines below to compile for ARMv7-A (Nexus one, Droid, etc.)
-		#CFLAGS="$CFLAGS -fpic -mthumb-interwork -ffunction-sections -funwind-tables -fstack-protector -fno-short-enums -D__ARM_ARCH_5__ -D__ARM_ARCH_5T__ -D__ARM_ARCH_5E__ -D__ARM_ARCH_5TE__  -Wno-psabi -march=armv7-a -mfloat-abi=softfp -mfpu=vfp -fno-exceptions -mthumb -Os -fomit-frame-pointer -fno-strict-aliasing -finline-limit=64  -I$ANDROID_NDK/build/platforms/android-4/arch-arm/usr/include/ -DANDROID  -Wa,--noexecstack -O2 -DNDEBUG "
+		#CFLAGS="$CFLAGS -fpic -mthumb-interwork -ffunction-sections -funwind-tables -fstack-protector -fno-short-enums -D__ARM_ARCH_5__ -D__ARM_ARCH_5T__ -D__ARM_ARCH_5E__ -D__ARM_ARCH_5TE__  -Wno-psabi -march=armv7-a -mfloat-abi=softfp -mfpu=vfp -fno-exceptions -mthumb -Os -fomit-frame-pointer -fno-strict-aliasing -finline-limit=64  -I$ANDROID_NDK/platforms/android-8/arch-arm/usr/include/ -DANDROID  -Wa,--noexecstack -O2 -DNDEBUG "
 		#LDFLAGS="$LDFLAGS -Wl,--fix-cortex-a8"
 
-                CC="${ANDROIDBIN}/arm-eabi-gcc"
-                RANLIB="${ANDROIDBIN}/arm-eabi-ranlib"
-                AR="${ANDROIDBIN}/arm-eabi-ar"
-                NM="${ANDROIDBIN}/arm-eabi-nm"
+                CC="${ANDROIDBIN}/arm-linux-androideabi-gcc"
+                RANLIB="${ANDROIDBIN}/arm-linux-androideabi-ranlib"
+                AR="${ANDROIDBIN}/arm-linux-androideabi-ar"
+                NM="${ANDROIDBIN}/arm-linux-androideabi-nm"
         ;;
         chrome*)
 		shared=false

@@ -230,7 +230,7 @@ const cst_val *pos_in_word(const cst_item *p)
 	int i=0;
 	p=item_as(p,"Syllable");
 	s=item_as(path_to_item(p,"R:SylStructure.parent.daughter1"),"Syllable");
-	for (;!item_equal(p,s);s=item_next(s),i++){}
+	for (;s && !item_equal(p,s);s=item_next(s),i++){}
 	return val_string_n(i);
 }
 
@@ -244,7 +244,7 @@ const cst_val *syl_vowel(const cst_item *p)
 	const cst_item *s,*ls;
 	s=item_as(path_to_item(p,"R:SylStructure.daughter1"),"Segment");
 	ls=item_as(path_to_item(p,"R:SylStructure.daughtern"),"Segment");
-	for(;!item_equal(s,ls);s=item_next(s))
+	for(;s && !item_equal(s,ls);s=item_next(s))
 	{
 		if (cst_streq("+",val_string(ph_vc(s)))){ return string_val(item_name(s));}
 	}
@@ -258,7 +258,7 @@ const cst_val *syl_numphones(const cst_item *p)
 	const cst_item *s,*ls;
 	s=item_as(path_to_item(p,"R:SylStructure.daughter1"),"Segment");
 	ls=item_as(path_to_item(p,"R:SylStructure.daughtern"),"Segment");
-	for(i=1;!item_equal(s,ls);s=item_next(s)){i++;}
+	for(i=1;s && !item_equal(s,ls);s=item_next(s)){i++;}
 	return val_string_n(i);
 }
 
@@ -269,7 +269,7 @@ const cst_val *pos_in_phrase(const cst_item *p)
 	int i=0;
 	p=item_as(p,"Word");
 	s=item_as(path_to_item(p,"R:SylStructure.R:Phrase.parent.daughter1"),"Word");
-	for (;!item_equal(p,s);s=item_next(s),i++){}
+	for (;s && !item_equal(p,s);s=item_next(s),i++){}
 	return val_string_n(i);
 }
 

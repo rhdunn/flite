@@ -73,7 +73,7 @@ typedef struct  cst_tokenstream_struct {
 
     cst_string charclass[256];
 
-    /* To allow externall specified reading functions e.g. epub */
+    /* To allow externally specified reading functions e.g. epub */
     int (*open)(struct cst_tokenstream_struct *ts, const char *filename);
     void (*close)(struct cst_tokenstream_struct *ts);
     int (*eof)(struct cst_tokenstream_struct *ts);
