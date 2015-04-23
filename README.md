@@ -1,5 +1,13 @@
 # Flite: Festival Lite
 
+- [Compilation](#compilation)
+- [Usage](#usage)
+- [Voice Quality](#voice-quality)
+- [Todo](#todo)
+- [License](#license)
+
+----------
+
 [Flite](http://cmuflite.org) is a small fast run-time speech synthesis
 engine. It is the latest addition to the suite of free software synthesis
 tools including University of Edinburgh's Festival Speech Synthesis
