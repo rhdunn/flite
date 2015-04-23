@@ -16,6 +16,7 @@ Generate the autotools files instead of using old versions:
   * Added an autogen.sh script to setup the configure script.
   * Link to the systems config.{guess,sub} files.
   * Use `autoconf` to generate the configure script.
+  * Renamed configure.in to configure.ac.
 
 ## [1.0]
 
