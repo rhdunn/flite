@@ -46,7 +46,7 @@
 #include "flite.h"
 #include "flite_version.h"
 
-cst_val *flite_set_voice_list(void);
+cst_val *flite_set_voice_list(const char *voxdir);
 
 void cst_alloc_debug_summary();
 
@@ -87,6 +87,7 @@ static void flite_usage()
 	   "  -b          Benchmark mode\n"
 	   "  -l          Loop endlessly\n"
 	   "  -voice NAME Use voice NAME\n"
+	   "  -voicedir NAME Directory contain voice data\n"
 	   "  -lv         List voices available\n"
 	   "  -add_lex FILENAME add lex addenda from FILENAME\n"
 	   "  -pw         Print words\n"
@@ -166,6 +167,7 @@ int main(int argc, char **argv)
     const char *filename;
     const char *outtype;
     cst_voice *desired_voice = 0;
+    const char *voicedir = NULL;
     int i;
     float durs;
     double time_start, time_end;
@@ -187,7 +189,6 @@ int main(int argc, char **argv)
     extra_feats = new_features();
 
     flite_init();
-    flite_voice_list = flite_set_voice_list();
 
     for (i=1; i<argc; i++)
     {
@@ -221,7 +222,16 @@ int main(int argc, char **argv)
 	}
 	else if ((cst_streq(argv[i],"-voice")) && (i+1 < argc))
 	{
+            if (flite_voice_list == NULL)
+                flite_set_voice_list(voicedir);
             desired_voice = flite_voice_select(argv[i+1]);
+	    i++;
+	}
+	else if ((cst_streq(argv[i],"-voicedir")) && (i+1 < argc))
+	{
+            voicedir = argv[i+1];
+            if (flite_voice_list == NULL)
+                flite_set_voice_list(voicedir);
 	    i++;
 	}
 	else if ((cst_streq(argv[i],"-add_lex")) && (i+1 < argc))
@@ -298,6 +308,8 @@ int main(int argc, char **argv)
     }
 
     if (filename == NULL) filename = "-";  /* stdin */
+    if (flite_voice_list == NULL)
+        flite_set_voice_list(voicedir);
     if (desired_voice == 0)
         desired_voice = flite_voice_select(NULL);
 
@@ -328,12 +340,20 @@ loop:
 
     if (explicit_phones)
 	durs = flite_phones_to_speech(filename,v,outtype);
-    else if (ssml_mode)
-        durs = flite_ssml_to_speech(filename,v,outtype);
     else if ((strchr(filename,' ') && !explicit_filename) || explicit_text)
-	durs = flite_text_to_speech(filename,v,outtype);
+    {
+        if (ssml_mode)
+            durs = flite_ssml_text_to_speech(filename,v,outtype);
+        else
+            durs = flite_text_to_speech(filename,v,outtype);
+    }
     else
-	durs = flite_file_to_speech(filename,v,outtype);
+    {
+        if (ssml_mode)
+            durs = flite_ssml_file_to_speech(filename,v,outtype);
+        else
+            durs = flite_file_to_speech(filename,v,outtype);
+    }
 
     gettimeofday(&tv,NULL);
     time_end = ((double)(tv.tv_sec))+((double)tv.tv_usec/1000000.0);

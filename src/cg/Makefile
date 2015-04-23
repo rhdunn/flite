@@ -41,9 +41,10 @@ ALL_DIRS=
 H = cst_mlsa.h cst_mlpg.h cst_vc.h
 SRCS = cst_cg.c cst_mlsa.c cst_mlpg.c cst_vc.c 
 OBJS = $(SRCS:.c=.o)
+X = cst_cg_load_voice.c cst_cg_map.c cst_cg_map.h
 LIBNAME = flite
 EXTRAS = 
-FILES = Makefile $(SRCS) $(H) $(EXTRAS)
+FILES = Makefile $(SRCS) $(H) $(EXTRAS) $(X)
 
 ALL = 
 

@@ -95,7 +95,7 @@ static const char * const addenda35[] = { "n/","s","l","ae1","sh",NULL};
 
 static const char * const addenda36[] = { "nin","ih","n",NULL};
 static const char * const addenda37[] = { "nto","t","ax",NULL};
-static const char * const addenda38[] = { "n_a","ey",NULL};
+static const char * const addenda38[] = { "0_a","ey",NULL};
 static const char * const addenda39[] = { "vhavent","hh","ae1","v","ax","n","t",NULL};
 
 static const char * const * const addenda[] = {

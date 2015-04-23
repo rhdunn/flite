@@ -43,7 +43,7 @@
 
 CST_VAL_REGISTER_TYPE_NODEL(cart,cst_cart)
 
-/* Make this 1 if you want to debug som cart calls */
+/* Make this 1 if you want to debug some cart calls */
 #define CART_DEBUG 0
 
 #define cst_cart_node_n(P,TREE) ((TREE)->rule_table[P])
@@ -112,7 +112,10 @@ const cst_val *cart_interpret(cst_item *item, const cst_cart *tree)
 #endif
 	tree_val = cst_cart_node_val(node,tree);
 	if (cst_cart_node_op(node,tree) == CST_CART_OP_IS)
+        {
+            /* printf("awb_debug %d %d\n",CST_VAL_TYPE(v),CST_VAL_TYPE(tree_val));*/
 	    r = val_equal(v,tree_val);
+        }
 	else if (cst_cart_node_op(node,tree) == CST_CART_OP_LESS)
 	    r = val_less(v,tree_val);
 	else if (cst_cart_node_op(node,tree) == CST_CART_OP_GREATER)

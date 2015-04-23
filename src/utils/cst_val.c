@@ -236,10 +236,10 @@ void *val_void(const cst_val *v)
 
 int cst_val_consp(const cst_val *v)
 {
-    /* To keep a val cell down to 8 bytes we identify non-cons cells */
+    /* To keep a val cell down to 8 bytes we identify non-cons cells  */
     /* with non-zero values in the least significant bit of the first */
     /* address in the cell (this is a standard technique used on Lisp */
-    /* machines                                                       */
+    /* machines)                                                      */
 #if 0
     void *t;
     int t1;
@@ -321,6 +321,12 @@ void val_print(cst_file fd,const cst_val *v)
 	    p=val_cdr(p);
 	    if (p)
 		cst_fprintf(fd," ");
+            if (p && !cst_val_consp(p))  /* dotted pairs for non-list */
+            {                            
+                cst_fprintf(fd,". ");
+                val_print(fd,p);
+                break;
+            }
 	}
 	cst_fprintf(fd,")");
     }
