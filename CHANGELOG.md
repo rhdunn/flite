@@ -3,6 +3,16 @@
 This file documents the changes made to the flite project in order to comply
 with clause 2 of the project's [BSD license](COPYING).
 
+## [1.2]
+
+  * A build process for diphone and clunit/ldom voices.
+  * FestVox voices can be converted (sometimes) automatically.
+  * Various bug fixes.
+  * Initial support for Mac OS X (not talking to audio device yet)
+    but compiles and runs.
+  * Files can be converted to a single audio file.
+  * Optional shared library support (Linux).
+
 ## [1.1-1]
 
   * Backport building `au_alsa.c` on modern systems from flite 1.4.

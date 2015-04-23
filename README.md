@@ -90,9 +90,11 @@ Requirements:
 
 Supported platforms:
 
-* Various Intel Linux systems (and iPaq Linux)
+* Various Intel Linux systems (and iPaq Linux), under various versions
+  of GCC (2.7.2 to 3.2.1)
 * FreeBSD 3.x and 4.x
-* Solaris 5.7
+* Solaris 5.7, and Solaris 9
+* Initial support for Mac OS X
 * OSF1 V4.0 (gives an unimportant warning about sizes when compiled `cst_val.c`)
 * Windows 2000 under Cygwin 1.3.5
 * Some support for WinCE (2.11 and 3.0) is included but is not complete
@@ -138,7 +140,7 @@ set up yet.  Thus:
          arm-linux-strip bin/flite
 
   *  copy `bin/flite` to the ipaq.  This binary is also available from
-     [flite-1.1_bin16KHz_arm-linux.tar.gz](http://cmuflite.org/packed/flite-1.1/flite-1.1_bin16KHz_arm-linux.tar.gz).
+     [flite-1.2_bin16KHz_arm-linux.tar.gz](http://cmuflite.org/packed/flite-1.2/flite-1.2_bin16KHz_arm-linux.tar.gz).
      Because the Linux ipaq audio driver only supports 16KHz (and more)
      we include this larger voice.  
 
@@ -146,7 +148,7 @@ The Sharp Zaurus SL-5000D is a very similar machine, however it
 does support 8KHz sampling and a smaller binary is provided.  The
 Zaurus typicall has less free memory so there is an advantage to
 using this
-[flite-1.1_bin8KHz_arm-linux.tar.gz](http://cmuflite.org/packed/flite-1.1/flite-1.1_bin8KHz_arm-linux.tar.gz)
+[flite-1.2_bin8KHz_arm-linux.tar.gz](http://cmuflite.org/packed/flite-1.2/flite-1.2_bin8KHz_arm-linux.tar.gz)
 file.
 
 This voice also used fixed point rather floating point as the
@@ -176,8 +178,14 @@ default the `-g` option is enabled, so it will be bigger that is actually requir
 
   *  `./bin/flite -v doc/alice none`
 
-     Will synthesize the file without playig the audio and give a summary
+     Will synthesize the file without playing the audio and give a summary
      of the speed.
+
+  *  `./bin/flite doc/alice alice.wav`
+
+     Will synthesize the whole of alice into a single file (previous
+     versions would only give the last utterance in the file, but
+     that is fixed now).
 
 An additional set of feature setting options are available, these are
 *debug* options, Voices are represented as sets of feature values (see
@@ -243,9 +251,8 @@ the next version.
 This release is just the beginning, there is much to do and this can
 be a lot faster and smaller.  We have already seriously considered some
 of the following but they didn't make this release.  In near
-future versions we will add
+future versions we will add:
 
-* A (default) compilation method from a FestVox built voice.
 * Streaming synthesis so no large buffers of waveforms need be held
   (we've got an initial pass at that in Cepstral but not read for this
   release).
@@ -261,7 +268,7 @@ future versions we will add
 The flite project is released under a [4-clause BSD license](COPYING) with
 the following copyright:
 
-    Copyright Carnegie Mellon University 1999-2001
+    Copyright Carnegie Mellon University 1999-2003
     All rights reserved
 
 The changes to the project are described in the [CHANGELOG.md](CHANGELOG.md)
