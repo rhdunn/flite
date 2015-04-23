@@ -4,6 +4,7 @@
 *.a
 
 config.*
+INSTALL
 install-sh
 missing
 mkinstalldirs

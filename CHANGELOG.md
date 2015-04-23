@@ -9,7 +9,7 @@ Add and modernize the standard project files:
 
   * Added a CHANGELOG.md file to track the project changes.
   * Added the COPYING file from the 1.1 upstream release.
-  * Support the standard GNU project files: AUTHORS, NEWS.
+  * Support the standard GNU project files: AUTHORS, NEWS, INSTALL.
   * Added a .gitignore file to ignore the build output.
   * Renamed configure.in to configure.ac.
 

@@ -15,6 +15,7 @@ ln -sf CHANGELOG.md NEWS
 ln -sf ${AUTOMAKE_DIR}/config.guess .
 ln -sf ${AUTOMAKE_DIR}/config.sub .
 
+ln -sf ${AUTOMAKE_DIR}/INSTALL .
 ln -sf ${AUTOMAKE_DIR}/install-sh .
 ln -sf ${AUTOMAKE_DIR}/missing .
 ln -sf ${AUTOMAKE_DIR}/mkinstalldirs .
