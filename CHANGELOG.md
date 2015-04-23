@@ -7,6 +7,7 @@ with clause 2 of the project's [BSD license](COPYING).
 
   * Added a CHANGELOG.md file to track the project changes.
   * Added the COPYING file from the 1.1 upstream release.
+  * Added a .gitignore file to ignore the build output.
 
 ## [1.0]
 

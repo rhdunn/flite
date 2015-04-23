@@ -1,0 +1,17 @@
+.*.swp
+
+*.o
+*.a
+
+config.cache
+config.log
+config.status
+
+config/config
+config/system.mak
+
+.build_lib
+make.depend
+
+include/flite_version.h
+bin/
