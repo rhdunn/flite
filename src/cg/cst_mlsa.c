@@ -63,15 +63,11 @@
 #include "cst_audio.h"
 
 #ifdef ANDROID
-#define SPEED_HACK_2
-/* This is basically the speed hack (see below) for windows CE,
-   but doesn't do anything to the sampling rate.
-*/
+#define SPEED_HACK
 #endif
 
 #ifdef UNDER_CE
 #define SPEED_HACK
-#define SPEED_HACK_2
 /* This is one of those other things you shouldn't do, but it makes
    CG voices in flowm fast enough on my phone */
 #define double float
@@ -95,7 +91,7 @@ cst_wave *mlsa_resynthesis(const cst_track *params,
 {
     /* Resynthesizes a wave from given track */
     cst_wave *wave = 0;
-    int sr = 16000;
+    int sr = cg_db->sample_rate;
     double shift;
 
     if (params->num_frames > 1)
@@ -124,25 +120,22 @@ static cst_wave *synthesis_body(const cst_track *params, /* f0 + mcep */
     int stream_mark;
     int rc = CST_AUDIO_STREAM_CONT;
     int num_mcep;
+    double ffs = 16000;
 
     num_mcep = params->num_channels-1;
-    framel = (int)(framem * fs / 1000.0);
-    init_vocoder(fs, framel, num_mcep, &vs, cg_db);
+    framel = (int)(0.5 + (framem * ffs / 1000.0)); /* 80 for 16KHz */
+    init_vocoder(ffs, framel, num_mcep, &vs, cg_db);
 
     if (str != NULL)
         vs.gauss = MFALSE;
 
     /* synthesize waveforms by MLSA filter */
     wave = new_wave();
-    cst_wave_resize(wave,params->num_frames * (framel + 2),1);
-#ifdef SPEED_HACK
-    /* This is a SPECTACULAR hack -- basically resample the original */
-    /* files to 8KHz but label them as 16KHz and do the full build */
-    /* then after synthesis get them to be played at 8KHz -- it works */
-    wave->sample_rate = 8000; 
-#else
+    cst_wave_resize(wave,params->num_frames * framel,1);
+    /* It is (weirdly) possible that fs and ffs are different */
+    /* But only for weird speech hack created 8KHz voices */
     wave->sample_rate = fs; 
-#endif
+
     mcep = cst_alloc(double,num_mcep+1);
 
     for (t = 0, stream_mark = pos = 0; 
@@ -176,71 +169,14 @@ static cst_wave *synthesis_body(const cst_track *params, /* f0 + mcep */
     cst_free(mcep);
     free_vocoder(&vs);
 
-    return wave;
-}
-
-#if 0
-static cst_wave *rt_synthesis_body(cst_frame_read_func *istream,
-                                   double fs,	/* sampling frequency (Hz) */
-                                   double framem,	/* FFT length */
-                                   cst_audio_streaming_info *asi)
-{
-    long t, pos;
-    int framel, i;
-    double f0;
-    VocoderSetup vs;
-    cst_wave *wave = 0;
-    double *mcep;
-    int stream_mark;
-    int rc = CST_AUDIO_STREAM_CONT;
-    int num_mcep;
-
-    num_mcep = params->num_channels-1;
-    framel = (int)(framem * fs / 1000.0);
-    init_vocoder(fs, framel, num_mcep, &vs, cg_db);
-
-    if (str != NULL)
-        vs.gauss = MFALSE;
-
-    /* synthesize waveforms by MLSA filter */
-    wave = new_wave();
-    cst_wave_resize(wave,params->num_frames * (framel + 2),1);
-    wave->sample_rate = fs; 
-
-    mcep = cst_alloc(double,num_mcep+1);
-
-    for (t = 0, stream_mark = pos = 0; 
-         (rc == CST_AUDIO_STREAM_CONT) && (t < params->num_frames);
-         t++) 
+    if (rc == CST_AUDIO_STREAM_STOP)
     {
-        frame = istream();
-        f0 = (double)frame[0];
-        for (i=1; i<num_mcep+1; i++)
-            mcep[i-1] = frames[i];
-        mcep[i-1] = 0;
-
-        vocoder(f0, mcep, str, t, num_mcep, cg_db, &vs, wave, &pos);
-
-        if (asi && (pos-stream_mark > asi->min_buffsize))
-        {
-            rc=(*asi->asc)(wave,stream_mark,pos-stream_mark,0,asi);
-            stream_mark = pos;
-        }
+        delete_wave(wave);
+        return NULL;
     }
-    wave->num_samples = pos;
-
-    if (asi && (rc == CST_AUDIO_STREAM_CONT))
-    {   /* drain the last part of the waveform */
-        (*asi->asc)(wave,stream_mark,pos-stream_mark,1,asi);
-    }
-
-    /* memory free */
-    cst_free(mcep);
-    free_vocoder(&vs);
-
-    return wave;
+    else
+        return wave;
 }
-#endif
 
 static void init_vocoder(double fs, int framel, int m, 
                          VocoderSetup *vs, cst_cg_db *cg_db)
@@ -249,7 +185,7 @@ static void init_vocoder(double fs, int framel, int m,
     vs->fprd = framel;
     vs->iprd = 1;
     vs->seed = 1;
-#ifdef SPEED_HACK_2
+#ifdef SPEED_HACK
     /* This makes it about 25% faster and sounds basically the same */
     vs->pd   = 4;
 #else
@@ -426,12 +362,12 @@ static void vocoder(double p, double *mc,
             x = fxpulse + fxnoise; /* excitation is pulse plus noise */
         }
 
-#ifdef SPEED_HACK
-        /* 8KHz voices are too quiet */
-	x *= exp(vs->c[0])*2.0;
-#else
-	x *= exp(vs->c[0])*gain;
-#endif
+        if (cg_db->sample_rate == 8000)
+            /* 8KHz voices are too quiet: this is probably not general */
+            x *= exp(vs->c[0])*2.0;
+        else
+            x *= exp(vs->c[0])*gain;
+
 	x = mlsadf(x, vs->c, m, cg_db->mlsa_alpha, vs->pd, vs->d1, vs);
 
         wav->samples[*pos] = (short)x;
@@ -485,10 +421,11 @@ static double mlsadf1(double x, double *b, int m, double a, int pd, double *d, V
 
 static double mlsadf2 (double x, double *b, int m, double a, int pd, double *d, VocoderSetup *vs)
 {
-   double v, out = 0.0, *pt, aa;
-   register int i;
+  double v, out = 0.0, *pt;
+  //  double aa;
+  register int i;
     
-   aa = 1 - a*a;
+  //aa = 1 - a*a;
    pt = &d[pd * (m+2)];
 
    for (i=pd; i>=1; i--) {

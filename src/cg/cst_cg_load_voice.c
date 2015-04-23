@@ -2,7 +2,7 @@
 /*                                                                       */
 /*                  Language Technologies Institute                      */
 /*                     Carnegie Mellon University                        */
-/*                         Copyright (c) 2010                            */
+/*                       Copyright (c) 2010-2011                         */
 /*                        All Rights Reserved.                           */
 /*                                                                       */
 /*  Permission is hereby granted, free of charge, to use and distribute  */
@@ -42,81 +42,85 @@
 #include "cst_cg.h"
 #include "cst_cg_map.h"
 
-cst_voice *cst_cg_load_voice(const char *voxdir,
-                             cst_val *voice_list,
-                             cst_lang **lang_table)
+cst_voice *cst_cg_load_voice(const char *filename,
+                             const cst_lang *lang_table)
 {
     cst_voice *vox;
     cst_lexicon *lex = NULL;
-    int fd;
-    int voice_feature_count;
-    int i;
-    const char* language;
+    int i, end_of_features;
+    const char *language;
+    const char *xname;
     cst_cg_db *cg_db;
     char* fname;
     char* fval;
-    cst_filemap *vd;
+    cst_file vd;
 
-    vd = cst_mmap_file(voxdir);
+    vd = cst_fopen(filename,CST_OPEN_READ);
     if (vd == NULL)
     {
-	printf("file: %s\n",voxdir);
-	perror("Opening voice data");
-	return NULL;
-    }
-    if (cst_cg_map_init(vd) == NULL)
-    {
-	perror("mmap failed");
-        cst_munmap_file(vd);
 	return NULL;
     }
 
-    /* Load up cg_db from external file */
-    cg_db = mapreader_load_db();
-
-    if (cg_db == NULL)
+    if (cst_cg_read_header(vd) != 0)
     {
-        cst_munmap_file(vd);
+        cst_fclose(vd);
         return NULL;
     }
 
     vox = new_voice();
 
     /* Read voice features from the external file */
-    voice_feature_count = mapreader_read_int();
-    for(i=0;i<voice_feature_count;i++)
+    /* Read until the feature is "end_of_features" */
+    fname="";
+    end_of_features = 0;
+    while (end_of_features == 0)
     {
-	mapreader_read_voice_feature(&fname, &fval);
-	printf("Setting feature %s: %s\n",fname, fval);
-	flite_feat_set_string(vox->features,fname, fval);
+	cst_read_voice_feature(vd,&fname, &fval);
+        if (cst_streq(fname,"end_of_features"))
+            end_of_features = 1;
+        else
+        {
+            xname = feat_own_string(vox->features,fname);
+            flite_feat_set_string(vox->features,xname, fval);
+        }
+        cst_free(fname);
+        cst_free(fval);
+    }
+
+    /* Load up cg_db from external file */
+    cg_db = cst_cg_load_db(vd);
+
+    if (cg_db == NULL)
+    {
+	cst_fclose(vd);
+        return NULL;
     }
 
     /* Use the language feature to initialize the correct voice */
     language = flite_get_param_string(vox->features, "language", "");
-    printf("Found language: %s\n",language);
 
     /* Search Lang table for lang_init() and lex_init(); */
-    for (i=0; lang_table[i]; i++)
+    for (i=0; lang_table[i].lang; i++)
     {
-        if (cst_streq(language,lang_table[i]->lang))
+        if (cst_streq(language,lang_table[i].lang))
         {
-            (lang_table[i]->lang_init)(vox);
-            lex = (lang_table[i]->lex_init)();
+            (lang_table[i].lang_init)(vox);
+            lex = (lang_table[i].lex_init)();
             break;
         }
     }
     if (lex == NULL)
     {   /* Language is not supported */
 	/* Delete allocated memory in cg_db */
-	mapreader_free_db(cg_db);
-	mapreader_finish();
+	cst_cg_free_db(vd,cg_db);
+	cst_fclose(vd);
 	return NULL;	
     }
     
     /* Things that weren't filled in already. */
+    vox->name = cg_db->name;
     flite_feat_set_string(vox->features,"name",cg_db->name);
-    flite_feat_set_string(vox->features,"voxdir",path);
-    flite_feat_set(voice->features,"voxdata",userdata_val(vd));
+    flite_feat_set_string(vox->features,"pathname",filename);
     
     flite_feat_set(vox->features,"lexicon",lexicon_val(lex));
     flite_feat_set(vox->features,"postlex_func",uttfunc_val(lex->postlex));
@@ -131,8 +135,7 @@ cst_voice *cst_cg_load_voice(const char *voxdir,
     flite_feat_set(vox->features,"cg_db",cg_db_val(cg_db));
     flite_feat_set_int(vox->features,"sample_rate",cg_db->sample_rate);
 
-    /* Add it to voice_list */
-
+    cst_fclose(vd);
     return vox;
 }
 

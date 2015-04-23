@@ -42,11 +42,14 @@
 #include "flite.h"
 #include "cst_alloc.h"
 #include "cst_clunits.h"
+#include "cst_cg.h"
 
 /* This is a global, which isn't ideal, this may change */
 /* It is set when flite_set_voice_list() is called which happens in */
 /* flite_main() */
 cst_val *flite_voice_list = 0;
+cst_lang flite_lang_list[20];
+int flite_lang_list_length = 0;
 
 int flite_init()
 {
@@ -54,6 +57,64 @@ int flite_init()
 
     return 0;
 }
+
+int flite_voice_dump(cst_voice *voice, const char *filename)
+{
+    return cst_cg_dump_voice(voice,filename);
+}
+
+cst_voice *flite_voice_load(const char *filename)
+{
+    /* Currently only supported for CG voices */
+    /* filename make be a local pathname or a url (http:/file:) */
+    cst_voice *v = NULL;
+
+    v = cst_cg_load_voice(filename,flite_lang_list);
+
+    return v;
+}
+
+int flite_add_voice(cst_voice *voice)
+{
+    const cst_val *x;
+    if (voice)
+    {
+        /* add to second place -- first is default voice */
+        /* This is thread unsafe */
+        if (flite_voice_list)
+        {   /* Other voices -- first is default, add this second */
+            x = cons_val(voice_val(voice),
+                         val_cdr(flite_voice_list));
+            set_cdr((cst_val *)(void *)flite_voice_list,x);
+        }
+        else
+        {   /* Only voice so goes on front */
+            flite_voice_list = cons_val(voice_val(voice),flite_voice_list);
+        }
+        
+        return TRUE;
+    }
+    else
+        return FALSE;
+
+}
+
+int flite_add_lang(const char *langname,
+                   void (*lang_init)(cst_voice *vox),
+                   cst_lexicon *(*lex_init)())
+{
+    if (flite_lang_list_length < 19)
+    {
+        flite_lang_list[flite_lang_list_length].lang = langname;
+        flite_lang_list[flite_lang_list_length].lang_init = lang_init;
+        flite_lang_list[flite_lang_list_length].lex_init = lex_init;
+        flite_lang_list_length++;
+        flite_lang_list[flite_lang_list_length].lang = NULL;
+    }
+
+    return TRUE;
+}
+
 
 cst_voice *flite_voice_select(const char *name)
 {
@@ -73,6 +134,16 @@ cst_voice *flite_voice_select(const char *name)
         if (cst_streq(name,get_param_string(voice->features,"name","")))
             /* longer name */
             return voice;
+        if (cst_streq(name,get_param_string(voice->features,"pathname","")))
+            /* even longer name (url) */
+            return voice;
+    }
+
+    if (cst_urlp(name))  /* naive check if its a url */
+    {
+        voice = flite_voice_load(name);
+        flite_add_voice(voice);
+        return voice;
     }
 
     return flite_voice_select(NULL);
@@ -154,17 +225,7 @@ float flite_file_to_speech(const char *filename,
 			   cst_voice *voice,
 			   const char *outtype)
 {
-    cst_utterance *utt;
     cst_tokenstream *ts;
-    const char *token;
-    cst_item *t;
-    cst_relation *tokrel;
-    float durs = 0;
-    int num_tokens;
-    cst_wave *w;
-    cst_breakfunc breakfunc = default_utt_break;
-    cst_uttfunc utt_user_callback = 0;
-    int fp;
 
     if ((ts = ts_open(filename,
 	      get_param_string(voice->features,"text_whitespace",NULL),
@@ -177,10 +238,28 @@ float flite_file_to_speech(const char *filename,
 		   filename);
 	return 1;
     }
+    return flite_ts_to_speech(ts,voice,outtype);
+}
+
+
+float flite_ts_to_speech(cst_tokenstream *ts,
+                         cst_voice *voice,
+                         const char *outtype)
+{
+    cst_utterance *utt;
+    const char *token;
+    cst_item *t;
+    cst_relation *tokrel;
+    float durs = 0;
+    int num_tokens;
+    cst_wave *w;
+    cst_breakfunc breakfunc = default_utt_break;
+    cst_uttfunc utt_user_callback = 0;
+    int fp;
+
     fp = get_param_int(voice->features,"file_start_position",0);
     if (fp > 0)
         ts_set_stream_pos(ts,fp);
-
     if (feat_present(voice->features,"utt_break"))
 	breakfunc = val_breakfunc(feat_val(voice->features,"utt_break"));
 
@@ -218,6 +297,11 @@ float flite_file_to_speech(const char *filename,
             if (utt)
             {
                 utt = flite_do_synth(utt,voice,utt_synth_tokens);
+                if (feat_present(utt->features,"Interrupted"))
+                {
+                    delete_utterance(utt); utt = NULL;
+                    break;
+                }
                 durs += flite_process_output(utt,outtype,TRUE);
                 delete_utterance(utt); utt = NULL;
             }

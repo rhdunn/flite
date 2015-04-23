@@ -47,8 +47,13 @@
 #include "flite_version.h"
 
 cst_val *flite_set_voice_list(const char *voxdir);
+void *flite_set_lang_list(void);
 
 void cst_alloc_debug_summary();
+
+/* Its not very appropriate that these are declared here */
+void usenglish_init(cst_voice *v);
+cst_lexicon *cmu_lex_init(void);
 
 static void flite_version()
 {
@@ -86,13 +91,14 @@ static void flite_usage()
 	   "  -ssml       Read input text/file in ssml mode\n"
 	   "  -b          Benchmark mode\n"
 	   "  -l          Loop endlessly\n"
-	   "  -voice NAME Use voice NAME\n"
+	   "  -voice NAME Use voice NAME (NAME can be filename or url too)\n"
 	   "  -voicedir NAME Directory contain voice data\n"
 	   "  -lv         List voices available\n"
 	   "  -add_lex FILENAME add lex addenda from FILENAME\n"
 	   "  -pw         Print words\n"
 	   "  -ps         Print segments\n"
 	   "  -pr RelName  Print relation RelName\n"
+           "  -voicedump FILENAME Dump selected (cg) voice to FILENAME\n"
            "  -v          Verbose mode\n");
     exit(0);
 }
@@ -160,8 +166,7 @@ static void ef_set(cst_features *f,const char *fv,const char *type)
 	    feat_set_float(f,feat,atof(val));
 	else
 	    feat_set_string(f,feat,val);
-	/* I don't free feat, because feats think featnames are const */
-	/* which is true except in this particular case          */
+        cst_free(feat);
     }
 }
 
@@ -182,6 +187,7 @@ int main(int argc, char **argv)
     int bench_iter = 0;
     cst_features *extra_feats;
     const char *lex_addenda_file = NULL;
+    const char *voicedumpfile = NULL;
     cst_audio_streaming_info *asi;
 
     filename = 0;
@@ -194,6 +200,7 @@ int main(int argc, char **argv)
     extra_feats = new_features();
 
     flite_init();
+    flite_add_lang("eng",usenglish_init,cmu_lex_init);
 
     for (i=1; i<argc; i++)
     {
@@ -275,6 +282,11 @@ int main(int argc, char **argv)
 		     uttfunc_val(&print_info));
 	    i++;
 	}
+	else if (cst_streq(argv[i],"-voicedump") && (i+1 < argc))
+	{
+            voicedumpfile = argv[i+1];
+	    i++;
+	}
 	else if ((cst_streq(argv[i],"-set") || cst_streq(argv[i],"-s"))
 		 && (i+1 < argc))
 	{
@@ -323,6 +335,12 @@ int main(int argc, char **argv)
     v = desired_voice;
     feat_copy_into(extra_feats,v->features);
     durs = 0.0;
+
+    if (voicedumpfile != NULL)
+    {
+        flite_voice_dump(v,voicedumpfile);
+        exit(0);
+    }
 
     if (lex_addenda_file)
         flite_voice_add_lex_addenda(v,lex_addenda_file);

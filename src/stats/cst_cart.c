@@ -50,7 +50,24 @@ CST_VAL_REGISTER_TYPE_NODEL(cart,cst_cart)
 
 void delete_cart(cst_cart *cart)
 {
-    cst_errmsg("delete_cart function missing\n");
+    /* have to compensate for previous over-zealous consting */
+    /* It is assume that given carts, can be freed (i.e. they aren't in */
+    /* in the data segment */
+    int i;
+
+    if (cart == NULL)
+        return;
+
+    for (i=0; cart->rule_table[i].val; i++)
+        delete_val((cst_val *)(void *)cart->rule_table[i].val);
+    cst_free((void *)cart->rule_table);
+
+    for (i=0; cart->feat_table[i]; i++)
+        cst_free((void *)cart->feat_table[i]);
+    cst_free((void *)cart->feat_table);
+
+    cst_free(cart);
+
     return;
 }
 

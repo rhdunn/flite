@@ -40,43 +40,37 @@
 #ifndef __CST_CG_MAP_H
 #define __CST_CG_MAP_H
 
-#include <sys/mman.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-
+#include "cst_file.h"
 #include "cst_cg.h"
 #include "cst_cart.h"
 #include "cst_val.h"
 #include "cst_synth.h"
 
-static void* voice_mapped_addr;
-static void* current_sought_addr;
-static struct stat voice_file_size;
+int cst_cg_read_header(cst_file fd);
 
-int mapreader_init(int);
-void mapreader_finish();
+cst_cg_db* cst_cg_load_db(cst_file fd);
+void cst_cg_free_db(cst_file fd,cst_cg_db*);
 
-cst_cg_db* mapreader_load_db();
-void mapreader_free_db(cst_cg_db*);
+char *cst_read_string(cst_file fd);
+void* cst_read_padded(cst_file fd, int*nb); 
+char** cst_read_db_types(cst_file fd);
 
-void* mapreader_read_paddded(int*); 
-char** mapreader_read_types();
+cst_cart_node* cst_read_tree_nodes(cst_file fd);
+char** cst_read_tree_feats(cst_file fd);
+cst_cart* cst_read_tree(cst_file fd);
+cst_cart** cst_read_tree_array(cst_file fd);
 
-cst_cart_node* mapreader_read_tree_nodes();
-char** mapreader_read_tree_feats();
-cst_cart* mapreader_read_tree();
-cst_cart** mapreader_read_tree_array();
+void* cst_read_array(cst_file fd);
+void** cst_read_2d_array(cst_file fd);
 
-void* mapreader_read_array();
-void** mapreader_read_2d_array();
+dur_stat** cst_read_dur_stats(cst_file fd);
 
-dur_stat** mapreader_read_dur_stats();
+char*** cst_read_phone_states(cst_file fd);
 
-char*** mapreader_read_phone_states();
+void cst_read_voice_feature(cst_file fd,char** fname, char** fval);
+int cst_read_int(cst_file fd);
+float cst_read_float(cst_file fd);
 
-void mapreader_read_voice_feature(char** fname, char** fval);
-int mapreader_read_int();
+extern char *cg_voice_header_string;
+
 #endif

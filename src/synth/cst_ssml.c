@@ -2,7 +2,7 @@
 /*                                                                       */
 /*                  Language Technologies Institute                      */
 /*                     Carnegie Mellon University                        */
-/*                      Copyright (c) 2001-2008                          */
+/*                      Copyright (c) 2001-2011                          */
 /*                        All Rights Reserved.                           */
 /*                                                                       */
 /*  Permission is hereby granted, free of charge, to use and distribute  */
@@ -43,6 +43,7 @@
 /*                                                                       */
 /*  <ssml> </ssml>                                                       */
 /*  <voice ...> </voice>                                                 */
+/*     name or urls for voices                                           */
 /*  <audio ...> </audio>                                                 */
 /*  <!-- ... -->                                                         */
 /*  <break .../>                                                         */
@@ -51,6 +52,10 @@
 /*  <phoneme ph="x x x"> </phoneme>                                      */
 /*                                                                       */
 /*  <...> ignore all others                                              */
+/*                                                                       */
+/*  Voice call backs (e.g. -pw and -ps) are not transfered when new      */
+/*  voices are selected                                                  */
+/*                                                                       */
 /*************************************************************************/
 
 #include "flite.h"
@@ -250,8 +255,8 @@ static float flite_ssml_to_speech_ts(cst_tokenstream *ts,
     /* code, that the code is far from clear, and probably not right */
     cst_features *ssml_feats, *ssml_word_feats;
     cst_features *attributes;
-    const char *token;
-    char *tag;
+    const char *token = "";
+    char *tag=NULL;
     cst_utterance *utt;
     cst_relation *tokrel;
     int num_tokens;
@@ -261,7 +266,7 @@ static float flite_ssml_to_speech_ts(cst_tokenstream *ts,
     cst_item *t;
     cst_voice *current_voice; 
     int ssml_eou = 0;
-    cst_wave *wave;
+    cst_wave *wave, *w;
 
     ssml_feats = new_features();
     feat_set(ssml_feats,"current_voice",userdata_val(voice));
@@ -280,19 +285,43 @@ static float flite_ssml_to_speech_ts(cst_tokenstream *ts,
     if (feat_present(voice->features,"utt_user_callback"))
 	utt_user_callback = val_uttfunc(feat_val(voice->features,"utt_user_callback"));
 
+    /* If its a file to write to, create and save an empty wave file */
+    /* as we are going to incrementally append to it                 */
+    if (!cst_streq(outtype,"play") && 
+        !cst_streq(outtype,"none") &&
+        !cst_streq(outtype,"stream"))
+    {
+	w = new_wave();
+	cst_wave_resize(w,0,1);
+	cst_wave_set_sample_rate(w,16000);
+	cst_wave_save_riff(w,outtype);  /* an empty wave */
+	delete_wave(w);
+    }
+
     num_tokens = 0;
     utt = new_utterance();
+
     tokrel = utt_relation_create(utt, "Token");
     while (!ts_eof(ts) || num_tokens > 0)
     {
         current_voice = 
             (cst_voice *)val_userdata(feat_val(ssml_feats,"current_voice"));
-	token = ts_get(ts);
-	while (cst_streq("<",token))
+        /* printf("awb_debug prewhile %d %s\n",ssml_eou,token); */
+        if (ssml_eou == 0)
+            token = ts_get(ts);
+        else
+        {
+            if (!cst_streq("<",token))
+                token = ts_get(ts);
+            ssml_eou = 0;
+        }
+	while ((cst_streq("<",token)) && (ssml_eou == 0))
 	{   /* A tag -- look ahead and process it to find out how to advance */
 	    tag = cst_upcase(ts_get(ts));
+            /* printf("awb_debug tag is %s\n",tag); */
             if (cst_streq("/",tag)) /* an end tag */
             {
+                cst_free(tag); tag=NULL;
                 tag = cst_upcase(ts_get(ts));
                 attributes = ssml_get_attributes(ts);
                 feat_set_string(attributes,"_type","end");
@@ -304,8 +333,9 @@ static float flite_ssml_to_speech_ts(cst_tokenstream *ts,
                 ssml_eou = 0;
             else
                 ssml_eou = 1;
-
-	    cst_free(tag);
+            
+            delete_features(attributes);
+	    cst_free(tag); tag=NULL;
 	}
 
         if ((cst_strlen(token) == 0) ||
@@ -321,6 +351,11 @@ static float flite_ssml_to_speech_ts(cst_tokenstream *ts,
             if (utt)
             {
                 utt = flite_do_synth(utt,current_voice,utt_synth_tokens);
+                if (feat_present(utt->features,"Interrupted"))
+                {
+                    delete_utterance(utt); utt = NULL;
+                    break;
+                }
                 durs += flite_process_output(utt,outtype,TRUE);
                 delete_utterance(utt); utt = NULL;
             }
@@ -332,7 +367,6 @@ static float flite_ssml_to_speech_ts(cst_tokenstream *ts,
             utt = new_utterance();
             tokrel = utt_relation_create(utt, "Token");
             num_tokens = 0;
-            ssml_eou = 0;
         }
 
         if (feat_present(ssml_word_feats,"ssml_play_audio"))
@@ -340,16 +374,16 @@ static float flite_ssml_to_speech_ts(cst_tokenstream *ts,
             wave = (cst_wave *)val_userdata(feat_val(ssml_word_feats,"ssml_play_audio"));
             /* Should create an utterances with the waveform in it */
             /* Have to stream it if there is streaming */
+            if (utt) delete_utterance(utt);
             utt = utt_synth_wave(wave,current_voice);
             if (utt_user_callback)
                 utt = (utt_user_callback)(utt);
             durs += flite_process_output(utt,outtype,TRUE);
-            delete_utterance(utt);
+            delete_utterance(utt); utt = NULL;
 
             utt = new_utterance();
             tokrel = utt_relation_create(utt, "Token");
             num_tokens = 0;
-            ssml_eou = 0;
 
             feat_remove(ssml_word_feats,"ssml_play_audio");
         }

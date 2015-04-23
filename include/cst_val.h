@@ -64,14 +64,25 @@ typedef struct  cst_val_atom_struct {
     short ref_count;
     short type;  /* order is here important */
 #else
+#if _M_X64
+    int type;  /* order is here important */
+    int ref_count;
+#else
     short type;  /* order is here important */
     short ref_count;
 #endif
+#endif
     union 
-    { 
-	float fval;
-	int ival;
-	void *vval; 
+    {
+#if _M_X64
+        double fval;
+        long long ival;
+        void *vval;
+#else
+        float fval;
+        int ival;
+        void *vval;
+#endif
     } v;
 } cst_val_atom;
 

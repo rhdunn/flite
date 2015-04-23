@@ -118,4 +118,7 @@ int cst_free_whole_file(cst_filemap *map);
 cst_filemap *cst_read_part_file(const char *path);
 int cst_free_part_file(cst_filemap *map);
 
+int cst_urlp(const char *url);
+cst_file cst_url_open(const char *url);
+
 #endif
