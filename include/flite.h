@@ -34,13 +34,16 @@
 /*               Date:  December 1999                                    */
 /*************************************************************************/
 /*                                                                       */
-/*  Light weight run-time speech synthesis system                        */
+/*  Light weight run-time speech synthesis system, public API            */
 /*                                                                       */
 /*************************************************************************/
 #ifndef _FLITE_H__
 #define _FLITE_H__
 
-#include <stdio.h>
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 #include "cst_string.h"
 #include "cst_regex.h"
 #include "cst_val.h"
@@ -60,19 +63,42 @@
 #include "cst_lexicon.h"
 #include "cst_synth.h"
 #include "cst_units.h"
+#include "cst_tokenstream.h"
 
 /* Public functions */
 int flite_init();
 
 cst_wave *flite_text_to_wave(const char *text,cst_voice *voice);
 float flite_file_to_speech(const char *filename, 
-			 cst_voice *voice,
-			 const char *outtype);
+				    cst_voice *voice,
+				    const char *outtype);
 float flite_text_to_speech(const char *text, 
-			 cst_voice *voice,
-			 const char *outtype);
+				    cst_voice *voice,
+				    const char *outtype);
+float flite_phones_to_speech(const char *text, 
+				      cst_voice *voice,
+				      const char *outtype);
+float flite_tokens_to_speech(cst_utterance *u,
+				       cst_voice *voice,
+				       const char *outtype);
 
 cst_utterance *flite_synth_text(const char *text,cst_voice *voice);
 cst_utterance *flite_synth_phones(const char *phones,cst_voice *voice);
+
+float flite_sable_text_to_speech(const char *text,
+				 cst_voice *voice,
+				 const char *outtype);
+float flite_sable_file_to_speech(const char *filename,
+				 cst_voice *voice,
+				 const char *outtype);
+float flite_sable_to_speech(cst_tokenstream *ts,
+			    cst_voice *voice,
+			    const char *outtype);
+
+
+#ifdef __cplusplus
+}; /* extern "C" */
+#endif /* __cplusplus */
+
 
 #endif

@@ -48,10 +48,13 @@
 CST_VAL_REGISTER_TYPE_NODEL(relation,cst_relation)
 CST_VAL_REGISTER_TYPE_NODEL(item,cst_item)
 CST_VAL_REGISTER_TYPE(utterance,cst_utterance)
+CST_VAL_REGISTER_FUNCPTR(itemfunc,cst_itemfunc)
 
 cst_item *new_item_relation(cst_relation *r,cst_item *i)
 {
-    cst_item *ni = cst_alloc(cst_item,1);
+    cst_item *ni;
+
+    ni = cst_utt_alloc(r->utterance, cst_item, 1);
     ni->contents = 0;
     ni->n = ni->p = ni->u = ni->d = 0;
     ni->relation = r;
@@ -64,7 +67,7 @@ void item_contents_set(cst_item *current, cst_item *i)
     cst_item_contents *c = 0;
     cst_item *nn_item;
     if (i == 0)
-	c = new_item_contents();
+	c = new_item_contents(current);
     else
 	c = i->contents;
     if (c != current->contents)
@@ -117,7 +120,7 @@ void delete_item(cst_item *item)
     }
     
     item_unref_contents(item);
-    cst_free(item);
+    cst_utt_free(item->relation->utterance, item);
 }
 
 void item_unref_contents(cst_item *item)
@@ -132,18 +135,19 @@ void item_unref_contents(cst_item *item)
 	{
 	    delete_features(item->contents->relations);
 	    delete_features(item->contents->features);
-	    cst_free(item->contents);
+	    cst_utt_free(item->relation->utterance,item->contents);
 	}
 	item->contents = NULL;
     }
 }
 
-cst_item_contents *new_item_contents()
+cst_item_contents *new_item_contents(cst_item *i)
 {
-    cst_item_contents *ic = cst_alloc(cst_item_contents,1);
+    cst_item_contents *ic;
 
-    ic->features = new_features();
-    ic->relations = new_features();
+    ic = cst_utt_alloc(i->relation->utterance,cst_item_contents,1);
+    ic->features = new_features_local(i->relation->utterance->ctx);
+    ic->relations = new_features_local(i->relation->utterance->ctx);
 
     return ic;
 }

@@ -44,12 +44,31 @@
 #define CST_ERROR_FORMAT -1
 #define CST_OK_FORMAT     0
 
-/* WinCE lacks a complete implementation of stdio */
+/* File access stuff (WinCE 2.11 is really damaged) */
 #ifdef UNDER_CE
 #include <winbase.h>
-typedef HANDLE cst_file_t;
+typedef HANDLE cst_file;
 #else
-typedef FILE * cst_file_t;
+#include <stdio.h>
+typedef FILE * cst_file;
+#endif
+
+/* File mapping stuff */
+#ifdef _WIN32
+#include <windows.h>
+typedef struct cst_filemap_struct {
+    void *mem;
+    cst_file fh;
+    size_t mapsize;
+    HANDLE h;
+} cst_filemap;
+#else
+typedef struct cst_filemap_struct {
+    void *mem;
+    cst_file fh;
+    size_t mapsize;
+    int fd;
+} cst_filemap;
 #endif
 
 #define CST_OPEN_WRITE (1<<0)
@@ -61,15 +80,25 @@ typedef FILE * cst_file_t;
 #define CST_SEEK_RELATIVE 1
 #define CST_SEEK_ENDREL 2
 
-cst_file_t cst_fopen(const char *path, int mode);
-long cst_fwrite(cst_file_t fh, const void *buf, long size, long count);
-long cst_fread(cst_file_t fh, void *buf, long size, long count);
-int cst_fprintf(cst_file_t fh, char *fmt, ...);
-int cst_fclose(cst_file_t fh);
-int cst_fgetc(cst_file_t fh);
+cst_file cst_fopen(const char *path, int mode);
+long cst_fwrite(cst_file fh, const void *buf, long size, long count);
+long cst_fread(cst_file fh, void *buf, long size, long count);
+int cst_fprintf(cst_file fh, char *fmt, ...);
+int cst_fclose(cst_file fh);
+int cst_fgetc(cst_file fh);
 
 /* These aren't LFS-compliant.  I don't think we'll need >2G files. */
-long cst_ftell(cst_file_t fh);
-long cst_fseek(cst_file_t fh, long pos, int whence);
+long cst_ftell(cst_file fh);
+long cst_fseek(cst_file fh, long pos, int whence);
+long cst_filesize(cst_file fh);
+
+cst_filemap *cst_mmap_file(const char *path);
+int cst_munmap_file(cst_filemap *map);
+
+cst_filemap *cst_read_whole_file(const char *path);
+int cst_free_whole_file(cst_filemap *map);
+
+cst_filemap *cst_read_part_file(const char *path);
+int cst_free_part_file(cst_filemap *map);
 
 #endif

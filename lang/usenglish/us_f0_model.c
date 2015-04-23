@@ -41,9 +41,9 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "flite.h"
+#include "cst_hrg.h"
+#include "cst_phoneset.h"
 #include "us_f0.h"
-
 
 static void apply_lr_model(cst_item *s,
 			   const us_f0_lr_term *f0_lr_terms,
@@ -156,12 +156,13 @@ cst_utterance *us_f0_model(cst_utterance *u)
     /* F0 target model: Black and Hunt ICSLP96, three points per syl  */
     cst_item *syl, *t, *nt;
     cst_relation *targ_rel;
-    float mean, stddev;
+    float mean, stddev, local_mean, local_stddev;
     float start, mid, end, lend;
     float seg_end;
 
     targ_rel = utt_relation_create(u,"Target");
     mean = get_param_float(u->features,"int_f0_target_mean", 100.0);
+    mean *= get_param_float(u->features,"f0_shift", 1.0);
     stddev = get_param_float(u->features,"int_f0_target_stddev", 12.0);
     
     lend = 0;
@@ -176,21 +177,31 @@ cst_utterance *us_f0_model(cst_utterance *u)
 	       ffeature_string(syl,"endtone")); */
 	if (!item_daughter(item_as(syl,"SylStructure")))
 	    continue;  /* no segs in syl */
+
+	local_mean = ffeature_float(syl,"R:SylStructure.parent.R:Token.parent.local_f0_shift");
+	if (local_mean)
+		local_mean *= mean;
+	else
+		local_mean = mean;
+	local_stddev = ffeature_float(syl,"R:SylStructure.parent.R:Token.parent.local_f0_range");
+	if (local_stddev == 0.0)
+		local_stddev = stddev;
+
 	apply_lr_model(syl,f0_lr_terms,&start,&mid,&end);
 	if (post_break(syl))
-	    lend = map_f0(start,mean,stddev);
+	    lend = map_f0(start,local_mean,local_stddev);
 	add_target_point(targ_rel,
 			 ffeature_float(syl,
 				"R:SylStructure.daughter.R:Segment.p.end"),
-			 map_f0((start+lend)/2.0,mean,stddev));
+			 map_f0((start+lend)/2.0,local_mean,local_stddev));
 	add_target_point(targ_rel,
 			 vowel_mid(syl),
-			 map_f0(mid,mean,stddev));
-	lend = map_f0(end,mean,stddev);
+			 map_f0(mid,local_mean,local_stddev));
+	lend = map_f0(end,local_mean,local_stddev);
 	if (pre_break(syl))
 	    add_target_point(targ_rel,
 			  ffeature_float(syl,"R:SylStructure.daughtern.end"),
-			     map_f0(end,mean,stddev));
+			     map_f0(end,local_mean,local_stddev));
     }
     
     /* Guarantee targets go from start to end of utterance */
@@ -211,30 +222,3 @@ cst_utterance *us_f0_model(cst_utterance *u)
 
     return u;
 }
-
-#if 0
-cst_utterance *us_f0_model(cst_utterance *u)
-{
-    /* F0 target model */
-    cst_item *s,*t;
-    cst_relation *targ_rel;
-    float mean, stddev;
-
-    targ_rel = utt_relation_create(u,"Target");
-    mean = get_param_float(u->features,"target_f0_mean", 100.0);
-    stddev = get_param_float(u->features,"target_f0_stddev", 12.0);
-
-    s=relation_head(utt_relation(u,"Segment"));
-    t = relation_append(targ_rel,NULL);
-    item_set_float(t,"pos",0.0);
-    item_set_float(t,"f0",120.0);
-
-    s=relation_tail(utt_relation(u,"Segment"));
-    t = relation_append(targ_rel,NULL);
-
-    item_set_float(t,"pos",item_feat_float(s,"end"));
-    item_set_float(t,"f0",100.0);
-
-    return u;
-}
-#endif

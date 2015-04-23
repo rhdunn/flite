@@ -38,7 +38,7 @@ TOP=../..
 DIRNAME=lang/cmulex
 BUILD_DIRS = 
 ALL_DIRS= 
-H = cmu6_lts_rules.h
+H = cmu6_lts_rules.h cmulex.h
 SRCS = cmu6_lts_rules.c cmu_lex.c cmu_lex_entry.c cmu_lex_phone.c
 OBJS = $(SRCS:.c=.o)
 SCM=

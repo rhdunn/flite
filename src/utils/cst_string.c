@@ -45,9 +45,6 @@
 #include "cst_string.h"
 
 #ifdef UNDER_CE /* WinCE does not fully implement ANSI C */
-#define isalnum(a) iswalnum((wint_t)(a))
-#define isupper(a) iswupper((wint_t)(a))
-#define islower(a) iswlower((wint_t)(a))
 
 char *cst_strrchr(const char *str, int c)
 {
@@ -146,7 +143,13 @@ char *cst_upcase(const char *str)
     return uc;
 }
 
+int cst_member_string(const char *str, const char * const *slist)
+{
+    const char * const *p;
 
+    for (p = slist; *p; ++p)
+	if (cst_streq(*p, str))
+	    break;
 
-
-
+    return *p != NULL;
+}

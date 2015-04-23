@@ -52,7 +52,7 @@
 #include "cst_track.h"
 #include "cst_sigpr.h"
 
-cst_voice *register_cmu_time_awb();
+cst_voice *register_cmu_time_awb(const char *voxdir);
 static const char *time_approx(int hour, int minute);
 static const char *time_min(int hour, int minute);
 static const char *time_hour(int hour, int minute);
@@ -79,6 +79,7 @@ int main(int argc, char **argv)
 	fprintf(stderr,"usage: flite_time HH:MM\n");
 	exit(-1);
     }
+    delete_cst_regex(timex);
     b[2] = '\0';
     b[0] = argv[1][0];
     b[1] = argv[1][1];
@@ -89,7 +90,7 @@ int main(int argc, char **argv)
 
     flite_init();
 
-    v = register_cmu_time_awb();
+    v = register_cmu_time_awb(NULL);
 
     sprintf(thetime,
 	    "The time is now, %s %s %s, %s.",

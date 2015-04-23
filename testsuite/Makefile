@@ -41,17 +41,17 @@ ALL_DIRS=
 DATAFILES=data.one
 SRCS = token_test_main.c hrg_test_main.c \
        regex_test_main.c nums_test_main.c \
-       play_wave_main.c \
+       play_wave_main.c record_wave_main.c \
        play_sync_main.c play_server_main.c play_client_main.c \
        lex_test_main.c utt_test_main.c lex_lookup_main.c \
        lpc_test_main.c asciiS2U_main.c asciiU2S_main.c \
-	lpc_test2_main.c find_sts_main.c record_wave_main.c
+	lpc_test2_main.c find_sts_main.c
 OTHERS = kal_test_main.c
 FILES = Makefile $(SRCS) $(DATAFILES) $(OTHERS)
 
 LOCAL_INCLUDES = -I$(TOP)/lang/usenglish
 
-MAIN_EXECS = $(SRCS:_main.c=)
+MAIN_EXECS = $(SRCS:_main.c=$(EXEEXT))
 lex_test_LIBS = -lflite_cmulex
 nums_test_LIBS = -lflite_usenglish
 utt_test_LIBS = -lflite_cmulex
@@ -61,12 +61,13 @@ ldom_time_LIBS = -L/home/awb/data/ldom/time_flite/flite/lib -lcmu_time_awb -lfli
 #	          /home/awb/src/malloc/gmalloc.o
 
 ALL = $(MAIN_EXECS)
+LOCAL_CLEAN = $(MAIN_EXECS)
 
 include $(TOP)/config/common_make_rules
 
 MAIN_O = $(SRCS:%=%_main.o)
 $(MAIN_O) : %_main.o : %_main.c
 	$(CC) $(CFLAGS) -o $@ $< 
-$(ALL) : % : %_main.o $(FLITELIBS)
+$(ALL) : %$(EXEEXT) : %_main.o $(FLITELIBS)
 	$(CC) $(CFLAGS) -o $@ $@_main.o $($(@:=_LIBS)) $(LDFLAGS)
 

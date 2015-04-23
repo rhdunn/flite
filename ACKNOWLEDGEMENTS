@@ -14,8 +14,14 @@ Other contributions are:
 David Huggins-Daines (dhd@cepstral.com)
    much of the clunits code, porting to multiple platforms, substantial
    code tidy up and configure/autoconf guidance.
+Cepstral, LLC (http://cepstral.com)
+   For supporting DHD to spend time on flite and passing back the important
+   fixes and enhancements
 Willie Walker <william.walker@sun.com> and the rest of the Sun Speech Group
-   lots of low level bugs (and fixes) during their port to JFlite.
+   lots of low level bugs (and fixes).
+Portuguese Foundation for Science and Technology (FCT) Praxis XXI program
+   The SAPI interface provided by Cepstral, LLC was partially funded by
+   the above program.
 Henry Spencer
    For the regex code
 University of Edinburgh

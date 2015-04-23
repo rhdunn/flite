@@ -41,22 +41,23 @@ ALL_DIRS=
 SRCS = flite_main.c flite_time_main.c
 OBJS = $(SRCS:.c=.o)
 FILES = Makefile $(SRCS)
-LOCAL_INCLUDES = 
+LOCAL_INCLUDES = -I$(TOP)/lang/$(FL_VOX)
+LOCAL_CLEAN = $(BINDIR)/flite$(EXEEXT) $(BINDIR)/flite_time$(EXEEXT)
 
-ALL = $(BINDIR)/flite $(BINDIR)/flite_time
+ALL = $(BINDIR)/flite$(EXEEXT) $(BINDIR)/flite_time$(EXEEXT)
 
 flite_LIBS = flite_$(FL_VOX) flite_$(FL_LANG) flite_$(FL_LEX) 
 flite_LIBS_flags = -L$(LIBDIR) $(flite_LIBS:%=-l%)
 flite_LIBS_deps = $(flite_LIBS:%=$(LIBDIR)/lib%.a)
 
-flite_time_LIBS = flite_$(FL_VOX) flite_cmu_time_awb flite_$(FL_LANG) flite_$(FL_LEX) 
+flite_time_LIBS = flite_$(FL_VOX) flite_cmu_time_awb flite_$(FL_LANG) flite_$(FL_LEX)
 flite_time_LIBS_flags = -L$(LIBDIR) $(flite_time_LIBS:%=-l%)
 flite_time_LIBS_deps = $(flite_time_LIBS:%=$(LIBDIR)/lib%.a)
 
 include $(TOP)/config/common_make_rules
 
-$(BINDIR)/flite: flite_main.o $(FLITELIBS) $(flite_LIBS_deps)
-	$(CC) $(CFLAGS) -o $(BINDIR)/flite flite_main.o $(flite_LIBS_flags) $(LDFLAGS) 
+$(BINDIR)/flite$(EXEEXT): flite_main.o $(FLITELIBS) $(flite_LIBS_deps)
+	$(CC) $(CFLAGS) -o $@ flite_main.o $(flite_LIBS_flags) $(LDFLAGS)
 
-$(BINDIR)/flite_time: flite_time_main.o $(FLITELIBS) $(flite_time_LIBS_deps)
-	$(CC) $(CFLAGS) -o $(BINDIR)/flite_time flite_time_main.o $(flite_time_LIBS_flags) $(LDFLAGS) 
+$(BINDIR)/flite_time$(EXEEXT): flite_time_main.o $(FLITELIBS) $(flite_time_LIBS_deps)
+	$(CC) $(CFLAGS) -o $@ flite_time_main.o $(flite_time_LIBS_flags) $(LDFLAGS) 

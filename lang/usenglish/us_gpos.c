@@ -36,8 +36,7 @@
 /*  Poor mans part of speech tagger                                      */
 /*************************************************************************/
 
-#include "flite.h"
-#include "usenglish.h"
+#include "cst_val.h"
 
 DEF_STATIC_CONST_VAL_STRING(gpos_in,"in");
 DEF_STATIC_CONST_VAL_STRING(gpos_of,"of");

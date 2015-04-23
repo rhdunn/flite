@@ -1,3 +1,10 @@
+/* This is an altered version.  It was originally altered for use in
+   the Edinburgh Speech Tools by Richard Caley and others.  It was
+   later altered for use in Flite by Alan W Black.  It was then
+   further altered by David Huggins-Daines.  Identifiers and
+   structures have been changed, but the basic structure of the code
+   is intact. */
+
 /*
  * regcomp and regexec -- regsub and regerror are elsewhere
  *
@@ -30,15 +37,15 @@
  *
  * Beware that some of this code is subtly aware of the way operator
  * precedence is structured in regular expressions.  Serious changes in
- * regular-expression syntax might require a total rethink.
- */
+ * regular-expression syntax might require a total rethink.  */
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 #include "cst_alloc.h"
-#include "regexp.h"
-#include "regmagic.h"
+#include "cst_string.h"
+#include "cst_error.h"
+#include "cst_regex.h"
 
 /*
  * The "internal use only" fields in regexp.h are present to pass info from
@@ -145,11 +152,7 @@
 #define	UCHARAT(p)	((int)*(p)&CHARBITS)
 #endif
 
-#ifdef UNDER_CE /* WinCE thought it would be cute to only implement wide chars */
-#define isalnum(a) iswalnum((wint_t)(a))
-#endif
-
-#define	FAIL(m)	{ hs_regerror(m); return(NULL); }
+#define	FAIL(m)	{ cst_errmsg("regexp failure: %s\n", m); cst_error(); }
 #define	ISMULT(c)	((c) == '*' || (c) == '+' || (c) == '?')
 
 /*
@@ -204,10 +207,10 @@ STATIC int strcspn();
  * Beware that the optimization-preparation code in here knows about some
  * of the structure of the compiled regexp.
  */
-hs_regexp *
+cst_regex *
 hs_regcomp(const char *exp)
 {
-        hs_regexp *r;
+        cst_regex *r;
 	char *scan;
 	char *longest;
 	unsigned int len;
@@ -223,7 +226,7 @@ hs_regcomp(const char *exp)
 	regnpar = 1;
 	regsize = 0L;
 	regcode = &regdummy;
-	regc(MAGIC);
+	regc(CST_REGMAGIC);
 	if (reg(0, &flags) == NULL)
 		return(NULL);
 
@@ -232,7 +235,9 @@ hs_regcomp(const char *exp)
 		FAIL("regexp too big");
 
 	/* Allocate space. */
-	r = cst_alloc(hs_regexp,regsize);
+	r = cst_alloc(cst_regex,1);
+	r->regsize = regsize;
+	r->program = cst_alloc(char,regsize);
 	if (r == NULL)
 		FAIL("out of space");
 
@@ -240,7 +245,7 @@ hs_regcomp(const char *exp)
 	regparse = exp;
 	regnpar = 1;
 	regcode = r->program;
-	regc(MAGIC);
+	regc(CST_REGMAGIC);
 	if (reg(0, &flags) == NULL)
 		return(NULL);
 
@@ -285,6 +290,13 @@ hs_regcomp(const char *exp)
 
 }
 
+void
+hs_regdelete(cst_regex *r)
+{
+	cst_free(r->program);
+	cst_free(r);
+}
+
 /*
  - reg - regular expression, i.e. main body or parenthesized thing
  *
@@ -309,7 +321,7 @@ reg(int paren, int *flagp)
 
 	/* Make an OPEN node, if parenthesized. */
 	if (paren) {
-		if (regnpar >= NSUBEXP)
+		if (regnpar >= CST_NSUBEXP)
 			FAIL("too many ()");
 		parno = regnpar;
 		regnpar++;
@@ -471,7 +483,7 @@ regpiece(int *flagp)
 static char *
 regatom(int *flagp)
 {
-	char *ret;
+	char *ret = NULL;
 	int flags;
 
 	*flagp = WORST;		/* Tentatively. */
@@ -753,20 +765,15 @@ regoptail(char *p, char *val)
  * regexec and friends
  */
 
-/*
- * Global work variables for regexec().
- */
-static const char *reginput;		/* EST_String-input pointer. */
-static  const char *regbol;		/* Beginning of input, for ^ check. */
-static const char **regstartp;	/* Pointer to startp array. */
-static const char **regendp;		/* Ditto for endp. */
+/* dhd@cepstral.com changed all this stuff to use a state structure
+   (and thus, be re-entrant) 2001-10-18 */
 
 /*
  * Forwards.
  */
-STATIC int regtry(hs_regexp *prog, const char *string);
-STATIC int regmatch(char *prog);
-STATIC int regrepeat(char *p);
+STATIC int regtry(cst_regstate *state, const char *string, char *prog);
+STATIC int regmatch(cst_regstate *state, char *scan);
+STATIC int regrepeat(cst_regstate *state, char *p);
 
 #ifdef UNDER_CE
 #undef DEBUG /* Just does not work on WinCE... */
@@ -775,26 +782,27 @@ STATIC int regrepeat(char *p);
 #ifdef DEBUG
 #define regnarrate stdout
 void regdump();
-STATIC char *regprop( char *scan);
+STATIC char *regprop(char *scan);
 #endif
 
 /*
  - regexec - match a regexp against a string
  */
-int
-hs_regexec(const hs_regexp *prog, const char *string)
+cst_regstate *
+hs_regexec(const cst_regex *prog, const char *string)
 {
+	cst_regstate *state;
 	char *s;
 
 	/* Be paranoid... */
 	if (prog == NULL || string == NULL) {
-	  hs_regerror("NULL parameter");
+		FAIL("NULL parameter");
 		return(0);
 	}
 
 	/* Check validity of program. */
-	if (UCHARAT(prog->program) != MAGIC) {
-	  hs_regerror("corrupted program");
+	if (UCHARAT(prog->program) != CST_REGMAGIC) {
+		FAIL("corrupted program");
 		return(0);
 	}
 
@@ -810,56 +818,61 @@ hs_regexec(const hs_regexp *prog, const char *string)
 			return(0);
 	}
 
+	state = cst_alloc(cst_regstate, 1);
 	/* Mark beginning of line for ^ . */
-	regbol = (char *)string;
+	state->bol = string;
 
 	/* Simplest case:  anchored match need be tried only once. */
-	if (prog->reganch)
-	  return(regtry((hs_regexp *)prog, string));
+	if (prog->reganch) {
+		if (regtry(state, string, prog->program+1))
+			return state;
+		else {
+			cst_free(state);
+			return NULL;
+		}
+	}
 
 	/* Messy cases:  unanchored match. */
 	s = (char *)string;
 	if (prog->regstart != '\0')
 		/* We know what char it must start with. */
 		while ((s = strchr(s, prog->regstart)) != NULL) {
-			if (regtry((hs_regexp *)prog, s))
-				return(1);
+			if (regtry(state, s, prog->program+1))
+				return state;
 			s++;
 		}
 	else
 		/* We don't -- general case. */
 		do {
-			if (regtry((hs_regexp *)prog, s))
-				return(1);
+			if (regtry(state, s, prog->program+1))
+				return state;
 		} while (*s++ != '\0');
 
-	/* Failure. */
-	return(0);
+	cst_free(state);
+	return NULL;
 }
 
 /*
  - regtry - try match at specific point
  */
 static int			/* 0 failure, 1 success */
-regtry(hs_regexp *prog, const char *string)
+regtry(cst_regstate *state, const char *string, char *prog)
 {
 	int i;
-	char **sp;
-	char **ep;
+	const char **sp;
+	const char **ep;
 
-	reginput = string;
-	regstartp = (const char **)prog->startp;
-	regendp = (const char **)prog->endp;
+	state->input = string;
 
-	sp = prog->startp;
-	ep = prog->endp;
-	for (i = NSUBEXP; i > 0; i--) {
+	sp = state->startp;
+	ep = state->endp;
+	for (i = CST_NSUBEXP; i > 0; i--) {
 		*sp++ = NULL;
 		*ep++ = NULL;
 	}
-	if (regmatch(prog->program + 1)) {
-	  prog->startp[0] = (char *)string;
-	  prog->endp[0] = (char *)reginput;
+	if (regmatch(state, prog)) {
+	  state->startp[0] = (char *)string;
+	  state->endp[0] = (char *)state->input;
 		return(1);
 	} else
 		return(0);
@@ -876,12 +889,10 @@ regtry(hs_regexp *prog, const char *string)
  * by recursion.
  */
 static int			/* 0 failure, 1 success */
-regmatch(char *prog)
+regmatch(cst_regstate *state, char *scan)
 {
-	char *scan;	/* Current node. */
 	char *next;		/* Next node. */
 
-	scan = prog;
 #ifdef DEBUG
 	if (scan != NULL && regnarrate)
 		fprintf(regnarrate, "%s(\n", regprop(scan));
@@ -895,32 +906,32 @@ regmatch(char *prog)
 
 		switch (OP(scan)) {
 		case BOL:
-			if (reginput != regbol)
+			if (state->input != state->bol)
 				return(0);
 			break;
 		case EOL:
-			if (*reginput != '\0')
+			if (*state->input != '\0')
 				return(0);
 			break;
 		case WORDA:
 			/* Must be looking at a letter, digit, or _ */
-			if ((!isalnum((int)*reginput)) && *reginput != '_')
+			if ((!isalnum((int)*state->input)) && *state->input != '_')
 				return(0);
 			/* Prev must be BOL or nonword */
-			if (reginput > regbol &&
-			    (isalnum((int)reginput[-1]) || reginput[-1] == '_'))
+			if (state->input > state->bol &&
+			    (isalnum((int)state->input[-1]) || state->input[-1] == '_'))
 				return(0);
 			break;
 		case WORDZ:
 			/* Must be looking at non letter, digit, or _ */
-			if (isalnum((int)*reginput) || *reginput == '_')
+			if (isalnum((int)*state->input) || *state->input == '_')
 				return(0);
 			/* We don't care what the previous char was */
 			break;
 		case ANY:
-			if (*reginput == '\0')
+			if (*state->input == '\0')
 				return(0);
-			reginput++;
+			state->input++;
 			break;
 		case EXACTLY: {
 				int len;
@@ -928,23 +939,23 @@ regmatch(char *prog)
 
 				opnd = OPERAND(scan);
 				/* Inline the first character, for speed. */
-				if (*opnd != *reginput)
+				if (*opnd != *state->input)
 					return(0);
 				len = strlen(opnd);
-				if (len > 1 && strncmp(opnd, reginput, len) != 0)
+				if (len > 1 && strncmp(opnd, state->input, len) != 0)
 					return(0);
-				reginput += len;
+				state->input += len;
 			}
 			break;
 		case ANYOF:
- 			if (*reginput == '\0' || strchr(OPERAND(scan), *reginput) == NULL)
+ 			if (*state->input == '\0' || strchr(OPERAND(scan), *state->input) == NULL)
 				return(0);
-			reginput++;
+			state->input++;
 			break;
 		case ANYBUT:
- 			if (*reginput == '\0' || strchr(OPERAND(scan), *reginput) != NULL)
+ 			if (*state->input == '\0' || strchr(OPERAND(scan), *state->input) != NULL)
 				return(0);
-			reginput++;
+			state->input++;
 			break;
 		case NOTHING:
 			break;
@@ -963,16 +974,16 @@ regmatch(char *prog)
 				const char *save;
 
 				no = OP(scan) - OPEN;
-				save = reginput;
+				save = state->input;
 
-				if (regmatch(next)) {
+				if (regmatch(state, next)) {
 					/*
 					 * Don't set startp if some later
 					 * invocation of the same parentheses
 					 * already has.
 					 */
-					if (regstartp[no] == NULL)
-					  regstartp[no] = save;
+					if (state->startp[no] == NULL)
+					  state->startp[no] = save;
 					return(1);
 				} else
 					return(0);
@@ -991,16 +1002,16 @@ regmatch(char *prog)
 				const char *save;
 
 				no = OP(scan) - CLOSE;
-				save = reginput;
+				save = state->input;
 
-				if (regmatch(next)) {
+				if (regmatch(state, next)) {
 					/*
 					 * Don't set endp if some later
 					 * invocation of the same parentheses
 					 * already has.
 					 */
-					if (regendp[no] == NULL)
-					  regendp[no] = save;
+					if (state->endp[no] == NULL)
+					  state->endp[no] = save;
 					return(1);
 				} else
 					return(0);
@@ -1013,10 +1024,10 @@ regmatch(char *prog)
 					next = OPERAND(scan);	/* Avoid recursion. */
 				else {
 					do {
-						save = reginput;
-						if (regmatch(OPERAND(scan)))
+						save = state->input;
+						if (regmatch(state, OPERAND(scan)))
 							return(1);
-						reginput = save;
+						state->input = save;
 						scan = regnext(scan);
 					} while (scan != NULL && OP(scan) == BRANCH);
 					return(0);
@@ -1039,19 +1050,19 @@ regmatch(char *prog)
 				if (OP(next) == EXACTLY)
 					nextch = *OPERAND(next);
 				min = (OP(scan) == STAR) ? 0 : 1;
-				save = reginput;
+				save = state->input;
 
-				no = regrepeat(OPERAND(scan));
+				no = regrepeat(state, OPERAND(scan));
 				while (no >= min) {
 					/* If it could work, try it. */
-					if (nextch == '\0' || *reginput == nextch)
+					if (nextch == '\0' || *state->input == nextch)
 					  {
-					    if (regmatch(next))
+					    if (regmatch(state, next))
 					      return(1);
 					  }
 					/* Couldn't or didn't -- back up. */
 					no--;
-					reginput = save + no;
+					state->input = save + no;
 				}
 				return(0);
 			}
@@ -1060,7 +1071,7 @@ regmatch(char *prog)
 			return(1);	/* Success! */
 			break;
 		default:
-		  hs_regerror("memory corruption");
+			FAIL("memory corruption");
 			return(0);
 			break;
 		}
@@ -1072,7 +1083,7 @@ regmatch(char *prog)
 	 * We get here only if there's trouble -- normally "case END" is
 	 * the terminating point.
 	 */
-	hs_regerror("corrupted pointers");
+	FAIL("corrupted pointers");
 	return(0);
 }
 
@@ -1080,13 +1091,13 @@ regmatch(char *prog)
  - regrepeat - repeatedly match something simple, report how many
  */
 static int
-regrepeat(char *p)
+regrepeat(cst_regstate *state, char *p)
 {
 	int count = 0;
 	const char *scan;
 	char *opnd;
 
-	scan = reginput;
+	scan = state->input;
 	opnd = OPERAND(p);
 	switch (OP(p)) {
 	case ANY:
@@ -1112,11 +1123,11 @@ regrepeat(char *p)
 		}
 		break;
 	default:		/* Oh dear.  Called inappropriately. */
-	  hs_regerror("internal foulup");
+		FAIL("internal foulup");
 		count = 0;	/* Best compromise. */
 		break;
 	}
-	reginput = scan;
+	state->input = scan;
 
 	return(count);
 }
@@ -1150,11 +1161,12 @@ STATIC char *regprop(char *scan);
  - regdump - dump a regexp onto stdout in vaguely comprehensible form
  */
 void
-regdump(hs_regexp *r)
+regdump(cst_regex *r)
 {
 	char *s;
 	char op = EXACTLY;	/* Arbitrary non-END op. */
 	char *next;
+
 
 	s = r->program + 1;
 	while (op != END) {	/* While that wasn't END last time... */
@@ -1266,7 +1278,7 @@ regprop(char *op)
 		p = "WORDZ";
 		break;
 	default:
-	  hs_regerror("corrupted opcode");
+		FAIL("corrupted opcode");
 		break;
 	}
 	if (p != NULL)

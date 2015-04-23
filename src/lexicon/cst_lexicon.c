@@ -38,10 +38,6 @@
 /*                                                                       */
 /*************************************************************************/
 
-/* 2001-07-18 <dhd@cepstral.com>: added lex_add_entry(),
-   lex_delete_entry(), made some const-ness changes (also fixed
-   lex_lookup_bsearch()) */
-
 #include <stdio.h>
 #include <string.h>
 #include "cst_features.h"
@@ -62,21 +58,18 @@ static int find_full_match(const lexicon_entry *entries, int i,const char *word)
 cst_lexicon *new_lexicon()
 {
     cst_lexicon *l = cst_alloc(cst_lexicon,1);
-    l->name = 0;
-    l->num_entries = 0;
-    l->entry_index = 0;
-    l->phones = 0;
-    l->phone_table = 0;
-    l->lts_rule_set = 0;
     l->syl_boundary = no_syl_boundaries;
-    l->addenda = 0;
     return l;
 }
 
 void delete_lexicon(cst_lexicon *lex)
 {
-    (void)lex;
-    cst_errmsg("Lexicon: delete called and ignored\n");
+	if (lex)
+	{
+		cst_free(lex->entry_index);
+		cst_free(lex->phones);
+		cst_free(lex);
+	}
 }
 
 lexicon_entry * lex_add_entry(cst_lexicon *l,

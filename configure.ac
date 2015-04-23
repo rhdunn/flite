@@ -34,13 +34,13 @@ AC_INIT(include/flite.h)
 
 AC_CANONICAL_SYSTEM
 AC_PROG_CC
+AC_PROG_RANLIB
+AC_CHECK_TOOL(AR, ar)
+AC_C_BIGENDIAN
+
 if test "x$GCC" = "xyes"; then
 	CFLAGS="$CFLAGS -Wall"
 fi
-AC_PROG_RANLIB
-AC_CHECK_TOOL(AR, ar)
-
-AC_C_BIGENDIAN
 
 AC_ARG_ENABLE( sockets, 
                [  --disable-sockets     without socket support],
@@ -54,7 +54,9 @@ if test "$sockets" = false; then
    AC_DEFINE(CST_NO_SOCKETS)
 fi
 
+dnl
 dnl Does this compiler support initialization of unions
+dnl
 AC_TRY_COMPILE([#include <stdio.h>],
                [ struct a { union { float b; int c; } d; };
                  const struct a e = { .d={ .b=3.14 } }; ],
@@ -65,18 +67,75 @@ if test "$unioninit" = no; then
 fi
 
 dnl
+dnl Does this platform support mmap(2)
+dnl Note we don't use AC_FUNC_MMAP because we really only care whether
+dnl read-only mappings work.
+dnl
+AC_CHECK_FUNC(mmap,MMAPTYPE=posix)
+
+dnl AC_CHECK_FUNC doesn't seem to work for Win32 API calls...
+if test "x$MMAPTYPE" = x; then
+   case "$host_os" in
+	cygwin*|mingw*)
+		MMAPTYPE=win32
+	;;
+ 	*)
+		MMAPTYPE=none
+	;;
+   esac
+fi
+AC_SUBST(MMAPTYPE)
+
+dnl
 dnl determine audio type or use none if none supported on this platform
 dnl
-AUDIOTYPE=-DCST_AUDIO_NONE
-AC_CHECK_FILE(/usr/include/sys/soundcard.h,
-              [AUDIOTYPE=-DCST_AUDIO_LINUX])
-AC_CHECK_FILE(/usr/include/machine/soundcard.h,
-              [AUDIOTYPE=-DCST_AUDIO_FREEBSD])
-AC_CHECK_FILE(/usr/include/sys/audioio.h,
-              [AUDIOTYPE=-DCST_AUDIO_SUNOS])
-AC_ARG_WITH( audio, [  --with-audio          with specific audio support (LINUX, FREEBSD, NONE etc) ],
-        AUDIOTYPE="-DCST_AUDIO_"$with_audio )
-AC_SUBST(AUDIOTYPE)
+AUDIODRIVER=none
+AC_CHECK_HEADER(sys/soundcard.h,
+              [AUDIODRIVER="oss"
+               AUDIODEFS=-DCST_AUDIO_LINUX])
+AC_CHECK_HEADER(machine/soundcard.h,
+              [AUDIODRIVER="oss"
+               AUDIODEFS=-DCST_AUDIO_FREEBSD])
+AC_CHECK_HEADER(sys/audioio.h,
+              [AUDIODRIVER="sun"
+               AUDIODEFS=-DCST_AUDIO_SUNOS])
+AC_CHECK_HEADER(sys/asoundlib.h,
+              [AUDIODRIVER="alsa"
+	       AUDIODEFS=-DCST_AUDIO_ALSA])
+AC_CHECK_HEADER(mmsystem.h,
+	      [AUDIODRIVER="wince"
+	       AUDIODEFS=-DCST_AUDIO_WINCE
+	       AUDIOLIBS=-lwinmm])
+
+dnl
+dnl allow the user to override the one detected above
+dnl
+AC_ARG_WITH( audio,
+	[  --with-audio          with specific audio support (none linux freebsd etc) ],
+        AUDIODRIVER=$with_audio )
+
+if test "x$AUDIODEFS" = x; then
+    case "$AUDIODRIVER" in
+	linux|oss)
+	    AUDIODRIVER=oss
+	    AUDIODEFS=-DCST_AUDIO_LINUX
+	    ;;
+	*bsd)
+	    AUDIODRIVER=oss
+	    AUDIODEFS=-DCST_AUDIO_FREEBSD
+	    ;;
+	qnx)
+	    AUDIODRIVER=alsa
+	    AUDIODEFS=-DCST_AUDIO_QNX
+	    ;;
+	none)
+	    AUDIODEFS=-DCST_AUDIO_NONE
+	    ;;
+    esac
+fi
+AC_SUBST(AUDIODRIVER)
+AC_SUBST(AUDIODEFS)
+AC_SUBST(AUDIOLIBS)
 
 dnl
 dnl language/lexicon/voice parameters (we don't really support multiple

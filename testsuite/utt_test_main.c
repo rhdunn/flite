@@ -102,7 +102,7 @@ static int WordSylSeg(cst_utterance *u)
     {
 	printf("word: %s\n",item_feat_string(word,"name"));
 	ssword = relation_append(sylstructure,word);
-	phones = lex_lookup(&cmu_lex,item_feat_string(word,"name"),0);
+	phones = lex_lookup((cst_lexicon *)&cmu_lex,item_feat_string(word,"name"),0);
 	for (p=phones; p; p=val_cdr(p))
 	{
 	    segitem = relation_append(seg,NULL);

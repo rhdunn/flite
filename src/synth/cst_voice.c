@@ -46,6 +46,7 @@ cst_voice *new_voice()
 {
     cst_voice *v = cst_alloc(struct cst_voice_struct,1);
     v->features = new_features();
+    v->ffunctions = new_features();
 
     return v;
 }
@@ -55,6 +56,7 @@ void delete_voice(cst_voice *v)
     if (v)
     {
 	delete_features(v->features);
+	delete_features(v->ffunctions);
 	cst_free(v);
     }
 }

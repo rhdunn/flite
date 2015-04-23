@@ -37,42 +37,46 @@
 /*  Ain't got no direct audio                                            */
 /*                                                                       */
 /*************************************************************************/
-#ifdef CST_AUDIO_NONE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "cst_string.h"
 #include "cst_wave.h"
 #include "cst_audio.h"
 
-int audio_set_sample_rate_none(int afd,int sample_rate)
+cst_audiodev * audio_open_none(int sps, int channels, int fmt)
 {
-    (void)afd;
-    (void)sample_rate;
+    cst_audiodev *ad;
 
+    ad = cst_alloc(cst_audiodev,1);
+    ad->sps = ad->real_sps = sps;
+    ad->channels = ad->real_channels = channels;
+    ad->fmt = ad->real_fmt = fmt;
+    return ad;
+}
+
+int audio_close_none(cst_audiodev *ad)
+{
+    if (ad)
+	cst_free(ad);
     return 0;
 }
 
-int audio_open_none()
+int audio_write_none(cst_audiodev *ad, void *samples, int num_bytes)
 {
-    return 0;
-}
-
-int audio_close_none(int fd)
-{
-    (void)fd;
-    return 0;
-}
-
-int audio_write_none(int afd, void *samples, int num_bytes)
-{
-    (void)afd;
+    (void)ad;
     (void)samples;
     return num_bytes;
 }
 
-int audio_flush_none(int afd)
+int audio_drain_none(cst_audiodev *ad)
 {
-    (void)afd;
+    (void)ad;
     return 0;
 }
-#endif
+
+int audio_flush_none(cst_audiodev *ad)
+{
+    (void)ad;
+    return 0;
+}

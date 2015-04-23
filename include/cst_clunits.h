@@ -48,15 +48,20 @@
 
 #define CLUNIT_NONE 65535
 
-typedef struct  cst_clunit_struct {
-    const char *name;
+typedef struct cst_clunit_struct {
+    unsigned short type, phone;
     int start, end;
     unsigned short prev, next;
 } cst_clunit;
 
+typedef struct cst_clunit_type_struct {
+    const char *name;
+    unsigned short start, count;
+} cst_clunit_type;
+
 typedef struct cst_clunit_db_struct {
     const char *name;
-    const char * const *types;
+    const cst_clunit_type *types;
     const cst_cart * const *trees; 
     const cst_clunit *units;
     unsigned short num_types, num_units;
@@ -66,26 +71,28 @@ typedef struct cst_clunit_db_struct {
 
     /* These are pre-scaled by 65536 to accomodate fixed-point machines */
     int *join_weights;
-    int continuity_weight;
 
+    /* Misc. important parameters */
     int optimal_coupling;
     int extend_selections;
-    int join_method;
+    int f0_weight;
     char *(*unit_name_func)(cst_item *s);
 } cst_clunit_db;
 
 CST_VAL_USER_TYPE_DCLS(clunit_db,cst_clunit_db)
 CST_VAL_USER_TYPE_DCLS(vit_cand,cst_vit_cand)
 
-cst_utterance *clunits_select(cst_utterance *utt);
-cst_utterance *concat_clunits(cst_utterance *utt);
 cst_utterance *clunits_synth(cst_utterance *utt);
+cst_utterance *clunits_dump_units(cst_utterance *utt);
 
 char *clunits_ldom_phone_word(cst_item *s);
-int clunit_get_unit_index(cst_clunit_db *clunit_db, 
+int clunit_get_unit_index(cst_clunit_db *cludb,
 			  const char *unit_type,
 			  int instance);
-int clunit_get_unit_index_name(cst_clunit_db *clunit_db,
+int clunit_get_unit_index_name(cst_clunit_db *cludb,
 			       const char *name);
+
+#define UNIT_TYPE(db,u) ((db)->types[(db)->units[(u)].type].name)
+#define UNIT_INDEX(db,u) ((u) - (db)->types[(db)->units[(u)].type].start)
 
 #endif

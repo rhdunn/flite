@@ -52,7 +52,6 @@ static int cmu_is_silence(const char *p);
 static int cmu_has_vowel_in_list(const cst_val *v);
 static int cmu_has_vowel_in_syl(const cst_item *i);
 static int cmu_sonority(const char *p);
-static int cmu_syl_boundary(const cst_item *i, const cst_val *v);
 
 static const char * const addenda0[] = { "p,", NULL };
 static const char * const addenda1[] = { "p.", NULL };
@@ -93,6 +92,7 @@ static const char * const addenda35[] = { "n/","s","l","ae1","sh",NULL};
 
 static const char * const addenda36[] = { "nin","ih","n",NULL};
 static const char * const addenda37[] = { "nto","t","ax",NULL};
+static const char * const addenda38[] = { "n_a","ey",NULL};
 
 static const char * const * const addenda[] = {
     addenda0,
@@ -134,6 +134,7 @@ static const char * const * const addenda[] = {
 
     addenda36,
     addenda37,
+    addenda38,
     NULL };
 
 static int cmu_is_silence(const char *p)
@@ -188,7 +189,7 @@ static int cmu_sonority(const char *p)
 	return 1;
 }
 
-static int cmu_syl_boundary(const cst_item *i,const cst_val *v)
+int cmu_syl_boundary(const cst_item *i,const cst_val *v)
 {
     /* Returns TRUE if this should be a syllable boundary */
     /* This is of course phone set dependent              */

@@ -34,91 +34,71 @@
 /*               Date:  April 2001                                       */
 /*************************************************************************/
 /*                                                                       */
-/*  A simple clunits/ldom voice defintion (the talking clock)            */
+/*  A simple clunits/ldom voice defintion			         */
 /*                                                                       */
 /*************************************************************************/
 
+#include <string.h>
 #include "flite.h"
 #include "cst_clunits.h"
 #include "usenglish.h"
+#include "cmulex.h"
 
-static cst_utterance *cmu_time_awb_utt_init(cst_utterance *u, cst_voice *v);
-static cst_utterance *cmu_time_awb_utt_synth(cst_utterance *u, cst_voice *v);
+static char *cmu_time_awb_unit_name(cst_item *s);
+
 extern cst_clunit_db cmu_time_awb_db;
+extern const unsigned char cmu_time_awb_lex_phones[];
+extern const char * const cmu_time_awb_phone_table[];
+extern const lexicon_entry cmu_time_awb_lex_entry[];
+extern const int cmu_time_awb_num_entries;
+cst_lexicon cmu_time_awb_lex;
 
 cst_voice *cmu_time_awb_ldom = NULL;
 
-cst_voice *register_cmu_time_awb()
+cst_voice *register_cmu_time_awb(const char *voxdir)
 {
     cst_voice *v = new_voice();
 
-    v->utt_init = cmu_time_awb_utt_init;
-    v->utt_synth = cmu_time_awb_utt_synth;
+    /* Sets up language specific parameters in the voice. */
+    usenglish_init(v);
 
-    usenglish_init();
-
-    /* Set up basic values for synthesizing with this voice */
-    feat_set_string(v->features,"name","cmu_time_awb_ldom");
-
-    /* Phoneset */
-    feat_set(v->features,"phoneset",phoneset_val(&us_phoneset));
-    feat_set_string(v->features,"silence",us_phoneset.silence);
-
-    /* Text analyser */
-    feat_set_string(v->features,"text_whitespace",us_english_whitespace);
-    feat_set_string(v->features,"text_postpunctuation",us_english_punctuation);
-    feat_set_string(v->features,"text_prepunctuation",
-		    us_english_prepunctuation);
-    feat_set_string(v->features,"text_singlecharsymbols",
-		    us_english_singlecharsymbols);
-
-    feat_set(v->features,"textanalysis_func",uttfunc_val(&us_textanalysis));
-
-    /* Phrasing */
-    feat_set(v->features,"phrasing_cart",cart_val(&us_phrasing_cart));
+    /* Things that weren't filled in already. */
+    feat_set_string(v->features,"name","awb");
 
     /* Lexicon */
-    feat_set(v->features,"lexicon",lexicon_val(&cmu_lex));
-
-    /* Intonation */
-    feat_set(v->features,"int_cart_accents",cart_val(&us_int_accent_cart));
-    feat_set(v->features,"int_cart_tones",cart_val(&us_int_tone_cart));
-    feat_set_float(v->features,"int_f0_target_mean",105.0);
-    feat_set_float(v->features,"int_f0_target_stddev",14.0);
-    feat_set(v->features,"f0_model_func",uttfunc_val(&us_f0_model));
-
-    /* Post lexical rules */
-    feat_set(v->features,"postlex_func",uttfunc_val(&us_postlex));
-
-    /* Duration */
-    feat_set(v->features,"dur_cart",cart_val(&us_durz_cart));
-    feat_set(v->features,"dur_stats",dur_stats_val(&us_dur_stats));
-    /* feat_set_float(v->features,"Duration_Stretch",1.0); */
+    cmu_time_awb_lex.name = "cmu_time_awb";
+    cmu_time_awb_lex.num_entries = cmu_time_awb_num_entries;
+    cmu_time_awb_lex.entry_index = (lexicon_entry *) cmu_time_awb_lex_entry;
+    cmu_time_awb_lex.phones = (unsigned char *) cmu_time_awb_lex_phones;
+    cmu_time_awb_lex.phone_table = (char **) cmu_time_awb_phone_table;
+    cmu_time_awb_lex.syl_boundary = cmu_syl_boundary;
+    cmu_time_awb_lex.lts_rule_set = NULL;
+    feat_set(v->features,"lexicon",lexicon_val(&cmu_time_awb_lex));
 
     /* Waveform synthesis */
     feat_set(v->features,"wave_synth_func",uttfunc_val(&clunits_synth));
     feat_set(v->features,"clunit_db",clunit_db_val(&cmu_time_awb_db));
-/*    feat_set_string(v->features,"join_type","modified_lpc"); */
+    feat_set_int(v->features,"sample_rate",cmu_time_awb_db.sts->sample_rate);
     feat_set_string(v->features,"join_type","simple_join");
+    feat_set_string(v->features,"resynth_type","fixed");
 
-    cmu_time_awb_db.unit_name_func = clunits_ldom_phone_word;
+    /* Unit selection */
+    cmu_time_awb_db.unit_name_func = cmu_time_awb_unit_name;
 
     cmu_time_awb_ldom = v;
 
     return cmu_time_awb_ldom;
 }
 
-static cst_utterance *cmu_time_awb_utt_init(cst_utterance *u, cst_voice *v)
+void unregister_cmu_time_awb(cst_voice *vox)
 {
-    /* Set up voice specific paramerers for synthesis */
-
-    return u;
+    if (vox != cmu_time_awb_ldom)
+	return;
+    delete_voice(vox);
+    cmu_time_awb_ldom = NULL;
 }
 
-static cst_utterance *cmu_time_awb_utt_synth(cst_utterance *u, cst_voice *v)
+static char *cmu_time_awb_unit_name(cst_item *s)
 {
-    feat_copy_into(v->features,u->features);
-    /* Use standard synthesizer */
-    return utt_synth(u);
+	return clunits_ldom_phone_word(s);
 }
-

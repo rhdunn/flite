@@ -105,7 +105,7 @@ static const cst_val *cart_interpret_questions(cst_item *item,
     cst_features *fcache;
     int r=0;
 
-    fcache = new_features();
+    fcache = new_features_local(item_utt(item)->ctx);
 
     while (cst_cart_node_op(node,tree) != CST_CART_OP_LEAF)
     {

@@ -11,8 +11,19 @@ DEFS     = @DEFS@
 AR       = @AR@
 RANLIB   = @RANLIB@
 
-AUDIOTYPE= @AUDIOTYPE@
+AUDIODRIVER = @AUDIODRIVER@
+AUDIODEFS   = @AUDIODEFS@
+AUDIOLIBS   = @AUDIOLIBS@
+
+MMAPTYPE    = @MMAPTYPE@
 
 FL_LANG  = @FL_LANG@
 FL_VOX   = @FL_VOX@
 FL_LEX   = @FL_LEX@
+
+exec_prefix   = @exec_prefix@
+prefix        = @prefix@
+EXEEXT	      = @EXEEXT@
+INSTALLBINDIR = @bindir@
+INSTALLLIBDIR = @libdir@
+INSTALLINCDIR = @includedir@/flite
