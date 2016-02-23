@@ -224,7 +224,7 @@ Some typical examples are:
 
      Speak with the US female slt voice.
 
-  *  `./bin/flite -voice http://festvox.org/flite/voices/US/cmu_us_ksp.flitevox -f doc/alice`
+  *  `./bin/flite -voice http://www.festvox.org/flite/packed/flite-2.0/voices/cmu_us_ksp.flitevox -f doc/alice`
 
      Speak with KSP voice, download on the fly from festvox.org.
 
@@ -268,9 +268,8 @@ the next version.
 
 We expect that often voices will be loaded from external files, and we
 have now set up a voice repository on
-`http://festvox.org/flite/voices/LANG/*.flitevox`.
-If you visit there with a browser you can hear the examples.  You can
-also download the .flitevox files to you machine so you don't need a
+`http://www.festvox.org/flite/packed/flite-2.0/voices/*.flitevox`.
+You can download the .flitevox files to you machine so you don't need a
 network connect everytime you need to load a voice.
 
 We are now actively adding to this list of available voices in English
