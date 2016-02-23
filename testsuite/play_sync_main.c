@@ -73,7 +73,7 @@ int main(int argc, char **argv)
     w = new_wave();
     if (cst_wave_load_riff(w,argv[1]) != CST_OK_FORMAT)
 	return -1;
-    r = new_relation();
+    r = new_relation("FOO");
     if (relation_load(r,argv[2]) != CST_OK_FORMAT)
 	return -1;
     
