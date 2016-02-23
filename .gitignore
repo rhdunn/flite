@@ -25,3 +25,21 @@ make.depend
 
 include/flite_version.h
 bin/
+
+testsuite/asciiS2U
+testsuite/asciiU2S
+testsuite/find_sts
+testsuite/hrg_test
+testsuite/lex_lookup
+testsuite/lex_test
+testsuite/lpc_test
+testsuite/lpc_test2
+testsuite/nums_test
+testsuite/play_client
+testsuite/play_server
+testsuite/play_sync
+testsuite/play_wave
+testsuite/record_wave
+testsuite/regex_test
+testsuite/token_test
+testsuite/utt_test
