@@ -6,6 +6,7 @@ with clause 2 of the project's [BSD license](COPYING).
 ## [1.0-2]
 
   * Fix building `testsuite/play_sync_main`.
+  * Fix building `testsuite/find_sts_main` (backported from flite 1.3).
 
 ## [1.0-1]
 

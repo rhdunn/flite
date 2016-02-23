@@ -40,6 +40,10 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+
+/* To allow some normally const fields to manipulated during building */
+#define const
+
 #include "cst_wave.h"
 #include "cst_track.h"
 #include "cst_sigpr.h"
