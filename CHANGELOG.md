@@ -8,6 +8,7 @@ with clause 2 of the project's [BSD license](COPYING).
   * Fix building `testsuite/play_sync_main`.
   * Fix building `testsuite/find_sts_main` (backported from flite 1.3).
   * Build the `testsuite` programs as part of the main build.
+  * Fix a typo in README.md.
 
 ## [1.0-1]
 

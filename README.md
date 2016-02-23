@@ -182,7 +182,7 @@ debugging.
 
 Some typical examples are:
 
-  *  `./bin/flite --sets join_type=simple_join doc/intro`
+  *  `./bin/flite --sets join_type=simple_join doc/intro.txt`
 
      Use simple concatenation of diphones without prosodic modification.
 
