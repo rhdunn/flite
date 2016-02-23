@@ -41,8 +41,8 @@
 ###########################################################################
 TOP=.
 DIRNAME=.
-BUILD_DIRS = include src doc lang main
-ALL_DIRS=config lib tools $(BUILD_DIRS) testsuite
+BUILD_DIRS = include src doc lang main testsuite
+ALL_DIRS=config lib tools $(BUILD_DIRS)
 CONFIG=configure configure.in config.sub config.guess \
        missing install-sh mkinstalldirs
 FILES = Makefile README ACKNOWLEDGEMENTS $(CONFIG)
