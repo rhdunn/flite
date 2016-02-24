@@ -8,6 +8,8 @@ with clause 2 of the project's [BSD license](COPYING).
   * Fix compilation with gcc >= 5.0 and -o0.
   * Fix the calls to `lex_lookup` in the testsuite. Based on a patch by
     Åke Forslund <ake.forslund@gmail.com>.
+  * Fix building `testsuite/multi_thread`. Based on a patch by Åke Forslund
+    <ake.forslund@gmail.com>.
   * Build fixes to the `testsuite` from [1.3-2](#1.3-2), [1.1-2](#1.1-2) and
     [1.0-2](#1.0-2).
 
