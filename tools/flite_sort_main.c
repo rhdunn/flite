@@ -2,7 +2,7 @@
 /*                                                                       */
 /*                  Language Technologies Institute                      */
 /*                     Carnegie Mellon University                        */
-/*                      Copyright (c) 1999-2000                          */
+/*                        Copyright (c) 2001                             */
 /*                        All Rights Reserved.                           */
 /*                                                                       */
 /*  Permission is hereby granted, free of charge, to use and distribute  */
@@ -31,38 +31,72 @@
 /*                                                                       */
 /*************************************************************************/
 /*             Author:  Alan W Black (awb@cs.cmu.edu)                    */
-/*               Date:  September 2000                                   */
+/*               Date:  August 2002                                      */
 /*************************************************************************/
 /*                                                                       */
-/*  This particular code is Copyright CMU, but it may have been derived  */
-/*  from code with some other copyright (which should have been included */
-/*  here too) make sure this has happened                                */
+/*  Unix sort is different in non-obvious ways so we use the actual      */
+/*  strcmp function that will be used to index the units to do the sort  */
 /*                                                                       */
 /*************************************************************************/
-
 #include <stdio.h>
-#include <string.h>
-#include "cst_synth.h"
+#include <stdlib.h>
+#include "cst_val.h"
+#include "cst_tokenstream.h"
 
-void register_lex_cmu();
-void register_lts_cmu6();
-
-void VOICE_init()
+int flite_strcmp(const void *a, const void *b)
 {
+    const cst_val **v1;
+    const cst_val **v2;
 
-    register_lex_cmu();
-    register_lts_cmu6();
-
+    v1 = (const cst_val **)a;
+    v2 = (const cst_val **)b;
+    return strcmp(val_string(val_car(*v1)),val_string(val_car(*v2)));
 }
 
-cst_utterance *VOICE_utt(cst_utterance *u)
+int main(int argc, char **argv)
 {
-    /* Add necessary functions to utterance to allow synthesis */
-    /* This is currently hardwired from some sort of English synthesizer */
-    cst_features *feats;
+    cst_tokenstream *ts;
+    cst_val *f,*g;
+    const cst_val *ff;
+    const char *token;
+    int s,i;
+    const cst_val **ll;
 
-    feats = u->features;
+    ts = ts_open("-");
 
-    feat_set_val(feats,"lexicon","cmu");
+    f = NULL;
+    s = 0;
+    while (!ts_eof(ts))
+    {
+	g = NULL;	
+	for(token = ts_get(ts);
+	    !cst_streq(token,")");
+	    token = ts_get(ts))
+	{
+	    g = cons_val(string_val(token),g);
+	    if (ts_eof(ts))
+		break;
+	}
+	if (!ts_eof(ts))
+	{
+	    g = cons_val(string_val(")"),g);
+	    f = cons_val(val_reverse(g),f);
+	    s++;
+	}
+    }
 
+    ll = cst_alloc(const cst_val *,s);
+    for (i=0,ff=f; ff; ff=val_cdr(ff),i+=1)
+	ll[i] = val_car(ff);
+
+    qsort(ll,s,sizeof(cst_val *),flite_strcmp);
+
+    for (i=0; i < s; i++)
+    {
+	for (ff=ll[i]; ff; ff=val_cdr(ff))
+	    printf("%s ",val_string(val_car(ff)));
+	printf("\n");
+    }
+
+    return 0;
 }

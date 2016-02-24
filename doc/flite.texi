@@ -1,7 +1,7 @@
 \input texinfo @c -*-texinfo-*-
 @c %**start of header
 @setfilename flite.info
-@settitle Flite: a small, fast run-time speech synthesis engine
+@settitle Flite: a small, fast speech synthesis engine
 @finalout
 @setchapternewpage odd
 @c %**end of header
@@ -11,15 +11,15 @@
 @c world example, but many others too.  I happily acknowledge their
 @c aid in producing this document -- awb
 
-@set EDITION 1.1
-@set VERSION 1.1
-@set UPDATED 4th December 2001
+@set EDITION 1.2
+@set VERSION 1.2
+@set UPDATED 19th February 2003
 
 @ifinfo
 This file documents @code{Flite}, a small, fast run-time speech
 synthesis engine.
 
-Copyright (C) 2001 Carnegie Mellon University
+Copyright (C) 2001-2003 Carnegie Mellon University
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -44,7 +44,7 @@ by the authors.
 @end ifinfo
 
 @titlepage
-@title Flite: a small, fast run-time speech synthesis engine
+@title Flite: a small, fast speech synthesis engine
 @subtitle System documentation
 @subtitle Edition @value{EDITION}, for Flite version @value{VERSION}
 @subtitle @value{UPDATED}
@@ -52,7 +52,7 @@ by the authors.
 
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 2001 Carnegie Mellon University, all rights
+Copyright @copyright{} 2001-2003 Carnegie Mellon University, all rights
 reserved.
 
 Permission is granted to make and distribute verbatim copies of
@@ -79,6 +79,7 @@ by the Carnegie Mellon University
 * Installation::        Compilation and Installation
 * Flite Design::
 * APIs::                 Standard functions
+* Converting FestVox Voices:: building flite voices from FestVox ones
 
 @end menu
 
@@ -90,12 +91,12 @@ run-time speech synthesis engine.
 
 This manual is nowhere near complete.
 
-Flite offers text to speech synthesis in a small and effiicent binary.
+Flite offers text to speech synthesis in a small and efficient binary.
 It is designed for embedded systems like PDAs as well large server
 installation which must serve synthesis to many ports.  Flite is part
 of the suite of free speech synthesis tools which include Edinburgh
 University's Festival Speech Synthesis System
-@url{http://www.cstr.ed.ac.uk/projects/festival.html} and Carnegie
+@url{http://www.cstr.ed.ac.uk/projects/festival} and Carnegie
 Mellon University's FestVox project @url{http://festvox.org}, which
 provides tools, scripts, and documentation for building new synthetic
 voices.
@@ -104,10 +105,10 @@ Flite is written in ANSI C, and is designed to be portable
 to almost any platform, including very small hardware.
 
 Flite is really just a synthesis library that can be linked into other
-programs, it includes two simle voices with the distribution, an old
-diphone voice and anb example limited omain voice which uses the newer
+programs, it includes two simple voices with the distribution, an old
+diphone voice and anb example limited domain voice which uses the newer
 unit selection techniques we have been developing.  Neither of these
-voices woud be considered production voices but server as examples, new
+voices would be considered production voices but server as examples, new
 voices will be released as they are developed.
 
 The latest versions, comments, new voices etc for Flite are available
@@ -125,7 +126,7 @@ similarly open lincenses) the general license is
 @example
                  Language Technologies Institute                      
                     Carnegie Mellon University                        
-                     Copyright (c) 1999-2001                          
+                     Copyright (c) 1999-2003                          
                        All Rights Reserved.                           
                                                                       
  Permission is hereby granted, free of charge, to use and distribute  
@@ -153,27 +154,94 @@ similarly open lincenses) the general license is
  THIS SOFTWARE.                                                       
 @end example
 
+@node Acknowledgements, Installation, Copying, Top
 @chapter Acknowledgements
 
+The initial development of flite was primarily done by awb while
+travelling, perhaps the name is doubly appropriate as a substantial
+amount of the coding was done over 30,000ft).  During most of that
+time awb was funded by the Language Technologies Institute at
+Carnegie Mellon University.
+
+Kevin A. Lenzo was involved in the design, conversion techniques and
+representations for the voice distributed with flite (as well as being
+the actual voice itself).
+
+Other contributions are:
+@itemize @bullet
+@item David Huggins-Daines (dhd@@cepstral.com):
+much of the clunits code, porting to multiple platforms, substantial
+code tidy up and configure/autoconf guidance.
+@item Cepstral, LLC (@url{http://cepstral.com}):
+For supporting DHD to spend time on flite and passing back the important
+fixes and enhancements including SAPI support
+@item Willie Walker <william.walker@@sun.com> and the Sun Speech Group:
+lots of low level bugs (and fixes).
+@item Portuguese Foundation for Science and Technology (FCT) Praxis XXI program
+The SAPI interface provided by Cepstral, LLC was partially funded by
+the above program.
+@item Henry Spencer:
+For the regex code
+@item University of Edinburgh:
+for releasing Festival for free, making a companion runtime synthesizer
+a practical project, much of the design of flite relies on the 
+architecture decisions made in the Festival Speech Synthesis Systems and
+the Edinburgh Speech Tools.
+
+The duration cart tree and intonation (accent and F0) models were
+derived from the models in the Festival distribution. which in turn
+were trained from the Boston University FM Radio Data Corpus.
+
+@item Carnegie Mellon University
+The included lexicon is derived from CMULEX and the letter to sound
+rules are constructed using the Lenzo and Black techniques for
+building LTS decision graphs.
+@item Craig Reese: IDA/Supercomputing Research Center and Joe Campbell: Department of Defense
+who wrote the ulaw conversion routines in src/speech/cst_wave_utils.c
+@end itemize
+
+
+@node Installation, Flite Design, Acknowledgements, Top
 @chapter Installation
 
 Flite consist simple of a set of C files.  GNU configure is
 used to configure the engine and will work on most
 major architectures.
 
-In general
+In general, the following should build the system
 @example
 tar zxvf flite-XXX.tar.gz
-cd flite
+cd flite-XXX
+./configure
 make
 @end example
-will build the system, though you will need to explicitly call GNU make
-@code{gmake} if make is not GNU make on your system.
+However you will need to explicitly call GNU make
+@code{gmake} if @code{code} make is not GNU make on your system.
 
 The configuration process build a file @file{config/config} which under
-some cicumstances may need to be edited, e.g. to add unusual options or
+some circumstances may need to be edited, e.g. to add unusual options or
 dealing with cross compilation.
 
+On Linux systems, we also support shared libraries which are useful for
+keeping space down when multiple different application are linked to the
+flite libraries.  For development we strong discourage use of shared
+libraries as it is too easy to either not set them up correctly or
+accidentally pick up the wrong version.  But for installation they are
+definitely encouraged.  That is if you are just going to make and
+install they are good but unless you know what @var{LD_LIBRARY_PATH}
+does, it may be better to use static libraries (the default) if you are
+changing C code or building your own voices.
+@example
+./configure --enable-shared
+make
+@end example
+This will build both shared and static versions of the libraries but
+will link the executables to the @emph{shared} libraries thus you will
+need to install the libraries in a place that your dynamic linker will
+find them (cf. /etc/ld.so.conf) or set @var{LD_LIBRARY_PATH}
+appropriately.
+
+@node Flite Design, APIs, Installation, Top
 @chapter Flite Design
 
 @section Background
@@ -209,7 +277,7 @@ Different C++ compilers are quite different and it takes significant
 amount of work to ensure compatibility of the code base over multiple
 compilers.  What makes this worse is that new versions of each compiler
 are incompatible and changes are required.  At first this looked like we
-were producing bad quality code but after 5 years it is clear that it is
+were producing bad quality code but after 7 years it is clear that it is
 also that the compilers are still maturing.  Thus it is clear that
 Festival and the Edinburgh Speech Tools will continue to require
 constant support as new versions of compilers are released.
@@ -229,7 +297,7 @@ Another major criticism of Festival is the use of Scheme as the
 interpreter language.  Even though it is a simple to implement language
 that is adequate for Festival's needs and can be easily included in the
 distribution, people still hate it.  Often these people do learn to use
-it and apreciate how run time configurability is very desriable and that
+it and appreciate how run time configurability is very desirable and that
 new voices may be added without recompilation.  Scheme does have garbage
 collection which makes leaky programs much harder to write and as some
 of the intended audience for developing in Festival will not be hard
@@ -243,7 +311,7 @@ size of the objects and data structure it uses.
 Flite is not intended as a research and development platform for speech
 synthesis, Festival is and will continue to be the best platform for
 that.  Flite however is designed as a run-time engine when an
-application needs to be delivered.  It specifcially addresses two
+application needs to be delivered.  It specifically addresses two
 communities.  First as a engine for small devices such as PDAs and
 telephones where the memory and CPU power are limited and in some cases do
 not even have a conventional operating system.
@@ -253,7 +321,7 @@ clients.  Here although large fixed databases are acceptable, the size
 of memory require per utterance and speed in which they can be
 synthesized is crucial.
 
-However inspite of the decision to build a new synthesis engine we see
+However in spite of the decision to build a new synthesis engine we see
 this as being tightly coupled into the existing free software synthesis
 tools or Festival and the FestVox voice building suite.  Flite offers
 a companion run-time engine.  Our intended mode of development is
@@ -273,7 +341,7 @@ framework as our research we can better understand what research issues
 are actually important to the improvement our work.
 
 In considering small useful synthesizers it forces a more explicit
-defintion of what is necessary in a synthesizer and also how we can
+definition of what is necessary in a synthesizer and also how we can
 trade size, flexibility and speed with the quality of synthesized
 output.  Defining that relationship is a research issue.
 
@@ -286,7 +354,7 @@ makes our work more satisfying.
 
 @section Key Decisions
 
-The basic archtecture of Festival is good.  It is well proven.  Paul
+The basic architecture of Festival is good.  It is well proven.  Paul
 Taylor, Alan W. Black and Richard Caley spent many hours debating low
 level aspects of representation and structure that would both be
 adequate for current theories but also allow for future theories too.
@@ -294,7 +362,7 @@ The heterogeneous relation graphs (HRG) are theoretically adequate,
 computationally efficient and well proven.  Thus both because HRGs have
 such a background and that Flite is to be compatible with voices and
 models developed in Festival, Flite uses HRGs as its basic utterance
-resprentation structure.
+representation structure.
 
 Most of a synthesizer is in its data (lexicons, unit database etc), the
 actual synthesis code it pretty small.  In Festival most of that data
@@ -323,7 +391,7 @@ Using the C compiler is a good portable solution but it as these
 structures can be very big this can tax the C compiler somewhat.  Also
 because this data is not going to change at run time it can all be
 declared @code{const}.  Which means (in Unix) it will be in the text
-sgement and hence read only (this can be ROM on platforms which have
+segment and hence read only (this can be ROM on platforms which have
 that distinction).  For structures to be const all their subparts
 must also be const thus all relevant parts must be in the same file,
 hence the unit databases files can be quite big.
@@ -340,7 +408,7 @@ available, or simply to load them all into memory.
 
 The flite distribution consists of two distinct parts:
 @itemize @bullet
-@item The flite library properly which is the core synthesis code
+@item The flite library containing the core synthesis code
 @item Voice(s) for flite.  These contain three sub-parts
 @itemize @bullet
 @item Language models:
@@ -357,44 +425,45 @@ and other objects.  It also allows for lists using the Scheme/Lisp,
 car/cdr architecture (as that is the most efficient way to represent
 arbitrary trees and lists).
 
-The cst_val structure is carefully designed to take up only 8 bytes (or
-16 on a 64-bit machine).  The multiple unit structure that it can
+The @code{cst_val} structure is carefully designed to take up only 8 bytes (or
+16 on a 64-bit machine).  The multiple union structure that it can
 contain are designed so there are no conflicts.  However it depends on
-the fact that a pointer to a cst_val is guaranteed to lie on a even
-address boundary (which is true for all architectures I know off).  Thus
+the fact that a pointer to a @code{cst_val} is guaranteed to lie on a even
+address boundary (which is true for all architectures I know of).  Thus
 the distinction between between cons (i.e. list) objects and atomic
-values can be determined by the odd/evennes of the least signficant bits
-of the first address in a cst_val.  In some circles this is considered
-hacky, in others elgant. This was done in flite to ensure that the most
-common structure is 8 bytes rather than 12 which saves signficantly on
+values can be determined by the odd/evenness of the least significant bits
+of the first address in a @code{cst_val}.  In some circles this is considered
+hacky, in others elegant. This was done in flite to ensure that the most
+common structure is 8 bytes rather than 12 which saves significantly on
 memory.
 
-All cst_val's except those of type cons are reference counted.  A few
-functions generate new lists of cst_val's which the user should be
-careful about as they need to explicitly delete them (notably the
-lexicon lookup function that returns a list of phonemes).   Everything
-that is added to an utterance will be deleted (and/or dereferenced)
-when the utterance is deleted.
+All @code{cst_val}'s except those of type cons are reference counted.  A
+few functions generate new lists of @code{cst_val}'s which the user
+should be careful about as they need to explicitly delete them (notably
+the lexicon lookup function that returns a list of phonemes).
+Everything that is added to an utterance will be deleted (and/or
+dereferenced) when the utterance is deleted.
 
-Like Festival user types can be added to the cst_vals.  In Festival this
-can be done on the fly but because this requires the updating of some
-list when each new type is added, this wouldn't be thread safe.  Thus an
-explicit method of defining user types is done in
+Like Festival user types can be added to the @code{cst_val}s.  In
+Festival this can be done on the fly but because this requires the
+updating of some list when each new type is added, this wouldn't be
+thread safe.  Thus an explicit method of defining user types is done in
 @file{src/utils/cst_val_user.c}.  This is not as neat as defining on the
 fly or using a registration function but it is thread safe and these
-user type wont changes often.
+user types wont changes often.
 
+@node APIs, Converting FestVox Voices, Flite Design, Top
 @chapter APIs
 
 Flite is a library that we expected will be embedded into other
 applications.  Included with the distribution is a small example
-exectuable that allows synthesis of strings of text and text files
+executable that allows synthesis of strings of text and text files
 from the command line.
 
 @section flite binary
 
 The example flite binary may be suitable for very simple applications.
-Unlike Festivl its start up time is very short (less that 25ms on a PIII
+Unlike Festival its start up time is very short (less that 25ms on a PIII
 500MHz) making it practical (on larger machines) to call it each
 time you need to synthesize something.
 @example
@@ -428,7 +497,11 @@ The second argument @code{OUTPUTTYPE} is the name of a file the output
 is written to, or if it is @code{play} then it is played to the audio
 device directly.  If it is @code{none} then the audio is created but
 discarded, this is used for benchmarking.  If @code{OUTPUTTYPE} is
-omitted, @code{play} is assumed.
+omitted, @code{play} is assumed.  You can also explicitly set the
+outputtype with the @code{-o} flag.
+@example
+flite -f doc/alice -o alice.wav
+@end example
 
 @section C example
 
@@ -471,7 +544,7 @@ gcc -Wall -g -o flite_test flite_test.c -I$FLITEDIR/include -L$FLITEDIR/lib
 @section Public Functions
 
 Although, of course you are welcome to call lower level functions,
-there a few key functions that will satifyt most users
+there a few key functions that will satisfy most users
 of flite.
 @table @code
 @item void flite_init(void);
@@ -483,13 +556,13 @@ Returns a waveform (as defined in @file{include/cst_wave.h}) synthesized
 from the given text string by the given voice.
 @item float flite_file_to_speech(const char *filename, cst_voice *voice, const char *outtype);
 synthesizes all the sentences in the file @file{filename} with 
-given voice.  Output (at presnet) can only reasonably be, @code{play}
+given voice.  Output (at present) can only reasonably be, @code{play}
 or @code{none}.
 @item float flite_text_to_speech(const char *text, cst_voice *voice, const char *outtype);
 synthesizes the text in string point to by @code{text}, with the given
 voice.  @code{outtype} may be a filename where the generated waveform is
 written to, or "play" and it will be sent to the audio device, or
-"none" and it wiull be discarded.  The return value is the
+"none" and it will be discarded.  The return value is the
 number of seconds of speech generated.
 @item cst_utterance *flite_synth_text(const char *text,cst_voice *voice);
 synthesize the given text with the given voice and returns an utterance
@@ -499,12 +572,210 @@ synthesize the given phones with the given voice and returns an utterance
 from it for further processing and access.
 @end table
 
-@chapter Adding new voices to Flite
+@node Converting FestVox Voices, , APIs, top
+@chapter Converting FestVox Voices
 
-Our goal it to provide basic scripts that will convert a FestVox built
-voice into Flite libraries that can be linked in with the flite library
-in the way that the example @code{cmu_us_kal} voice is in the basic
-distrbution.  
+As of 1.2 initial scripts have been added to aid the conversion of
+FestVox voices to Flite.  In general the conversion cannot be automatic.
+For example all specific Scheme code written for a voice needs to be
+hand converted to C to work in Flite, this can be a major task.
+
+Simple conversion scripts are given as examples of the stages you need
+to go through.  These are designed to work on standard (English) diphone
+sets, and simple limited domain voices.  The conversion technique will
+almost certainly fail for large unit selection voices due to
+limitations in the C compiler (more discussion below).
+
+Conversion is basically taking the description of units (clunit
+catalogue or diphone index) and constructing some C files that can be
+compiled to form a usable database.  Using the C compiler to generate
+the object files has the advantage that we do not need to worry about
+byte order, alignment and object formats as the C compiler for the
+particular target platform should be able to generate the right code.
+
+Before you start ensure you have successfully built and run your FestVox
+voice in Festival.  Flite is not designed as a voice building/debugging
+tool it is just a delivery vehicle for finalized voices so you should
+first ensure you are satisfied with the quality of Festival voices
+before you start converting it for Flite.
+
+The following basic stages are required:
+@itemize @bullet
+@item Setup the directories and copy the conversion scripts
+@item Build the LPC files
+@item Build the MCEP files (for ldom/clunits)
+@item Convert LPC (MCEP) into STS (short term signal) files
+@item Convert the catalogue/diphone index
+@item Compile the generated C code
+@end itemize
+
+The conversion assumes the environment variable @code{FLITEDIR}
+is set, for example
+@example
+   export FLITEDIR=/home/awb/projects/flite/
+@end example
+The basic flite conversion takes place within a FestVox voice directory.
+Thus all of the conversion scripts expect that the standard files are
+available.  The first task is to build some new directories and copy in
+the build scripts.  The scripts are copied rather than linked from the
+Flite directories as you may need to change these for your particular
+voices.
+@example
+   $FLITEDIR/tools/setup_flite
+@end example
+This will read @file{etc/voice.defs}, which should have been created by
+the FestVox build process (except in very old versions of FestVox).
+
+If you don't have a @file{etc/voice.defs} you can construct one
+with @code{festvox/src/general/guess_voice_defs} in the Festvox
+distribution, or generate one by hand making it look
+like
+@example
+FV_INST=cmu
+FV_LANG=us
+FV_NAME=ked_timit
+FV_TYPE=clunits
+FV_VOICENAME=$FV_INST"_"$FV_LANG"_"$FV_NAME
+FV_FULLVOICENAME=$FV_VOICENAME"_"$FV_TYPE
+@end example
+
+The main script build building the Flite voice is @file{bin/build_flite}
+which will eventually build sufficient C code in @file{flite/} that can
+be compiled with the constructed @file{flite/Makefile} to give you a
+library that can be linked into applications and also an example
+@file{flite} binary with the constructed voice built-in.
+
+You can run all of these stages, except the final make, together by
+running the the build script with no arguments
+@example
+   ./bin/build_flite
+@end example
+But as things may not run smoothly, we will go through the 
+stages explicitly.
+
+The first stage is to build the LPC files, this may have already been
+done as part of the diphone building process (though probably not in
+the ldom/clunit case).  In our experience it is very important that the
+records be of similar power, as mis-matched power can often cause
+overflows in the resulting flite (and sometimes Festival) voices. Thus,
+for diphone voices, it is important to run the power normalization
+techniques described int he FestVox document.  The Flite LPC build
+process also builds a parameter file of the ranges of the LPC parameters
+used in later coding of the files, so even if you have already built your
+LPC files you should still do this again
+@example
+   ./bin/build_flite lpc
+@end example
+
+For ldom, and clunit voices (but not for diphone voices) we also
+need the Mel-frequency Cepstral Coefficients.  These are assumed to
+have been cleared and are in @file{mcep/} as they are necessary
+for running the voice in Festival.  This stage simply constructs 
+information about the range of the mcep parameters.
+@example
+   ./bin/build_flite mcep
+@end example
+
+The next stage is to construct the STS files.  Short Term Signals (STS)
+are built for each pitch period in the database.  These are ascii files
+(one for each utterance file in the database, with LPC coefficients, and
+ulaw encoded residuals for each pitch period.  These are built using a
+binary executable built as part of the Flite build
+(@file{flite/tools/find_sts}.
+@example
+   ./bin/build_flite sts
+@end example
+Note that the flite code expects waveform files to be in Microsoft RIFF
+format and cannot deal with files in other formats.  Some earlier
+versions of the Edinburgh Speech Tools used NIST as the default header
+format.  This is likely to cause flite and its related programs not
+work. So do ensure you waveform files are in riff format (ch_wave -info
+wav/* will tell you the format).  And the following fill convert
+all you wave files
+@example
+   mv wav wav.nist
+   mkdir wav
+   cd wav.nist
+   for i in *.wav
+   do
+      ch_wave -otype riff -o ../wav/$i $i
+   done
+@end example
+
+The next stage is to convert the index to the required C format.  For
+diphone voices this takes the @file{dic/*.est} index files, for
+clunit/ldom voices it takes the @file{festival/clunit/VOICE.catalogue}
+and @file{festival/trees/VOICE.tree} files.  This process uses a binary
+executable built as part of the Flite build process
+(@file{flite/tools/flite_sort}) to sort the indices into the same
+sorting order required for flite to run.  (Using unix sort may or may
+not give the same result due to definitions of lexicographic order so
+we use the very same function in C that will be used in flite to ensure
+that a consistent order is given.)
+@example
+   ./bin/build_flite idx
+@end example
+All the necessary C files should now have been built in @file{flite/}
+and you may compile them by
+@example
+   cd flite
+   make
+@end example
+This should give a library and an executable called @file{flite} that
+can run as
+@example
+   ./flite "Hello World"
+@end example
+Assuming a general voice.  For ldom voices it will only be able to say
+things in its domain.  This @file{flite} binary offers the same options
+as standard the standard @file{flite} binary compiled in the Flite build
+but with your voice rather than the distributed voices.
+
+Almost certainly this process will not run smoothly for you.  Building
+voices is still a very hard thing to do and problems will probably
+exist.
+
+This build process does not deal with customization for the given
+voices.  Thus you will need to edit @file{flite/VOICE.c} to set
+intonation ranges and duration stretch for your particular voice.
+
+For example in our @file{cmu_us_sls_diphone} voice (a US English female
+diphone voice).  We had to change the default parameters from 
+@example
+    feat_set_float(v->features,"int_f0_target_mean",110.0);
+    feat_set_float(v->features,"int_f0_target_stddev",15.0);
+
+    feat_set_float(v->features,"duration_stretch",1.0); 
+@end example
+to
+@example
+    feat_set_float(v->features,"int_f0_target_mean",167.0);
+    feat_set_float(v->features,"int_f0_target_stddev",25.0);
+
+    feat_set_float(v->features,"duration_stretch",1.0); 
+@end example
+
+Note this conversion is limited.  Because it depends on the C compiler
+to do the final conversion into binary object format (a good idea in
+general for portability), you can easily generate files too big for the
+C compiler to deal with.  We have spent a some time investigating this
+so the largest possible voices can be converted but it is still too
+limited for our larger voices.  In general the limitation seems to be
+best quantified by the number of pitch periods in the database.  After
+about 100k pitch periods the files get too big to handle.  There are
+probably solutions to this but we have not yet investigated them.  This
+limitation doesn't seem to be an issue with the diphone voices as they
+are typically much smaller than unit selection voices.
+
+@section Lexicon Conversion
+
+@section Language Conversion
+
+This is by far the weakest part as this is the most open ended.  There
+are basic tools in the @file{flite/tools/} directory that include Scheme
+code to convert various Scheme structures to C include CART tree
+conversion and Lisp list conversion.  The other major source of help
+here is the existing language examples in @file{flite/lang/usenglish/}.
 
 @chapter Porting to new platforms
 
@@ -515,6 +786,3 @@ byte order, unions, compiler restrictions
 @contents
 
 @bye
-
-
-

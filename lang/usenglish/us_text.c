@@ -483,7 +483,9 @@ static cst_val *us_tokentowords_one(cst_item *token, const char *name)
 	nsw = item_feat_string(token,"nsw");
 
     if ((cst_streq("a",name) || cst_streq("A",name)) &&
-	(! cst_streq(name,item_name(token))))
+        ((item_next(token) == 0) ||
+         (!cst_streq(name,item_name(token))) ||
+         (!cst_streq("",ffeature_string(token,"punc")))))
     {   /* if A is a sub part of a token, then its ey not ah */
 	r = cons_val(string_val("_a"),0);
     }

@@ -61,10 +61,11 @@ $idir/[a-z].tree.wfst to compile from."
     (format ofde "/*******************************************************/\n")
     (format ofde "\n")
     (format ofde "#include \"cst_string.h\"\n")
-    (format ofde "#include \"lts.h\"\n")
-    (format ofde "#include \"lexicon.h\"\n")
+    (format ofde "#include \"cst_lts.h\"\n")
+    (format ofde "#include \"cst_lexicon.h\"\n")
     (format ofde "#include \"%s_lts_rules.h\"\n\n" name)
-    (format ofde "static const lts_model %s_lts_model[] = \n" name)
+    (format ofde "extern const cst_lts_rules %s_lts_rules;\n\n" name)
+    (format ofde "static const cst_lts_model %s_lts_model[] = \n" name)
     (format ofde "{\n")
 
     (mapcar
@@ -94,7 +95,7 @@ $idir/[a-z].tree.wfst to compile from."
 
     ;; Which rule starts where
     (format ofde "\n")
-    (format ofde "static const lts_addr %s_lts_letter_index[27] = \n" name)
+    (format ofde "static const cst_lts_addr %s_lts_letter_index[27] = \n" name)
     (format ofde "{\n")
     (mapcar 
      (lambda (p) (format ofde "    %d, /* %s */\n" (car (cdr p)) (car p)))
@@ -102,20 +103,15 @@ $idir/[a-z].tree.wfst to compile from."
     (format ofde "    0\n")
     (format ofde "};\n")
 
-    ;; The register function 
     (format ofde "\n")
-    (format ofde "void register_lts_%s()\n" name)
-    (format ofde "{\n")
-    (format ofde "   lts_rules *lr = new_lts_rules();\n")
-    (format ofde "   lr->name = cst_strdup(\"%s\");\n" name)
-    (format ofde "   lr->letter_index = %s_lts_letter_index;\n" name)
-    (format ofde "   lr->models = %s_lts_model;\n" name)
-    (format ofde "   lr->phone_table = %s_lts_phone_table;\n" name)
-    (format ofde "   lr->context_window_size = %d;\n" lts_context_window_size)
-    (format ofde "   lr->context_extra_feats = %d;\n" lts_context_extra_feats)
-    (format ofde "   lexicon_select(\"cmu\")->lts_rule_set = lr;\n")
-    (format ofde "   return;\n")
-    (format ofde "}\n")
+    (format ofde "const cst_lts_rules %s_lts_rules = {\n" name)
+    (format ofde "   \"%s\",\n" name)
+    (format ofde "   %s_lts_letter_index,\n" name)
+    (format ofde "   %s_lts_model,\n" name)
+    (format ofde "   %s_lts_phone_table,\n" name)
+    (format ofde "   4, /* context_window_size */\n")
+    (format ofde "   1  /* context_extra_feats */\n")
+    (format ofde "};\n")
     (format ofde "\n")
 
     (fclose ofde)

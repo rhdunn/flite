@@ -166,7 +166,7 @@ static const char *time_hour(int hour, int minute)
     int hh;
 
     hh = hour;
-    if (minute > 33)
+    if (minute >= 32)
 	hh += 1;
     if (hh == 24)
 	hh = 0;
@@ -214,8 +214,10 @@ static const char *time_tod(int hour, int minute)
 	return "";
     else if (hh > 17)
 	return "in the evening";
-    if (hh > 11)
+    else if (hh > 11)
 	return "in the afternoon";
+    else if ((hh == 0) && (minute < 33))
+	return "";
     else
 	return "in the morning";
 }

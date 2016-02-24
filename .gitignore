@@ -28,7 +28,6 @@ bin/
 
 testsuite/asciiS2U
 testsuite/asciiU2S
-testsuite/find_sts
 testsuite/hrg_test
 testsuite/lex_lookup
 testsuite/lex_test
@@ -43,3 +42,7 @@ testsuite/record_wave
 testsuite/regex_test
 testsuite/token_test
 testsuite/utt_test
+
+tools/find_sts
+tools/flite_sort
+tools/regexcomp

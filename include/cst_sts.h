@@ -68,8 +68,8 @@ struct cst_sts_list_struct {
     int sample_rate;
     float coeff_min;      /* used for decoding the short representation */
     float coeff_range;    /* for coefficients  */ 
-    float post_emphasis;  /* not sure about this */
-    int residual_fold;    /* residual has been "folded" by this factor */
+    float post_emphasis;  /* not actually used */
+    int residual_fold;    /* residual "folded" by this (or compression type) */
 };
 typedef struct cst_sts_list_struct cst_sts_list;
 

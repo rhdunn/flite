@@ -73,8 +73,11 @@ cst_audiodev *audio_open_oss(int sps, int channels, cst_audiofmt fmt)
 
     afd = open(oss_audio_device,O_WRONLY);
     if (afd == -1)
+    {
 	cst_errmsg("oss_audio: failed to open audio device %s\n",
 		   oss_audio_device);
+	return NULL;
+    }
 
     ad = cst_alloc(cst_audiodev, 1);
     ad->sps = sps;
@@ -88,10 +91,16 @@ cst_audiodev *audio_open_oss(int sps, int channels, cst_audiofmt fmt)
     ioctl(afd,SNDCTL_DSP_RESET,0);
 
     ad->real_sps = ad->sps;
-    ioctl(afd,SNDCTL_DSP_SPEED,&ad->real_sps);
 
     ad->real_channels = ad->channels;
     ioctl(afd,SNDCTL_DSP_CHANNELS,&ad->real_channels);
+    if (ad->real_channels != ad->channels)
+    {
+	/* Its a stereo only device so it'll play things twice as fast */
+	ad->real_sps /= 2;
+    }
+
+    ioctl(afd,SNDCTL_DSP_SPEED,&ad->real_sps);
 
     frag = (4 << 16) | 10;
     ioctl(afd,SNDCTL_DSP_SETFRAGMENT,&frag);

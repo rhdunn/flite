@@ -63,6 +63,8 @@ cst_audiodev *audio_open(int sps, int channels, cst_audiofmt fmt)
     int up, down;
 
     ad = AUDIO_OPEN_NATIVE(sps, channels, fmt);
+    if (ad == NULL)
+	return NULL;
 
     down = sps / 1000;
     up = ad->real_sps / 1000;

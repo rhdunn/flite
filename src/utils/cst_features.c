@@ -252,9 +252,9 @@ int feat_print(cst_file fd,const cst_features *f)
     
     for (p=f->head; p; p=p->next)
     {
-	cst_fprintf(fd, "%s %s\n",
-		    p->name,
-		    val_string(p->val));
+	cst_fprintf(fd, "%s ",p->name);
+	val_print(fd,p->val);
+	cst_fprintf(fd,"\n");
     }
 
     return 0;

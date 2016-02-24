@@ -45,7 +45,7 @@ SRCS = token_test_main.c hrg_test_main.c \
        play_sync_main.c play_server_main.c play_client_main.c \
        lex_test_main.c utt_test_main.c lex_lookup_main.c \
        lpc_test_main.c asciiS2U_main.c asciiU2S_main.c \
-	lpc_test2_main.c find_sts_main.c
+       lpc_test2_main.c
 OTHERS = kal_test_main.c
 FILES = Makefile $(SRCS) $(DATAFILES) $(OTHERS)
 

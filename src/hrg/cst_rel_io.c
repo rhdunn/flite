@@ -82,7 +82,7 @@ int relation_load(cst_relation *r, const char *filename)
 	if (cst_streq(token,""))
 	    continue;
 	item = relation_append(r,NULL);
-	item_set_float(item,"end",cst_atof(token));
+	item_set_float(item,"end",(float)cst_atof(token));
 	token = ts_get(fd);
 	token = ts_get(fd);
 	item_set_string(item,"name",token);

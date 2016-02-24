@@ -107,7 +107,7 @@ int main(int argc, char **argv)
 
     if (argc == 1)
     {
-	fprintf(stderr,"usage: record_wave -f FREQ WAVEFILE\n");
+	fprintf(stderr,"usage: record_wave -f FREQ -t TIME WAVEFILE\n");
 	return 1;
     }
 

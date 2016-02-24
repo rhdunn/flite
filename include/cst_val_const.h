@@ -112,6 +112,11 @@
 #include <stdio.h>
 #include "cst_val_defs.h"
 
+/* There is built-in int to string conversions here for numbers  */
+/* up to 20, not if you make this bigger you have to hand change */
+/* other things too                                              */
+#define CST_CONST_INT_MAX 19
+
 #ifndef NO_UNION_INITIALIZATION
 
 /* This is the simple way when initialization of unions is supported */
