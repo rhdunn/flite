@@ -3,6 +3,23 @@
 This file documents the changes made to the flite project in order to comply
 with clause 2 of the project's [BSD license](COPYING).
 
+## [1.3-1]
+
+  * Restore ALSA support, preserving the backported ALSA fixes from [1.1-1](#1.1-1).
+
+## [1.3]
+
+Upstream version 1.3:
+
+  * Fixes to lpc residual extraction to give better quality output
+  * An updated lexicon (`festlex_CMU` from festival-2.0) and better
+    compression its about 30% of the previous size, with about 
+    the same accuracy.
+  * Fairly substantial code movements to better support PalmOS and 
+    multi-platform cross compilation builds.
+  * A PalmOS 5.0 port with an small example talking app ("flop").
+  * Runs under `ix86_64` linux.
+
 ## [1.2-2]
 
   * Build fixes to the `testsuite` from [1.1-2](#1.1-2) and [1.0-2](#1.0-2).
@@ -13,12 +30,14 @@ with clause 2 of the project's [BSD license](COPYING).
 
 ## [1.2]
 
+Upstream version 1.2:
+
   * A build process for diphone and clunit/ldom voices.
   * FestVox voices can be converted (sometimes) automatically.
   * Various bug fixes.
   * Initial support for Mac OS X (not talking to audio device yet)
     but compiles and runs.
-  * Files can be converted to a single audio file.
+  * Text files can be synthesized to a single audio file.
   * Optional shared library support (Linux).
 
 ## [1.1-2]
@@ -34,7 +53,7 @@ with clause 2 of the project's [BSD license](COPYING).
 
 ## [1.1]
 
-  * Upstream version 1.1.
+Upstream version 1.1.
 
 ## [1.0-2]
 
@@ -69,4 +88,4 @@ Generate the autotools files instead of using old versions:
 
 ## [1.0]
 
-  * Initial beta version developed by Kevin A. Lenzo and Alan W. Black.
+Initial beta version developed by Kevin A. Lenzo and Alan W. Black.

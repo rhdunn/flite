@@ -37,11 +37,64 @@
 /*  Waveforms                                                            */
 /*                                                                       */
 /*************************************************************************/
-#include <stdio.h>
-#include <stdlib.h>
 #include "cst_string.h"
 #include "cst_wave.h"
 #include "cst_file.h"
+
+void cst_wave_resample(cst_wave *w, int sample_rate)
+{
+    /* This is here so that it won't necessarily be linked in tight-space */
+    /* platforms like PalmOS                                              */
+
+    cst_rateconv *filt;
+    int up, down;
+    short *in;
+    const short *inptr;
+    short *outptr;
+    int n, insize, outsize;
+
+    /* Sure, we could take the GCD.  In practice, though, this
+       gives us what we want and makes things go faster. */
+    down = w->sample_rate / 1000;
+    up = sample_rate / 1000;
+
+    if (up < 1 || down < 1) {
+	cst_errmsg("cst_wave_resample: invalid input/output sample rates (%d, %d)\n",
+		   up * 1000, down * 1000);
+	cst_error();
+    }
+
+    filt = new_rateconv(up, down, w->num_channels);
+
+    inptr = in = w->samples;
+    insize = w->num_samples;
+
+    w->num_samples = w->num_samples * up / down + 2048;
+    w->samples = cst_alloc(short, w->num_samples * w->num_channels);
+    w->sample_rate = sample_rate;
+
+    outptr = w->samples;
+    outsize = w->num_samples;
+
+    while ((n = cst_rateconv_in(filt, inptr, insize)) > 0) {
+	inptr += n;
+	insize -= n;
+
+	while ((n = cst_rateconv_out(filt, outptr, outsize)) > 0) {
+	    outptr += n;
+	    outsize -= n;
+	}
+    }
+    cst_rateconv_leadout(filt);
+    while ((n = cst_rateconv_out(filt, outptr, outsize)) > 0) {
+	outptr += n;
+	outsize -= n;
+    }
+
+    cst_free(in);
+    delete_rateconv(filt);
+
+}
 
 int cst_wave_save(cst_wave *w,const char *filename,const char *type)
 {
@@ -51,6 +104,8 @@ int cst_wave_save(cst_wave *w,const char *filename,const char *type)
 	return cst_wave_save_aiff(w,filename);
     else if (cst_streq(type,"snd"))
     return cst_wave_save_snd(w,filename); */
+    else if (cst_streq(type,"raw"))
+	return cst_wave_save_raw(w,filename);
     else
     {
 	cst_errmsg("cst_wave_save: unsupported wavetype \"%s\"\n",
@@ -71,7 +126,7 @@ int cst_wave_save_raw(cst_wave *w, const char *filename)
 	return -1;
     }
 
-    rv = cst_wave_save_riff_fd(w, fd);
+    rv = cst_wave_save_raw_fd(w, fd);
     cst_fclose(fd);
 
     return rv;
@@ -349,11 +404,7 @@ int cst_wave_load_riff_header(cst_wave_header *header,cst_file fd)
     }
     cst_fread(fd,&d_short,2,1);
     if (CST_BIG_ENDIAN) d_short = SWAPSHORT(d_short);
-    if (d_short != 1)
-    {
-	cst_errmsg("cst_load_wave_riff: can only support mono\n");
-	return CST_ERROR_FORMAT;
-    }
+
     header->num_channels = d_short;
 
     cst_fread(fd,&d_int,4,1);
@@ -409,8 +460,8 @@ int cst_wave_load_riff_fd(cst_wave *w,cst_file fd)
 
     /* Now read the data itself */
     cst_wave_set_sample_rate(w,hdr.sample_rate);     /* sample rate */
-    data_length = samples * hdr.num_channels;
-    cst_wave_resize(w,samples,hdr.num_channels);
+    data_length = samples;
+    cst_wave_resize(w,samples/hdr.num_channels,hdr.num_channels);
 
     if ((d = cst_fread(fd,w->samples,sizeof(short),data_length)) != data_length)
     {

@@ -37,8 +37,6 @@
 /*  Use some external program to play stuff                              */
 /*                                                                       */
 /*************************************************************************/
-#include <stdio.h>
-#include <stdlib.h>
 #include "cst_audio.h"
 
 cst_audiodev * audio_open_command(int sps, int channels, int fmt)

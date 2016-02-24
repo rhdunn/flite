@@ -37,8 +37,7 @@
 /*  Basic wraparounds for malloc and free                                */
 /*                                                                       */
 /*************************************************************************/
-#include <stdio.h>
-#include <stdlib.h>
+#include "cst_file.h"
 #include "cst_alloc.h"
 #include "cst_error.h"
 
@@ -47,8 +46,8 @@
 #endif /* UNDER_CE */
 
 /* define this if you want to trace memory usage */
-/* #define CST_DEBUG_MALLOC
-   #define CST_DEBUG_MALLOC_TRACE */
+/* #define CST_DEBUG_MALLOC */
+/* #define CST_DEBUG_MALLOC_TRACE */
 #ifdef CST_DEBUG_MALLOC
 int cst_allocated = 0;
 int cst_freed = 0;
@@ -59,8 +58,8 @@ int cst_alloc_out = 0;
 #ifdef CST_DEBUG_MALLOC_TRACE
 /* This is a crude memory tracer to find leaks */
 int cst_alloc_ckpt = -1;
-/* You to know how big this should be to use it, its for debuging only */
-#define NUM_CHUNKS 1000000
+/* You have to know how big this should be to use it, its for debuging only */
+#define NUM_CHUNKS 10000000
 void *cst_alloc_cunks[NUM_CHUNKS];
 #endif
 #endif
@@ -79,10 +78,12 @@ void *cst_safe_alloc(int size)
 
 #ifdef CST_DEBUG_MALLOC
     if (size > cst_alloc_imax)
+    {
 	cst_alloc_imax = size;
+    }
     cst_allocated += size;
     cst_alloc_out += size;
-    size += sizeof(int);
+    size += 2 * sizeof(int);
 #endif
 
 #ifdef UNDER_CE
@@ -98,7 +99,9 @@ void *cst_safe_alloc(int size)
     cst_alloc_cunks[cst_alloc_num_calls] = p;
 #endif
     cst_alloc_num_calls++;
-    *(int *)p = size - sizeof(int);
+    *(int *)p = 1314;
+    p = (int *)p + 1;
+    *(int *)p = size - (2 * sizeof(int));
     if ((cst_allocated - cst_freed) > cst_alloc_max)
 	cst_alloc_max = cst_allocated - cst_freed;
     p = (int *)p + 1;
@@ -153,10 +156,20 @@ void cst_free(void *p)
     if (p != NULL)
     {
 #ifdef CST_DEBUG_MALLOC
+	if (*((int *)p - 2) != 1314)
+	{
+	    cst_dbgmsg("CST_MALLOC_DEBUG freeing non-malloc memory\n");
+	    return;
+	}
+	if (*((int *)p - 1) <= 0)
+	{
+	    cst_dbgmsg("CST_MALLOC_DEBUG re-freeing memory\n");
+	    return;
+	}
 	cst_freed += *((int *)p - 1);
 	cst_alloc_out -= *((int *)p - 1);
-	*((int *)p - 1) = 0;
-	p = (int *)p - 1;
+	*((int *)p - 1) = 0; /* mark it as freed */
+	p = (int *)p - 2;
 #endif
 #ifndef CST_DEBUG_MALLOC_TRACE
 #ifdef UNDER_CE
@@ -174,6 +187,7 @@ void cst_free(void *p)
 }
 
 #ifdef CST_DEBUG_MALLOC_TRACE
+
 void cst_find_unfreed()
 {
     int i, t;
@@ -185,13 +199,21 @@ void cst_find_unfreed()
 	     && cst_alloc_cunks[i];
 	 i++)
     {
-	if (*(int *)cst_alloc_cunks[i] != 0) 
+	if (((int *)cst_alloc_cunks[i])[1] != 0) 
 	{
-	    cst_dbgmsg("unfreed at %d\n", i);
+            cst_dbgmsg("unfreed at %d\n", i);
 	    t++;
 	}
     }
     cst_dbgmsg("total unfreed %d\n", t);
+}
+
+void cst_alloc_debug_summary()
+{
+    cst_find_unfreed();
+    printf("allocated %d freed %d max %d imax %d calls %d out %d\n",
+	   cst_allocated, cst_freed, cst_alloc_max, 
+	   cst_alloc_imax, cst_alloc_num_calls, cst_alloc_out);
 }
 #endif
 

@@ -37,8 +37,6 @@
 /*  Waveforms                                                            */
 /*                                                                       */
 /*************************************************************************/
-#include <stdio.h>
-#include <stdlib.h>
 #include "cst_string.h"
 #include "cst_val.h"
 #include "cst_wave.h"
@@ -92,57 +90,6 @@ void cst_wave_rescale(cst_wave *w, int factor)
 
 	for (i = 0; i < w->num_samples; ++i)
 		w->samples[i] = ((int)w->samples[i] * factor) / 65536;
-}
-
-void cst_wave_resample(cst_wave *w, int sample_rate)
-{
-	cst_rateconv *filt;
-	int up, down;
-	short *in;
-	const short *inptr;
-	short *outptr;
-	int n, insize, outsize;
-
-	/* Sure, we could take the GCD.  In practice, though, this
-           gives us what we want and makes things go faster. */
-	down = w->sample_rate / 1000;
-	up = sample_rate / 1000;
-
-	if (up < 1 || down < 1) {
-		cst_errmsg("cst_wave_resample: invalid input/output sample rates (%d, %d)\n",
-			   up * 1000, down * 1000);
-		cst_error();
-	}
-
-	filt = new_rateconv(up, down, w->num_channels);
-
-	inptr = in = w->samples;
-	insize = w->num_samples;
-
-	w->num_samples = w->num_samples * up / down + 2048;
-	w->samples = cst_alloc(short, w->num_samples * w->num_channels);
-	w->sample_rate = sample_rate;
-
-	outptr = w->samples;
-	outsize = w->num_samples;
-
-	while ((n = cst_rateconv_in(filt, inptr, insize)) > 0) {
-		inptr += n;
-		insize -= n;
-
-		while ((n = cst_rateconv_out(filt, outptr, outsize)) > 0) {
-			outptr += n;
-			outsize -= n;
-		}
- 	}
-	cst_rateconv_leadout(filt);
-	while ((n = cst_rateconv_out(filt, outptr, outsize)) > 0) {
-		outptr += n;
-		outsize -= n;
-	}
-
-	cst_free(in);
-	delete_rateconv(filt);
 }
 
 cst_wave *copy_wave(const cst_wave *w)

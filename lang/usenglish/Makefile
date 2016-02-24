@@ -51,7 +51,7 @@ FILES = Makefile $(SCM) $(SRCS) $(H)
 LIBNAME = flite_usenglish
 LOCAL_INCLUDES = 
 
-ALL = .build_lib
+ALL = 
 
 include $(TOP)/config/common_make_rules
 

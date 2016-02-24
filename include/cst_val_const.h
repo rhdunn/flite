@@ -109,12 +109,11 @@
 #ifndef _CST_VAL_CONSTS_H__
 #define _CST_VAL_CONSTS_H__
 
-#include <stdio.h>
 #include "cst_val_defs.h"
 
-/* There is built-in int to string conversions here for numbers  */
-/* up to 20, not if you make this bigger you have to hand change */
-/* other things too                                              */
+/* There is built-in int to string conversions here for numbers   */
+/* up to 20, note if you make this bigger you have to hand change */
+/* other things too                                               */
 #define CST_CONST_INT_MAX 19
 
 #ifndef NO_UNION_INITIALIZATION

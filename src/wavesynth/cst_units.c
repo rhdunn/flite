@@ -38,9 +38,7 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
+#include "cst_math.h"
 #include "cst_hrg.h"
 #include "cst_utt_utils.h"
 #include "cst_wave.h"
@@ -77,23 +75,22 @@ cst_utterance *join_units(cst_utterance *utt)
 
 cst_utterance *join_units_simple(cst_utterance *utt)
 {
-    cst_wave *w;
+    cst_wave *w = 0;
     cst_lpcres *lpcres;
     const char *resynth_type;
-    resynth_type = get_param_string(utt->features,"resynth_type", "float");
+    resynth_type = get_param_string(utt->features,"resynth_type", "fixed");
     
     asis_to_pm(utt);
     concat_units(utt);
 
     lpcres = val_lpcres(utt_feat_val(utt,"target_lpcres"));
 
-    if (cst_streq(resynth_type, "float"))
-	    w = lpc_resynth(lpcres); 
-    else if (cst_streq(resynth_type, "fixed"))
-	    w = lpc_resynth_fixedpoint(lpcres); 
-    else {
-	    cst_errmsg("unknown resynthesis type %s\n", resynth_type);
-	    cst_error(); /* Should not happen */
+    if (cst_streq(resynth_type, "fixed"))
+	w = lpc_resynth_fixedpoint(lpcres); 
+    else 
+    {
+	cst_errmsg("unknown resynthesis type %s\n", resynth_type);
+	cst_error(); /* Should not happen */
     }
 
     utt_set_wave(utt,w);
@@ -103,10 +100,11 @@ cst_utterance *join_units_simple(cst_utterance *utt)
 
 cst_utterance *join_units_modified_lpc(cst_utterance *utt)
 {
-    cst_wave *w;
+    cst_wave *w = 0;
     cst_lpcres *lpcres;
     const char *resynth_type;
     resynth_type = get_param_string(utt->features,"resynth_type", "float");
+
 
     f0_targets_to_pm(utt);
     concat_units(utt);
@@ -114,12 +112,15 @@ cst_utterance *join_units_modified_lpc(cst_utterance *utt)
     lpcres = val_lpcres(utt_feat_val(utt,"target_lpcres"));
 
     if (cst_streq(resynth_type, "float"))
-	    w = lpc_resynth(lpcres); 
+	w = lpc_resynth(lpcres); 
     else if (cst_streq(resynth_type, "fixed"))
-	    w = lpc_resynth_fixedpoint(lpcres); 
-    else {
-	    cst_errmsg("unknown resynthesis type %s\n", resynth_type);
-	    cst_error(); /* Should not happen */
+    {
+	w = lpc_resynth_fixedpoint(lpcres); 
+    }
+    else 
+    {
+	cst_errmsg("unknown resynthesis type %s\n", resynth_type);
+	cst_error(); /* Should not happen */
     }
 
     utt_set_wave(utt,w);
@@ -190,7 +191,7 @@ cst_utterance *f0_targets_to_pm(cst_utterance *utt)
     /* First pass to count how many pms will be required */
     for (t=relation_head(utt_relation(utt,"Target"));
 	 t;
-	 t=item_next(t))
+	 t=item_next(t), lf0 = f0, lpos = pos) /* changed by dhopkins */
     {
 	pos = item_feat_float(t,"pos");
 	f0 = item_feat_float(t,"f0");
@@ -211,7 +212,7 @@ cst_utterance *f0_targets_to_pm(cst_utterance *utt)
     /* Second pass puts the values in */
     for (t=relation_head(utt_relation(utt,"Target"));
 	 t;
-	 t=item_next(t))
+	 t=item_next(t), lf0 = f0, lpos = pos) /* changed by dhopkins */
     {
 	pos = item_feat_float(t,"pos");
 	f0 = item_feat_float(t,"f0");
@@ -285,7 +286,7 @@ cst_utterance *concat_units(cst_utterance *utt)
 				   &target_lpcres->residual[rpos],
 				   get_frame_size(sts_list, nearest_u_pm),
 				   get_sts_residual(sts_list, nearest_u_pm));
-	    /* But this requires particault layout of residuals which
+	    /* But this requires particular layout of residuals which
 	       probably isn't true */
 	    /*
 	    if (cst_streq(residual_type,"windowed"))
@@ -326,6 +327,7 @@ static int nearest_pm(cst_sts_list *sts_list, int start,int end,float u_index)
     return end-1;
 }
 
+#if 0
 void add_residual_windowed(int targ_size, 
 			   unsigned char *targ_residual,
 			   int unit_size, 
@@ -369,6 +371,7 @@ void add_residual_windowed(int targ_size,
     cst_free(unit);
 
 }
+#endif
 
 void add_residual(int targ_size, unsigned char *targ_residual,
 		  int unit_size, const unsigned char *unit_residual)
@@ -408,7 +411,7 @@ void add_residual_pulse(int targ_size, unsigned char *targ_residual,
 			int unit_size, const unsigned char *unit_residual)
 {
     /* Unit residual isn't a pointed its a number, the power for the 
-       the sts, yes this is hackily vasting the address to a number */
+       the sts, yes this is hackily casting the address to a number */
 
     if (unit_size < targ_size)
 	targ_residual[((targ_size-unit_size)/2)] 

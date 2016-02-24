@@ -1,9 +1,10 @@
 #!/bin/sh
 #####################################################-*-mode:shell-script-*-
 ##                                                                       ##
+##                                                                       ##
 ##                  Language Technologies Institute                      ##
-##                   Alan W Black and Kevin A. Lenzo                     ##
-##                        Copyright (c) 2000                             ##
+##                     Carnegie Mellon University                        ##
+##                      Copyright (c) 2001-2002                          ##
 ##                        All Rights Reserved.                           ##
 ##                                                                       ##
 ##  Permission is hereby granted, free of charge, to use and distribute  ##
@@ -93,18 +94,24 @@ cat $FLITEDIR/tools/build_flite |
   sed 's%__FLITEDIR__%'$FLITEDIR'%' >bin/build_flite
 chmod +x bin/build_flite
 
-if [ "$FV_TYPE" = "diphone" ]
+if [ -f flite/$FV_VOICENAME.c ]
 then
-   cat $FLITEDIR/tools/VOICE_diphone.c |
-     sed 's%__VOICENAME__%'$FV_VOICENAME'%g' >flite/$FV_VOICENAME.c
-else 
-   if [ "$FV_TYPE" = "ldom" ]
+   echo flite/$FV_VOICENAME.c already exists
+   echo not overwriting it with a new copy
+else
+   if [ "$FV_TYPE" = "diphone" ]
    then
-      cat $FLITEDIR/tools/VOICE_ldom.c |
+      cat $FLITEDIR/tools/VOICE_diphone.c |
         sed 's%__VOICENAME__%'$FV_VOICENAME'%g' >flite/$FV_VOICENAME.c
-   else
-      cat $FLITEDIR/tools/VOICE_clunits.c |
-        sed 's%__VOICENAME__%'$FV_VOICENAME'%g' >flite/$FV_VOICENAME.c
+   else 
+      if [ "$FV_TYPE" = "ldom" ]
+      then
+         cat $FLITEDIR/tools/VOICE_ldom.c |
+           sed 's%__VOICENAME__%'$FV_VOICENAME'%g' >flite/$FV_VOICENAME.c
+      else
+         cat $FLITEDIR/tools/VOICE_clunits.c |
+           sed 's%__VOICENAME__%'$FV_VOICENAME'%g' >flite/$FV_VOICENAME.c
+      fi
    fi
 fi
 

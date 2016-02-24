@@ -33,20 +33,24 @@
 ##                                                                       ##
 ##  cmu_us_kal diphone                                                   ##
 ##                                                                       ##
+##    Updated from kal4 03 Jan 2005                                      ##
 ###########################################################################
 TOP=../..
 DIRNAME=lang/cmu_us_kal16
 BUILD_DIRS = 
 ALL_DIRS= 
 H = voxdefs.h
-SRCS = cmu_us_kal16_diphone.c cmu_us_kal16.c
+SRCS = cmu_us_kal16_diphone.c cmu_us_kal16.c \
+       cmu_us_kal16_lpc.c \
+       cmu_us_kal16_res.c \
+       cmu_us_kal16_residx.c
 OBJS = $(SRCS:.c=.o)
 SCM=
 FILES = Makefile $(SCM) $(SRCS) $(H)
 LIBNAME = flite_cmu_us_kal16
 LOCAL_INCLUDES = -I$(TOP)/lang/usenglish  -I$(TOP)/lang/cmulex
 
-ALL = .build_lib
+ALL = 
 
 include $(TOP)/config/common_make_rules
 

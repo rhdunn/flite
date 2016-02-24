@@ -43,8 +43,6 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <stdio.h>
-#include <string.h>
 #include "us_f0.h"
 
 const us_f0_lr_term f0_lr_terms[] = {

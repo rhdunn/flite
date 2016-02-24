@@ -37,8 +37,6 @@
 /*  Waveforms                                                            */
 /*                                                                       */
 /*************************************************************************/
-#include <stdio.h>
-#include <stdlib.h>
 #include "cst_string.h"
 #include "cst_val.h"
 #include "cst_sts.h"

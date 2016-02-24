@@ -41,7 +41,15 @@
 #define _SYNTH_H__
 
 #include "cst_hrg.h"
+#include "cst_tokenstream.h"
 #include "cst_voice.h"
+
+typedef int (*cst_breakfunc)(cst_tokenstream *ts, 
+		             const char *token, 
+			     cst_relation *tokens);
+CST_VAL_USER_FUNCPTR_DCLS(breakfunc,cst_breakfunc)
+int default_utt_break(cst_tokenstream *ts,
+		      const char *token, cst_relation *tokens);
 
 /* You must call utt_init before any of the others. */
 cst_utterance *utt_init(cst_utterance *u, cst_voice *vox);
@@ -56,6 +64,8 @@ typedef struct cst_dur_stats_struct {
 } dur_stat;
 typedef dur_stat *dur_stats; /* only one star, due to funky cst_val magic */
 CST_VAL_USER_TYPE_DCLS(dur_stats,dur_stats)
+
+cst_utterance *default_segmentanalysis(cst_utterance *u);
 
 cst_utterance *default_tokenization(cst_utterance *u);
 cst_utterance *default_textanalysis(cst_utterance *u);
@@ -73,12 +83,6 @@ typedef struct cst_synth_module_struct {
     const char *hookname;
     cst_uttfunc defhook;
 } cst_synth_module;
-
-/* Synth methods are arrays of cst_synth_module terminated by
-   (hookname==NULL) */
-extern const cst_synth_module synth_method_text[];
-extern const cst_synth_module synth_method_tokens[];
-extern const cst_synth_module synth_method_phones[];
 
 cst_utterance *apply_synth_module(cst_utterance *u,
 				  const cst_synth_module *mod);

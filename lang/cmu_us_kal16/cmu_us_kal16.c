@@ -44,7 +44,7 @@
 #include "cmulex.h"
 
 static cst_utterance *cmu_us_kal_postlex(cst_utterance *u);
-extern cst_diphone_db cmu_us_kal_db;
+extern cst_diphone_db cmu_us_kal16_db;
 
 cst_voice *cmu_us_kal_diphone = NULL;
 
@@ -73,8 +73,8 @@ cst_voice *register_cmu_us_kal(const char *voxdir)
 
     /* Waveform synthesis: diphone_synth */
     feat_set(v->features,"wave_synth_func",uttfunc_val(&diphone_synth));
-    feat_set(v->features,"diphone_db",diphone_db_val(&cmu_us_kal_db));
-    feat_set_int(v->features,"sample_rate",cmu_us_kal_db.sts->sample_rate);
+    feat_set(v->features,"diphone_db",diphone_db_val(&cmu_us_kal16_db));
+    feat_set_int(v->features,"sample_rate",cmu_us_kal16_db.sts->sample_rate);
     feat_set_string(v->features,"resynth_type","fixed");
     feat_set_string(v->features,"join_type","modified_lpc");
 

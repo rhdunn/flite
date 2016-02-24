@@ -37,8 +37,6 @@
 /*  Relations                                                            */
 /*                                                                       */
 /*************************************************************************/
-#include <stdio.h>
-#include <stdlib.h>
 #include "cst_item.h"
 #include "cst_relation.h"
 #include "cst_utterance.h"

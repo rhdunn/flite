@@ -40,7 +40,7 @@
 #ifndef _CST_SIGPR_H__
 #define _CST_SIGPR_H__
 
-#include <stdio.h>
+#include "cst_file.h"
 #include "cst_val.h"
 #include "cst_sts.h"
 

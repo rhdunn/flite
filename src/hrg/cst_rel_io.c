@@ -37,8 +37,6 @@
 /*  Relations i/o                                                        */
 /*                                                                       */
 /*************************************************************************/
-#include <stdio.h>
-#include <stdlib.h>
 #include "cst_file.h"
 #include "cst_tokenstream.h"
 #include "cst_item.h"
@@ -51,16 +49,12 @@ int relation_load(cst_relation *r, const char *filename)
     cst_item *item;
     const char *token=0;
 
-    if ((fd = ts_open(filename)) == 0)
+    if ((fd = ts_open(filename,NULL,";","","")) == 0)
     {
 	cst_errmsg("relation_load: can't open file \"%s\" for reading\n",
 		   filename);
 	return CST_ERROR_FORMAT;
     }
-
-    fd->singlecharsymbols = ";";
-    fd->prepunctuationsymbols = "";
-    fd->postpunctuationsymbols = "";
 
     for ( ; !ts_eof(fd); )
     {

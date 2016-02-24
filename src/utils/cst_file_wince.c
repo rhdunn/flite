@@ -156,6 +156,18 @@ int cst_fprintf(cst_file fh, char *fmt, ...)
 	return cst_fwrite(fh,outbuf,1,count);
 }
 
+int cst_sprintf(cst_file fh, char *fmt, ...)
+{
+	va_list args;
+	char outbuf[512];
+	int count;
+
+	va_start(args,fmt);
+	count = vsprintf(outbuf,fmt,args); /* You use WinCE, you lose. */
+	va_end(args);
+	return count;
+}
+
 int cst_fclose(cst_file fh)
 {
 	return CloseHandle(fh);

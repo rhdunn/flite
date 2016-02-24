@@ -21,8 +21,6 @@
 /* This is an altered version.  It has been modified by David
    Huggins-Daines <dhd@cepstral.com> on 2001-10-23 to use a different
    API and be re-entrant and safe and all that good stuff. */
-#include <stdio.h>
-#include <string.h>
 #include "cst_regex.h"
 #include "cst_string.h"
 #include "cst_error.h"

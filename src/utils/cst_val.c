@@ -37,8 +37,7 @@
 /*  Typed values                                                          */
 /*                                                                       */
 /*************************************************************************/
-#include <stdio.h>
-#include <stdlib.h>
+#include "cst_math.h"
 #include "cst_file.h"
 #include "cst_val.h"
 #include "cst_string.h"
@@ -69,7 +68,7 @@ cst_val *string_val(const char *s)
     cst_val *v = new_val();
     CST_VAL_TYPE(v) = CST_VAL_TYPE_STRING;
     /* would be nice to note if this is a deletable string or not */
-    CST_VAL_STRING_LVAL(v) = cst_strdup(s);
+    CST_VAL_STRING_LVAL(v) = cst_strdup((const unsigned char *)s);
     return v;
 }
 
@@ -198,6 +197,20 @@ const cst_val *val_cdr(const cst_val *v)
 	cst_error();
     }
     return 0;
+}
+
+void *val_generic(const cst_val *v, int type, const char *stype)
+{   /* a generic access function that checks the expected type */
+    if (v && CST_VAL_TYPE(v) == type)
+	return CST_VAL_VOID(v);
+    else
+    {
+        cst_errmsg("VAL: tried to access %s in %d type val\n",
+                       stype,
+                       (v ? CST_VAL_TYPE(v) : -1));
+        cst_error();
+    }
+    return NULL;
 }
 
 void *val_void(const cst_val *v)

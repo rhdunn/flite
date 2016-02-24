@@ -20,7 +20,7 @@ The core Flite library was developed by [Alan W. Black](mailto:awb@cs.cmu.edu)
 Technologies Institute at Carnegie Mellon University.  The name
 `flite`, originally chosen to mean `festival-lite` is perhaps doubly
 appropriate as a substantial part of design and coding was done over
-30,000ft while awb was travelling.
+30,000ft while awb was travelling, and usually isn't in meetings.
 
 The voices, lexicon and language components of flite, both their
 compression techniques and their actual contents were developed by
@@ -31,7 +31,7 @@ Flite is the answer to the complaint that Festival is too big, too slow,
 and not portable enough.
 
 * Flite is designed for very small devices, such as PDAs, and also
-  for large server machine with lots of ports.
+  for large server machines with lots of ports.
 * Flite is not a replacement for Festival but an alternative run time
   engine for voices developed in the FestVox framework where size and
   speed is crucial.
@@ -39,7 +39,8 @@ and not portable enough.
   more care in programming, and is harder to customize at run time.
 * It is thread safe.
 * Voices, lexicons and language descriptions can be compiled
-  (mostly automatically) into C representations from their FestVox formats.
+  (mostly automatically for voices and lexicons) into C representations 
+  from their FestVox formats
 * All voices, lexicons and language model data are const and in the
   text segment (i.e. they may be put in ROM).  As they are linked in
   at compile time, there is virtually no startup delay.
@@ -58,16 +59,16 @@ and not portable enough.
   applications.
 
 Flite is distributed with a single 8K diphone voice (derived from the
-`cmu_us_kal` voice), an pruned lexicon (derived from
+`cmu_us_kal` voice), a pruned lexicon (derived from
 cmulex) and a set of models for US English.  Here are comparisons
 with Festival using basically the same 8KHz diphone voice
 
 |           | Flite | Festival |
 |-----------|-------|----------|
-| core code | 100K  | 2.6M     |
-| USEnglish | 35K   | ??       |
-| lexicon   | 1.6M  | 5M       |
-| diphone   | 2.1M  | 2.1M     |
+| core code | 60K   | 2.6M     |
+| USEnglish | 100K  | ??       |
+| lexicon   | 600K  | 5M       |
+| diphone   | 1.8M  | 2.1M     |
 | runtime   | <1M   | 16-20M   |
 
 On a 500Mhz PIII, a timing test of the first two chapters of
@@ -91,13 +92,15 @@ Requirements:
 Supported platforms:
 
 * Various Intel Linux systems (and iPaq Linux), under various versions
-  of GCC (2.7.2 to 3.2.1)
+  of GCC (2.7.2 to 4.x)
 * FreeBSD 3.x and 4.x
 * Solaris 5.7, and Solaris 9
 * Initial support for Mac OS X
-* OSF1 V4.0 (gives an unimportant warning about sizes when compiled `cst_val.c`)
-* Windows 2000 under Cygwin 1.3.5
+* Windows 2000/XP under Cygwin 1.3.5 and later
 * Some support for WinCE (2.11 and 3.0) is included but is not complete
+* PalmOS 5.x devices (Treo 600, Zire 31 and Tungsten C)
+* Successfully compiles and runs under 64Bit Linux architectures
+* OSF1 V4.0 (gives an unimportant warning about sizes when compiled `cst_val.c`)
 
 Other similar platforms should just work, we have also cross compiled
 on a Linux machine for StrongARM.  However note that new byte order
@@ -146,15 +149,13 @@ set up yet.  Thus:
 
 The Sharp Zaurus SL-5000D is a very similar machine, however it 
 does support 8KHz sampling and a smaller binary is provided.  The
-Zaurus typicall has less free memory so there is an advantage to
+Zaurus typically has less free memory so there is an advantage to
 using this
 [flite-1.2_bin8KHz_arm-linux.tar.gz](http://cmuflite.org/packed/flite-1.2/flite-1.2_bin8KHz_arm-linux.tar.gz)
 file.
 
 This voice also used fixed point rather floating point as the
-StrongARM doesn't have floating point instructions.  We are working on
-a much smaller voice for the ipaq hopefully small enough to fit in the
-flash.
+StrongARM doesn't have floating point instructions.
 
 # Usage
 
@@ -246,6 +247,12 @@ built new voices efficiently and robustly as soon as we can.  Though
 in the mean time, a few higher quality voices will be released with
 the next version.
 
+If you aren't willing to wait you can try
+[Cepstral, LLC](http://www.cepstral.com)'s voices.  They aren't free, but
+they do sound better and are targeted at similar platforms.  Although
+Cepstral uses the Flite core, the voices, compression and interfaces are
+quite different.
+
 # Todo
 
 This release is just the beginning, there is much to do and this can
@@ -253,22 +260,21 @@ be a lot faster and smaller.  We have already seriously considered some
 of the following but they didn't make this release.  In near
 future versions we will add:
 
-* Streaming synthesis so no large buffers of waveforms need be held
-  (we've got an initial pass at that in Cepstral but not read for this
-  release).
+* Streaming synthesis so no large buffers of waveforms need be held.
 * Better compression of the lexicon, and unit databases.
 * Better quality speech (we have better diphone databases which
   haven't been released yet but do give better quality synthesis).
 * Documentation to allow people to more easily integrate flite
   into applications.
-* Some reasonable voices based on our newer voice building work.
+* Some reasonable voices based on our newer voice building work
+  (e.g. Arctic and HTS).
 
 # License
 
 The flite project is released under a [4-clause BSD license](COPYING) with
 the following copyright:
 
-    Copyright Carnegie Mellon University 1999-2003
+    Copyright Carnegie Mellon University 1999-2005
     All rights reserved
 
 The changes to the project are described in the [CHANGELOG.md](CHANGELOG.md)

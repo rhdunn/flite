@@ -38,14 +38,15 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <stdio.h>
 #include "flite.h"
 
-extern const unsigned char cmu_lex_phones[];
-extern const lexicon_entry cmu_lex_entry[];
-extern const int cmu_num_entries;
-extern const char * const cmu_phone_table[54];
-extern const cst_lts_rules cmu6_lts_rules;
+extern const int cmu_lex_entry[];
+extern const unsigned char cmu_lex_data[];
+extern const int cmu_lex_num_entries;
+extern const int cmu_lex_num_bytes;
+extern const char * const cmu_lex_phone_table[54];
+extern const unsigned char * const cmu_lex_phones_huff_table[];
+extern const unsigned char * const cmu_lex_entries_huff_table[];
 
 static int cmu_is_vowel(const char *p);
 static int cmu_is_silence(const char *p);
@@ -223,17 +224,43 @@ int cmu_syl_boundary(const cst_item *i,const cst_val *v)
 }
 
 cst_lexicon cmu_lex;
+cst_lts_rules cmu_lts_rules;
+extern const char * const cmu_lts_phone_table[];
+extern const char * const cmu_lts_letter_table[];
+extern const cst_lts_addr cmu_lts_letter_index[];
+extern const cst_lts_model cmu_lts_model[];
 
 void cmu_lex_init()
 {
     /* I'd like to do this as a const but it needs everything in this */
     /* file and already the bits are too big for some compilers */
+
+    cmu_lts_rules.name = "cmu";
+    cmu_lts_rules.letter_index = cmu_lts_letter_index;
+#ifdef CST_NO_STATIC_LTS_MODEL
+    /* cmu_lts_rules.models will be set elsewhere */
+#else
+    cmu_lts_rules.models = cmu_lts_model;
+#endif
+    cmu_lts_rules.phone_table = cmu_lts_phone_table;
+    cmu_lts_rules.context_window_size = 4;
+    cmu_lts_rules.context_extra_feats = 1;
+    cmu_lts_rules.letter_table = 0 /* cmu_lts_letter_table */;
+
     cmu_lex.name = "cmu";
-    cmu_lex.num_entries = cmu_num_entries;
-    cmu_lex.entry_index = (lexicon_entry *) cmu_lex_entry;
-    cmu_lex.phones = (unsigned char *) cmu_lex_phones;
-    cmu_lex.phone_table = (char **) cmu_phone_table;
+    cmu_lex.num_entries = cmu_lex_num_entries;
+#ifdef CST_NO_STATIC_LEX
+    /* cmu_lex.data will be set elsewhere */
+#else
+    cmu_lex.data = cmu_lex_data;
+#endif
+    cmu_lex.num_bytes = cmu_lex_num_bytes;
+    cmu_lex.phone_table = (char **) cmu_lex_phone_table;
     cmu_lex.syl_boundary = cmu_syl_boundary;
     cmu_lex.addenda = (char ***) addenda;
-    cmu_lex.lts_rule_set = (cst_lts_rules *) &cmu6_lts_rules;
+    cmu_lex.lts_rule_set = (cst_lts_rules *) &cmu_lts_rules;
+
+    cmu_lex.phone_hufftable = cmu_lex_phones_huff_table;
+    cmu_lex.entry_hufftable = cmu_lex_entries_huff_table;
+
 }

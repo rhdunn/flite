@@ -2,7 +2,7 @@
 ##                                                                       ##
 ##                  Language Technologies Institute                      ##
 ##                     Carnegie Mellon University                        ##
-##                      Copyright (c) 1999-2003                          ##
+##                      Copyright (c) 1999-2005                          ##
 ##                        All Rights Reserved.                           ##
 ##                                                                       ##
 ##  Permission is hereby granted, free of charge, to use and distribute  ##
@@ -35,31 +35,46 @@
 ##                                                                       ##
 ##       Authors:  Alan W Black (awb@cs.cmu.edu)                         ##
 ##                 Kevin A. Lenzo (lenzo@cs.cmu.edu)                     ##
-##          Date:  February 2003                                         ##
-##       Version:  1.2-release                                           ## 
+##          Date:  October 2005                                          ##
+##       Version:  1.3-release                                           ## 
 ##                                                                       ## 
 ###########################################################################
 TOP=.
-DIRNAME=.
-BUILD_DIRS = include src lang lib tools doc main testsuite
-ALL_DIRS=config $(BUILD_DIRS) sapi
+DIRNAME=
+BUILD_DIRS = include src lang doc
+ALL_DIRS=config $(BUILD_DIRS) testsuite sapi palm tools main
 CONFIG=configure configure.in config.sub config.guess \
        missing install-sh mkinstalldirs
 FILES = Makefile README ACKNOWLEDGEMENTS COPYING $(CONFIG)
 DIST_CLEAN = config.cache config.log config.status \
 		config/config config/system.mak FileList
 
+HOST_ONLY_DIRS = tools main testsuite
 ALL = $(BUILD_DIRS)
 
 config_dummy := $(shell test -f config/config || ( echo '*** '; echo '*** Making default config file ***'; echo '*** '; ./configure; )  >&2)
 
 include $(TOP)/config/common_make_rules
 
+ifeq ($(TARGET_OS),wince)
+BUILD_DIRS += main
+endif
+
+ifeq ($(TARGET_OS),palmos)
+INCLUDES += -I$(TOP)/palm/include
+endif
+
+
 config/config: config/config.in config.status
 	./config.status
 
 configure: configure.in
 	autoconf
+
+flop:
+	./configure --target=arm-palmos
+	$(MAKE)
+	ls -al palm/flop/flop.prc
 
 backup: time-stamp
 	@ $(RM) -f $(TOP)/FileList
@@ -71,6 +86,17 @@ backup: time-stamp
 	@ $(RM) -f $(TOP)/.file-list-all
 	@ $(RM) $(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE) 
 	@ ls -l $(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE).tar.gz
+
+backupbz2: time-stamp
+	@ $(RM) -f $(TOP)/FileList
+	@ $(MAKE) file-list
+	@ echo .time-stamp >>FileList
+	@ ln -s . $(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE)
+	@ sed 's/^\.\///' <FileList | sed 's/^/'$(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE)'\//' | grep -v cmu_us_kal16 >.file-list-all
+	@ tar jcvf $(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE).tar.bz2 `cat $(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE)/.file-list-all`
+	@ $(RM) -f $(TOP)/.file-list-all
+	@ $(RM) $(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE) 
+	@ ls -l $(PROJECT_PREFIX)-$(PROJECT_VERSION)-$(PROJECT_STATE).tar.bz2
 
 tags:
 	@ $(RM) -f $(TOP)/FileList

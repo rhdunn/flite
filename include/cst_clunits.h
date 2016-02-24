@@ -46,7 +46,7 @@
 #include "cst_track.h"
 #include "cst_sts.h"
 
-#define CLUNIT_NONE 65535
+#define CLUNIT_NONE (unsigned short)65535
 
 typedef struct cst_clunit_struct {
     unsigned short type, phone;

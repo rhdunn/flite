@@ -42,9 +42,8 @@
 /*  Client side                                                          */
 /*                                                                       */
 /*************************************************************************/
-#include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
+#include "cst_file.h"
 #include "cst_socket.h"
 #include "cst_string.h"
 #include "cst_wave.h"

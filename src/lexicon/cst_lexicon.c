@@ -38,22 +38,21 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <stdio.h>
-#include <string.h>
 #include "cst_features.h"
 #include "cst_lexicon.h"
 
 CST_VAL_REGISTER_TYPE_NODEL(lexicon,cst_lexicon)
+
+#define WP_SIZE 64
 
 static int no_syl_boundaries(const cst_item *i, const cst_val *p);
 static cst_val *lex_lookup_addenda(const char *wp,const cst_lexicon *l,
                                    int *found);
 
 static int lex_match_entry(const char *a, const char *b);
-static int lex_lookup_bsearch(const lexicon_entry *entries,
-			      int start, int end,
-			      const char *word);
-static int find_full_match(const lexicon_entry *entries, int i,const char *word);
+static int lex_lookup_bsearch(const cst_lexicon *l,const char *word);
+static int find_full_match(const cst_lexicon *l,
+			   int i,const char *word);
 
 cst_lexicon *new_lexicon()
 {
@@ -63,115 +62,13 @@ cst_lexicon *new_lexicon()
 }
 
 void delete_lexicon(cst_lexicon *lex)
-{
-	if (lex)
-	{
-		cst_free(lex->entry_index);
-		cst_free(lex->phones);
-		cst_free(lex);
-	}
-}
-
-lexicon_entry * lex_add_entry(cst_lexicon *l,
-			      const char *word,
-			      const char *pos,
-			      const unsigned char *phones)
-{
-    unsigned char *nextphone;
-    char *wp;
-    int i;
-
-    wp = cst_alloc(char,strlen(word)+2);
-    sprintf(wp,"%c%s",(pos ? pos[0] : '0'),word);
-
-    /* Allow me to rationalize my laziness by saying that linear
-       search, realloc(), and friends are okay here since (a)
-       user-defined lexicons won't be very large and (b) inserting
-       items won't happen very often. */
-
-    /* Find the first entry "greater than" the new item. */
-    for (i = 0; i < l->num_entries; ++i) {
-	int d = lex_match_entry(l->entry_index[i].word_pos, wp);
-
-	if (d == 0) {
-	    /* Uh oh, we have a match already.  How "fatal" should
-               this be? */
-	    return NULL;
-	} else if (d > 0) {
-	    break;
-	}
+{   /* But I doubt if this will ever be called, lexicons are mapped */
+    /* This probably isn't complete */
+    if (lex)
+    {
+	cst_free(lex->data);
+	cst_free(lex);
     }
-    
-    /* Find phone indices and glob them onto the end of the phone table */
-    if (l->phones == NULL) {
-	nextphone = l->phones = cst_alloc(unsigned char, strlen(phones) + 1);
-    } else {
-	size_t lnphones;
-
-	nextphone = l->phones + l->entry_index[l->num_entries-1].phone_index;
-	nextphone += strlen(nextphone) + 1; /* They are null terminated */
-	lnphones = nextphone - l->phones;
-	l->phones = cst_realloc(l->phones, unsigned char,
-				lnphones + strlen(phones) + 1);
-	nextphone = l->phones + lnphones;
-    }
-    strcpy(nextphone, phones);
-
-    /* Now expand and insert */
-    l->entry_index = cst_realloc(l->entry_index, lexicon_entry, l->num_entries + 1);
-    if (i < l->num_entries)
-	    memmove(l->entry_index + i + 1, l->entry_index + i, l->num_entries - i);
-    l->entry_index[i].word_pos = wp;
-    l->entry_index[i].phone_index = nextphone - l->phones;
-
-    ++l->num_entries;
-    return l->entry_index + i;
-}
-
-int
-lex_delete_entry(cst_lexicon *l, const char *word, const char *pos)
-{
-    unsigned char *phones, *nextphone, *lastphone;
-    char *wp;
-    int i, nphones, j;
-
-    /* See notes above in lex_add_entry() about the inefficency of
-       these functions. */
-
-    wp = cst_alloc(char,strlen(word)+2);
-    sprintf(wp,"%c%s",(pos ? pos[0] : '0'),word);
-
-    /* Find the entry */
-    if ((i = lex_lookup_bsearch(l->entry_index,0,l->num_entries,wp)) < 0) {
-	cst_free(wp);
-	return -1;
-    }
-
-    /* Shrink the phone index */
-    phones = l->phones + l->entry_index[i].phone_index;
-    nextphone = phones + strlen(phones) + 1;
-    nphones = nextphone - phones;
-
-    for (j = i + 1; j < l->num_entries; ++j)
-	l->entry_index[j].phone_index -= nphones;
-
-    lastphone = l->phones + l->entry_index[l->num_entries-1].phone_index;
-    lastphone += strlen(lastphone) + 1;
-    memmove(phones, nextphone, lastphone - nextphone);
-
-    /* Dispose of the entry itself ... this of course assumes that it
-       was added with lex_add_entry() and is thus not constant. */
-    cst_free(l->entry_index[i].word_pos);
-
-    /* Shrink the entry index */
-    memmove(l->entry_index + i, l->entry_index + i + 1,
-	    l->num_entries - i - 1);
-    l->entry_index = cst_realloc(l->entry_index, lexicon_entry,
-				 l->num_entries - 1);
-    --l->num_entries;
-
-    cst_free(wp);
-    return 0;
 }
 
 #if 0
@@ -217,7 +114,7 @@ int in_lex(const cst_lexicon *l, const char *word, const char *pos)
     char *wp;
 
     wp = cst_alloc(char,strlen(word)+2);
-    sprintf(wp,"%c%s",(pos ? pos[0] : '0'),word);
+    cst_sprintf(wp,"%c%s",(pos ? pos[0] : '0'),word);
 
     for (i=0; l->addenda[i]; i++)
     {
@@ -229,7 +126,7 @@ int in_lex(const cst_lexicon *l, const char *word, const char *pos)
 	}
     }
 
-    if (!r && (lex_lookup_bsearch(l->entry_index,0,l->num_entries,wp) >= 0))
+    if (!r && (lex_lookup_bsearch(l,wp) >= 0))
 	r = TRUE;
 
     cst_free(wp);
@@ -238,37 +135,54 @@ int in_lex(const cst_lexicon *l, const char *word, const char *pos)
 
 cst_val *lex_lookup(const cst_lexicon *l, const char *word, const char *pos)
 {
-    int index,p;
+    int index;
+    int p;
+    const unsigned char *q;
     char *wp;
     cst_val *phones = 0;
     int found = FALSE;
 
     wp = cst_alloc(char,strlen(word)+2);
-    sprintf(wp,"%c%s",(pos ? pos[0] : '0'),word);
+    cst_sprintf(wp,"%c%s",(pos ? pos[0] : '0'),word);
 
     if (l->addenda)
 	phones = lex_lookup_addenda(wp,l,&found);
 
     if (!found)
     {
-	index = lex_lookup_bsearch(l->entry_index,0,l->num_entries,wp);
+	index = lex_lookup_bsearch(l,wp);
 
 	if (index >= 0)
 	{
-	    for (p=l->entry_index[index].phone_index; l->phones[p]; p++)
-		phones = cons_val(string_val(l->phone_table[l->phones[p]]),
+	    if (l->phone_hufftable)
+	    {
+		for (p=index-2; l->data[p]; p--)
+		    for (q=l->phone_hufftable[l->data[p]]; *q; q++)
+			phones = cons_val(string_val(l->phone_table[*q]),
 				  phones);
+	    }
+	    else  /* no compression -- should we still support this ? */
+	    {
+		for (p=index-2; l->data[p]; p--)
+		    phones = cons_val(string_val(l->phone_table[l->data[p]]),
+				      phones);
+	    }
 	    phones = val_reverse(phones);
 	}
 	else if (l->lts_rule_set)
+	{
 	    phones = lts_apply(word,
 			       "",  /* more features if we had them */
 			       l->lts_rule_set);
+	}
 	else if (l->lts_function)
+	{
 	    phones = (l->lts_function)(l,word,"");
+	}
     }
 
     cst_free(wp);
+    
     return phones;
 }
 
@@ -280,7 +194,7 @@ static cst_val *lex_lookup_addenda(const char *wp,const cst_lexicon *l,
     cst_val *phones;
     
     phones = NULL;
-	
+
     for (i=0; l->addenda[i]; i++)
     {
 	if (((wp[0] == '0') || (wp[0] == l->addenda[i][0][0])) &&
@@ -296,50 +210,148 @@ static cst_val *lex_lookup_addenda(const char *wp,const cst_lexicon *l,
     return NULL;
 }
 
-static int lex_lookup_bsearch(const lexicon_entry *entries,
-			      int start, int end,
-			      const char *word)
+static int lex_uncompress_word(char *ucword,int max_size,
+			       int p,const cst_lexicon *l)
 {
-    int mid,c;
+    int i,j=0,length;
+    unsigned char *cword;
 
-    while (start < end) {
-	    mid = (start + end)/2;
-	    c = lex_match_entry(entries[mid].word_pos,word);
-
-	    if (c == 0)
-		    return find_full_match(entries,mid,word);
-	    else if (c > 0)
-		    end = mid;
+    if (l->entry_hufftable == 0)
+        /* can have "compressed" lexicons without compression */
+	cst_sprintf(ucword,"%s",&l->data[p]);
+    else
+    {
+	cword = &l->data[p];
+	for (i=0,j=0; cword[i]; i++)
+	{
+	    length = strlen(l->entry_hufftable[cword[i]]);
+	    if (j+length+1<max_size)
+	    {
+		memmove(ucword+j,l->entry_hufftable[cword[i]],length);
+		j += length;
+	    }
 	    else
-		    start = mid + 1;
+		break;
+	}
+	ucword[j] = '\0';
+    }
+
+    return j;
+}
+static int lex_data_next_entry(const cst_lexicon *l,int p,int end)
+{
+    for (p++; p < end; p++)
+	if (l->data[p-1] == 255)
+	    return p;
+    return end;
+}
+static int lex_data_prev_entry(const cst_lexicon *l,int p,int start)
+{
+    for (p--; p > start; p--)
+	if (l->data[p-1] == 255)
+	    return p;
+    return start;
+}
+static int lex_data_closest_entry(const cst_lexicon *l,int p,int start,int end)
+{
+    int d;
+
+    d=0;
+    while ((p-d > start) && 
+	   (p+d < end))
+    {
+	if (l->data[(p+d)-1] == 255)
+	    return p+d;
+	else if (l->data[(p-d)-1] == 255)
+	    return p-d;
+	d++;
+    }
+    return p-d;
+}
+
+static int lex_lookup_bsearch(const cst_lexicon *l, const char *word)
+{
+    int start,mid,end,c;
+    /* needs to be longer than longest word in lexicon */
+    char word_pos[WP_SIZE];
+
+    start = 0;
+    end = l->num_bytes;
+    while (start < end) {
+	mid = (start + end)/2;
+
+	/* find previous entry start */
+	mid = lex_data_closest_entry(l,mid,start,end);
+	lex_uncompress_word(word_pos,WP_SIZE,mid,l);
+
+	c = lex_match_entry(word_pos,word);
+
+	if (c == 0)
+	    return find_full_match(l,mid,word);
+	else if (c > 0)
+	    end = mid;
+	else
+	    start = lex_data_next_entry(l,mid + 1,end);
+
+#if 0
+	if (l->data[start-1] == 255)
+	{
+	    lex_uncompress_word(word_pos,WP_SIZE,start,l);
+	    printf("start %s %d ",word_pos,start);
+	}
+	else
+	    printf("start NULL %d ",start);
+	if (l->data[mid-1] == 255)
+	{
+	    lex_uncompress_word(word_pos,WP_SIZE,mid,l);
+	    printf("mid %s %d ",word_pos,mid);
+	}
+	else
+	    printf("mid NULL %d ",mid);
+	if (l->data[end-1] == 255)
+	{
+	    lex_uncompress_word(word_pos,WP_SIZE,end,l);
+	    printf("end %s %d ",word_pos,end);
+	}
+	else
+	    printf("end NULL %d ",end);
+	printf("\n");
+#endif
+
     }
     return -1;
 }
 
-static int find_full_match(const lexicon_entry *entries, int i,const char *word)
+static int find_full_match(const cst_lexicon *l,
+			   int i,const char *word)
+
 {
     /* found word, now look for actual match including pos */
-    int w, match;
+    int w, match=i;
+    /* needs to be longer than longest word in lexicon */
+    char word_pos[WP_SIZE];
 
-    if (word[0] == '0')
-	return i;  /* don't care about pos value */
-    for (w=i; w >=0; w--)
+    for (w=i; w > 0; )
     {
-	if (!cst_streq(word+1,entries[w].word_pos+1))
+	lex_uncompress_word(word_pos,WP_SIZE,w,l);
+	if (!cst_streq(word+1,word_pos+1))
 	    break;
-	else if ((cst_streq(word,entries[w].word_pos)) ||
-		 (entries[w].word_pos[0] == '0'))
+	else if (cst_streq(word,word_pos))
 	    return w;
+	match = w;  /* if we can't find an exact match we'll take this one */
+        /* go back to last entry */
+	w = lex_data_prev_entry(l,w,0);
     }
-    match = w+1;  /* if we can't find an exact match we'll take this one */
-    
-    for (w=i; entries[w].word_pos; w++)
+
+    for (w=i; w < l->num_bytes;)
     {
-	if (!cst_streq(word+1,entries[w].word_pos+1))
+	lex_uncompress_word(word_pos,WP_SIZE,w,l);
+	if (!cst_streq(word+1,word_pos+1))
 	    break;
-	else if ((cst_streq(word,entries[w].word_pos)) ||
-		 (entries[w].word_pos[0] == '0'))
+	else if (cst_streq(word,word_pos))
 	    return w;
+        /* go to next entry */
+	w = lex_data_next_entry(l,w,l->num_bytes);
     }
 
     return match;

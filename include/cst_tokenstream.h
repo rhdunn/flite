@@ -40,8 +40,6 @@
 #ifndef _CST_TOKENSTREAM_H__
 #define _CST_TOKENSTREAM_H__
 
-#include <stdio.h>
-#include <string.h>
 #include "cst_alloc.h"
 #include "cst_string.h"
 #include "cst_file.h"
@@ -50,45 +48,71 @@ typedef struct  cst_tokenstream_struct {
     cst_file fd;
     int file_pos;
     int line_number;
-    char *string_buffer;
+    unsigned char *string_buffer;
 
     int current_char;
 
     int token_pos;
     int ws_max;
-    char *whitespace;
+    unsigned char *whitespace;
     int prep_max;
-    char *prepunctuation;
+    unsigned char *prepunctuation;
     int token_max;
-    char *token;
+    unsigned char *token;
     int postp_max;
-    char *postpunctuation;
+    unsigned char *postpunctuation;
 
-    const char *whitespacesymbols;
-    const char *singlecharsymbols;
-    const char *prepunctuationsymbols;
-    const char *postpunctuationsymbols;
+    /* Should only be set through set_charclasses as charclass table needs */
+    /* to be updated when you reset these                                  */
+    const unsigned char *p_whitespacesymbols;
+    const unsigned char *p_singlecharsymbols;
+    const unsigned char *p_prepunctuationsymbols;
+    const unsigned char *p_postpunctuationsymbols;
+
+    unsigned char charclass[256];
 } cst_tokenstream;
 
-extern const char *cst_ts_default_whitespace;
-extern const char *cst_ts_default_prepunc;
-extern const char *cst_ts_default_postpunc;
-extern const char *cst_ts_default_singlecharsymbols;
+#define TS_CHARCLASS_NONE        0
+#define TS_CHARCLASS_WHITESPACE  2
+#define TS_CHARCLASS_SINGLECHAR  4
+#define TS_CHARCLASS_PREPUNCT    8
+#define TS_CHARCLASS_POSTPUNCT  16
+#define TS_CHARCLASS_QUOTE      32
+
+#define ts_charclass(C,CLASS,TS) ((TS)->charclass[(unsigned int)C] & CLASS)
+
+extern const unsigned char * const cst_ts_default_whitespacesymbols;
+extern const unsigned char * const cst_ts_default_prepuncuationsymbols;
+extern const unsigned char * const cst_ts_default_postpunctuationsymbols;
+extern const unsigned char * const cst_ts_default_singlecharsymbols;
 
 /* Public functions for tokenstream manipulation */
-cst_tokenstream *new_tokenstream();
-void delete_tokenstream(cst_tokenstream *ts);
-
-cst_tokenstream *ts_open(const char *filename);
-cst_tokenstream *ts_open_string(const char *string);
+cst_tokenstream *ts_open(const char *filename,
+			 const unsigned char *whitespacesymbols,
+			 const unsigned char *singlecharsymbols,
+			 const unsigned char *prepunctsymbols,
+			 const unsigned char *postpunctsymbols);
+cst_tokenstream *ts_open_string(const unsigned char *string,
+				const unsigned char *whitespacesymbols,
+				const unsigned char *singlecharsymbols,
+				const unsigned char *prepunctsymbols,
+				const unsigned char *postpunctsymbols);
 
 void ts_close(cst_tokenstream *ts);
 
 int ts_eof(cst_tokenstream *ts);
-const char *ts_get(cst_tokenstream *ts);
+const unsigned char *ts_get(cst_tokenstream *ts);
 
-const char *ts_get_quoted_token(cst_tokenstream *ts,
+const unsigned char *ts_get_quoted_token(cst_tokenstream *ts,
 				char quote,
 				char escape);
+
+void set_charclasses(cst_tokenstream *ts,
+		     const unsigned char *whitespace,
+		     const unsigned char *singlecharsymbols,
+		     const unsigned char *prepunctuation,
+		     const unsigned char *postpunctuation);
+
+int ts_read(void *buff, int size, int num, cst_tokenstream *ts);
 
 #endif

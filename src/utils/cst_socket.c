@@ -57,7 +57,7 @@ int cst_socket_server(const char *name, int port,
 
 int cst_socket_close(int socket)
 {
-    return close(socket);
+    return -1;
 }
 #else
 #include <stdio.h>

@@ -38,8 +38,6 @@
 /*  to avoid having to create them on the fly                            */
 /*                                                                       */
 /*************************************************************************/
-#include <stdio.h>
-#include <stdlib.h>
 #include "cst_val.h"
 #include "cst_features.h"
 #include "cst_string.h"

@@ -39,8 +39,6 @@
 /*  I'd like to make this file be automatically generated                */
 /*                                                                       */
 /*************************************************************************/
-#include <stdio.h>
-#include <stdlib.h>
 #include "cst_val.h"
 #include "cst_string.h"
 
@@ -64,6 +62,7 @@ CST_VAL_REG_TD_TYPE_NODEL(userdata,cst_userdata,41)
 CST_VAL_REGISTER_TYPE_NODEL(userdata,cst_userdata)
 CST_VAL_REG_TD_FUNCPTR(itemfunc,cst_itemfunc,43)
 CST_VAL_REG_TD_TYPE(features,cst_features,45)
+CST_VAL_REG_TD_FUNCPTR(breakfunc,cst_breakfunc,47)
 
 const cst_val_def cst_val_defs[] = {
     /* These ones are never called */
@@ -90,5 +89,6 @@ const cst_val_def cst_val_defs[] = {
     { NULL, NULL }, /* 39 (reserved) */
     { "userdata", val_delete_userdata },   /* 41 userdata */
     { "itemfunc", val_delete_itemfunc },   /* 43 itemfunc */
-    { "features", val_delete_features }    /* 45 itemfunc */
+    { "features", val_delete_features },   /* 45 itemfunc */
+    { "breakfunc", val_delete_breakfunc }  /* 47 breakfunc */
 };

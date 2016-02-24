@@ -38,15 +38,21 @@ TOP=../..
 DIRNAME=lang/cmulex
 BUILD_DIRS = 
 ALL_DIRS= 
-H = cmu6_lts_rules.h cmulex.h
-SRCS = cmu6_lts_rules.c cmu_lex.c cmu_lex_entry.c cmu_lex_phone.c
-OBJS = $(SRCS:.c=.o)
-SCM=
-FILES = Makefile $(SCM) $(SRCS) $(H)
-LIBNAME = flite_cmulex
-LOCAL_INCLUDES = 
+H = cmu_lts_model.h cmulex.h
+SRCS = cmu_lts_rules.c cmu_lts_model.c \
+       cmu_lex.c cmu_lex_entries.c cmu_lex_data.c
+LEX_DATA_INCLUDES = cmu_lex_data_raw.c cmu_lex_num_bytes.c \
+     cmu_lex_phones_huff_table.c cmu_lex_entries_huff_table.c
 
-ALL = .build_lib
+OBJS = $(SRCS:.c=.o)
+SCRIPTS=make_cmulex  
+
+SCM=
+FILES = Makefile $(SCM) $(SRCS) $(H) $(SCRIPTS) $(LEX_DATA_INCLUDES)
+LIBNAME = flite_cmulex
+LOCAL_INCLUDES = $(LEXDEFS)
+
+ALL = 
 
 include $(TOP)/config/common_make_rules
 

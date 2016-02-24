@@ -36,7 +36,7 @@
 ;;;
 ;;; Convert the LTS cart trees to regular grammars and build wfsts
 ;;;
-;;; Technique describe in the Flite paper
+;;; Technique described in the Flite paper
 ;;;  http://www.cs.cmu.edu/~awb/papers/ISCA01/flite/flite.html
 ;;;
 ;;;
@@ -59,7 +59,7 @@
 		 (format nil "%s/%s.tree.rg" odir (car a)))
      (system 
       (format nil 
-	      "wfst_build -type rg -detmin -o %s/%s.tree.wfst %s/%s.tree.rg"
+	      "wfst_build -heap 10000000 -type rg -detmin -o %s/%s.tree.wfst %s/%s.tree.rg"
 	      odir (car a)
 	      odir (car a)))
      t)

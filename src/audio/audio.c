@@ -37,8 +37,6 @@
 /*  Access to audio devices                                   ,          */
 /*                                                                       */
 /*************************************************************************/
-#include <stdio.h>
-#include <stdlib.h>
 #include "cst_string.h"
 #include "cst_wave.h"
 #include "cst_audio.h"
@@ -224,6 +222,7 @@ int play_wave(cst_wave *w)
 {
     cst_audiodev *ad;
     int i,n,r;
+    int num_shorts;
 
     if (!w)
 	return CST_ERROR_FORMAT;
@@ -233,12 +232,13 @@ int play_wave(cst_wave *w)
 			 CST_AUDIO_LINEAR16)) == NULL)
 	return CST_ERROR_FORMAT;
 
-    for (i=0; i < w->num_samples; i += r/2)
+    num_shorts = w->num_samples*w->num_channels;
+    for (i=0; i < num_shorts; i += r/2)
     {
-	if (w->num_samples > i+CST_AUDIOBUFFSIZE)
+	if (num_shorts > i+CST_AUDIOBUFFSIZE)
 	    n = CST_AUDIOBUFFSIZE;
 	else
-	    n = w->num_samples-i;
+	    n = num_shorts-i;
 	r = audio_write(ad,&w->samples[i],n*2);
 	if (r <= 0)
 	{

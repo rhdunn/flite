@@ -39,8 +39,6 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <stdio.h>
-#include <string.h>
 #include "cst_hrg.h"
 #include "cst_phoneset.h"
 #include "us_f0.h"

@@ -44,7 +44,7 @@ OBJS = $(SRCS:.c=.o)
 LIBNAME = flite
 FILES = Makefile $(SRCS)
 
-ALL = .build_lib
+ALL = 
 
 include $(TOP)/config/common_make_rules
 

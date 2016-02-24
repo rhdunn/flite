@@ -40,8 +40,7 @@
 #ifndef _CST_DIPHONE_H__
 #define _CST_DIPHONE_H__
 
-#include <stdio.h>
-
+#include "cst_file.h"
 #include "cst_val.h"
 #include "cst_features.h"
 #include "cst_wave.h"
@@ -51,9 +50,9 @@
 
 struct cst_diphone_entry_struct {
     char *name;
-    int start_pm;
-    int pb_pm;
-    int end_pm;
+    unsigned short start_pm;
+    unsigned char pb_pm;
+    unsigned char end_pm;
 };
 typedef struct cst_diphone_entry_struct cst_diphone_entry;
 
