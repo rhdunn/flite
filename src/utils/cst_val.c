@@ -68,7 +68,7 @@ cst_val *string_val(const char *s)
     cst_val *v = new_val();
     CST_VAL_TYPE(v) = CST_VAL_TYPE_STRING;
     /* would be nice to note if this is a deletable string or not */
-    CST_VAL_STRING_LVAL(v) = cst_strdup((const unsigned char *)s);
+    CST_VAL_STRING_LVAL(v) = cst_strdup(s);
     return v;
 }
 
@@ -119,8 +119,12 @@ void delete_val(cst_val *v)
 	    if (CST_VAL_TYPE(v) == CST_VAL_TYPE_STRING)
 		cst_free(CST_VAL_VOID(v));
 	    else if (CST_VAL_TYPE(v) >= CST_VAL_TYPE_FIRST_FREE)
-            (cst_val_defs[CST_VAL_TYPE(v)/2].delete_function)(CST_VAL_VOID(v));
-	    cst_free(v);
+            {
+                if (cst_val_defs[CST_VAL_TYPE(v)/2].delete_function)
+                    (cst_val_defs[CST_VAL_TYPE(v)/2].delete_function)
+                        (CST_VAL_VOID(v));
+            }
+            cst_free(v);
 	}
     }
 }
@@ -236,17 +240,26 @@ int cst_val_consp(const cst_val *v)
     /* with non-zero values in the least significant bit of the first */
     /* address in the cell (this is a standard technique used on Lisp */
     /* machines                                                       */
+#if 0
     void *t;
     int t1;
 
     /* Hmm this still isn't right (it can be) but this isn't it */
     t = CST_VAL_CAR(v);
-    t1 = (int)t;
+    t1 = *(int *)&t;
 
     if ((t1&0x1) == 0)
 	return TRUE;
     else
 	return FALSE;
+#endif
+    const cst_val_atom *t;
+
+    t = (const cst_val_atom *)v;
+    if (t->type % 2 == 0)
+      return TRUE;
+    else
+      return FALSE;
 }
 
 const cst_val *set_cdr(cst_val *v1, const cst_val *v2)
@@ -451,4 +464,91 @@ int val_dec_refcount(const cst_val *b)
 	return 	CST_VAL_REFCOUNT(wb);
     }
 }
+
+cst_val *cst_utf8_explode(const cst_string *utf8string)
+{
+    /* return a list of utf-8 characters as strings */
+    const unsigned char *xxx = (const unsigned char *)utf8string;
+    cst_val *chars=NULL;
+    int i, l=0;
+    char utf8char[5];
+
+    for (i=0; xxx[i]; i++)
+    {
+        if (xxx[i] < 0x80)  /* one byte */
+        {
+            sprintf(utf8char,"%c",xxx[i]);
+            l = 1;
+        }
+        else if (xxx[i] < 0xe0) /* two bytes */
+        {
+            sprintf(utf8char,"%c%c",xxx[i],xxx[i+1]);
+            i++;
+            l = 2;
+        }
+        else if (xxx[i] < 0xff) /* three bytes */
+        {
+            sprintf(utf8char,"%c%c%c",xxx[i],xxx[i+1],xxx[i+2]);
+            i++; i++;
+            l = 3;
+        }
+        else
+        {
+            sprintf(utf8char,"%c%c%c%c",xxx[i],xxx[i+1],xxx[i+2],xxx[i+3]);
+            i++; i++; i++;
+            l = 4;
+        }
+        chars = cons_val(string_val(utf8char),chars);
+    }
+    return val_reverse(chars);
+
+}
+
+int val_stringp(const cst_val *v)
+{
+    if (cst_val_consp(v))
+        return FALSE;
+    else if (CST_VAL_TYPE(v) == CST_VAL_TYPE_STRING)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+const cst_val *val_assoc_string(const char *v1,const cst_val *al)
+{
+    const cst_val *i;
+
+    for (i=al; i; i=val_cdr(i))
+    {
+	if (cst_streq(v1,val_string(val_car(val_car(i)))))
+	    return val_car(i);
+    }
+    return NULL;
+}
+
+cst_string *cst_implode(const cst_val *sl)
+{
+    const cst_val *v;
+    int l=0;
+    char *s;
+
+    for (v=sl; v; v=val_cdr(v))
+    {
+        if (val_stringp(val_car(v)))
+            l += cst_strlen(val_string(val_car(v)));
+    }
+
+    s = cst_alloc(cst_string,l+1);
+
+    for (v=sl; v; v=val_cdr(v))
+    {
+        if (val_stringp(val_car(v)))
+            cst_sprintf(s,"%s%s",s,val_string(val_car(v)));
+
+    }
+
+    return s;
+}
+
+
 

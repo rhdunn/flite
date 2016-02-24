@@ -62,13 +62,22 @@ typedef struct lexicon_struct {
 
     char ***addenda;
     /* ngram frequency table used for packed entries */
-    const unsigned char * const *phone_hufftable;
-    const unsigned char * const *entry_hufftable;
+    const char * const *phone_hufftable;
+    const char * const *entry_hufftable;
+
+    cst_utterance *(*postlex)(cst_utterance *u);
+
+    cst_val *lex_addenda;  /* For pronunciations added at run time */
 
 } cst_lexicon;
 
 cst_lexicon *new_lexicon();
 void delete_lexicon(cst_lexicon *lex);
+
+cst_val *cst_lex_make_entry(const cst_lexicon *lex, 
+                            const cst_string *entry);
+cst_val *cst_lex_load_addenda(const cst_lexicon *lex, 
+                              const char *lexfile);
 
 cst_val *lex_lookup(const cst_lexicon *l, const char *word, const char *pos);
 int in_lex(const cst_lexicon *l, const char *word, const char *pos);

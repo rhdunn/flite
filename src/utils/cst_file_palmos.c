@@ -228,8 +228,8 @@ int cst_vsprintf(char *s, const char *fmt, va_list args)
 	    else if (fmt[fp+1] == 's')
 	    {
 		sa = va_arg(args, char *);
-		memmove(s+sp,sa,strlen(sa));
-		sp+=strlen(sa); fp++;
+		memmove(s+sp,sa,cst_strlen(sa));
+		sp+=cst_strlen(sa); fp++;
 	    }
 	    else if (fmt[fp+1] == '.')
 	    {   
@@ -247,8 +247,8 @@ int cst_vsprintf(char *s, const char *fmt, va_list args)
 			   fmt[fp])
 			fp++;
 		    sa = va_arg(args, char *);
-		    memmove(s+sp,sa,strlen(sa));
-		    sp+=strlen(sa);
+		    memmove(s+sp,sa,cst_strlen(sa));
+		    sp+=cst_strlen(sa);
 		}
 	    }
 	    else if (fmt[fp+1] == 'c')

@@ -118,7 +118,7 @@ the main files."
     (set! i (length times))
 
     (format ofdidx "cst_sts_list %s_sts = {\n" name)
-    (format ofdidx "  0,\n")      ;; no general index
+    (format ofdidx "  0,0,\n")      ;; no general index
     (format ofdidx "#ifdef CST_NO_STATIC_VOX\n")  ;; don't link in data 
     (format ofdidx "  0,0,0,\n")
     (format ofdidx "#else\n")
@@ -130,9 +130,7 @@ the main files."
     (format ofdidx "  %d,\n" lpc_order)
     (format ofdidx "  %d,\n" sample_rate)
     (format ofdidx "  %f,\n" lpc_min)
-    (format ofdidx "  %f,\n" lpc_range)
-    (format ofdidx "  %f,\n" 0.0)
-    (format ofdidx "  1 \n")  
+    (format ofdidx "  %f\n" lpc_range)
     (format ofdidx "};\n\n")
 
     (format ofdidx "static const cst_diphone_entry %s_index[] = { \n" name)
@@ -246,34 +244,37 @@ Ouput this LPC frame."
     (set! pm_pos (+ 1 pm_pos))
 ))
 
-(define (output_stsS frame ofd)
+(define (output_stsS frame ofdlpc ofdres ofdresi)
   "(output_sts frame residual ofd)
 Ouput this LPC frame."
+  (format t "Spike excited diphones\n")
   (let ((time (nth 0 frame))
 	(coeffs (nth 1 frame))
 	(size (nth 2 frame))
 	(r (nth 3 frame)))
     (set! times (cons time times))
 
-    (format ofd "static const unsigned short diphs_frame_%d[] = { \n" pm_pos)
-    (while (cdr coeffs)
-     (format ofd " %d," (car coeffs))
-     (set! coeffs (cdr coeffs))
-     (if (not (cdr coeffs)) (format ofd " %d" (car coeffs))))
-    (format ofd " };\n")
+    (format ofdlpc "/* %d */ " pm_pos)
+    (while coeffs
+     (format ofdlpc " %d," (car coeffs))
+     (set! coeffs (cdr coeffs)))
+    (format ofdlpc "\n")
 
     (set! s size)
+    (format ofdres "/* %d */ " pm_pos)
+
     (set! sump 0)
     (while (cdr r)
      (set! sump (+ (* (car r) (car r)) sump))
      (set! r (cdr r)))
-    
-    (format ofd "#define diphs_res_%d  (void *)%d\n" pm_pos (sqrt sump))
-    (format ofd "#define diphs_size_%d %d\n" pm_pos size)
-    (format ofd "\n")
+    (format ofdresi "   %d, /* %d */\n" (sqrt sump) pm_pos)
 
     (set! pm_pos (+ 1 pm_pos))
 ))
+
+(defvar spike_excited t)
+(if (boundp 'spike_excited)
+    (set! output_sts output_stsS))
 
 (define (oldfind_pm_pos entry lpcdir ofdsts)
   "(find_pm_pos entry lpddir)

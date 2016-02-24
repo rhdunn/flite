@@ -48,13 +48,16 @@
 #define islower(a) iswlower((wint_t)(a))
 #endif
 
+/* typedef unsigned char cst_string; */
+typedef char cst_string;
+
 double cst_atof(const char *str);
 
-unsigned char *cst_strdup(const unsigned char *s);
-unsigned char *cst_strchr(const unsigned char *s, int c);
-unsigned char *cst_strrchr(const unsigned char *str, int c);
+cst_string *cst_strdup(const cst_string *s);
+cst_string *cst_strchr(const cst_string *s, int c);
+cst_string *cst_strrchr(const cst_string *str, int c);
 #define cst_strstr(h,n) \
-     ((unsigned char *)strstr((const char *)h,(const char *)n))
+     ((cst_string *)strstr((const char *)h,(const char *)n))
 #define cst_strlen(s) (strlen((const char *)s))
 #define cst_streq(A,B) (strcmp(A,B) == 0)
 #define cst_streqn(A,B,N) (strncmp(A,B,N) == 0)
@@ -63,7 +66,7 @@ char *cst_substr(const char *str,int start, int length);
 
 char *cst_string_before(const char *s,const char *c);
 
-unsigned char *cst_downcase(const unsigned char *str);
-unsigned char *cst_upcase(const unsigned char *str);
+cst_string *cst_downcase(const cst_string *str);
+cst_string *cst_upcase(const cst_string *str);
 
 #endif

@@ -42,7 +42,9 @@ TOP=../..
 DIRNAME=src/regex
 BUILD_DIRS = 
 ALL_DIRS= 
+H = cst_regex_defs.h
 SRCS = cst_regex.c regexp.c regsub.c
+SCRIPTS = make_cst_regexes
 OBJS = $(SRCS:.c=.o)
 FILES = Makefile $(H) $(SRCS)
 LIBNAME = flite
@@ -52,4 +54,8 @@ LOCAL_INCLUDES = -I.
 ALL = 
 
 include $(TOP)/config/common_make_rules
+
+regexes:
+	./make_cst_regexes $(BINDIR) >cst_regex_defs.h
+
 

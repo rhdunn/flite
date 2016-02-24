@@ -38,7 +38,8 @@ DIRNAME = palm/include
 
 H = pocore.h \
     elf.h elf32.h elf_common.h peal.h pealstub.h \
-    palm_flite.h fdlibm.h
+    palm_flite.h 
+ORPHANED = fdlibm.h
 
 FILES = Makefile $(H)
 

@@ -45,10 +45,48 @@
 
 #include "cst_args.h"
 #include "flite.h"
-#include "voxdefs.h"
 
-cst_voice *REGISTER_VOX(const char *voxdir);
-cst_voice *UNREGISTER_VOX(cst_voice *vox);
+#include "../lang/usenglish/usenglish.h"
+#include "../lang/cmulex/cmu_lex.h"
+
+static cst_voice *cmu_us_no_wave = NULL;
+
+static cst_utterance *no_wave_synth(cst_utterance *u)
+{
+    return u;
+}
+
+static cst_voice *register_cmu_us_no_wave(const char *voxdir)
+{
+    cst_voice *v = new_voice();
+    cst_lexicon *lex;
+
+    v->name = "no_wave_voice";
+
+    /* Set up basic values for synthesizing with this voice */
+    usenglish_init(v);
+    feat_set_string(v->features,"name","cmu_us_no_wave");
+
+    /* Lexicon */
+    lex = cmu_lex_init();
+    feat_set(v->features,"lexicon",lexicon_val(lex));
+
+    /* Intonation */
+    feat_set_float(v->features,"int_f0_target_mean",95.0);
+    feat_set_float(v->features,"int_f0_target_stddev",11.0);
+
+    feat_set_float(v->features,"duration_stretch",1.1); 
+
+    /* Post lexical rules */
+    feat_set(v->features,"postlex_func",uttfunc_val(lex->postlex));
+
+    /* Waveform synthesis: diphone_synth */
+    feat_set(v->features,"wave_synth_func",uttfunc_val(&no_wave_synth));
+
+    cmu_us_no_wave = v;
+
+    return cmu_us_no_wave;
+}
 
 int main(int argc, char **argv)
 {
@@ -75,7 +113,7 @@ int main(int argc, char **argv)
 
     
     flite_init();
-    v = REGISTER_VOX(NULL);
+    v = register_cmu_us_no_wave(NULL);
 
     u = flite_synth_text(text,v);
 

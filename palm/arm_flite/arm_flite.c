@@ -96,7 +96,7 @@ static cst_utterance *find_first_utt(cst_voice *voice, flite_info *fi)
     int num_tokens;
     cst_breakfunc breakfunc = default_utt_break;
 
-    if (fi->start >= strlen(fi->text))
+    if (fi->start >= cst_strlen(fi->text))
 	return NULL;
     ts = ts_open_string(&fi->text[fi->start],
 	      get_param_string(voice->features,"text_whitespace",NULL),
@@ -115,7 +115,7 @@ static cst_utterance *find_first_utt(cst_voice *voice, flite_info *fi)
 	fi->utt_length = ts->file_pos;
 	token = ts_get(ts);
 
-	if ((strlen(token) == 0) ||
+	if ((cst_strlen(token) == 0) ||
 	    (num_tokens > 500) ||  /* need an upper bound */
 	    (relation_head(tokrel) && 
 	     breakfunc(ts,token,tokrel)))

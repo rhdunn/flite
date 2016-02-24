@@ -3,7 +3,6 @@
 - [Compilation](#compilation)
 - [Usage](#usage)
 - [Voice Quality](#voice-quality)
-- [Todo](#todo)
 - [License](#license)
 
 ----------
@@ -20,7 +19,7 @@ The core Flite library was developed by [Alan W. Black](mailto:awb@cs.cmu.edu)
 Technologies Institute at Carnegie Mellon University.  The name
 `flite`, originally chosen to mean `festival-lite` is perhaps doubly
 appropriate as a substantial part of design and coding was done over
-30,000ft while awb was travelling, and usually isn't in meetings.
+30,000ft while awb was travelling, and (usually) isn't in meetings.
 
 The voices, lexicon and language components of flite, both their
 compression techniques and their actual contents were developed by
@@ -51,8 +50,7 @@ and not portable enough.
 * For standard diphone voices, maximum run time memory
   requirements are approximately less than twice the memory requirement
   for the waveform generated.  For 32bit archtectures
-  this effectively means under 1M. (Later versions will include a
-  streaming option which will reduce this to less than one quarter).
+  this effectively means under 1M.
 * The flite program supports, synthesis of individual strings or files
   (utterance by utterance) to direct audio devices or to waveform files.
 * The flite library offers simple functions suitable for use in specific
@@ -97,7 +95,7 @@ Supported platforms:
 * Solaris 5.7, and Solaris 9
 * Initial support for Mac OS X
 * Windows 2000/XP under Cygwin 1.3.5 and later
-* Some support for WinCE (2.11 and 3.0) is included but is not complete
+* Support for WinCE (2.11 and 3.0) WM (5.x plus) is included
 * PalmOS 5.x devices (Treo 600, Zire 31 and Tungsten C)
 * Successfully compiles and runs under 64Bit Linux architectures
 * OSF1 V4.0 (gives an unimportant warning about sizes when compiled `cst_val.c`)
@@ -128,36 +126,22 @@ Interesting options there are:
   * `-DNO_UNION_INITIALIZATION=1` for compilers without C 99 union inintialization;
   * `-DCST_AUDIO_NONE` if you don't need/want audio support.
 
-To compile for the ipaq Linux distribution (we've done this on Familiar
-and Intimate), no automatic cross compilation configuration is
-set up yet.  Thus:
+There are different sets of voices and languages you can select between
+them (and your own sets if you make config/XXX.lv).  For example:
 
-  *  run `configure` on a Linux machine;
-  *  edit `config/config`;
-  *  change `gcc`, `ar` and `ranlib` to their arm-linux equivalents;
-  *  change `FL_VOX` to `cmu_us_kal16`;
-  *  run:
+    ./configure --with-langvox=transtac
 
-         make clean
-         make
-         arm-linux-strip bin/flite
-
-  *  copy `bin/flite` to the ipaq.  This binary is also available from
-     [flite-1.2_bin16KHz_arm-linux.tar.gz](http://cmuflite.org/packed/flite-1.2/flite-1.2_bin16KHz_arm-linux.tar.gz).
-     Because the Linux ipaq audio driver only supports 16KHz (and more)
-     we include this larger voice.  
-
-The Sharp Zaurus SL-5000D is a very similar machine, however it 
-does support 8KHz sampling and a smaller binary is provided.  The
-Zaurus typically has less free memory so there is an advantage to
-using this
-[flite-1.2_bin8KHz_arm-linux.tar.gz](http://cmuflite.org/packed/flite-1.2/flite-1.2_bin8KHz_arm-linux.tar.gz)
-file.
-
-This voice also used fixed point rather floating point as the
-StrongARM doesn't have floating point instructions.
+Will use the languages and voices defined in `config/transtac.lv`.
 
 # Usage
+
+The `bin/flite` voices contains all supported voices and you may
+choose between the voices with the `-voice` flag and list the supported
+voices with the `-lw` flag.  Note the kal (diphone) voice is a different
+technology from the others and is much less computationally expensive
+but more robotic.  For each voice additional binaries that contain
+only that voice are created in `bin/flite_FULLVOICENAME`,
+e.g. `bin/flite_cmu_us_awb`.
 
 If it compiles properly a binary will be put in `bin/`. By
 default the `-g` option is enabled, so it will be bigger that is actually required.
@@ -202,7 +186,7 @@ Some typical examples are:
 
      Use simple concatenation of diphones without prosodic modification.
 
-  *  `./bin/flite --seti verbosity=1 doc/alice`
+  *  `./bin/flite -pw doc/alice`
 
      Print sentences as they are said.
 
@@ -214,11 +198,27 @@ Some typical examples are:
 
      Make it speak higher.
 
-The talking clock is an example talking clock as discussed on
-[ldom](http://festvox.org/ldom). It requires a single argument in the
-format `HH:MM`. Under Unix you can call it as:
+  *  `./bin/flite_time `date +%H:%M``
 
-    ./bin/flite_time `date +%H:%M`
+     The talking clock is an example talking clock as discussed on
+     [ldom](http://festvox.org/ldom). It requires a single argument in the
+     format `HH:MM`. This example uses the Unix `date` command.
+
+  *  `./bin/flite -lv`
+
+     List the voices available in this build.
+
+  *  `./bin/flite -voice rms -f doc/alice`
+
+     Speak with the US male rms voice.
+
+  *  `./bin/flite -voice awb -f doc/alice`
+
+     Speak with the "Scottish" male awb voice.
+
+  *  `./bin/flite -voice slt -f doc/alice`
+
+     Speak with the US female slt voice.
 
 # Voice Quality
 
@@ -247,34 +247,12 @@ built new voices efficiently and robustly as soon as we can.  Though
 in the mean time, a few higher quality voices will be released with
 the next version.
 
-If you aren't willing to wait you can try
-[Cepstral, LLC](http://www.cepstral.com)'s voices.  They aren't free, but
-they do sound better and are targeted at similar platforms.  Although
-Cepstral uses the Flite core, the voices, compression and interfaces are
-quite different.
-
-# Todo
-
-This release is just the beginning, there is much to do and this can
-be a lot faster and smaller.  We have already seriously considered some
-of the following but they didn't make this release.  In near
-future versions we will add:
-
-* Streaming synthesis so no large buffers of waveforms need be held.
-* Better compression of the lexicon, and unit databases.
-* Better quality speech (we have better diphone databases which
-  haven't been released yet but do give better quality synthesis).
-* Documentation to allow people to more easily integrate flite
-  into applications.
-* Some reasonable voices based on our newer voice building work
-  (e.g. Arctic and HTS).
-
 # License
 
 The flite project is released under a [4-clause BSD license](COPYING) with
 the following copyright:
 
-    Copyright Carnegie Mellon University 1999-2005
+    Copyright Carnegie Mellon University 1999-2009
     All rights reserved
 
 The changes to the project are described in the [CHANGELOG.md](CHANGELOG.md)

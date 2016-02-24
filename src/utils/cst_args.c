@@ -41,7 +41,7 @@
 #include "cst_features.h"
 
 static void parse_description(const char *description, cst_features *f);
-static void parse_usage(cst_file fd,const char *progname,
+static void parse_usage(const char *progname,
 			const char *s1, const char *s2,
 			const char *description);
 
@@ -65,7 +65,7 @@ cst_val *cst_args(char **argv, int argc,
 		(cst_streq("-h",argv[i])) ||
 		(cst_streq("-?",argv[i])) ||
 		(cst_streq("-help",argv[i])))
-		parse_usage(stdout,argv[0],"","",description);
+		parse_usage(argv[0],"","",description);
 	    else
 	    {
 		type = feat_string(op_types,argv[i]);
@@ -74,7 +74,7 @@ cst_val *cst_args(char **argv, int argc,
 		else
 		{
 		    if (i+1 == argc)
-			parse_usage(stderr,argv[0],
+			parse_usage(argv[0],
 				    "missing argument for ",argv[i],
 				    description);
 		    if (cst_streq("<int>",type))
@@ -84,7 +84,7 @@ cst_val *cst_args(char **argv, int argc,
 		    else if (cst_streq("<string>",type))
 			feat_set_string(args,argv[i],argv[i+1]);
 		    else
-			parse_usage(stderr,argv[0],
+			parse_usage(argv[0],
 				    "unknown arg type ",type,
 				    description);
 		    i++;
@@ -99,12 +99,12 @@ cst_val *cst_args(char **argv, int argc,
     return val_reverse(files);
 }
 
-static void parse_usage(cst_file fd,const char *progname,
+static void parse_usage(const char *progname,
 			const char *s1, const char *s2,
 			const char *description)
 {
-    fprintf(fd,"%s: %s %s\n", progname,s1,s2);
-    fprintf(fd,"%s\n",description);
+    cst_errmsg("%s: %s %s\n", progname,s1,s1);
+    cst_errmsg("%s\n",description);
     exit(0);
 }
 
@@ -112,10 +112,10 @@ static void parse_description(const char *description, cst_features *f)
 {
     /* parse the description into something more usable */
     cst_tokenstream *ts;
-    const unsigned char *arg;
-    unsigned char *op;
+    const char *arg;
+    char *op;
 
-    ts = ts_open_string((const unsigned char *)description,
+    ts = ts_open_string(description,
 			" \t\r\n", /* whitespace */
 			"{}[]|",   /* singlecharsymbols */
 			"",        /* prepunctuation */
@@ -131,6 +131,8 @@ static void parse_description(const char *description, cst_features *f)
 	    else
 		feat_set_string(f,op,"<binary>");
 	}
+        else
+            cst_free(op);
     }
 
     ts_close(ts);

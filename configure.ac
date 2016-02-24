@@ -2,7 +2,7 @@ dnl########################################################################
 dnl                                                                      ##
 dnl                 Language Technologies Institute                      ##
 dnl                    Carnegie Mellon University                        ##
-dnl                     Copyright (c) 1999-2001                          ##
+dnl                     Copyright (c) 1999-2008                          ##
 dnl                       All Rights Reserved.                           ##
 dnl                                                                      ##
 dnl Permission is hereby granted, free of charge, to use and distribute  ##
@@ -63,6 +63,7 @@ TARGET_OS=$target_os
 
 M68KCC=
 M68KCLAGS=
+WINDRES=
 
 case "$target_os" in
         palmos*)
@@ -81,14 +82,58 @@ case "$target_os" in
 		LEXDEFS="-DCST_NO_STATIC_LEX -DCST_NO_STATIC_LTS_MODEL"
 		VOXDEFS="-DCST_NO_STATIC_VOX"
         ;;
+dnl         wince*)
+dnl                 # For the GNUWINCE environment
+dnl                 # http://win-ce.voxware.com:28575/Development%20Tools/
+dnl 		shared=false
+dnl      	        CFLAGS="$CFLAGS -DCST_NO_SOCKETS -march=armv4 -mapcs-32 -malignment-traps -DNEWLIB -DSARM -DWIN32 -DGNUWINCE"
+dnl                 CC="/usr/local/wince/bin/arm-wince-pe-gcc"
+dnl                 RANLIB=/usr/local/wince/bin/arm-wince-pe-ranlib
+dnl                 AR=/usr/local/wince/bin/arm-wince-pe-ar
+dnl         ;;
         wince*)
-                # For the GNUWINCE environment
-                # http://win-ce.voxware.com:28575/Development%20Tools/
+                # For the CEGCC environment (mingw32ce)
+                # http://cegcc.sourceforge.net/
 		shared=false
-     	        CFLAGS="$CFLAGS -DCST_NO_SOCKETS -march=armv4 -mapcs-32 -malignment-traps -DNEWLIB -DSARM -DWIN32 -DGNUWINCE"
-                CC="/usr/local/wince/bin/arm-wince-pe-gcc"
-                RANLIB=/usr/local/wince/bin/arm-wince-pe-ranlib
-                AR=/usr/local/wince/bin/arm-wince-pe-ar
+                # cegcc
+     	        # CFLAGS="$CFLAGS -DCST_NO_SOCKETS -DUNDER_CE -DNEWLIB -DSARM -DWIN32 -DGNUWINCE"
+                # CC="/opt/cegcc/bin/arm-cegcc-gcc"
+                # RANLIB="/opt/cegcc/bin/arm-cegcc-ranlib"
+                # AR="/opt/cegcc/bin/arm-cegcc-ar"
+                # mingw32ce
+     	        CFLAGS="$CFLAGS -DCST_NO_SOCKETS -DUNDER_CE -DSARM -DWIN32"
+                if test -f "/opt/mingw32ce/bin/arm-mingw32ce-gcc" 
+                then
+                    MINGW32CEPREF="/opt/mingw32ce/bin/arm-mingw32ce-"
+                else
+                    MINGW32CEPREF="/opt/mingw32ce/bin/arm-wince-mingw32ce-"
+                fi
+                CC="${MINGW32CEPREF}gcc"
+                RANLIB="${MINGW32CEPREF}ranlib"
+                AR="${MINGW32CEPREF}ar"
+                SIZE="${MINGW32CEPREF}size"
+                STRIP="${MINGW32CEPREF}strip"
+                WINDRES="${MINGW32CEPREF}windres"
+                DLLTOOL="${MINGW32CEPREF}dlltool"
+                DLLWRAP="${MINGW32CEPREF}dllwrap"
+                NM="${MINGW32CEPREF}nm"
+        ;;
+        mingw*)
+                # For the Windows under mingw32 environment
+                # http://www.mingw.org
+		shared=false
+     	        CFLAGS="$CFLAGS -DCST_NO_SOCKETS -DUNDER_WINDOWS -DWIN32 -shared"
+                MINGWPREF="i386-mingw32-"
+                CC="${MINGWPREF}gcc"
+                RANLIB="${MINGWPREF}ranlib"
+                AR="${MINGWPREF}ar"
+                WINDRES="${MINGWPREF}windres"
+                DLLTOOL="${MINGWPREF}dlltool"
+                DLLWRAP="${MINGWPREF}dllwrap"
+                NM="${MINGWPREF}nm"
+        ;;
+        uclinux*)
+                LDFLAGS="$LDFLAGS -Wl,-elf2flt"
         ;;
 	darwin*)
 		CFLAGS="$CFLAGS -no-cpp-precomp"
@@ -98,6 +143,12 @@ esac
 AC_SUBST(TARGET_OS)
 AC_SUBST(TARGET_CPU)
 AC_SUBST(M68KCC)
+AC_SUBST(WINDRES)
+AC_SUBST(SIZE)
+AC_SUBST(STRIP)
+AC_SUBST(DLLTOOL)
+AC_SUBST(DLLWRAP)
+AC_SUBST(NM)
 AC_SUBST(LEXDEFS)
 AC_SUBST(VOXDEFS)
 
@@ -118,7 +169,7 @@ SHFLAGS=
 OTHERLIBS=
 if test "$shared" = true; then
    case "$target_os" in
-	linux*)
+	linux*|k*bsd*-gnu|gnu*)
 		SHFLAGS="-fPIC"
         ;;
 	solaris*)
@@ -131,7 +182,10 @@ if test "$shared" = true; then
 fi
 case "$target_os" in
      wince*)
-        OTHERLIBS="-lc -lgcc -lwinsock -lcoredll"
+        # cegcc
+        #OTHERLIBS="-lc -lgcc -lwinsock -lcoredll"
+        # mingw32ce
+        OTHERLIBS=
      ;;
      *)
      ;;
@@ -189,7 +243,12 @@ if test "$target_os" = "palmos"
 then
     STDIOTYPE=palmos
 else
-    STDIOTYPE=stdio
+   if test "$target_os" = "wince"
+   then
+      STDIOTYPE=wince
+   else
+      STDIOTYPE=stdio
+   fi
 fi
 AC_SUBST(STDIOTYPE)
 
@@ -214,6 +273,22 @@ AC_CHECK_HEADER(mmsystem.h,
 	      [AUDIODRIVER="wince"
 	       AUDIODEFS=-DCST_AUDIO_WINCE
 	       AUDIOLIBS=-lwinmm])
+
+dnl I don't care what you ask for, for wince you get wince
+case "$target_os" in
+     wince*)
+        AUDIODRIVER="wince"
+        AUDIODEFS=-DCST_AUDIO_WINCE
+        AUDIOLIBS=
+     ;;
+     mingw*)
+        AUDIODRIVER="none"
+        AUDIODEFS=-DCST_AUDIO_NONE
+        AUDIOLIBS=
+     ;;
+     *)
+     ;;
+esac
 
 dnl
 dnl allow the user to override the one detected above
@@ -275,5 +350,10 @@ fi
 AC_SUBST(FL_LEX)
 AC_SUBST(EXEEXT)
 
+FL_LANGVOX="default"
+AC_ARG_WITH( langvox,
+	[  --with-langvox          with subsets of lang, lex and voices ],
+        FL_LANGVOX=$with_langvox )
+AC_SUBST(FL_LANGVOX)
 
 AC_OUTPUT(config/config config/system.mak)

@@ -276,9 +276,9 @@ hs_regcomp(const char *exp)
 			len = 0;
 			for (; scan != NULL; scan = regnext(scan))
 				if ((OP(scan) == EXACTLY) && 
-				    (strlen(OPERAND(scan)) >= len)) {
+				    (cst_strlen(OPERAND(scan)) >= len)) {
 					longest = OPERAND(scan);
-					len = strlen(OPERAND(scan));
+					len = cst_strlen(OPERAND(scan));
 				}
 			r->regmust = longest;
 			r->regmlen = len;
@@ -939,7 +939,7 @@ regmatch(cst_regstate *state, char *scan)
 				/* Inline the first character, for speed. */
 				if (*opnd != *state->input)
 					return(0);
-				len = strlen(opnd);
+				len = cst_strlen(opnd);
 				if (len > 1 && strncmp(opnd, state->input, len) != 0)
 					return(0);
 				state->input += len;
@@ -1099,7 +1099,7 @@ regrepeat(cst_regstate *state, char *p)
 	opnd = OPERAND(p);
 	switch (OP(p)) {
 	case ANY:
-		count = strlen(scan);
+		count = cst_strlen(scan);
 		scan += count;
 		break;
 	case EXACTLY:
@@ -1248,7 +1248,7 @@ regprop(char *op)
 	case OPEN+7:
 	case OPEN+8:
 	case OPEN+9:
-	    cst_sprintf(buf+strlen(buf), "OPEN%d", OP(op)-OPEN);
+	    cst_sprintf(buf+cst_strlen(buf), "OPEN%d", OP(op)-OPEN);
 		p = NULL;
 		break;
 	case CLOSE+1:
@@ -1260,7 +1260,7 @@ regprop(char *op)
 	case CLOSE+7:
 	case CLOSE+8:
 	case CLOSE+9:
-	    cst_sprintf(buf+strlen(buf), "CLOSE%d", OP(op)-CLOSE);
+	    cst_sprintf(buf+cst_strlen(buf), "CLOSE%d", OP(op)-CLOSE);
 		p = NULL;
 		break;
 	case STAR:

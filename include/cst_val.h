@@ -41,6 +41,7 @@
 #define _CST_VAL_H__
 
 #include "cst_file.h"
+#include "cst_string.h"
 #include "cst_error.h"
 #include "cst_alloc.h"
 #include "cst_val_defs.h"
@@ -51,7 +52,7 @@
 #define CST_VAL_TYPE_FLOAT   3
 #define CST_VAL_TYPE_STRING  5
 #define CST_VAL_TYPE_FIRST_FREE 7
-#define CST_VAL_TYPE_MAX     50
+#define CST_VAL_TYPE_MAX     54
 
 typedef struct  cst_val_cons_struct {
     struct cst_val_struct *car;
@@ -130,11 +131,15 @@ int val_less(const cst_val *a, const cst_val *b);
 int val_greater(const cst_val *a, const cst_val *b);
 int val_member(const cst_val *a, const cst_val *b);
 int val_member_string (const char *a, const cst_val *b);
+int val_stringp(const cst_val *a);
+const cst_val *val_assoc_string(const char *v1,const cst_val *al);
 
 void val_print(cst_file fd,const cst_val *v);
 cst_val *val_reverse(cst_val *v);
 cst_val *val_append(cst_val *a,cst_val *b);
 int val_length(const cst_val *l);
+cst_val *cst_utf8_explode(const cst_string *utf8string);
+cst_string *cst_implode(const cst_val *string_list);
 
 /* make sure you know what you are doing before you call these */
 int val_dec_refcount(const cst_val *b);
@@ -145,6 +150,6 @@ extern const cst_val_def cst_val_defs[];
 
 /* Generic pointer vals */
 typedef void cst_userdata;
-CST_VAL_USER_TYPE_DCLS(userdata,cst_userdata);
+CST_VAL_USER_TYPE_DCLS(userdata,cst_userdata)
 
 #endif

@@ -450,6 +450,12 @@ int cst_wave_load_riff_fd(cst_wave *w,cst_file fd)
 	    if (CST_BIG_ENDIAN) d_int = SWAPINT(d_int);
 	    cst_fseek(fd,cst_ftell(fd)+d_int,CST_SEEK_ABSOLUTE);
 	}
+	else if (strncmp(info,"clm ",4) == 0)
+	{   /* another random chunk type -- resample puts this one in */
+	    cst_fread(fd,&d_int,4,1);
+	    if (CST_BIG_ENDIAN) d_int = SWAPINT(d_int);
+	    cst_fseek(fd,cst_ftell(fd)+d_int,CST_SEEK_ABSOLUTE);
+	}
 	else 
 	{
 	    cst_errmsg("cst_wave_load_riff: unsupported chunk type \"%*s\"\n",

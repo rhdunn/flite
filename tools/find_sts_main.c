@@ -81,7 +81,7 @@ cst_sts *find_sts(cst_wave *sig, cst_track *lpc)
 	    sig->samples,
 	    sizeof(short)*sig->num_samples);
     /* EST LPC Windows are centered around the point */
-    /* so offset things by a have period */
+    /* so offset things by a half period */
     start = (int)((float)sig->sample_rate * lpc->times[0]/2);
     for (i=0; i<lpc->num_frames; i++)
     {
@@ -163,7 +163,7 @@ cst_wave *reconstruct_wave(cst_wave *sig, cst_sts *sts, cst_track *lpc)
     fclose(ofd);
 #endif
 
-    return lpc_resynth(lpcres);
+    return lpc_resynth_fixedpoint(lpcres);
 }
 
 void compare_waves(cst_wave *a, cst_wave *b)

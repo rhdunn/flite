@@ -49,10 +49,10 @@
 typedef struct fsm_struct {
     short vocab_size;
     short num_transitions;
-    unsigned short *transitions;
+    const unsigned short *transitions;
 } cst_fsm;
 
-int fsm_transition(cst_fsm *fsm,int state, int symbol)
+int fsm_transition(const cst_fsm *fsm,int state, int symbol)
 {
     int i;
 
@@ -305,7 +305,7 @@ int fsm_transition(cst_fsm *fsm,int state, int symbol)
 #define fsm_aswdP_trans_200 ((fsm_aswdP_state_2 * 128) + 78)
 #define fsm_aswdP_trans_201 ((fsm_aswdP_state_19 * 128) + 86)
 #define fsm_aswdP_trans_202 0
-static short fsm_aswdP_trans[203] = {
+static const unsigned short fsm_aswdP_trans[203] = {
    fsm_aswdP_trans_0,
    fsm_aswdP_trans_1,
    fsm_aswdP_trans_2,
@@ -510,7 +510,7 @@ static short fsm_aswdP_trans[203] = {
    fsm_aswdP_trans_201,
    fsm_aswdP_trans_202
 };
-static cst_fsm fsm_aswdP = {
+static const cst_fsm fsm_aswdP = {
    128, /* vocab size */
    203,  /* num_transitions */
    fsm_aswdP_trans
@@ -1043,7 +1043,7 @@ static cst_fsm fsm_aswdP = {
 #define fsm_aswdS_trans_451 ((fsm_aswdS_state_2 * 128) + 78)
 #define fsm_aswdS_trans_452 ((fsm_aswdS_state_20 * 128) + 86)
 #define fsm_aswdS_trans_453 0
-static short fsm_aswdS_trans[454] = {
+static const unsigned short fsm_aswdS_trans[454] = {
    fsm_aswdS_trans_0,
    fsm_aswdS_trans_1,
    fsm_aswdS_trans_2,
@@ -1499,7 +1499,7 @@ static short fsm_aswdS_trans[454] = {
    fsm_aswdS_trans_452,
    fsm_aswdS_trans_453
 };
-static cst_fsm fsm_aswdS = {
+static const cst_fsm fsm_aswdS = {
    128, /* vocab size */
    454,  /* num_transitions */
    fsm_aswdS_trans
@@ -1535,7 +1535,7 @@ static int is_word_suf(const char *word)
 
     state = fsm_transition(&fsm_aswdP,0,'#');
 
-    for (i=strlen(word)-1; i >= 0 ; i--)
+    for (i=cst_strlen(word)-1; i >= 0 ; i--)
     {
 	if ((word[i] == 'n') || ((word[i] == 'm')))
 	    symbol = 'N';

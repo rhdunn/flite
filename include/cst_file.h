@@ -44,8 +44,9 @@
 #define CST_ERROR_FORMAT -1
 #define CST_OK_FORMAT     0
 
-/* File access stuff (WinCE 2.11 is really damaged) */
 #ifdef UNDER_CE
+/* File access stuff (WinCE 2.11 is really damaged) */
+#include <windows.h>
 #include <winbase.h>
 typedef HANDLE cst_file;
 #elif __palmos__
@@ -53,7 +54,6 @@ typedef HANDLE cst_file;
 #include <System/StdIOPalm.h>
 typedef FILE * cst_file;
 #else
-#include <unistd.h>
 #include <stdio.h>
 typedef FILE * cst_file;
 #endif

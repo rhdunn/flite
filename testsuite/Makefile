@@ -46,7 +46,8 @@ SRCS = token_test_main.c hrg_test_main.c \
        lex_test_main.c utt_test_main.c lex_lookup_main.c \
        lpc_test_main.c asciiS2U_main.c asciiU2S_main.c \
        lpc_test2_main.c combine_waves_main.c \
-       bin2ascii_main.c record_in_noise_main.c
+       bin2ascii_main.c record_in_noise_main.c \
+       compare_wave_main.c
 OTHERS = kal_test_main.c
 FILES = Makefile $(SRCS) $(DATAFILES) $(OTHERS)
 
@@ -70,5 +71,5 @@ MAIN_O = $(SRCS:%=%_main.o)
 $(MAIN_O) : %_main.o : %_main.c
 	$(CC) $(CFLAGS) -o $@ $< 
 $(ALL) : %$(EXEEXT) : %_main.o $(FLITELIBS)
-	$(CC) $(CFLAGS) -o $@ $@_main.o $($(@:=_LIBS)) $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $@ $@_main.o $($(@:=_LIBS)) $(FLITELIBFLAGS) $(LDFLAGS)
 

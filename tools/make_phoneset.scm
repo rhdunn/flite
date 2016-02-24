@@ -36,6 +36,7 @@
 ;;;                                                                     ;;;
 ;;; Convert a phoneset to a C compilable structure                      ;;;
 ;;;                                                                     ;;;
+;;; (phonesettoC "cmu_klingon" (car (load "cmu_klingon_worf_phoneset.scm" t)) "pau" ".")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar featval_ids nil)

@@ -72,7 +72,7 @@ cst_wave *concat_wave(cst_wave *dest, const cst_wave *src);
 #define cst_wave_num_samples(w) (w?w->num_samples:0)
 #define cst_wave_num_channels(w) (w?w->num_channels:0)
 #define cst_wave_sample_rate(w) (w?w->sample_rate:0)
-#define cst_wave_samples(w) (w?w->samples:0)
+#define cst_wave_samples(w) (w->samples)
 
 #define cst_wave_set_num_samples(w,s) w->num_samples=s
 #define cst_wave_set_num_channels(w,s) w->num_channels=s
