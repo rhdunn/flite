@@ -32,6 +32,7 @@ testsuite/asciiS2U
 testsuite/asciiU2S
 testsuite/bin2ascii
 testsuite/combine_waves
+testsuite/compare_wave
 testsuite/hrg_test
 testsuite/lex_lookup
 testsuite/lex_test
