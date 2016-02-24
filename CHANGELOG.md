@@ -3,6 +3,10 @@
 This file documents the changes made to the flite project in order to comply
 with clause 2 of the project's [BSD license](COPYING).
 
+## [1.1-2]
+
+  * Fix building `testsuite/record_wave_main.c` (backported from flite 1.2).
+
 ## [1.1-1]
 
   * Backport building `au_alsa.c` on modern systems from flite 1.4.
@@ -14,8 +18,8 @@ with clause 2 of the project's [BSD license](COPYING).
 
 ## [1.0-2]
 
-  * Fix building `testsuite/play_sync_main`.
-  * Fix building `testsuite/find_sts_main` (backported from flite 1.3).
+  * Fix building `testsuite/play_sync_main.c`.
+  * Fix building `testsuite/find_sts_main.c` (backported from flite 1.3).
   * Build the `testsuite` programs as part of the main build.
   * Fix a typo in README.md.
 
