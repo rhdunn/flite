@@ -137,7 +137,7 @@ Will use the languages and voices defined in `config/transtac.lv`.
 
 The `bin/flite` voices contains all supported voices and you may
 choose between the voices with the `-voice` flag and list the supported
-voices with the `-lw` flag.  Note the kal (diphone) voice is a different
+voices with the `-lv` flag.  Note the kal (diphone) voice is a different
 technology from the others and is much less computationally expensive
 but more robotic.  For each voice additional binaries that contain
 only that voice are created in `bin/flite_FULLVOICENAME`,

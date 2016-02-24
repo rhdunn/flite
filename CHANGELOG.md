@@ -3,6 +3,10 @@
 This file documents the changes made to the flite project in order to comply
 with clause 2 of the project's [BSD license](COPYING).
 
+## [1.4-2]
+
+  * Fix a typo in README.md.
+
 ## [1.4-1]
 
   * Build improvements from [1.0-1](#1.0-1).
