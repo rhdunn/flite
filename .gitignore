@@ -28,6 +28,8 @@ bin/
 
 testsuite/asciiS2U
 testsuite/asciiU2S
+testsuite/bin2ascii
+testsuite/combine_waves
 testsuite/hrg_test
 testsuite/lex_lookup
 testsuite/lex_test
@@ -38,6 +40,7 @@ testsuite/play_client
 testsuite/play_server
 testsuite/play_sync
 testsuite/play_wave
+testsuite/record_in_noise
 testsuite/record_wave
 testsuite/regex_test
 testsuite/token_test
