@@ -6,6 +6,7 @@ with clause 2 of the project's [BSD license](COPYING).
 ## [1.1-2]
 
   * Fix building `testsuite/record_wave_main.c` (backported from flite 1.2).
+  * Add `play_wave_sync` from flite 1.3 to fix `testsuite/play_sync_main.c`.
 
 ## [1.1-1]
 
