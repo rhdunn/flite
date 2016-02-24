@@ -37,9 +37,11 @@
 /*    Feature support                                                    */
 /*                                                                       */
 /*************************************************************************/
-#include <stdio.h>
-#include <stdlib.h>
+
+#include "cst_error.h"
 #include "cst_features.h"
+
+CST_VAL_REGISTER_TYPE(features,cst_features)
 
 static cst_featvalpair *feat_find_featpair(const cst_features *f, 
 					   const char *name)
@@ -57,10 +59,23 @@ static cst_featvalpair *feat_find_featpair(const cst_features *f,
     }
 }
 
-cst_features *new_features()
+cst_features *new_features(void)
 {
-    cst_features *f = cst_alloc(cst_features,1);
+    cst_features *f;
+
+    f = cst_alloc(cst_features,1);
     f->head = NULL;
+    f->ctx = NULL;
+    return f;
+}
+
+cst_features *new_features_local(cst_alloc_context ctx)
+{
+    cst_features *f;
+
+    f = cst_local_alloc(ctx, sizeof(*f));
+    f->head = NULL;
+    f->ctx = ctx;
     return f;
 }
 
@@ -74,9 +89,9 @@ void delete_features(cst_features *f)
 	{
 	    np = n->next;
 	    delete_val(n->val);
-	    cst_free(n);
+	    cst_local_free(f->ctx,n);
 	}
-	cst_free(f);
+	cst_local_free(f->ctx,f);
     }
 }
 
@@ -113,7 +128,7 @@ int feat_remove(cst_features *f, const char *name)
 		else
 		    p->next = np;
 		delete_val(n->val);
-		cst_free(n);
+		cst_local_free(f->ctx,n);
 		return TRUE;
 	    }
 	}
@@ -205,7 +220,8 @@ void feat_set(cst_features *f, const char* name, const cst_val *val)
     }
     else if (n == NULL)
     {   /* first reference to this feature so create new fpair */
-	cst_featvalpair *p = cst_alloc(cst_featvalpair,1);
+	cst_featvalpair *p;
+	p = cst_local_alloc(f->ctx, sizeof(*p));
 	p->next = f->head;
 	p->name = name; 
 	p->val = val_inc_refcount(val);
@@ -230,3 +246,16 @@ int feat_copy_into(const cst_features *from,cst_features *to)
     return i;
 }
 
+int feat_print(cst_file fd,const cst_features *f)
+{
+    cst_featvalpair *p;
+    
+    for (p=f->head; p; p=p->next)
+    {
+	cst_fprintf(fd, "%s %s\n",
+		    p->name,
+		    val_string(p->val));
+    }
+
+    return 0;
+}

@@ -95,6 +95,7 @@ cst_utterance *get_diphone_units(cst_utterance *utt)
 	}
 	/* first half of diphone */
 	u = relation_append(units,NULL);
+	item_add_daughter(s0,u);
 	item_set_string(u,"name",diphone_name);
 	end0 = item_feat_float(s0,"end");
 	item_set_int(u,"target_end", (int)(end0*udb->sts->sample_rate));
@@ -103,6 +104,7 @@ cst_utterance *get_diphone_units(cst_utterance *utt)
 	item_set_int(u,"unit_end",udb->diphones[unit_entry].pb_pm);
 	/* second half of diphone */
 	u = relation_append(units,NULL);
+	item_add_daughter(s1,u);
 	item_set_string(u,"name",diphone_name);
 	end1 = item_feat_float(s1,"end");
 	item_set_int(u,"target_end",(int)(((end0+end1)/2.0)*udb->sts->sample_rate));

@@ -42,7 +42,7 @@
 
 #include <stdio.h>
 
-/* The short term singal (sts) structure is the basic unit data info  */
+/* The short term signal (sts) structure is the basic unit data info  */
 /* it may be diphones of general units, indexes and names are held    */
 /* else where, this information plus the indexes in the Unit relation */
 /* allow reconstruction of the signal itself                          */
@@ -53,17 +53,15 @@ struct cst_sts_struct {
 };
 typedef struct cst_sts_struct cst_sts;
 
+/* This represents a database of short-term signals. */
 struct cst_sts_list_struct {
+    /* If the sts are compiled in, this will point to them. */
     const cst_sts *sts;
-
-    /* These "extra" pointers allow the cst_sts array members to point
-       into a memory-mapped file instead of having all the data linked
-       in.  In the case where the size of short-term signals is fixed
-       then the cst_sts array may in fact be NULL and we will just
-       index directly off of these. */
-    const unsigned short *frames;
-    const unsigned char *residuals;
-    const unsigned long *resoffs;
+    /* Otherwise they will be loaded in these (not going to bother
+       with union initialization here).  Note that frames/residuals
+       are (ab)used to mean "shorts" and "bytes" in the case of
+       mel-cep vectors for clunits voices. */
+    cst_filemap *frames, *residuals, *resoffs;
 
     int num_sts;          /* But I don't think you need that number */
     int num_channels;     /* typically lpc order */
@@ -103,6 +101,13 @@ void delete_sts_list(cst_sts_list *l);
 
 const unsigned short * get_sts_frame(const cst_sts_list *sts_list, int frame);
 const unsigned char * get_sts_residual(const cst_sts_list *sts_list, int frame);
+const unsigned char * get_sts_residual_fixed(const cst_sts_list *sts_list, int frame);
+
+/* Of course they aren't actually const in all cases... */
+void release_sts_frame(const cst_sts_list *sts_list, int frame,
+		       const unsigned short *data);
+void release_sts_residual(const cst_sts_list *sts_list, int frame,
+			  const unsigned char *data);
 
 int get_frame_size(const cst_sts_list *sts_list, int frame);
 int get_unit_size(const cst_sts_list *s,int start, int end);

@@ -3,6 +3,15 @@
 This file documents the changes made to the flite project in order to comply
 with clause 2 of the project's [BSD license](COPYING).
 
+## [1.1-1]
+
+  * Backport building `au_alsa.c` on modern systems from flite 1.4.
+  * Build improvements from [1.0-1](#1.0-1).
+
+## [1.1]
+
+  * Upstream version 1.1.
+
 ## [1.0-2]
 
   * Fix building `testsuite/play_sync_main`.

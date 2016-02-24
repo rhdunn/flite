@@ -48,7 +48,14 @@ FILES = Makefile $(SCM) $(SRCS) find_cmimax
 LIBNAME = flite
 LOCAL_INCLUDES = 
 
-ALL = .build_lib
+ALL = regexcomp$(EXEEXT)
+LOCAL_CLEAN = regexcomp$(EXEEXT)
 
 include $(TOP)/config/common_make_rules
+
+MAIN_O = $(SRCS:%=%_main.o)
+$(MAIN_O) : %_main.o : %_main.c
+	$(CC) $(CFLAGS) -o $@ $< 
+$(ALL) : %$(EXEEXT) : %_main.o $(FLITELIBS)
+	$(CC) $(CFLAGS) -o $@ $@_main.o $($(@:=_LIBS)) $(LDFLAGS)
 

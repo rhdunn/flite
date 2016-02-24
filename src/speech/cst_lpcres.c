@@ -44,7 +44,6 @@
 #include "cst_sts.h"
 
 CST_VAL_REGISTER_TYPE(lpcres,cst_lpcres)
-CST_VAL_REGISTER_TYPE_NODEL(sts_list,cst_sts_list)
 
 cst_lpcres *new_lpcres()
 {
@@ -89,58 +88,4 @@ void lpcres_resize_samples(cst_lpcres *l,int num_samples)
     memset(l->residual,255,num_samples);
     l->num_samples = num_samples;
 
-}
-
-cst_sts_list *new_sts_list()
-{
-    cst_sts_list *l = cst_alloc(struct cst_sts_list_struct,1);
-    return l;
-}
-
-void delete_sts_list(cst_sts_list *l)
-{
-    if (l)
-    {
-	/* sub data is always const so can't free it */
-	cst_free(l);
-    }
-    return;
-}
-
-int get_unit_size(const cst_sts_list *s,int start, int end)
-{
-    /* returns size (in samples) of unit */
-    int i,size;
-
-    for (i=start,size=0; i<end; i++)
-	size += get_frame_size(s, i);
-
-    return size;
-}
-
-int get_frame_size(const cst_sts_list *sts_list, int frame)
-{
-    if (sts_list->sts == NULL) {
-	/* This assumes that the voice compiler has generated an extra
-           offset at the end of the array. */
-	return sts_list->resoffs[frame+1] - sts_list->resoffs[frame];
-    } else {
-	return sts_list->sts[frame].size;
-    }
-}
-
-const unsigned short * get_sts_frame(const cst_sts_list *sts_list, int frame)
-{
-	if (sts_list->sts == NULL)
-	    return sts_list->frames + (frame * sts_list->num_channels);
-	else
-	    return sts_list->sts[frame].frame;
-}
-
-const unsigned char * get_sts_residual(const cst_sts_list *sts_list, int frame)
-{
-	if (sts_list->sts == NULL)
-	    return sts_list->residuals + sts_list->resoffs[frame];
-	else
-	    return sts_list->sts[frame].residual;
 }

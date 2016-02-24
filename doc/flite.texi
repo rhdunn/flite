@@ -11,9 +11,9 @@
 @c world example, but many others too.  I happily acknowledge their
 @c aid in producing this document -- awb
 
-@set EDITION 1.0
-@set VERSION 1.0
-@set UPDATED 12th July 2001
+@set EDITION 1.1
+@set VERSION 1.1
+@set UPDATED 4th December 2001
 
 @ifinfo
 This file documents @code{Flite}, a small, fast run-time speech
@@ -253,7 +253,7 @@ clients.  Here although large fixed databases are acceptable, the size
 of memory require per utterance and speed in which they can be
 synthesized is crucial.
 
-However inspite of the decision to build a new synthesize engine we see
+However inspite of the decision to build a new synthesis engine we see
 this as being tightly coupled into the existing free software synthesis
 tools or Festival and the FestVox voice building suite.  Flite offers
 a companion run-time engine.  Our intended mode of development is
@@ -327,6 +327,14 @@ sgement and hence read only (this can be ROM on platforms which have
 that distinction).  For structures to be const all their subparts
 must also be const thus all relevant parts must be in the same file,
 hence the unit databases files can be quite big.
+
+Of course, this all presumes that you have a C compiler robust enough to
+compile these files, hardware smart enough to treat flash ROM as memory
+rather than disk, or an operating system smart enough to demand-page
+executables.  Certain "popular" operating systems and compilers fail in
+at least one of these respects, and therefore we have provided the
+flexibility to use memory-mapped file I/O on voice databases, where
+available, or simply to load them all into memory.
 
 @chapter Structure
 
@@ -467,9 +475,9 @@ there a few key functions that will satifyt most users
 of flite.
 @table @code
 @item void flite_init(void);
-This must be called before any other flite function can be called.
-Its initialization is minimal and currently is not thread save (as
-it sets some globals).  This will be fixed in the future.
+This must be called before any other flite function can be called.  As
+of Flite 1.1, it actually does nothing at all, but there is no guarantee
+that this will remain true.
 @item cst_wave *flite_text_to_wave(const char *text,cst_voice *voice);
 Returns a waveform (as defined in @file{include/cst_wave.h}) synthesized
 from the given text string by the given voice.
@@ -501,7 +509,6 @@ distrbution.
 @chapter Porting to new platforms
 
 byte order, unions, compiler restrictions
-
 
 @chapter Future developments
 

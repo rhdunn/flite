@@ -40,6 +40,7 @@
 #include <stdio.h>
 #include "flite.h"
 #include "usenglish.h"
+#include "us_text.h"
 
 static void print_and_delete(cst_val *p)
 {

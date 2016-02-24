@@ -45,13 +45,14 @@
 
 static const char * const cst_relation_noname = "NoName";
 
-cst_relation *new_relation(const char *name)
+cst_relation *new_relation(const char *name, cst_utterance *u)
 {
-    cst_relation *r = cst_alloc(cst_relation,1);
+    cst_relation *r = cst_utt_alloc(u,cst_relation,1);
 
     r->name = cst_strdup(name);
-    r->features = new_features();
+    r->features = new_features_local(u->ctx);
     r->head = NULL;
+    r->utterance = u;
 
     return r;
 }
@@ -70,7 +71,7 @@ void delete_relation(cst_relation *r)
 	}
 	delete_features(r->features);
 	cst_free(r->name);
-	cst_free(r);
+	cst_utt_free(r->utterance,r);
     }
 }
 
@@ -100,5 +101,19 @@ cst_item *relation_append(cst_relation *r, cst_item *i)
     if (r->tail)
 	r->tail->n = ni;
     r->tail = ni;
+    return ni;
+}
+
+cst_item *relation_prepend(cst_relation *r, cst_item *i)
+{
+    cst_item *ni = new_item_relation(r,i);
+    
+    if (r->tail == NULL)
+	r->tail = ni;
+
+    ni->n = r->head;
+    if (r->head)
+	r->head->p = ni;
+    r->head = ni;
     return ni;
 }

@@ -38,17 +38,42 @@ TOP=..
 DIRNAME=include
 BUILD_DIRS = 
 ALL_DIRS= 
-H = cst_alloc.h cst_error.h cst_endian.h cst_file.h \
-    cst_string.h cst_regex.h cst_tokenstream.h \
-    cst_val.h cst_val_defs.h cst_val_const.h \
-    cst_features.h \
-    cst_utterance.h cst_relation.h cst_item.h cst_hrg.h \
-    cst_cart.h cst_wave.h cst_track.h \
-    cst_audio.h cst_socket.h cst_voice.h cst_phoneset.h \
-    cst_units.h cst_lexicon.h cst_lts.h \
-    cst_synth.h cst_utt_utils.h cst_sigpr.h \
-    cst_clunits.h cst_diphone.h cst_viterbi.h \
-    cst_sts.h flite.h 
+H = cst_alloc.h  \
+	cst_args.h \
+	cst_audio.h \
+	cst_cart.h \
+	cst_clunits.h \
+	cst_diphone.h \
+	cst_endian.h \
+	cst_error.h \
+	cst_features.h \
+	cst_file.h \
+	cst_hrg.h \
+	cst_item.h \
+	cst_lexicon.h \
+	cst_lts.h \
+	cst_phoneset.h \
+	cst_regex.h \
+	cst_relation.h \
+	cst_sigpr.h \
+	cst_socket.h \
+	cst_string.h \
+	cst_sts.h \
+	cst_synth.h \
+	cst_tokenstream.h \
+	cst_track.h \
+	cst_units.h \
+	cst_utt_utils.h \
+	cst_utterance.h \
+	cst_val.h \
+	cst_val_const.h \
+	cst_val_defs.h \
+	cst_viterbi.h \
+	cst_voice.h \
+	cst_wave.h \
+	cst_ss.h \
+	flite.h
+
 FILES = Makefile $(H)
 INSTALL_HEADERS = $(H)
 

@@ -39,10 +39,13 @@
 /*  semantics follow them                                                */
 /*************************************************************************/
 
-#include "flite.h"
-#include "usenglish.h"
+#include "cst_hrg.h"
+#include "cst_phoneset.h"
+#include "cst_regex.h"
+#include "us_ffeatures.h"
 
 static const cst_val *word_break(const cst_item *word);
+static const cst_val *word_punc(const cst_item *word);
 static const cst_val *gpos(const cst_item *word);
 static const cst_val *word_numsyls(const cst_item *word);
 static const cst_val *ssyl_in(const cst_item *syl);
@@ -75,6 +78,27 @@ DEF_STATIC_CONST_VAL_STRING(val_string_other,"_other_");
 DEF_STATIC_CONST_VAL_STRING(val_string_a,"a");
 DEF_STATIC_CONST_VAL_STRING(val_string_flight,"flight");
 DEF_STATIC_CONST_VAL_STRING(val_string_to,"to");
+DEF_STATIC_CONST_VAL_STRING(val_string_empty,"");
+
+static const cst_val *word_punc(const cst_item *word)
+{
+    cst_item *ww;
+    const cst_val *v;
+
+    ww = item_as(word,"Token");
+
+    if ((ww != NULL) && (item_next(ww) != 0))
+	v = &val_string_empty;
+    else
+	v = ffeature(item_parent(ww),"punc");
+
+/*    printf("word_punc word %s punc %s\n",
+	   item_feat_string(ww,"name"),
+	   val_string(v)); */
+
+    return v;
+
+}
 
 static const cst_val *word_break(const cst_item *word)
 {
@@ -140,12 +164,12 @@ static const cst_val *ssyl_in(const cst_item *syl)
 
     fs = path_to_item(syl,"R:SylStructure.parent.R:Phrase.parent.daughter.R:SylStructure.daughter");
 
-    for (c=0, p=item_prev(ss); p; p=item_prev(p))
+    /* This should actually include the first syllable, but Festival's
+       doesn't. */
+    for (c=0, p=item_prev(ss); p && !item_equal(p,fs); p=item_prev(p))
     {
 	if (cst_streq("1",item_feat_string(p,"stress")))
 	    c++;
-	if (item_equal(p,fs))
-	    break;
     }
     
     return val_string_n(c);  /* its used randomly as int and float */
@@ -197,9 +221,9 @@ static const cst_val *syl_out(const cst_item *syl)
 
     ss = item_as(syl,"Syllable");
 
-    fs = path_to_item(syl,"R:SylStructure.parent.R:Phrase.parent.daughter.R:SylStructure.daughter");
+    fs = path_to_item(syl,"R:SylStructure.parent.R:Phrase.parent.daughtern.R:SylStructure.daughtern");
 
-    for (c=0, p=ss; p; p=item_prev(p),c++)
+    for (c=0, p=ss; p; p=item_next(p),c++)
 	if (item_equal(p,fs))
 	    break;
     return val_string_n(c);
@@ -317,7 +341,7 @@ static const cst_val *asyl_in(const cst_item *syl)
     return val_string_n(c);
 }
 
-static const cst_val *seg_coda_fric(const cst_item *seg)
+static const cst_val *seg_coda_ctype(const cst_item *seg, const char *ctype)
 {
     const cst_item *s;
     const cst_phoneset *ps = item_phoneset(seg);
@@ -329,7 +353,7 @@ static const cst_val *seg_coda_fric(const cst_item *seg)
 	if (cst_streq("+",phone_feature_string(ps,item_feat_string(s,"name"),
 					       "vc")))
 	    return VAL_STRING_0;
-	if (cst_streq("f",phone_feature_string(ps,item_feat_string(s,"name"),
+	if (cst_streq(ctype,phone_feature_string(ps,item_feat_string(s,"name"),
 					       "ctype")))
 	    return VAL_STRING_1;
     }
@@ -337,7 +361,7 @@ static const cst_val *seg_coda_fric(const cst_item *seg)
     return VAL_STRING_0;
 }
 
-static const cst_val *seg_onset_stop(const cst_item *seg)
+static const cst_val *seg_onset_ctype(const cst_item *seg, const char *ctype)
 {
     const cst_item *s;
     const cst_phoneset *ps = item_phoneset(seg);
@@ -349,52 +373,56 @@ static const cst_val *seg_onset_stop(const cst_item *seg)
 	if (cst_streq("+",phone_feature_string(ps,item_feat_string(s,"name"),
 					       "vc")))
 	    return VAL_STRING_0;
-	if (cst_streq("s",phone_feature_string(ps,item_feat_string(s,"name"),
-					       "ctype")))
+	if (cst_streq(ctype,phone_feature_string(ps,item_feat_string(s,"name"),
+						 "ctype")))
 	    return VAL_STRING_1;
     }
 
     return VAL_STRING_0;
+}
+
+static const cst_val *seg_coda_fric(const cst_item *seg)
+{
+    return seg_coda_ctype(seg,"f");
+}
+
+static const cst_val *seg_onset_fric(const cst_item *seg)
+{
+    return seg_onset_ctype(seg,"f");
 }
 
 static const cst_val *seg_coda_stop(const cst_item *seg)
 {
-    const cst_item *s;
-    const cst_phoneset *ps = item_phoneset(seg);
-    
-    for (s=item_last_daughter(item_parent(item_as(seg,"SylStructure")));
-	 s;
-	 s=item_prev(s))
-    {
-	if (cst_streq("+",phone_feature_string(ps,item_feat_string(s,"name"),
-					       "vc")))
-	    return VAL_STRING_0;
-	if (cst_streq("s",phone_feature_string(ps,item_feat_string(s,"name"),
-					       "ctype")))
-	    return VAL_STRING_1;
-    }
+    return seg_coda_ctype(seg,"s");
+}
 
-    return VAL_STRING_0;
+static const cst_val *seg_onset_stop(const cst_item *seg)
+{
+    return seg_onset_ctype(seg,"s");
+}
+
+static const cst_val *seg_coda_nasal(const cst_item *seg)
+{
+    return seg_coda_ctype(seg,"n");
 }
 
 static const cst_val *seg_onset_nasal(const cst_item *seg)
 {
-    const cst_item *s;
-    const cst_phoneset *ps = item_phoneset(seg);
-    
-    for (s=item_daughter(item_parent(item_as(seg,"SylStructure")));
-	 s;
-	 s=item_next(s))
-    {
-	if (cst_streq("+",phone_feature_string(ps,item_feat_string(s,"name"),
-					       "vc")))
-	    return VAL_STRING_0;
-	if (cst_streq("n",phone_feature_string(ps,item_feat_string(s,"name"),
-					       "ctype")))
-	    return VAL_STRING_1;
-    }
+    return seg_onset_ctype(seg,"n");
+}
 
-    return VAL_STRING_0;
+static const cst_val *seg_coda_glide(const cst_item *seg)
+{
+    if (seg_coda_ctype(seg,"r") == VAL_STRING_0)
+	    return seg_coda_ctype(seg,"l");
+    return VAL_STRING_1;
+}
+
+static const cst_val *seg_onset_glide(const cst_item *seg)
+{
+    if (seg_onset_ctype(seg,"r") == VAL_STRING_0)
+	    return seg_onset_ctype(seg,"l");
+    return VAL_STRING_1;
 }
 
 static const cst_val *seg_onsetcoda(const cst_item *seg)
@@ -411,6 +439,22 @@ static const cst_val *seg_onsetcoda(const cst_item *seg)
 	    return (cst_val *)&val_string_onset;
     }
     return (cst_val *)&val_string_coda;
+}
+
+static const cst_val *segment_duration(const cst_item *seg)
+{
+    const cst_item *s = item_as(seg,"Segment");
+
+    if (!s)
+	return VAL_STRING_0;
+    else if (item_prev(s) == NULL)
+	return item_feat(s,"end");
+    else
+	/* It should be okay to construct this as it will get
+           dereferenced when the CART interpreter frees its feature
+           cache. */
+	return float_val(item_feat_float(s,"end")
+			 - item_feat_float(item_prev(s),"end"));
 }
 
 static const cst_val *pos_in_syl(const cst_item *seg)
@@ -513,7 +557,7 @@ static const cst_val *token_pos_guess(const cst_item *token)
     else if (cst_streq(dc,"jan") ||
 	cst_streq(dc,"january") ||
 	cst_streq(dc,"feb") ||
-	cst_streq(dc,"febrary") ||
+	cst_streq(dc,"february") ||
 	cst_streq(dc,"mar") ||
 	cst_streq(dc,"march") ||
 	cst_streq(dc,"apr") ||
@@ -565,40 +609,46 @@ static const cst_val *token_pos_guess(const cst_item *token)
     return r;
 }
 
-void us_ff_register()
+void us_ff_register(cst_features *ffunctions)
 {
-    ff_register("word_break",word_break);
-    ff_register("gpos",gpos);
-    ff_register("word_numsyls",word_numsyls);
-    ff_register("ssyl_in",ssyl_in);
-    ff_register("ssyl_out",ssyl_out);
-    ff_register("syl_in",syl_in);
-    ff_register("syl_out",syl_out);
-    ff_register("syl_break",syl_break);
-    ff_register("old_syl_break",syl_break);
-    ff_register("syl_onsetsize",syl_onsetsize);
-    ff_register("syl_codasize",syl_codasize);
-    ff_register("ph_vc",ph_vc);
-    ff_register("ph_vlng",ph_vlng);
-    ff_register("ph_vheight",ph_vheight);
-    ff_register("ph_vfront",ph_vfront);
-    ff_register("ph_vrnd",ph_vrnd);
-    ff_register("ph_ctype",ph_ctype);
-    ff_register("ph_cplace",ph_cplace);
-    ff_register("ph_cvox",ph_cvox);
-    ff_register("accented",accented);
-    ff_register("asyl_in",asyl_in);
-    ff_register("seg_coda_fric",seg_coda_fric);
-    ff_register("seg_onset_stop",seg_onset_stop);
-    ff_register("seg_onsetcoda",seg_onsetcoda);
-    ff_register("pos_in_syl",pos_in_syl);
-    ff_register("position_type",position_type);
-    ff_register("sub_phrases",sub_phrases);
-    ff_register("last_accent",last_accent);
-    ff_register("syl_final",syl_final);
-    ff_register("seg_coda_stop",seg_coda_stop);
-    ff_register("seg_onset_nasal",seg_onset_nasal);
-    ff_register("num_digits",num_digits);
-    ff_register("month_range",month_range);
-    ff_register("token_pos_guess",token_pos_guess);
+    ff_register(ffunctions, "word_break",word_break);
+    ff_register(ffunctions, "word_punc",word_punc);
+    ff_register(ffunctions, "gpos",gpos);
+    ff_register(ffunctions, "word_numsyls",word_numsyls);
+    ff_register(ffunctions, "ssyl_in",ssyl_in);
+    ff_register(ffunctions, "ssyl_out",ssyl_out);
+    ff_register(ffunctions, "syl_in",syl_in);
+    ff_register(ffunctions, "syl_out",syl_out);
+    ff_register(ffunctions, "syl_break",syl_break);
+    ff_register(ffunctions, "old_syl_break",syl_break);
+    ff_register(ffunctions, "syl_onsetsize",syl_onsetsize);
+    ff_register(ffunctions, "syl_codasize",syl_codasize);
+    ff_register(ffunctions, "ph_vc",ph_vc);
+    ff_register(ffunctions, "ph_vlng",ph_vlng);
+    ff_register(ffunctions, "ph_vheight",ph_vheight);
+    ff_register(ffunctions, "ph_vfront",ph_vfront);
+    ff_register(ffunctions, "ph_vrnd",ph_vrnd);
+    ff_register(ffunctions, "ph_ctype",ph_ctype);
+    ff_register(ffunctions, "ph_cplace",ph_cplace);
+    ff_register(ffunctions, "ph_cvox",ph_cvox);
+    ff_register(ffunctions, "accented",accented);
+    ff_register(ffunctions, "asyl_in",asyl_in);
+    ff_register(ffunctions, "seg_coda_fric",seg_coda_fric);
+    ff_register(ffunctions, "seg_onset_fric",seg_onset_fric);
+    ff_register(ffunctions, "seg_coda_stop",seg_coda_stop);
+    ff_register(ffunctions, "seg_onset_stop",seg_onset_stop);
+    ff_register(ffunctions, "seg_coda_nasal",seg_coda_nasal);
+    ff_register(ffunctions, "seg_onset_nasal",seg_onset_nasal);
+    ff_register(ffunctions, "seg_coda_glide",seg_coda_glide);
+    ff_register(ffunctions, "seg_onset_glide",seg_onset_glide);
+    ff_register(ffunctions, "seg_onsetcoda",seg_onsetcoda);
+    ff_register(ffunctions, "pos_in_syl",pos_in_syl);
+    ff_register(ffunctions, "position_type",position_type);
+    ff_register(ffunctions, "sub_phrases",sub_phrases);
+    ff_register(ffunctions, "last_accent",last_accent);
+    ff_register(ffunctions, "syl_final",syl_final);
+    ff_register(ffunctions, "num_digits",num_digits);
+    ff_register(ffunctions, "month_range",month_range);
+    ff_register(ffunctions, "token_pos_guess",token_pos_guess);
+    ff_register(ffunctions, "segment_duration",segment_duration);
 }

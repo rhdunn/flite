@@ -41,6 +41,7 @@
 #define _CST_WAVE_H__
 
 #include <stdio.h>
+
 #include "cst_error.h"
 #include "cst_alloc.h"
 #include "cst_endian.h"
@@ -56,8 +57,9 @@ typedef struct  cst_wave_struct {
 } cst_wave;
 
 cst_wave *new_wave();
-cst_wave *copy_wave(cst_wave *w);
+cst_wave *copy_wave(const cst_wave *w);
 void delete_wave(cst_wave *val);
+cst_wave *concat_wave(cst_wave *dest, const cst_wave *src);
 
 #define cst_wave_num_samples(w) (w?w->num_samples:0)
 #define cst_wave_num_channels(w) (w?w->num_channels:0)
@@ -70,28 +72,52 @@ void delete_wave(cst_wave *val);
 
 int cst_wave_save(cst_wave *w, const char *filename, const char *type);
 int cst_wave_save_riff(cst_wave *w, const char *filename);
-int cst_wave_save_aiff(cst_wave *w, const char *filename);
-int cst_wave_save_snd(cst_wave *w, const char *filename);
-int cst_wave_save_ulaw(cst_wave *w, const char *filename);
 int cst_wave_save_raw(cst_wave *w, const char *filename);
+
+int cst_wave_save_riff_fd(cst_wave *w, cst_file fd);
+int cst_wave_save_raw_fd(cst_wave *w, cst_file fd);
 
 int cst_wave_load(cst_wave *w, const char *filename, const char *type);
 int cst_wave_load_riff(cst_wave *w, const char *filename);
-int cst_wave_load_aiff(cst_wave *w, const char *filename);
-int cst_wave_load_snd(cst_wave *w, const char *filename);
-int cst_wave_load_ulaw(cst_wave *w, const char *filename);
 int cst_wave_load_raw(cst_wave *w, const char *filename,
-		      const char *bo, int sample_rate);
-int cst_wave_load_riff_fd(cst_wave *w, FILE *fd);
-int cst_wave_load_aiff_fd(cst_wave *w, FILE *fd);
-int cst_wave_load_snd_fd(cst_wave *w, FILE *fd);
-int cst_wave_load_ulaw_fd(cst_wave *w, FILE *fd);
-int cst_wave_load_raw_fd (cst_wave *w, FILE *fd,
-			  const char *bo, int sample_rate);
+				const char *bo, int sample_rate);
+
+int cst_wave_load_riff_fd(cst_wave *w, cst_file fd);
+int cst_wave_load_raw_fd (cst_wave *w, cst_file fd,
+				    const char *bo, int sample_rate);
 
 void cst_wave_resize(cst_wave *w,int samples, int num_channels);
-int cst_wave_resample(cst_wave *w, int sample_rate);
-int cst_wave_rescale(cst_wave *w, int factor);
+void cst_wave_resample(cst_wave *w, int sample_rate);
+void cst_wave_rescale(cst_wave *w, int factor);
+
+/* Resampling code */
+typedef struct cst_rateconv_struct {
+	int channels;           /* what do you think? */
+	int up, down;           /* up/down sampling ratio */
+
+	double gain;            /* output gain */
+	int lag;                /* lag time (in samples) */
+	int *sin, *sout, *coep; /* filter buffers, coefficients */
+
+	/* n.b. outsize is the minimum buffer size for
+           cst_rateconv_out() when streaming */
+	int insize, outsize;    /* size of filter buffers */
+	int incount;		/* amount of input data */
+	int len;		/* size of filter */
+
+	/* internal foo coefficients */
+	double fsin, fgk, fgg;
+	/* internal counters */
+	int inbaseidx, inoffset, cycctr, outidx;
+} cst_rateconv;
+
+cst_rateconv * new_rateconv(int up, int down, int channels);
+void delete_rateconv(cst_rateconv *filt);
+int cst_rateconv_in(cst_rateconv *filt, const short *inptr, int max);
+int cst_rateconv_leadout(cst_rateconv *filt);
+int cst_rateconv_out(cst_rateconv *filt, short *outptr, int max);
+
+/* File format cruft. */
 
 #define RIFF_FORMAT_PCM    0x0001
 #define RIFF_FORMAT_ADPCM  0x0002

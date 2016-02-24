@@ -251,9 +251,11 @@ cst_val *en_exp_id(const char *numstring)
     /* Expand numstring as pairs as in years or ids */
     char aaa[3];
 
-    if (((strlen(numstring) == 4) && 
-	 ((numstring[1] == '0') || 
-	  (numstring[2] == '0'))) ||
+    if ((strlen(numstring) == 2) && (numstring[0] == '0'))
+	return cons_val(string_val("oh"),
+			en_exp_digits(&numstring[1]));
+    else if (((strlen(numstring) == 4) && 
+	 ((numstring[1] == '0'))) ||
 	(strlen(numstring) < 3))
 	return en_exp_number(numstring);
     else if (strlen(numstring)%2 == 1)
@@ -268,6 +270,42 @@ cst_val *en_exp_id(const char *numstring)
 	aaa[2] = '\0';
 	return val_append(en_exp_number(aaa),en_exp_id(&numstring[2]));
     }
+}
+
+cst_val *en_exp_real(const char *numstring)
+{
+    char *aaa, *p;
+    cst_val *r;
+
+    if (numstring && (numstring[0] == '-'))
+	r = cons_val(string_val("minus"),
+		     en_exp_real(&numstring[1]));
+    else if (numstring && (numstring[0] == '+'))
+	r = cons_val(string_val("plus"),
+		     en_exp_real(&numstring[1]));
+    else if (((p=strchr(numstring,'e')) != 0) ||
+	     ((p=strchr(numstring,'E')) != 0))
+    {
+	aaa = cst_strdup(numstring);
+	aaa[strlen(numstring)-strlen(p)] = '\0';
+	r = val_append(en_exp_real(aaa),
+		       cons_val(string_val("e"),
+				en_exp_real(p+1)));
+	cst_free(aaa);
+    }
+    else if ((p=strchr(numstring,'.')) != 0)
+    {
+	aaa = cst_strdup(numstring);
+	aaa[strlen(numstring)-strlen(p)] = '\0';
+	r = val_append(en_exp_number(aaa),
+		       cons_val(string_val("point"),
+				en_exp_digits(p+1)));
+	cst_free(aaa);
+    }
+    else
+	r = en_exp_number(numstring);  /* I don't think you can get here */
+
+    return r;
 }
 
 cst_val *en_exp_digits(const char *numstring)
@@ -303,12 +341,45 @@ cst_val *en_exp_letters(const char *lets)
 	    aaa[0] = tolower((int)aaa[0]);
 	if (strchr("0123456789",aaa[0]))
 	    r = cons_val(string_val(digit2num[aaa[0]-'0']),r);
+	else if (cst_streq(aaa,"a"))
+	    r = cons_val(string_val("_a"),r);
 	else
 	    r = cons_val(string_val(aaa),r);
     }
     cst_free(aaa);
 
     return val_reverse(r);
+}
+
+int en_exp_roman(const char *roman)
+{
+    int val;
+    const char *p;
+    val = 0;
+
+    for (p=roman; *p != 0; p++)
+    {
+	if (*p == 'X')
+	    val += 10;
+	else if (*p == 'V')
+	    val += 5;
+	else if (*p == 'I')
+	{
+	    if (p[1] == 'V')
+	    {
+		val += 4;
+		p++;
+	    }
+	    else if (p[1] == 'X')
+	    {
+		val += 9;
+		p++;
+	    }
+	    else 
+		val += 1;
+	}
+    }
+    return val;
 }
 
 

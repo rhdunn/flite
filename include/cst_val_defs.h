@@ -45,12 +45,12 @@
 /* Macro for defining new user structs as vals  */
 #define CST_VAL_USER_TYPE_DCLS(NAME,TYPE)              \
 extern const int cst_val_type_##NAME;                  \
-TYPE *val_##NAME(const cst_val *v);                    \
+TYPE *val_##NAME(const cst_val *v);           \
 cst_val *NAME##_val(const TYPE *v);
 
 #define CST_VAL_USER_FUNCPTR_DCLS(NAME,TYPE)           \
 extern const int cst_val_type_##NAME;                  \
-TYPE val_##NAME(const cst_val *v);                     \
+TYPE val_##NAME(const cst_val *v);            \
 cst_val *NAME##_val(const TYPE v);
 
 #define CST_VAL_REGISTER_TYPE(NAME,TYPE)               \

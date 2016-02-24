@@ -44,7 +44,7 @@ SRCS = us_int_accent_cart.c us_int_tone_cart.c us_f0_model.c \
        us_dur_stats.c us_durz_cart.c us_f0lr.c \
        us_phoneset.c us_ffeatures.c us_phrasing_cart.c \
        us_gpos.c us_text.c us_expand.c us_postlex.c \
-       us_nums_cart.c usenglish.c 
+       us_nums_cart.c us_aswd.c usenglish.c 
 OBJS = $(SRCS:.c=.o)
 SCM=
 FILES = Makefile $(SCM) $(SRCS) $(H)

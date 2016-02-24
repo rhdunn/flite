@@ -39,8 +39,11 @@
 /*  semantics follow them                                                 */
 /*************************************************************************/
 
-cst_val *ssyl_in(cst_item *syl);
-cst_val *ssyl_out(cst_item *syl);
-cst_val *syl_in(cst_item *syl);
-cst_val *syl_break(cst_item *syl);
-cst_val *gpos(cst_item *word);
+#ifndef _US_FFEATURES_H
+#define _US_FFEATURES_H
+
+void us_ff_register(cst_features *ffunctions);
+
+extern const cst_val * const * const us_gpos[];
+
+#endif /* _US_FFEATURES_H */

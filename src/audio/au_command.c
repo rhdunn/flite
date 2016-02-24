@@ -37,44 +37,43 @@
 /*  Use some external program to play stuff                              */
 /*                                                                       */
 /*************************************************************************/
-#ifdef CST_AUDIO_COMMAND
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include "cst_string.h"
-#include "cst_wave.h"
 #include "cst_audio.h"
 
-int audio_set_sample_rate_command(int afd,int sample_rate)
+cst_audiodev * audio_open_command(int sps, int channels, int fmt)
 {
-    (void)afd;
-    (void)sample_rate;
+    cst_audiodev *ad;
 
+    ad = cst_alloc(cst_audiodev,1);
+    ad->sps = sps;
+    ad->channels = channels;
+    ad->fmt = fmt;
+    return NULL;
+}
+
+int audio_close_command(cst_audiodev *ad)
+{
+    if (ad)
+	cst_free(ad)
     return 0;
 }
 
-int audio_open_command()
+int audio_write_command(cst_audiodev *ad, void *samples, int num_bytes)
 {
-    return 0;
-}
-
-int audio_close_command(int fd)
-{
-    (void)fd;
-    return 0;
-}
-
-int audio_write_command(int afd, void *samples, int num_bytes)
-{
-    (void)afd;
+    (void)ad;
     (void)samples;
     return num_bytes;
 }
 
-int audio_flush_command(int afd)
+int audio_drain_command(cst_audiodev *ad)
 {
-    (void)afd;
+    (void)ad;
     return 0;
 }
-#endif
+
+int audio_flush_command(cst_audiodev *ad)
+{
+    (void)ad;
+    return 0;
+}

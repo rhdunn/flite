@@ -49,7 +49,7 @@ const char * const ts_default_postpunctuationsymbols = "\"'`.,:;!?(){}[]";
 
 static const char ts_getc(cst_tokenstream *ts);
 
-static void extend_buffer(char **buffer,int p,int *buffer_max)
+static void extend_buffer(char **buffer,int *buffer_max)
 {
     int new_max;
 
@@ -154,7 +154,7 @@ static void get_token_sub_part(cst_tokenstream *ts,
 	       (strchr(ts->singlecharsymbols,ts->current_char) == NULL) &&
 	       (ts->current_char != EOF)); p++)
     {
-	if (p >= *buffer_max) extend_buffer(buffer,p,buffer_max);
+	if (p >= *buffer_max) extend_buffer(buffer,buffer_max);
 	(*buffer)[p] = ts->current_char;
 	ts_getc(ts);
     }
@@ -173,7 +173,7 @@ static void get_token_sub_part_2(cst_tokenstream *ts,
 	       (strchr(ts->singlecharsymbols,ts->current_char) == NULL) &&
 	       (ts->current_char != EOF)); p++)
     {
-	if (p >= *buffer_max) extend_buffer(buffer,p,buffer_max);
+	if (p >= *buffer_max) extend_buffer(buffer,buffer_max);
 	(*buffer)[p] = ts->current_char;
 	ts_getc(ts);
     }
@@ -192,7 +192,7 @@ static void get_token_postpunctuation(cst_tokenstream *ts)
     if (t != p)
     {
 	if (t-p >= ts->postp_max) 
-	    extend_buffer(&ts->postpunctuation,(t-p),&ts->postp_max);
+	    extend_buffer(&ts->postpunctuation,&ts->postp_max);
 	/* Copy postpunctuation from token */
 	memmove(ts->postpunctuation,&ts->token[p+1],(t-p));
 	/* truncate token at postpunctuation */
@@ -229,6 +229,75 @@ static const char ts_getc(cst_tokenstream *ts)
     return ts->current_char;
 }
 
+const char *ts_get_quoted_token(cst_tokenstream *ts,
+				char quote,
+				char escape)
+{
+    /* for reading the next quoted token that starts with quote and
+       ends with quote, quote may appear only if preceded by escape */
+    int l;
+    char e[3];
+
+    e[0] = quote;
+    e[1] = escape;
+    e[2] = '\0';
+
+    /* skipping whitespace */
+    get_token_sub_part(ts,ts->whitespacesymbols,
+		       &ts->whitespace,
+		       &ts->ws_max);
+    ts->token_pos = ts->file_pos - 1;
+
+    if (ts->current_char == quote)
+    {   /* go until quote */
+	ts_getc(ts);
+	l=0;
+	while (!ts_eof(ts))
+	{
+	    get_token_sub_part_2(ts,e,&ts->token,&ts->token_max);
+	    if (ts->current_char == escape)
+	    {
+		ts_getc(ts);
+		l = strlen(ts->token);
+		if (l+1 >= ts->token_max) 
+		    extend_buffer(&ts->token,&ts->token_max);
+		ts->token[l] = ts->current_char;
+		ts->token[l+1] = '\0';
+		ts_getc(ts);
+	    }
+	    else
+		break;
+	}
+	ts_getc(ts);
+    }
+    else /* its not quotes, like to be careful dont you */
+    {    /* treat is as standard token                  */
+	/* Get prepunctuation */
+	get_token_sub_part(ts,ts->prepunctuationsymbols,
+			   &ts->prepunctuation,
+			   &ts->prep_max);
+	/* Get the symbol itself */
+	if (strchr(ts->singlecharsymbols,ts->current_char) != NULL)
+	{
+	    if (2 >= ts->token_max) extend_buffer(&ts->token,&ts->token_max);
+	    ts->token[0] = ts->current_char;
+	    ts->token[1] = '\0';
+	    ts_getc(ts);
+	}
+	else
+	    get_token_sub_part_2(ts,
+				 ts->whitespacesymbols,       /* end class1 */
+				 &ts->token,
+				 &ts->token_max);
+	/* This'll have token *plus* post punctuation in ts->token */
+	/* Get postpunctuation */
+	get_token_postpunctuation(ts);
+    }
+
+    return ts->token;
+}
+
+
 const char *ts_get(cst_tokenstream *ts)
 {
     /* Get next token */
@@ -248,7 +317,7 @@ const char *ts_get(cst_tokenstream *ts)
     /* Get the symbol itself */
     if (strchr(ts->singlecharsymbols,ts->current_char) != NULL)
     {
-	if (2 >= ts->token_max) extend_buffer(&ts->token,2,&ts->token_max);
+	if (2 >= ts->token_max) extend_buffer(&ts->token,&ts->token_max);
 	ts->token[0] = ts->current_char;
 	ts->token[1] = '\0';
 	ts_getc(ts);

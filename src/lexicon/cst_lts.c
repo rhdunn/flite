@@ -98,8 +98,10 @@ cst_val *lts_apply(const char *word,const char *feats,const cst_lts_rules *r)
 	if ((full_buff[pos] < 'a') ||
 	    (full_buff[pos] > 'z'))
 	{   /* English specific */
+#ifdef EXCESSIVELY_CHATTY
 	    cst_errmsg("lts:skipping unknown char \"%c\"\n",
 		       full_buff[pos]);
+#endif
 	    continue;
 	}
 	phone = apply_model(fval_buff,

@@ -39,7 +39,7 @@ DIRNAME=src/stats
 BUILD_DIRS = 
 ALL_DIRS= 
 H = 
-SRCS = cst_cart.c cst_viterbi.c
+SRCS = cst_cart.c cst_viterbi.c cst_ss.c
 OBJS = $(SRCS:.c=.o)
 FILES = Makefile $(H) $(SRCS)
 LIBNAME = flite

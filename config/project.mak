@@ -36,6 +36,6 @@
 ###########################################################################
 PROJECT_NAME = Festival Lite
 PROJECT_PREFIX = flite
-PROJECT_VERSION = 1.0
-PROJECT_DATE = August 2001
-PROJECT_STATE = beta
+PROJECT_VERSION = 1.1
+PROJECT_DATE = December 2001
+PROJECT_STATE = release
