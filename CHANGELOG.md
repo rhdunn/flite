@@ -6,6 +6,8 @@ with clause 2 of the project's [BSD license](COPYING).
 ## [1.4-2]
 
   * Fix a typo in README.md.
+  * Build fixes to the `testsuite` from [1.3-2](#1.3-2), [1.1-2](#1.1-2) and
+    [1.0-2](#1.0-2).
 
 ## [1.4-1]
 
