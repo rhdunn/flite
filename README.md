@@ -234,7 +234,7 @@ Some typical examples are:
 
 Voice names are identified as loadable files if the name includes a
 `/` (slash) otherwise they are treated as internal names.  So if you
-want to load voices from the current directory you need to prefix the
+want to load voices from the current directory you need to prefix them
 with `./`.
 
 # Voice Quality
