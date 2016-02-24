@@ -3,6 +3,11 @@
 This file documents the changes made to the flite project in order to comply
 with clause 2 of the project's [BSD license](COPYING).
 
+## [1.3-2]
+
+  * Fix the calls to `ts_open` in the testsuite. Based on a patch by
+    Åke Forslund <ake.forslund@gmail.com>.
+
 ## [1.3-1]
 
   * Restore ALSA support, preserving the backported ALSA fixes from [1.1-1](#1.1-1).
