@@ -116,7 +116,7 @@ then
          }' >pruned_lex.scm
      # And get the entries that didn't even align
      grep "^align failed: " align.log | sed 's/align failed: //' >>pruned_lex.scm
-     $FESTIVAL --heap $HEAP -b '(lex.compile "pruned_lex.scm" "pruned_lex.out")'
+     $FESTIVAL --heap $HEAP -b '(begin (load "cmulex.scm") (lex.compile "pruned_lex.scm" "pruned_lex.out"))'
      $FESTIVAL --heap $HEAP -b $FLITEDIR/tools/make_lex.scm '(lextoC "cmu" "pruned_lex.out" "c")' ;
    )
 fi
