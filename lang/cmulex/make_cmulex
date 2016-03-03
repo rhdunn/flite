@@ -41,6 +41,18 @@ then
    FLITEDIR=`pwd`/../..
 fi
 
+if [ "x$FESTIVAL" = "x" ]
+then
+   FESTIVAL=$ESTDIR/../festival/bin/festival
+fi
+
+if [ ! `command -v $FESTIVAL` ]
+then
+    echo "Cannot find the festival program at '$FESTIVAL'."
+    echo "Ensure the ESTDIR environment variable is set correctly."
+    exit 1
+fi
+
 if [ $# = 0 ]
 then
    $0 setup
@@ -64,14 +76,14 @@ fi
 if [ "$1" = "lts" ]
 then
   (cd festival/lib/dicts/cmu;
-   festival --heap 10000000 -b allowables.scm '(dump-flat-entries-all "cmudict-0.4.out" "lts_scratch/lex_entries.out")'
+   $FESTIVAL --heap 10000000 -b allowables.scm '(dump-flat-entries-all "cmudict-0.4.out" "lts_scratch/lex_entries.out")'
    ./build_lts cummulate
    ./build_lts align
    ./build_lts build
    ./build_lts merge
    ./build_lts test
-   festival --heap 10000000 -b $FLITEDIR/tools/make_lts_wfst.scm lts_scratch/lex_lts_rules.scm '(lts_to_rg_to_wfst lex_lts_rules "wfst/")';
-   festival --heap 10000000 -b $FLITEDIR/tools/make_lts.scm lts_scratch/lex_lts_rules.scm '(ltsregextoC "cmu" lex_lts_rules "wfst/" "c")';
+   $FESTIVAL --heap 10000000 -b $FLITEDIR/tools/make_lts_wfst.scm lts_scratch/lex_lts_rules.scm '(lts_to_rg_to_wfst lex_lts_rules "wfst/")';
+   $FESTIVAL --heap 10000000 -b $FLITEDIR/tools/make_lts.scm lts_scratch/lex_lts_rules.scm '(ltsregextoC "cmu" lex_lts_rules "wfst/" "c")';
    )
 fi
 
@@ -97,8 +109,8 @@ then
          }' >pruned_lex.scm
      # And get the entries that didn't even align
      grep "^align failed: " align.log | sed 's/align failed: //' >>pruned_lex.scm
-     festival --heap 10000000 -b '(lex.compile "pruned_lex.scm" "pruned_lex.out")'
-     festival --heap 10000000 -b $FLITEDIR/tools/make_lex.scm '(lextoC "cmu" "pruned_lex.out" "c")' ;
+     $FESTIVAL --heap 10000000 -b '(lex.compile "pruned_lex.scm" "pruned_lex.out")'
+     $FESTIVAL --heap 10000000 -b $FLITEDIR/tools/make_lex.scm '(lextoC "cmu" "pruned_lex.out" "c")' ;
    )
 fi
 
@@ -132,7 +144,7 @@ then
            for (i=1; i<=length($1); i++)
               printf("%s_%s ",substr($1,i,1),$(i+2));
            printf("\n");}' >pruned_lex2.data
-#     festival --heap 10000000 -b $FLITEDIR/tools/make_lex.scm '(lextoC "cmu" "pruned_lex.out" "c")' ;
+#     $FESTIVAL --heap 10000000 -b $FLITEDIR/tools/make_lex.scm '(lextoC "cmu" "pruned_lex.out" "c")' ;
    )
 fi
 

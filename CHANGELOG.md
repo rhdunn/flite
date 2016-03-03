@@ -9,6 +9,7 @@ with clause 2 of the project's [BSD license](COPYING).
     from flite 1.4.2.
   * Backport the fix for running `wfst_build` in `make_lts_wfst.scm` from
     flite 1.4.
+  * Allow specifying a custom location for the `festival` application in `make_cmulex`.
 
 ## [1.3-2]
 
