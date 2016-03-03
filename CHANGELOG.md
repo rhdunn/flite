@@ -7,6 +7,8 @@ with clause 2 of the project's [BSD license](COPYING).
 
   * Backport the fix for checking if `FLITEDIR` is not defined in `make_cmulex`
     from flite 1.4.2.
+  * Backport the fix for running `wfst_build` in `make_lts_wfst.scm` from
+    flite 1.4.
 
 ## [1.3-2]
 
