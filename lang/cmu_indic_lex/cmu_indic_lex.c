@@ -49,7 +49,7 @@ static const struct cmu_indic_char cmu_indic_offset_char[128] = {
   /*001*/ {IND_ANUSWAAR, "nX"},
   /*002*/ {IND_ANUSWAAR, "nX"},
   /*003*/ {IND_VISARGA, "h"},
-  
+
   /*004*/ {IND_INDEPENDENT_VOWEL, "A"},
   /*005*/ {IND_INDEPENDENT_VOWEL, "A"},
   /*006*/ {IND_INDEPENDENT_VOWEL, "A:"},
@@ -73,39 +73,39 @@ static const struct cmu_indic_char cmu_indic_offset_char[128] = {
   /*017*/ {IND_CONSONANT, "g"},
   /*018*/ {IND_CONSONANT, "gh"},
   /*019*/ {IND_CONSONANT, "N"},
-  
+
   /*01A*/ {IND_CONSONANT, "c"},
   /*01B*/ {IND_CONSONANT, "ch"},
   /*01C*/ {IND_CONSONANT, "J"},
   /*01D*/ {IND_CONSONANT, "Jh"},
   /*01E*/ {IND_CONSONANT, "n~"},
-  
+
   /*01F*/ {IND_CONSONANT, "tr"},
   /*020*/ {IND_CONSONANT, "tR"},
   /*021*/ {IND_CONSONANT, "dr"},
   /*022*/ {IND_CONSONANT, "dR"},
   /*023*/ {IND_CONSONANT, "nr"},
-  
+
   /*024*/ {IND_CONSONANT, "tB"},
   /*025*/ {IND_CONSONANT, "tBh"},
   /*026*/ {IND_CONSONANT, "dB"},
   /*027*/ {IND_CONSONANT, "dBh"},
   /*028*/ {IND_CONSONANT, "nB"},
   /*029*/ {IND_CONSONANT, "nB"},
-  
+
   /*02A*/ {IND_CONSONANT, "p"},
   /*02B*/ {IND_CONSONANT, "ph"},
   /*02C*/ {IND_CONSONANT, "b"},
   /*02D*/ {IND_CONSONANT, "bh"},
   /*02E*/ {IND_CONSONANT, "m"},
-  
+
   /*02F*/ {IND_CONSONANT, "j"},
   /*030*/ {IND_CONSONANT, "9r"},
   /*031*/ {IND_CONSONANT, "9r"},
   /*032*/ {IND_CONSONANT, "l"},
   /*033*/ {IND_CONSONANT, "lr"},
   /*034*/ {IND_CONSONANT, "lr"},
-  
+
   /*035*/ {IND_CONSONANT, "v"},
   /*036*/ {IND_CONSONANT, "c}"},
   /*037*/ {IND_CONSONANT, "sr"},
@@ -159,7 +159,7 @@ static const struct cmu_indic_char cmu_indic_offset_char[128] = {
   /*05D*/ {IND_CONSONANT, "rrh"},
   /*05E*/ {IND_CONSONANT, "f"},
   /*05F*/ {IND_CONSONANT, "j"},
-  
+
   /*060*/ {IND_INDEPENDENT_VOWEL, "9r="},
   /*061*/ {IND_INDEPENDENT_VOWEL, "lr="},
   /*062*/ {IND_VOWEL, "lr="},
@@ -211,7 +211,7 @@ static int cmu_indic_is_vowel(const char *p)
 }
 
 static int cmu_indic_lex_ord_to_offset(const int indic_ord) {
-  int output;
+  int output=0;
   int i;
   int offset;
 
@@ -234,7 +234,7 @@ static int cmu_indic_lex_ord_to_offset(const int indic_ord) {
     offset = 0x0C80;
   if ((i >= 0x0D00) && (i <= 0x0D7F))
     offset = 0x0D00;
-  
+
   if (!offset) {
     cst_errmsg("Indic language can not process character 0x%x\n", i);
   } else {
@@ -248,7 +248,7 @@ static int cmu_indic_get_char_type(const cst_val *indic_char) {
   int c;
 
   if (!indic_char) return IND_IGNORE;
-  
+
   c = val_int(indic_char);
   if ((c < 0x0900) || (c > 0x0D7F))
     return IND_IGNORE;
@@ -260,7 +260,7 @@ static const cst_val* cmu_indic_get_char_phoneme(const cst_val *indic_char) {
   int c;
 
   if (!indic_char) return string_val("");
-  
+
   c = val_int(indic_char);
   c = cmu_indic_lex_ord_to_offset(c);
   return string_val(cmu_indic_offset_char[c].phoneme);
@@ -269,7 +269,7 @@ static const cst_val* cmu_indic_get_char_phoneme(const cst_val *indic_char) {
 static cst_val *cmu_indic_lex_remove_ignore_chars(const cst_val *indic_ords) {
   cst_val *output = 0;
   const cst_val *v;
-  
+
   for(v=indic_ords; v; v=val_cdr(v)) {
     if (cmu_indic_get_char_type(val_car(v)) == IND_IGNORE)
       continue;
@@ -297,12 +297,12 @@ static cst_val *cmu_indic_lex_map_nukta_chars(const cst_val *indic_ords) {
         case 2338: mapped_val=2397; break; // ढ़
         case 2347: mapped_val=2398; break; // फ़
         case 2351: mapped_val=2399; break; // य़
-          
+
         // Bengali
         case 2465: mapped_val=2524; break;
         case 2566: mapped_val=2525; break;
         case 2479: mapped_val=2527; break;
-          
+
         // Tamil
         case 2962: mapped_val=2964; break;
         default:
@@ -315,7 +315,7 @@ static cst_val *cmu_indic_lex_map_nukta_chars(const cst_val *indic_ords) {
       output = cons_val(val_car(v), output);
     }
   }
-    
+
   return val_reverse(output);
 }
 
@@ -333,14 +333,14 @@ cst_val *cmu_indic_lex_ord_to_phones(const cst_val *ords,
 
   int cur_char_type = 0;
   int next_char_type = 0;
-  
+
   // Ignore chars (filter)
   in_ords = cmu_indic_lex_remove_ignore_chars(ords);
 
   if (!in_ords) {
     return out_phones;
   }
-  
+
   // Map Nukta Chars (filter)
   in_ords = cmu_indic_lex_map_nukta_chars(in_ords);
 
@@ -366,7 +366,7 @@ cst_val *cmu_indic_lex_ord_to_phones(const cst_val *ords,
       // Add consonant to the output list
       out_phone_strings = cons_val(cmu_indic_get_char_phoneme(cur_char),
                                    out_phone_strings);
-    
+
       // If a consonant is followed by a combination vowel, a
       // halant, a punctuation then don't add a schwa after
       // it. Otherwise, insert a schwa. For end-of-word, check
@@ -583,7 +583,7 @@ static cst_val *delete_medial_schwa(const cst_val *rphones)
     /* This schwa deletion follows the technique by Narsimhan et al (2001). */
     /* 1. Process input from right to left                                  */
     /* 2. If a schwa is found in a VC_CV context, then delete it.           */
-  
+
     /* There are exceptions to this: (i) Phonotactic constraints of         */
     /* Hindi not violated, and no (ii) morpheme boundary present on the     */
     /* left. But I don't know how to handle these yet. So this will be      */
@@ -631,13 +631,13 @@ static cst_val *cmu_indic_hindi_schwa_fixes(cst_val *phones)
         return phones;
 }
 
-cst_val *cmu_indic_lex_lts_function(const struct lexicon_struct *l, 
+cst_val *cmu_indic_lex_lts_function(const struct lexicon_struct *l,
                                     const char *word, const char *pos,
                                     const cst_features *feats)
 {
     cst_val *utflets = 0;
     cst_val *ords = 0;
-    
+
     cst_val *phones = 0;
     cst_val *english_phones;
     cst_val *base_phones = NULL, *rp;
@@ -645,12 +645,16 @@ cst_val *cmu_indic_lex_lts_function(const struct lexicon_struct *l,
     int cmu_indic_variant_deletes_word_final_schwa=0;
     const cst_val *v;
     cst_val *tmpv;
-    
+
     indic_variant = get_param_string(feats, "variant", "none");
 
     if (!strcmp(indic_variant, "hin")) {
       cmu_indic_variant_deletes_word_final_schwa = 1;
+    } else if (!strcmp(indic_variant, "mar")) {
+      cmu_indic_variant_deletes_word_final_schwa = 1;
     } else if (!strcmp(indic_variant, "tel")) {
+      cmu_indic_variant_deletes_word_final_schwa = 0;
+    } else if (!strcmp(indic_variant, "tam")) {
       cmu_indic_variant_deletes_word_final_schwa = 0;
     } else {
       cmu_indic_variant_deletes_word_final_schwa = 0;
@@ -717,7 +721,7 @@ static int cmu_indic_contains_vowel(const cst_val *r)
         if (cmu_indic_is_vowel(val_string(val_car(x))))
             return TRUE;
     }
-    
+
     return FALSE;
 }
 
@@ -731,7 +735,7 @@ static int cmu_indic_has_vowel_in_syl(const cst_item *i)
     return FALSE;
 }
 
-int cmu_indic_syl_boundary(const cst_item *i,const cst_val *rest) 
+int cmu_indic_syl_boundary(const cst_item *i,const cst_val *rest)
 {
     if (!rest)
         return TRUE;
@@ -762,7 +766,7 @@ int cmu_indic_syl_boundary(const cst_item *i,const cst_val *rest)
 }
 
 #if 0
-int cmu_indic_syl_boundary(const cst_item *i,const cst_val *rest) 
+int cmu_indic_syl_boundary(const cst_item *i,const cst_val *rest)
 {
     /* For debugging the syl boundary code */
     int x;
@@ -809,17 +813,17 @@ cst_utterance *cmu_indic_assign_lex_stress(cst_utterance *u)
             x3 = ffeature_string(syl,"R:SylStructure.daughtern.p.p.name");
             if (cmu_indic_is_vowel(x1))
             {   /* If syllable is open vowel */
-                if (cst_streq(x1,"A") || cst_streq(x1,"i") || 
+                if (cst_streq(x1,"A") || cst_streq(x1,"i") ||
                     cst_streq(x1,"u"))
                     syl_weight = 1;
                 else
                     syl_weight = 2;
             }
-            else 
-            {   
+            else
+            {
                 if (cmu_indic_is_vowel(x2))
                 {
-                    if (cst_streq(x2,"A") || cst_streq(x2,"i") || 
+                    if (cst_streq(x2,"A") || cst_streq(x2,"i") ||
                         cst_streq(x2,"u"))
                         syl_weight = 2;
                     else
@@ -864,7 +868,7 @@ cst_utterance *cmu_indic_postlex(cst_utterance *u)
     /* Print out words as 'festival' lexical entries */
     const cst_item *word, *syl, *seg;
 
-    for (word=relation_head(utt_relation(u,"Word")); 
+    for (word=relation_head(utt_relation(u,"Word"));
 	 word; word=item_next(word))
     {
         printf("( \"%s\" nil (",ffeature_string(word,"name"));
@@ -872,7 +876,7 @@ cst_utterance *cmu_indic_postlex(cst_utterance *u)
              syl;syl=item_next(syl))
         {
             printf("(( ");
-            for (seg=item_daughter(item_as(syl,"SylStructure")); seg; 
+            for (seg=item_daughter(item_as(syl,"SylStructure")); seg;
                  seg=item_next(seg))
             {
                 printf("%s ",ffeature_string(seg,"name"));
@@ -880,7 +884,7 @@ cst_utterance *cmu_indic_postlex(cst_utterance *u)
             printf(") %s %d) ",
                    ffeature_string(syl,"stress"),
                    ffeature_int(syl,"syl_weight"));
-                   
+
         }
         printf("))\n");
     }

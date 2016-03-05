@@ -586,11 +586,11 @@ void add_residual_pulse(int targ_size, unsigned char *targ_residual,
 			int unit_size, const unsigned char *unit_residual)
 {
     int p,i,m;
-    /* Unit residual isn't a pointed its a number, the power for the 
+    /* Unit residual isn't a pointer its a number, the power for the 
        the sts, yes this is hackily casting the address to a number */
 
     /* Need voiced and unvoiced model */
-    p = (int)unit_residual;
+    p = (int)unit_residual; /* I know the compiler will complain about this */
 
     if (p > 7000)  /* voiced */
     {

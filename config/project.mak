@@ -36,8 +36,8 @@
 ###########################################################################
 PROJECT_NAME = Festival Lite
 PROJECT_PREFIX = flite
-PROJECT_VERSION = 1.9.0
-PROJECT_DATE = Jul 2014
-PROJECT_STATE = current
+PROJECT_VERSION = 2.0.0
+PROJECT_DATE = Dec 2014
+PROJECT_STATE = release
 
 PROJECT_SHLIB_VERSION = 1

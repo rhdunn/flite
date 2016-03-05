@@ -51,7 +51,12 @@ then
    fi
 fi
 
-HEAPSIZE=20000000
+if [ "$SIODHEAPSIZE" = "" ]
+then
+   SIODHEAPSIZE=20000000
+   export SIODHEAPSIZE
+fi
+HEAPSIZE=$SIODHEAPSIZE
 
 . ./etc/voice.defs
 
@@ -460,7 +465,7 @@ fi
 # build index file
 if [ "$1" = "idx" ]
 then
-   HEAPSIZE=10000000
+   HEAPSIZE=100000000
    if [ "$FV_TYPE" != "diphone" ]  # clunits or ldom 
    then
       echo "Building clunits/ldom index"

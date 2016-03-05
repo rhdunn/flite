@@ -37,14 +37,14 @@
 ##       Authors:  Alan W Black (awb@cs.cmu.edu)                         ##
 ##                 Kevin A. Lenzo (lenzo@cs.cmu.edu)                     ##
 ##                 and others see ACKNOWLEDGEMENTS                       ##
-##          Date:  Jul 2014                                              ##
-##       Version:  1.9.0 release                                         ##
+##          Date:  December 2014                                         ##
+##       Version:  2.0.0 release                                         ##
 ##                                                                       ## 
 ###########################################################################
 TOP=.
 DIRNAME=
 BUILD_DIRS = include src lang doc
-ALL_DIRS=config $(BUILD_DIRS) testsuite sapi \
+ALL_DIRS=config $(BUILD_DIRS) testsuite \
          wince windows android \
          tools main 
 CONFIG=configure configure.in config.sub config.guess \

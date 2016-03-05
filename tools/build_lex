@@ -70,7 +70,7 @@ fi
 if [ "$1" = "lts" ]
 then
    # Let's assume you have your allowables.scm already
-   # ./build_lts make_allowables_smt
+   ./build_lts make_allowables_smt
    ./build_lts cummulate
    ./build_lts align
    ./build_lts build
