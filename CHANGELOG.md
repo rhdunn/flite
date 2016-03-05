@@ -10,6 +10,7 @@ with clause 2 of the project's [BSD license](COPYING).
   * Backport the fix for running `wfst_build` in `make_lts_wfst.scm` from
     flite 1.4.
   * Allow specifying a custom location for the `festival` application in `make_cmulex`.
+  * Work around setting the heap with festival/speech-tools 2.4 in `make_cmulex`.
 
 ## [1.3-2]
 
