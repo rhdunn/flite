@@ -51,7 +51,8 @@ CONFIG=configure configure.in config.sub config.guess \
        missing install-sh mkinstalldirs
 WINDOWS = Exports.def flite.sln fliteDll.vcproj
 FILES = Makefile README ACKNOWLEDGEMENTS COPYING $(CONFIG) $(WINDOWS)
-DIST_CLEAN = config.cache config.log config.status \
+DIST_CLEAN = .time-stamp $(TOP)/build/ \
+                config.cache config.log config.status \
 		config/config config/system.mak FileList
 
 HOST_ONLY_DIRS = tools main testsuite

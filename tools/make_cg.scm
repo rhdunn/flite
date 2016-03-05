@@ -41,12 +41,14 @@
 ;; Used for getting smaller models, if non-zero this will reduce the 
 ;; order of the dumped models from whatever it is (probably 24) to this
 ;; It does the right thing with statics and dynamics and stddev
+(defvar cg:relevant_params nil) ;; a list of param ranges to dump
 (defvar cg_reduced_order 0)
 (if (> cg_reduced_order 0) ;; just to remind me
     (format t "\n***** CG: note reducing order to %d *****\n\n" 
             cg_reduced_order))
 (defvar F0MEAN 0.0)
 (defvar F0STD 1.0)
+(defvar num_channels_additive_constant 4)
 
 (define (cg_convert name festvoxdir odir)
   "(cg_convert name clcatfn clcatfnordered cltreesfn festvoxdir odir)
@@ -72,6 +74,16 @@ Convert a festvox clunits (processed) voice into a C file."
     "f0" name odir)
    (format ofd "\n")
    (format ofd "extern const cst_cart * const %s_f0_carts[];\n" name )
+
+   (if cg:spamf0
+	(begin
+	  (set! acctrack (track.load "festival/trees/cb.params"))
+	  (format ofd "extern const cst_cart %s_spamf0_phrase_cart;\n" name)
+	  (format ofd "extern const cst_cart %s_spamf0_accent_cart;\n" name)
+	  (format ofd "extern const float * const %s_spamf0_accent_vectors[];\n" name)
+	  (format ofd "#define %s_spamf0_accent_num_channels %d\n" name (track.num_channels acctrack))
+	  (format ofd "#define %s_spamf0_accent_num_frames %d\n" name (track.num_frames acctrack))
+	))
 
    ;; spectral trees
    (set! val_table nil) ;; different val number over the two sets of carts
@@ -226,6 +238,21 @@ Convert a festvox clunits (processed) voice into a C file."
          (format ofd "  %s_static_mcep_carts,\n" name)
          (format ofd "  %s_delta_mcep_carts,\n" name) 
          (format ofd "  NULL,\n")
+	 (if cg:spamf0
+	    (begin
+         	(set! mfd (fopen (path-append odir "paramfiles.mak") "a"))
+	        (format mfd "SPAMF0=true\n")
+        	(fclose mfd)
+		(format ofd "  &%s_spamf0_accent_cart,\n" name)
+		(format ofd "  &%s_spamf0_phrase_cart,\n" name)
+	    )
+	    (begin
+         	(set! mfd (fopen (path-append odir "paramfiles.mak") "a"))
+	        (format mfd "SPAMF0=false\n")
+        	(fclose mfd)
+	    	(format ofd "  NULL,NULL,\n")
+	    )
+ 	 )
 
          (format ofd "  %s_static_num_channels,\n" name)
          (format ofd "  %s_static_num_frames,\n" name)
@@ -236,16 +263,48 @@ Convert a festvox clunits (processed) voice into a C file."
          (format ofd "  %s_delta_model_vectors,\n" name)
 
          (format ofd "  0,0,NULL,\n")
+	 (if cg:spamf0
+	    (begin
+		(format ofd "  %s_spamf0_accent_num_channels,\n" name)
+		(format ofd "  %s_spamf0_accent_num_frames,\n" name)
+		(format ofd "  %s_spamf0_accent_vectors,\n" name)
+	    )
+	    (format ofd "  0,0,NULL,\n")
+ 	 )
+
         )
        (begin
          (format ofd "  %s_single_mcep_carts,\n" name)
          (format ofd "  NULL,NULL,\n")
+	 (if cg:spamf0
+	    (begin
+         	(set! mfd (fopen (path-append odir "paramfiles.mak") "a"))
+	        (format mfd "SPAMF0=true\n")
+        	(fclose mfd)
+		(format ofd "  &%s_spamf0_accent_cart,\n" name)
+		(format ofd "  &%s_spamf0_phrase_cart,\n" name)
+	    )
+	    (begin
+         	(set! mfd (fopen (path-append odir "paramfiles.mak") "a"))
+	        (format mfd "SPAMF0=false\n")
+        	(fclose mfd)
+	    	(format ofd "  NULL,NULL,\n")
+	    )
+ 	 )
 
          (format ofd "  %s_single_num_channels,\n" name)
          (format ofd "  %s_single_num_frames,\n" name)
          (format ofd "  %s_single_model_vectors,\n" name)
          (format ofd "  0,0,NULL,\n")
-         (format ofd "  0,0,NULL,\n")))
+         (format ofd "  0,0,NULL,\n")
+	 (if cg:spamf0
+	    (begin
+		(format ofd "  %s_spamf0_accent_num_channels,\n" name)
+		(format ofd "  %s_spamf0_accent_num_frames,\n" name)
+		(format ofd "  %s_spamf0_accent_vectors,\n" name)
+	    )
+	    (format ofd "  0,0,NULL,\n")
+ 	 )))
 
    (format ofd "  %s_model_min,\n" name)
    (format ofd "  %s_model_range,\n" name)
@@ -275,6 +334,9 @@ Convert a festvox clunits (processed) voice into a C file."
          (format ofd "  0, /* cg:mixed_excitation */\n")
          (format ofd "  0,0, /* cg:mixed_excitation */\n")
          (format ofd "  NULL, \n")))
+   (if cg:spamf0
+	(format ofd "  1, // cg:spamf0\n")
+	(format ofd "  0, // cg:spamf0\n"))
    (format ofd "  1.5 /* gain */\n")
    (format ofd "};\n")
 
@@ -420,6 +482,19 @@ Convert a festvox clunits (processed) voice into a C file."
 (define (mcepcoeff_norm c min range)
   (* (/ (- c min) range) 65535))
 
+(define (output_accent_frame name track f ofd)
+  "(output_accent_frame name track frame ofd)
+Ouput this accent params."
+  (let ((i 0) (nc (track.num_channels track)))
+    ;(format ofd "static const unsigned short %s_spamf0_accent_frame_%d[] = { \n" name f)
+    (format ofd "static const float %s_spamf0_accent_frame_%d[] = { \n" name f)
+	  (while (< i nc)
+                       (format ofd " %f," (track.get track f i))
+                 (set! i (+ 1 i)))
+          (format ofd " };\n")
+)
+)
+
 (define (output_param_frame name type track f ofd)
   "(output_param_frame name track frame ofd)
 Ouput this frame."
@@ -428,7 +503,10 @@ Ouput this frame."
     (set! min_range mcep_min_range)
     (set! real_order (/ (- nc 4) 4))
     (set! new_min_range nil)
-    
+
+    (if cg:relevant_params
+        (begin ;; specified number of parameters
+          )
     (if cg:mixed_excitation
 	(begin
 	  
@@ -470,7 +548,7 @@ Ouput this frame."
                  (set! min_range (cdr min_range))
                  (set! i (+ 1 i)))
           (format ofd " };\n")
-          ))
+          )))
     )
   )
 

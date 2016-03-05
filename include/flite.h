@@ -66,12 +66,15 @@ extern "C" {
 #include "cst_tokenstream.h"
 
 extern cst_val *flite_voice_list;
+extern cst_lang flite_lang_list[20];
 
 /* Public functions */
 int flite_init();
 
 /* General top level functions */
 cst_voice *flite_voice_select(const char *name);
+cst_voice *flite_voice_load(const char *voice_filename);
+int flite_voice_dump(cst_voice *voice, const char *voice_filename);
 float flite_file_to_speech(const char *filename, 
 			   cst_voice *voice,
 			   const char *outtype);
@@ -94,6 +97,9 @@ cst_wave *flite_text_to_wave(const char *text,cst_voice *voice);
 cst_utterance *flite_synth_text(const char *text,cst_voice *voice);
 cst_utterance *flite_synth_phones(const char *phones,cst_voice *voice);
 
+float flite_ts_to_speech(cst_tokenstream *ts, 
+                         cst_voice *voice,
+                         const char *outtype);
 cst_utterance *flite_do_synth(cst_utterance *u,
                               cst_voice *voice,
                               cst_uttfunc synth);
@@ -122,9 +128,15 @@ float flite_ffeature_float(const cst_item *item,const char *featpath);
 const cst_val *flite_ffeature(const cst_item *item,const char *featpath);
 cst_item* flite_path_to_item(const cst_item *item,const char *featpath);
 
+/* These functions are *not* thread-safe, they are designed to be called */
+/* before the initial synthesis occurs */
+int flite_add_voice(cst_voice *voice);
+int flite_add_lang(const char *langname,
+                   void (*lang_init)(cst_voice *vox),
+                   cst_lexicon *(*lex_init)());
+
 #ifdef __cplusplus
 }  /* extern "C" */
 #endif /* __cplusplus */
-
 
 #endif

@@ -180,6 +180,8 @@ cst_audiodev *audio_open_alsa(unsigned int sps, int channels, cst_audiofmt fmt)
   /* Make sure the device is ready to accept data */
   assert(snd_pcm_state(pcm_handle) == SND_PCM_STATE_PREPARED);
 
+  /* snd_pcm_hw_params_free(hwparams); */
+
   /* Write hardware parameters to flite audio device data structure */
   ad = cst_alloc(cst_audiodev, 1);
   assert(ad != NULL);

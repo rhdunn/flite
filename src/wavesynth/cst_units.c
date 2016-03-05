@@ -136,6 +136,13 @@ cst_utterance *join_units_modified_lpc(cst_utterance *utt)
 	cst_error(); /* Should not happen */
     }
 
+    if (w == NULL)
+    {
+        /* Synthesis Failed, probably because it was interrupted */
+        utt_set_feat_int(utt,"Interrupted",1);
+        w = new_wave();
+    }
+
     utt_set_wave(utt,w);
     
     return utt;
@@ -146,7 +153,7 @@ cst_utterance *asis_to_pm(cst_utterance *utt)
     /* Copy the PM structure from the units unchanged */
     cst_item *u;
     cst_lpcres *target_lpcres;
-    int unit_entry, unit_start, unit_end;
+    int  unit_start, unit_end;
     int utt_pms, utt_size, i;
     cst_sts_list *sts_list;
 
@@ -159,7 +166,6 @@ cst_utterance *asis_to_pm(cst_utterance *utt)
 	 u; 
 	 u=item_next(u))
     {
-	unit_entry = item_feat_int(u,"unit_entry");
 	unit_start = item_feat_int(u,"unit_start");
 	unit_end = item_feat_int(u,"unit_end");
 	utt_size += get_unit_size(sts_list,unit_start,unit_end);
@@ -174,7 +180,6 @@ cst_utterance *asis_to_pm(cst_utterance *utt)
 	 u; 
 	 u=item_next(u))
     {
-	unit_entry = item_feat_int(u,"unit_entry");
 	unit_start = item_feat_int(u,"unit_start");
 	unit_end = item_feat_int(u,"unit_end");
 	for (i=unit_start; i<unit_end; i++,utt_pms++)
@@ -245,9 +250,9 @@ cst_utterance *concat_units(cst_utterance *utt)
 {
     cst_lpcres *target_lpcres;
     cst_item *u;
-    int pm_i, unit_entry, unit_size, unit_start, unit_end;
-    int rpos, pm_start, nearest_u_pm;
-    int sample_rate;
+    int pm_i;
+    int  unit_size, unit_start, unit_end;
+    int rpos, nearest_u_pm;
     int target_end, target_start;
     float m, u_index;
     cst_sts_list *sts_list;
@@ -259,7 +264,6 @@ cst_utterance *concat_units(cst_utterance *utt)
     else
         residual_type = sts_list->codec;
     target_lpcres = val_lpcres(utt_feat_val(utt,"target_lpcres"));
-    sample_rate = sts_list->sample_rate;
     
     target_lpcres->lpc_min = sts_list->coeff_min;
     target_lpcres->lpc_range = sts_list->coeff_range;
@@ -273,13 +277,10 @@ cst_utterance *concat_units(cst_utterance *utt)
         target_lpcres->packed_residuals = 
             cst_alloc(const unsigned char *,target_lpcres->num_frames);
     }
-    
-    sample_rate = sts_list->sample_rate;
 
     target_start = 0.0; rpos = 0; pm_i = 0; u_index = 0;
     for (u=relation_head(utt_relation(utt,"Unit")); u; u=item_next(u))
     {
-	unit_entry = item_feat_int(u,"unit_entry");
 	unit_start = item_feat_int(u,"unit_start");
 	unit_end = item_feat_int(u,"unit_end");
 	unit_size = get_unit_size(sts_list,unit_start,unit_end);
@@ -289,7 +290,7 @@ cst_utterance *concat_units(cst_utterance *utt)
 	m = (float)unit_size/(float)(target_end-target_start);
 /*	printf("unit_size %d start %d end %d tstart %d tend %d m %f\n",  
 	unit_size, unit_start, unit_end, target_start, target_end, m); */
-	for (pm_start=pm_i ; 
+	for ( /* pm_start=pm_i */ ; 
 	     (pm_i < target_lpcres->num_frames) &&
 		 (target_lpcres->times[pm_i] <= target_end);
 	     pm_i++)
