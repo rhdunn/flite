@@ -1,9 +1,8 @@
-#!/bin/sh
 ###########################################################################
 ##                                                                       ##
 ##                  Language Technologies Institute                      ##
 ##                     Carnegie Mellon University                        ##
-##                         Copyright (c) 2004                            ##
+##                        Copyright (c) 2013                             ##
 ##                        All Rights Reserved.                           ##
 ##                                                                       ##
 ##  Permission is hereby granted, free of charge, to use and distribute  ##
@@ -31,29 +30,24 @@
 ##  THIS SOFTWARE.                                                       ##
 ##                                                                       ##
 ###########################################################################
-#
-#  Build a segmented resource out of the binary data in given .bin file
-#
-#   make_seg_ro arm.bin type id 
+##                                                                       ##
+##  indic lexicon and letter to sound rules                           ##
+##                                                                       ##
+###########################################################################
+TOP=../..
+DIRNAME=lang/cmu_indic_lex
+BUILD_DIRS = 
+ALL_DIRS= 
+H = cmu_indic_lex.h
+SRCS = cmu_indic_lex.c
+SCRIPTS = 
+OBJS = $(SRCS:.c=.o)
+SCM=
+FILES = Makefile $(SCM) $(SRCS) $(H) $(SCRIPTS)
+LIBNAME = flite_cmu_indic_lex
+LOCAL_INCLUDES = 
 
-SEGSIZE=65400
+ALL = 
 
-arm-palmos-objcopy -O binary $1 $1.raw
-split -b $SEGSIZE $1.raw $1.raw.
-NUMSEGS=`ls $1.raw.* | wc -l`
-NUMBYTES=`ls -al $1.raw | awk '{print $5}'`
-HEXTYPE=`printf "%04x" $3`
+include $(TOP)/config/common_make_rules
 
-rm -f $2""????.bin
-
-printf "FLITE \0"         >$2""$HEXTYPE.bin
-printf "%4s\0" $2        >>$2""$HEXTYPE.bin
-printf "%07d\0" $3        >>$2""$HEXTYPE.bin
-printf "%07d\0" $SEGSIZE  >>$2""$HEXTYPE.bin
-printf "%07d\0" $NUMSEGS  >>$2""$HEXTYPE.bin
-printf "%07d\0" $NUMBYTES >>$2""$HEXTYPE.bin
-
-ls $1.raw.* |
-awk '{printf("mv %s %s%04x.bin\n",$1,"'$2'",'$3'+NR);}' | sh -v
-par r $2.ro $2 $2 CMFL $2""????.bin
-rm -f $1.raw* $2""????.bin

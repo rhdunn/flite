@@ -97,6 +97,7 @@ static void flite_usage()
 	   "  -add_lex FILENAME add lex addenda from FILENAME\n"
 	   "  -pw         Print words\n"
 	   "  -ps         Print segments\n"
+       "  -psdur      Print segments and their durations (end-time)\n"
 	   "  -pr RelName  Print relation RelName\n"
            "  -voicedump FILENAME Dump selected (cg) voice to FILENAME\n"
            "  -v          Verbose mode\n");
@@ -123,18 +124,30 @@ static cst_utterance *print_info(cst_utterance *u)
 {
     cst_item *item;
     const char *relname;
-
+    int printEndTime = 0;
+    
     relname = utt_feat_string(u,"print_info_relation");
+    if (!strcmp(relname, "SegmentEndTime"))
+      {
+        relname = "Segment";
+        printEndTime = 1;
+      }
+      
     for (item=relation_head(utt_relation(u,relname)); 
 	 item; 
 	 item=item_next(item))
     {
-	printf("%s ",item_feat_string(item,"name"));
+      if (!printEndTime)
+        printf("%s ",item_feat_string(item,"name"));
+      else
+        printf("%s:%1.3f ",item_feat_string(item,"name"), item_feat_float(item,"end"));
+    
 #if 0
         if (cst_streq("+",ffeature_string(item,"ph_vc")))
             printf("%s",ffeature_string(item,"R:SylStructure.parent.stress"));
         printf(" ");
 #endif
+
     }
     printf("\n");
 
@@ -146,6 +159,7 @@ static void ef_set(cst_features *f,const char *fv,const char *type)
     /* set feature from fv (F=V), guesses type if not explicit type given */
     const char *val;
     char *feat;
+    const char *fname;
 
     if ((val = strchr(fv,'=')) == 0)
     {
@@ -157,15 +171,16 @@ static void ef_set(cst_features *f,const char *fv,const char *type)
     {
 	feat = cst_strdup(fv);
 	feat[cst_strlen(fv)-cst_strlen(val)] = '\0';
+        fname=feat_own_string(f,feat);
 	val = val+1;
 	if ((type && cst_streq("int",type)) ||
 	    ((type == 0) && (cst_regex_match(cst_rx_int,val))))
-	    feat_set_int(f,feat,atoi(val));
+	    feat_set_int(f,fname,atoi(val));
 	else if ((type && cst_streq("float",type)) ||
 		 ((type == 0) && (cst_regex_match(cst_rx_double,val))))
-	    feat_set_float(f,feat,atof(val));
+	    feat_set_float(f,fname,atof(val));
 	else
-	    feat_set_string(f,feat,val);
+	    feat_set_string(f,fname,val);
         cst_free(feat);
     }
 }
@@ -268,6 +283,14 @@ int main(int argc, char **argv)
 	else if (cst_streq(argv[i],"-ps"))
 	{
 	    feat_set_string(extra_feats,"print_info_relation","Segment");
+	    feat_set(extra_feats,"post_synth_hook_func",
+		     uttfunc_val(&print_info));
+	}
+	else if (cst_streq(argv[i],"-psdur"))
+	{
+        // Added by AUP Mar 2013 for extracting durations (end-time) of segments
+        // (useful in talking heads, etc.)
+	    feat_set_string(extra_feats,"print_info_relation","SegmentEndTime");
 	    feat_set(extra_feats,"post_synth_hook_func",
 		     uttfunc_val(&print_info));
 	}

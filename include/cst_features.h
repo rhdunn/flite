@@ -54,6 +54,9 @@ typedef struct cst_features_struct {
     struct cst_featvalpair_struct *head;
     cst_alloc_context ctx;
     cst_val *owned_strings; /* fnames that are owned by this struct */
+
+    /* Link to other cst_features that we search too */
+    const struct cst_features_struct *linked; 
 } cst_features;
 
 /* Constructor functions */
@@ -91,6 +94,8 @@ const char *feat_own_string(cst_features *f,const char *name);
 CST_VAL_USER_TYPE_DCLS(features,cst_features)
 
 int feat_copy_into(const cst_features *from,cst_features *to);
+/* Link FROM into TO so FROM's features will be searched after TO's features */
+int feat_link_into(const cst_features *from,cst_features *to);
 /* For debugging */
 int cst_feat_print(cst_file fd,const cst_features *f);
 

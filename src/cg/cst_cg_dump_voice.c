@@ -80,6 +80,8 @@ static void cst_cg_write_db_types(cst_file fd, const cst_cg_db* db)
 static void cst_cg_write_tree_nodes(cst_file fd, const cst_cart_node* nodes)
 {
     int num_nodes, i;
+    int an_int;
+    float a_float;
 
     num_nodes=0;
     while(nodes[num_nodes].val != 0)
@@ -99,11 +101,13 @@ static void cst_cg_write_tree_nodes(cst_file fd, const cst_cart_node* nodes)
         }
         else if (nodes[i].val->c.a.type == CST_VAL_TYPE_INT)
         {
-            cst_fwrite(fd, &nodes[i].val->c.a.v.ival,sizeof(int),1);
+            an_int=nodes[i].val->c.a.v.ival;
+            cst_fwrite(fd, &an_int,sizeof(int),1);
         }
         else if (nodes[i].val->c.a.type == CST_VAL_TYPE_FLOAT)
         {
-            cst_fwrite(fd, &nodes[i].val->c.a.v.fval,sizeof(float),1);
+            a_float=nodes[i].val->c.a.v.fval;
+            cst_fwrite(fd, &a_float,sizeof(float),1);
         }
         else
         {   /* its not going to work without more code ... */
@@ -234,6 +238,8 @@ int cst_cg_dump_voice(const cst_voice *v,const cst_string *filename)
                           get_param_string(v->features,"language","eng"));
     cst_cg_write_voice_feature(fd, "country", 
                           get_param_string(v->features,"country","USA"));
+    cst_cg_write_voice_feature(fd, "variant", 
+                          get_param_string(v->features,"variant","none"));
     cst_cg_write_voice_feature(fd, "age", 
                           get_param_string(v->features,"age","30"));
     cst_cg_write_voice_feature(fd, "gender", 

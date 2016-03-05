@@ -64,7 +64,7 @@ typedef struct  cst_val_atom_struct {
     short ref_count;
     short type;  /* order is here important */
 #else
-#if _M_X64
+#if (defined(__x86_64__) || defined(_M_X64))
     int type;  /* order is here important */
     int ref_count;
 #else
@@ -74,7 +74,7 @@ typedef struct  cst_val_atom_struct {
 #endif
     union 
     {
-#if _M_X64
+#if (defined(__x86_64__) || defined(_M_X64))
         double fval;
         long long ival;
         void *vval;
@@ -153,6 +153,9 @@ cst_val *val_append(cst_val *a,cst_val *b);
 int val_length(const cst_val *l);
 cst_val *cst_utf8_explode(const cst_string *utf8string);
 cst_string *cst_implode(const cst_val *string_list);
+
+cst_val *cst_utf8_ord(const cst_val *utf8_char);
+cst_val *cst_utf8_chr(const cst_val *ord);
 
 /* make sure you know what you are doing before you call these */
 int val_dec_refcount(const cst_val *b);

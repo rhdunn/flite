@@ -2,7 +2,7 @@
 /*                                                                       */
 /*                  Language Technologies Institute                      */
 /*                     Carnegie Mellon University                        */
-/*                        Copyright (c) 2004                             */
+/*                         Copyright (c) 2013                            */
 /*                        All Rights Reserved.                           */
 /*                                                                       */
 /*  Permission is hereby granted, free of charge, to use and distribute  */
@@ -30,41 +30,32 @@
 /*  THIS SOFTWARE.                                                       */
 /*                                                                       */
 /*************************************************************************/
-/*             Author:  Alan W Black (awb@cs.cmu.edu)                    */
-/*               Date:  December 2004                                    */
+/*  indic lang public functions                                       */
 /*************************************************************************/
-/*                                                                       */
-/*  PalmOS Callbacks to System Functions                                 */
-/*                                                                       */
-/*************************************************************************/
-#include <PalmOS.h>
-#include <PceNativeCall.h>
-#include <CoreTraps.h>
-#include <StringMgr.h>
-#include <stdarg.h>
-#include "pocore.h"
 
-Int16
-StrPrintF( Char* s, const Char* formatStr, ... )
-{
-    Int16 r;
-    va_list args; 
-    unsigned int stack[12];
+#ifndef _cmu_indic_lang_h_
+#define _cmu_indic_lang_h_
 
-    va_start(args,formatStr);
-    *(int *)&stack[0] = SWAPINT(s);
-    *(int *)&stack[4] = SWAPINT(formatStr);
-    *(int *)&stack[8] = SWAPINT(args);
-    
-    r = (Int16)(*gCall68KFuncP)(gEmulStateP,
-				  PceNativeTrapNo(sysTrapStrPrintF),
-				  stack,
-				  12 | kPceNativeWantA0);
-    va_end(args);
-    return r;
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
-}
+#include "cst_utterance.h"
+#include "cst_cart.h"
+#include "cst_val.h"
+#include "cst_phoneset.h"
+#include "cst_lexicon.h"
+#include "cst_synth.h"
 
+void cmu_indic_lang_init(cst_voice *v);
+extern const cst_phoneset cmu_indic_phoneset;
+extern const cst_cart cmu_indic_phrasing_cart; 
 
+const cst_regex * const cst_rx_not_indic;
 
+#ifdef __cplusplus
+} /* extern "C" */
+#endif /* __cplusplus */
+
+#endif
 

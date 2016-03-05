@@ -2,7 +2,7 @@
 /*                                                                       */
 /*                  Language Technologies Institute                      */
 /*                     Carnegie Mellon University                        */
-/*                       Copyright (c) 2010-2011                         */
+/*                       Copyright (c) 2010-2013                         */
 /*                        All Rights Reserved.                           */
 /*                                                                       */
 /*  Permission is hereby granted, free of charge, to use and distribute  */
@@ -58,11 +58,13 @@ cst_voice *cst_cg_load_voice(const char *filename,
     vd = cst_fopen(filename,CST_OPEN_READ);
     if (vd == NULL)
     {
+        cst_errmsg("Error load voice: can't open file %s\n",filename);
 	return NULL;
     }
 
     if (cst_cg_read_header(vd) != 0)
     {
+        cst_errmsg("Error load voice: %s does not have expected header\n",filename);
         cst_fclose(vd);
         return NULL;
     }
@@ -114,6 +116,7 @@ cst_voice *cst_cg_load_voice(const char *filename,
 	/* Delete allocated memory in cg_db */
 	cst_cg_free_db(vd,cg_db);
 	cst_fclose(vd);
+        cst_errmsg("Error load voice: lang/lex %s not supported in this binary\n",language);
 	return NULL;	
     }
     

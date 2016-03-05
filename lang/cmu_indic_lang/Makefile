@@ -2,7 +2,7 @@
 ##                                                                       ##
 ##                  Language Technologies Institute                      ##
 ##                     Carnegie Mellon University                        ##
-##                         Copyright (c) 2004                            ##
+##                        Copyright (c) 2013                             ##
 ##                        All Rights Reserved.                           ##
 ##                                                                       ##
 ##  Permission is hereby granted, free of charge, to use and distribute  ##
@@ -30,37 +30,22 @@
 ##  THIS SOFTWARE.                                                       ##
 ##                                                                       ##
 ###########################################################################
-##  Author:  Alan W Black (awb@cs.cmu.edu)                               ##
-##           November 2004                                               ##
 ##                                                                       ##
-##  In order to call PalmOS System functions from ARM you need to make a ##
-##  M68K system call.  This contains the basic glue code to do this      ##
-##                                                                       ##
-##  Also maps some posix functions names to PalmOS names so we don't     ##
-##  need to change the core code                                         ##
-##                                                                       ##
-##  Done as lots of different files so you only end up linking in the    ##
-##  you use                                                              ##
-##                                                                       ##
-##  Inspired by the output from gen_pace.pl Eric House (fixin@peak.org)  ##
-##  and the PalmOS docs, but done by hand.                               ##
+##  indic general functions/models                                    ##
 ##                                                                       ##
 ###########################################################################
-TOP = ../..
-DIRNAME = palm/pocore
-
-SRCS = po_alloc.c \
-       po_MemPtrNew.c po_MemChunkFree.c \
-       po_FileTell.c po_FileOpen.c po_FileWrite.c \
-       po_FileSeek.c po_FileReadLow.c po_FileClose.c \
-       po_atof.c po_sio.c \
-       po_core.c po_setjmp.c
-OTHERS = po_StrPrintF.c po_StrVPrintF.c \
-
-OBJS := $(SRCS:.c=.o)
-FILES = Makefile $(H) $(SRCS) $(OTHERS)
-
-LIBNAME = pocore
+TOP=../..
+DIRNAME=lang/cmu_indic_lang
+BUILD_DIRS = 
+ALL_DIRS= 
+H = cmu_indic_lang.h cmu_indic_phrasing_cart.h
+SRCS = cmu_indic_lang.c cmu_indic_phoneset.c cmu_indic_phrasing_cart.c
+SCRIPTS = 
+OBJS = $(SRCS:.c=.o)
+SCM=
+FILES = Makefile $(SCM) $(SRCS) $(H) $(SCRIPTS)
+LIBNAME = flite_cmu_indic_lang
+LOCAL_INCLUDES = 
 
 ALL = 
 

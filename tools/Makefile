@@ -41,11 +41,13 @@ ALL_DIRS=
 SRCS = find_sts_main.c flite_sort_main.c
 OBJS = $(SRCS:.c=.o)
 TMPLTS = VOICE_ldom.c VOICE_clunits.c VOICE_diphone.c \
-         VOICE_cg.c Makefile.flite 
+         VOICE_cg.c Makefile.flite \
+         Makefile.lex LANGNAME_lex.c LANGNAME_lex.h \
+         Makefile.lang LANGNAME_lang.c LANGNAME_lang.h
 SCRIPTS = build_flite setup_flite huff_table flite_test \
           make_voice_list wfst2c build_lex clunit_prune \
           a2byte.pl a2short.pl a2int.pl flite_rename_voice \
-          make_lang_list
+          make_lang_list make_new_lang_lex
 SCM=make_lex.scm make_lts.scm make_cart.scm play_sync.scm \
     make_phoneset.scm make_vallist.scm make_clunits.scm \
     make_didb.scm make_didb2.scm make_f0lr.scm make_lts_wfst.scm \

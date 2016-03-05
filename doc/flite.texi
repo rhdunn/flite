@@ -11,15 +11,15 @@
 @c world example, but many others too.  I happily acknowledge their
 @c aid in producing this document -- awb
 
-@set EDITION 1.5
-@set VERSION 1.5
-@set UPDATED 9th December 2011
+@set EDITION 1.9
+@set VERSION 1.9
+@set UPDATED 15th July 2014
 
 @ifinfo
 This file documents @code{Flite}, a small, fast run-time speech
 synthesis engine.
 
-Copyright (C) 2001-2011 Carnegie Mellon University
+Copyright (C) 2001-2014 Carnegie Mellon University
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -52,7 +52,7 @@ by the authors.
 
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 2001-2011 Carnegie Mellon University, all rights
+Copyright @copyright{} 2001-2014 Carnegie Mellon University, all rights
 reserved.
 
 Permission is granted to make and distribute verbatim copies of
@@ -126,7 +126,7 @@ similarly open licenses) the general license is
 @example
                   Language Technologies Institute                      
                     Carnegie Mellon University                        
-                     Copyright (c) 1999-2011
+                     Copyright (c) 1999-2014
                        All Rights Reserved.                           
                                                                       
  Permission is hereby granted, free of charge, to use and distribute  
@@ -320,6 +320,10 @@ as if those were the sizes of parameters that were used to the train
 the voice. 
 
 @section PalmOS Support
+
+Support for PalmOS was removed from 1.9, I no longer have any working
+PalmOS devices.  But this section remains for people who do, but they
+may need to update something to make this work.
 
 Starting with 1.3 we have initial support for PalmOS using the free
 development tools.  The compilation method assumes the target device
@@ -885,7 +889,7 @@ be complained about on standard out.
 @section Streaming Synthesis
 
 In 1.4 support was added for streaming synthesis.  Basically you may
-provided a call back function that will be called with waveform data
+provide a call back function that will be called with waveform data
 immediately when it is available.  This potentially can reduce the
 delay between sending text to the synthesized and having audio
 available.
@@ -1185,7 +1189,8 @@ directory.  The you can compile it with
    ./flite_cmu_us_awb "Hello world"
 @end example
 Note that the voice that is to be converted *must* be a standard
-clustergen voice with f0, mceps, delta mceps and voicing in its
+clustergen voice with f0, mceps, delta mceps (optionally strengths for
+mixed excitation) and voicing in its
 combined coeffs files.  The method could be changed to deal with other
 possibilities but it will only work for default build method.
 
@@ -1193,6 +1198,18 @@ The generated library @file{libflite_cmu_us_awb.a} may be linked with
 other programs like any other flite voice.  The binary generated
 @code{flite_cmu_us_awb} links in only one voice (unlike the flite binary in
 the full flite distribution.
+
+A single flat file contain the cg voice can also be generated that can
+be loaded at run time into the flite binary.  You can dump this file
+from the initial constructed flite binary
+@example
+   ./flite_cmu_us_awb -voicedump cmu_us_awb.flitevox
+@end example
+The file cmu_us_awb.flitevox may now be references (with pathname/url) on
+the flite command line and used by the synthesizer
+@example
+   ./flite -voice cmu_us_awb.flitevox "Hello World"
+@end example
 
 @section Lexicon Conversion
 
