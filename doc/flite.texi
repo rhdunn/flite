@@ -779,8 +779,8 @@ Voices may also be dynamically loaded from files as well as built in.
 The argument to the @code{-voice} option may be pathname to a dumped
 (Clustergen) voice.  This may be a Unix pathname or a URL (only protocols @file{http} and @file{file} are supported.  For example
 @example
-flite -voice file://cmu_us_awb.vox -f doc/alice -o alice.wav
-flite -voice http://cmufestvox,org/voices/cmu_us_ksp.vox -f doc/alice -o alice.wav
+flite -voice file://cmu_us_awb.flitevox -f doc/alice -o alice.wav
+flite -voice http://cmufestvox,org/voices/cmu_us_ksp.flitevox -f doc/alice -o alice.wav
 @end example
 Voices will be loaded once and added to @code{flite_voice_list}.
 Although these voices are often small (a few megabytes) there will
