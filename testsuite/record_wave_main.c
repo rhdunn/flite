@@ -55,6 +55,7 @@ float desired_time = -1;
 int still_record = 1;
 
 static const char * const vw_audio_device = "/dev/dsp";
+
 static int audio_set_sample_rate_vw(int afd,int sample_rate)
 {
     int fmt;
@@ -90,7 +91,6 @@ static int audio_set_sample_rate_vw(int afd,int sample_rate)
     else
 	return 0;
 }
-
 
 void sigint_handler(int a)
 {

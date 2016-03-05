@@ -54,7 +54,7 @@ FILES = Makefile README ACKNOWLEDGEMENTS COPYING $(CONFIG) $(WINDOWS)
 DIST_CLEAN = config.cache config.log config.status \
 		config/config config/system.mak FileList
 
-HOST_ONLY_DIRS = tools main
+HOST_ONLY_DIRS = tools main testsuite
 ALL = $(BUILD_DIRS)
 
 config_dummy := $(shell test -f config/config || ( echo '*** '; echo '*** Making default config file ***'; echo '*** '; ./configure; )  >&2)

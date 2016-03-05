@@ -15,6 +15,12 @@ Upstream version 1.4.2:
   * Better clunit support (smaller).
   * Android support.
 
+## [1.4-2]
+
+  * Fix a typo in README.md.
+  * Build fixes to the `testsuite` from [1.3-2](#1.3-2), [1.1-2](#1.1-2) and
+    [1.0-2](#1.0-2).
+
 ## [1.4-1]
 
   * Build improvements from [1.0-1](#1.0-1).
@@ -37,6 +43,12 @@ Upstream version 1.4:
   * Speed-ups in feature interpretation limiting calls to alloc.
   * Speed-ups (and fixes) for converting clunits festvox voices.
 
+## [1.3-2]
+
+  * Fix the calls to `ts_open` in the testsuite. Based on a patch by
+    Åke Forslund <ake.forslund@gmail.com>.
+  * Build fixes to the `testsuite` from [1.1-2](#1.1-2) and [1.0-2](#1.0-2).
+
 ## [1.3-1]
 
   * Restore ALSA support, preserving the backported ALSA fixes from [1.1-1](#1.1-1).
@@ -55,6 +67,10 @@ Upstream version 1.3:
   * A PalmOS 5.0 port with an small example talking app ("flop").
   * Runs under `ix86_64` linux.
 
+## [1.2-2]
+
+  * Build fixes to the `testsuite` from [1.1-2](#1.1-2) and [1.0-2](#1.0-2).
+
 ## [1.2-1]
 
   * Backport the build fix for `tools/find_sts_main.c` from flite 1.3.
@@ -72,6 +88,12 @@ Upstream version 1.2:
   * Text files can be synthesized to a single audio file.
   * Optional shared library support (Linux).
 
+## [1.1-2]
+
+  * Fix building `testsuite/record_wave_main.c` (backported from flite 1.2).
+  * Add `play_wave_sync` from flite 1.3 to fix `testsuite/play_sync_main.c`.
+  * Build fixes to the `testsuite` from [1.0-2](#1.0-2).
+
 ## [1.1-1]
 
   * Backport building `au_alsa.c` on modern systems from flite 1.4.
@@ -80,6 +102,13 @@ Upstream version 1.2:
 ## [1.1]
 
 Upstream version 1.1.
+
+## [1.0-2]
+
+  * Fix building `testsuite/play_sync_main.c`.
+  * Fix building `testsuite/find_sts_main.c` (backported from flite 1.3).
+  * Build the `testsuite` programs as part of the main build.
+  * Fix a typo in README.md.
 
 ## [1.0-1]
 
