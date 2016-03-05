@@ -41,7 +41,7 @@ ALL_DIRS=
 SRCS = find_sts_main.c flite_sort_main.c
 OBJS = $(SRCS:.c=.o)
 TMPLTS = VOICE_ldom.c VOICE_clunits.c VOICE_diphone.c \
-         VOICE_cg.c Makefile.flite 
+         VOICE_cg.c Makefile.flite cg_dump_voxdata.c
 SCRIPTS = build_flite setup_flite huff_table flite_test \
           make_voice_list wfst2c build_lex clunit_prune \
           a2byte.pl a2short.pl a2int.pl flite_rename_voice

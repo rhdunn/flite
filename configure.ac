@@ -149,6 +149,16 @@ dnl         ;;
                 AR="${ANDROIDBIN}/arm-eabi-ar"
                 NM="${ANDROIDBIN}/arm-eabi-nm"
         ;;
+        chrome*)
+                # For Android with Android NDK
+                # http://developer.android.com/sdk/ndk/index.html
+		shared=false
+                CHROMEBIN="$CHROME_NDK/toolchain/linux_x86/bin/"
+                CC="${CHROMEBIN}/nacl-gcc"
+                RANLIB="${CHROMEBIN}/nacl-ranlib"
+                AR="${CHROMEBIN}/nacl-ar"
+                NM="${CHROMEBIN}/nacl-nm"
+        ;;
         uclinux*)
                 LDFLAGS="$LDFLAGS -Wl,-elf2flt"
         ;;
@@ -184,6 +194,24 @@ AC_SUBST(HOST_CPU)
 
 SHFLAGS=
 OTHERLIBS=
+
+withpic=false
+AC_ARG_WITH( pic, [  --with-pic           with pic ],
+        withpic=$with_pic )
+if test "x$with_pic" = "xyes"; then
+   case "$target_os" in
+	linux*)
+		CFLAGS="$CFLAGS -fPIC"
+        ;;
+	solaris*)
+		CFLAGS="$CFLAGS -fPIC"
+        ;;
+	*)
+		CFLAGS="$CFLAGS -fPIC"
+	;;
+   esac
+fi
+
 if test "$shared" = true; then
    case "$target_os" in
 	linux*|k*bsd*-gnu|gnu*)
@@ -320,7 +348,8 @@ dnl allow the user to override the one detected above
 dnl
 AC_ARG_WITH( audio,
 	[  --with-audio          with specific audio support (none linux freebsd etc) ],
-        AUDIODRIVER=$with_audio )
+        AUDIODRIVER=$with_audio
+	AUDIODEFS="" )
 
 if test "x$AUDIODEFS" = x; then
     case "$AUDIODRIVER" in

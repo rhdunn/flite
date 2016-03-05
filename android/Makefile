@@ -84,7 +84,7 @@ IMGS =
 OTHER = 
 FILES = Makefile README $(APP_CODE)
 
-#include $(TOP)/config/common_make_rules
+include $(TOP)/config/common_make_rules
 
 all: app
 
@@ -104,6 +104,6 @@ $(ANDROID_NDK)/ndk-build:
 $(FLITEDIR)/android/Makefile:
 	$(error Please set the FLITEDIR variable to point to absolute path of the flite root directory)
 
-clean:
+local_clean:
 	@ echo "Cleaning up app code directory"
 	@ cd $(TOP)/android/app_code; rm -f local.properties; rm -rf bin/ gen/ libs/

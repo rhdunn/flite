@@ -120,11 +120,12 @@ the main files."
     (format ofdidx "cst_sts_list %s_sts = {\n" name)
     (format ofdidx "  0,0,\n")      ;; no general index
     (format ofdidx "#ifdef CST_NO_STATIC_VOX\n")  ;; don't link in data 
-    (format ofdidx "  0,0,0,\n")
+    (format ofdidx "  0,0,0,0,\n")
     (format ofdidx "#else\n")
     (format ofdidx "  %s_lpc,\n" name)
     (format ofdidx "  %s_res,\n" name)
     (format ofdidx "  %s_resi,\n" name)
+    (format ofdidx "  0,\n")
     (format ofdidx "#endif\n")
     (format ofdidx "  %d,\n" i)
     (format ofdidx "  %d,\n" lpc_order)
@@ -272,7 +273,7 @@ Ouput this LPC frame."
     (set! pm_pos (+ 1 pm_pos))
 ))
 
-(defvar spike_excited t)
+;(defvar spike_excited t)
 (if (boundp 'spike_excited)
     (set! output_sts output_stsS))
 

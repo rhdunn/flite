@@ -126,6 +126,7 @@ static cst_utterance *ssml_apply_tag(const char *tag,
     cst_wave *wave;
     cst_item *t;
     cst_relation *r;
+    float break_size;
 
 #if SSML_DEBUG
     printf("SSML TAG %s\n",tag);
@@ -163,6 +164,12 @@ static cst_utterance *ssml_apply_tag(const char *tag,
             ((t = relation_tail(r)) != NULL))
         {
             item_set_string(t,"break","1");
+            /* cst_feat_print(stdout,attributes); */
+            if (cst_streq("size",get_param_string(attributes,"_name0","")))
+            {
+                break_size=feat_float(attributes,"_val0");
+                item_set_float(t,"break_size",break_size);
+            }
         }
     }
     else if (cst_streq("PROSODY",tag))
@@ -180,6 +187,23 @@ static cst_utterance *ssml_apply_tag(const char *tag,
         else if (cst_streq("end",feat_string(attributes,"_type")))
         {
             feat_remove(word_feats,"local_duration_stretch");
+        }
+
+    }
+    else if (cst_streq("PHONEME",tag))
+    {
+        if (cst_streq("start",feat_string(attributes,"_type")))
+        {
+            if (cst_streq("ph",get_param_string(attributes,"_name0","")))
+            {
+                const char *ph;
+                ph = feat_string(attributes,"_val0");
+                feat_set_string(word_feats,"phones",ph);
+            }
+        }
+        else if (cst_streq("end",feat_string(attributes,"_type")))
+        {
+            feat_remove(word_feats,"phones");
         }
 
     }
@@ -264,7 +288,7 @@ static float flite_ssml_to_speech_ts(cst_tokenstream *ts,
         current_voice = 
             (cst_voice *)val_userdata(feat_val(ssml_feats,"current_voice"));
 	token = ts_get(ts);
-	if (cst_streq("<",token))
+	while (cst_streq("<",token))
 	{   /* A tag -- look ahead and process it to find out how to advance */
 	    tag = cst_upcase(ts_get(ts));
             if (cst_streq("/",tag)) /* an end tag */
@@ -275,6 +299,7 @@ static float flite_ssml_to_speech_ts(cst_tokenstream *ts,
             }
             else
                 attributes = ssml_get_attributes(ts);
+            token = ts_get(ts);  /* skip ">" */
 	    if (ssml_apply_tag(tag,attributes,utt,ssml_word_feats,ssml_feats))
                 ssml_eou = 0;
             else
