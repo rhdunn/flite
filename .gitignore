@@ -49,3 +49,6 @@ testsuite/utt_test
 tools/find_sts
 tools/flite_sort
 tools/regexcomp
+
+festlex_CMU.tar.gz
+lang/cmulex/festival/
