@@ -7,6 +7,7 @@ with clause 2 of the project's [BSD license](COPYING).
 
   * Build fixes for `make_cmulex` from [1.3-3](#1.3-3).
   * Allow specifying a custom location for the `festival` application in `make_cmulex`.
+  * Fix the flite directory location in `make_cmulex`.
 
 ## [1.4-2]
 
