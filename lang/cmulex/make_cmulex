@@ -101,7 +101,7 @@ then
      # We will prune words that aren't homographs and the LTS gets correct
      # Use the lts_test.log to find the failed entries and only
      # include them in the list 
-     festival -b cmulex.scm ~/projects/flite/tools/make_lex.scm '(remove_predictable_entries "cmudict-0.4.out" "pruned_lex.scm" "lex_lts_rules.scm")'
+     $FESTIVAL -b cmulex.scm ~/projects/flite/tools/make_lex.scm '(remove_predictable_entries "cmudict-0.4.out" "pruned_lex.scm" "lex_lts_rules.scm")'
      $FESTIVAL --heap $HEAP -b '(begin (load "cmulex.scm") (lex.compile "pruned_lex.scm" "pruned_lex.out"))'
      $FESTIVAL --heap $HEAP -b $FLITEDIR/tools/make_lex.scm '(lextoC "cmu" "pruned_lex.out" "c")' ;
    )
