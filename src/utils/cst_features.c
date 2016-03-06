@@ -73,7 +73,7 @@ cst_features *new_features_local(cst_alloc_context ctx)
 {
     cst_features *f;
 
-    f = cst_local_alloc(ctx, sizeof(*f));
+    f = (cst_features *)cst_local_alloc(ctx, sizeof(*f));
     f->head = NULL;
     f->ctx = ctx;
     return f;
@@ -164,31 +164,43 @@ const cst_val *feat_val(const cst_features *f, const char *name)
 
 int get_param_int(const cst_features *f, const char *name,int def)
 {
-    if (feat_present(f,name))
-	return val_int(feat_val(f,name));
+    const cst_val *v;
+    
+    v = feat_val(f,name);
+    if (v != NULL)
+        return val_int(v);
     else
 	return def;
 }
 
 float get_param_float(const cst_features *f, const char *name, float def)
 {
-    if (feat_present(f,name))
-	return val_float(feat_val(f,name));
+    const cst_val *v;
+    
+    v = feat_val(f,name);
+    if (v != NULL)
+        return val_float(v);
     else
 	return def;
 }
 const char *get_param_string(const cst_features *f, const char *name, const char *def)
 {
-    if (feat_present(f,name))
-	return val_string(feat_val(f,name));
+    const cst_val *v;
+    
+    v = feat_val(f,name);
+    if (v != NULL)
+        return val_string(v);
     else
 	return def;
 }
 
 const cst_val *get_param_val(const cst_features *f, const char *name, cst_val *def)
 {
-    if (feat_present(f,name))
-	return feat_val(f,name);
+    const cst_val *v;
+    
+    v = feat_val(f,name);
+    if (v != NULL)
+        return v;
     else
 	return def;
 }
@@ -221,7 +233,7 @@ void feat_set(cst_features *f, const char* name, const cst_val *val)
     else if (n == NULL)
     {   /* first reference to this feature so create new fpair */
 	cst_featvalpair *p;
-	p = cst_local_alloc(f->ctx, sizeof(*p));
+	p = (cst_featvalpair *)cst_local_alloc(f->ctx, sizeof(*p));
 	p->next = f->head;
 	p->name = name; 
 	p->val = val_inc_refcount(val);

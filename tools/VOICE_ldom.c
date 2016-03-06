@@ -53,6 +53,8 @@ cst_voice *register___VOICENAME__(const char *voxdir)
 {
     cst_voice *v = new_voice();
 
+    v->name = "__NICKNAME__";
+
     /* Sets up language specific parameters in the __VOICENAME__. */
     usenglish_init(v);
 

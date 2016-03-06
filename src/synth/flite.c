@@ -2,7 +2,7 @@
 /*                                                                       */
 /*                  Language Technologies Institute                      */
 /*                     Carnegie Mellon University                        */
-/*                         Copyright (c) 2000                            */
+/*                       Copyright (c) 2000-2008                         */
 /*                        All Rights Reserved.                           */
 /*                                                                       */
 /*  Permission is hereby granted, free of charge, to use and distribute  */
@@ -41,6 +41,11 @@
 #include "cst_tokenstream.h"
 #include "flite.h"
 
+/* This is a global, which isn't ideal, this may change */
+/* It is set when flite_set_voice_list() is called which happens in */
+/* flite_main() */
+cst_val *flite_voice_list = 0;
+
 int flite_init()
 {
     cst_regex_init();
@@ -48,9 +53,56 @@ int flite_init()
     return 0;
 }
 
-static cst_utterance *flite_synth_foo(cst_utterance *u,
-				      cst_voice *voice,
-				      cst_uttfunc synth)
+cst_voice *flite_voice_select(const char *name)
+{
+    const cst_val *v;
+    cst_voice *voice;
+
+    if (flite_voice_list == NULL)
+        return NULL;  /* oops, not good */
+    if (name == NULL)
+        return val_voice(val_car(flite_voice_list));
+
+    for (v=flite_voice_list; v; v=val_cdr(v))
+    {
+        voice = val_voice(val_car(v));
+        if (cst_streq(name,voice->name))
+            return voice;
+    }
+
+    return flite_voice_select(NULL);
+
+}
+
+int flite_voice_add_lex_addenda(cst_voice *v, const cst_string *lexfile)
+{
+    /* Add addenda in lexfile to current voice */
+    cst_lexicon *lex;
+    const cst_val *lex_addenda = NULL;
+    cst_val *new_addenda;
+
+    lex = val_lexicon(feat_val(v->features,"lexicon"));
+    if (feat_present(v->features, "lex_addenda"))
+	lex_addenda = feat_val(v->features, "lex_addenda");
+
+    new_addenda = cst_lex_load_addenda(lex,lexfile);
+#if 0
+    printf("\naddenda: ");
+    val_print(stdout,new_addenda);
+    printf("\n");
+#endif
+
+    new_addenda = val_append(new_addenda,(cst_val *)lex_addenda);
+    if (lex->lex_addenda)
+        delete_val(lex->lex_addenda);
+    lex->lex_addenda = new_addenda;
+
+    return 0;
+}
+
+cst_utterance *flite_do_synth(cst_utterance *u,
+                                     cst_voice *voice,
+                                     cst_uttfunc synth)
 {		       
     utt_init(u, voice);
     if ((*synth)(u) == NULL)
@@ -68,7 +120,7 @@ cst_utterance *flite_synth_text(const char *text, cst_voice *voice)
 
     u = new_utterance();
     utt_set_input_text(u,text);
-    return flite_synth_foo(u, voice, utt_synth);
+    return flite_do_synth(u, voice, utt_synth);
 }
 
 cst_utterance *flite_synth_phones(const char *text, cst_voice *voice)
@@ -77,7 +129,7 @@ cst_utterance *flite_synth_phones(const char *text, cst_voice *voice)
 
     u = new_utterance();
     utt_set_input_text(u,text);
-    return flite_synth_foo(u, voice, utt_synth_phones);
+    return flite_do_synth(u, voice, utt_synth_phones);
 }
 
 cst_wave *flite_text_to_wave(const char *text, cst_voice *voice)
@@ -102,9 +154,12 @@ float flite_file_to_speech(const char *filename,
     const char *token;
     cst_item *t;
     cst_relation *tokrel;
-    float d, durs = 0;
+    float durs = 0;
     int num_tokens;
+    cst_wave *w;
     cst_breakfunc breakfunc = default_utt_break;
+    cst_uttfunc utt_user_callback = 0;
+    int fp;
 
     if ((ts = ts_open(filename,
 	      get_param_string(voice->features,"text_whitespace",NULL),
@@ -117,15 +172,22 @@ float flite_file_to_speech(const char *filename,
 		   filename);
 	return 1;
     }
+    fp = get_param_int(voice->features,"file_start_position",0);
+    if (fp > 0)
+        ts_set_stream_pos(ts,fp);
 
     if (feat_present(voice->features,"utt_break"))
 	breakfunc = val_breakfunc(feat_val(voice->features,"utt_break"));
 
-    /* If its a file to write to delete it as we're going to */
-    /* incrementally append to it                            */
-    if (!cst_streq(outtype,"play") && !cst_streq(outtype,"none"))
+    if (feat_present(voice->features,"utt_user_callback"))
+	utt_user_callback = val_uttfunc(feat_val(voice->features,"utt_user_callback"));
+
+    /* If its a file to write to, create and save an empty wave file */
+    /* as we are going to incrementally append to it                 */
+    if (!cst_streq(outtype,"play") && 
+        !cst_streq(outtype,"none") &&
+        !cst_streq(outtype,"stream"))
     {
-	cst_wave *w;
 	w = new_wave();
 	cst_wave_resize(w,0,1);
 	cst_wave_set_sample_rate(w,16000);
@@ -139,20 +201,25 @@ float flite_file_to_speech(const char *filename,
     while (!ts_eof(ts) || num_tokens > 0)
     {
 	token = ts_get(ts);
-	if ((strlen(token) == 0) ||
+	if ((cst_strlen(token) == 0) ||
 	    (num_tokens > 500) ||  /* need an upper bound */
 	    (relation_head(tokrel) && 
 	     breakfunc(ts,token,tokrel)))
 	{
-	    /* An end of utt */
-	    d = flite_tokens_to_speech(utt,voice,outtype);
-	    utt = NULL;
-	    if (d < 0)
-		goto out;
-	    durs += d;
+	    /* An end of utt, so synthesize it */
+            if (utt_user_callback)
+                utt = (utt_user_callback)(utt);
 
-	    if (ts_eof(ts))
-		goto out;
+            if (utt)
+            {
+                utt = flite_do_synth(utt,voice,utt_synth_tokens);
+                durs += flite_process_output(utt,outtype,TRUE);
+                delete_utterance(utt); utt = NULL;
+            }
+            else 
+                break;
+
+	    if (ts_eof(ts)) break;
 
 	    utt = new_utterance();
 	    tokrel = utt_relation_create(utt, "Token");
@@ -165,11 +232,15 @@ float flite_file_to_speech(const char *filename,
 	item_set_string(t,"whitespace",ts->whitespace);
 	item_set_string(t,"prepunctuation",ts->prepunctuation);
 	item_set_string(t,"punc",ts->postpunctuation);
-	item_set_int(t,"file_pos",ts->file_pos);
+        /* Mark it at the beginning of the token */
+	item_set_int(t,"file_pos",
+                     ts->file_pos-(1+ /* as we are already on the next char */
+                                   cst_strlen(token)+
+                                   cst_strlen(ts->prepunctuation)+
+                                   cst_strlen(ts->postpunctuation)));
 	item_set_int(t,"line_number",ts->line_number);
     }
 
-out:
     delete_utterance(utt);
     ts_close(ts);
     return durs;
@@ -180,24 +251,13 @@ float flite_text_to_speech(const char *text,
 			   const char *outtype)
 {
     cst_utterance *u;
-    cst_wave *w;
-    float durs;
+    float dur;
 
     u = flite_synth_text(text,voice);
-    if (u == NULL)
-	return -1;
-
-    w = utt_wave(u);
-
-    durs = (float)w->num_samples/(float)w->sample_rate;
-	     
-    if (cst_streq(outtype,"play"))
-	play_wave(w);
-    else if (!cst_streq(outtype,"none"))
-	cst_wave_save_riff(w,outtype);
+    dur = flite_process_output(u,outtype,FALSE);
     delete_utterance(u);
 
-    return durs;
+    return dur;
 }
 
 float flite_phones_to_speech(const char *text,
@@ -205,44 +265,104 @@ float flite_phones_to_speech(const char *text,
 			     const char *outtype)
 {
     cst_utterance *u;
-    cst_wave *w;
-    float durs;
+    float dur;
 
     u = flite_synth_phones(text,voice);
-    if (u == NULL)
-	    return -1;
-    w = utt_wave(u);
-
-    durs = (float)w->num_samples/(float)w->sample_rate;
-	     
-    if (cst_streq(outtype,"play"))
-	play_wave(w);
-    else if (!cst_streq(outtype,"none"))
-	cst_wave_save_riff(w,outtype);
+    dur = flite_process_output(u,outtype,FALSE);
     delete_utterance(u);
 
-    return durs;
+    return dur;
 }
 
-float flite_tokens_to_speech(cst_utterance *u,
-			     cst_voice *voice,
-			     const char *outtype)
+float flite_process_output(cst_utterance *u, const char *outtype,
+                           int append)
 {
+    /* Play or save (append) output to output file */
     cst_wave *w;
-    float durs;
+    float dur;
 
-    u = flite_synth_foo(u,voice,utt_synth_tokens);
-    if (u == NULL)
-	    return -1;
+    if (!u) return 0.0;
+
     w = utt_wave(u);
 
-    durs = (float)w->num_samples/(float)w->sample_rate;
+    dur = (float)w->num_samples/(float)w->sample_rate;
 	     
     if (cst_streq(outtype,"play"))
 	play_wave(w);
+    else if (cst_streq(outtype,"stream"))
+    {
+        /* It's already been played so do nothing */
+        
+    }
     else if (!cst_streq(outtype,"none"))
-	cst_wave_append_riff(w,outtype);
-    delete_utterance(u);
+    {
+        if (append)
+            cst_wave_append_riff(w,outtype);
+        else
+            cst_wave_save_riff(w,outtype);
+    }
 
-    return durs;
+    return dur;
 }
+
+int flite_get_param_int(const cst_features *f, const char *name,int def)
+{
+    return get_param_int(f,name,def);
+}
+float flite_get_param_float(const cst_features *f, const char *name, float def)
+{
+    return get_param_float(f,name,def);
+}
+const char *flite_get_param_string(const cst_features *f, const char *name, const char *def)
+{
+    return get_param_string(f,name,def);
+}
+const cst_val *flite_get_param_val(const cst_features *f, const char *name, cst_val *def)
+{
+    return get_param_val(f,name,def);
+}
+
+void flite_feat_set_int(cst_features *f, const char *name, int v)
+{
+    feat_set_int(f,name,v);
+}
+void flite_feat_set_float(cst_features *f, const char *name, float v)
+{
+    feat_set_float(f,name,v);
+}
+void flite_feat_set_string(cst_features *f, const char *name, const char *v)
+{
+    feat_set_string(f,name,v);
+}
+void flite_feat_set(cst_features *f, const char *name,const cst_val *v)
+{
+    feat_set(f,name,v);
+}
+
+int flite_feat_remove(cst_features *f, const char *name)
+{
+	return feat_remove(f,name);
+}
+
+const char *flite_ffeature_string(const cst_item *item,const char *featpath)
+{
+    return ffeature_string(item,featpath);
+}
+
+int flite_ffeature_int(const cst_item *item,const char *featpath)
+{
+    return ffeature_int(item,featpath);
+}
+float flite_ffeature_float(const cst_item *item,const char *featpath)
+{
+    return ffeature_float(item,featpath);
+}
+const cst_val *flite_ffeature(const cst_item *item,const char *featpath)
+{
+    return ffeature(item,featpath);
+}
+cst_item* flite_path_to_item(const cst_item *item,const char *featpath)
+{
+    return path_to_item(item,featpath);
+}
+

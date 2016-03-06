@@ -10,7 +10,7 @@ extern const unsigned int cmu_us_kal_resi[];
 
 
 cst_sts_list cmu_us_kal_sts = {
-  0,
+    0,0,
 #ifdef CST_NO_STATIC_VOX
   0,0,0,
 #else
@@ -22,9 +22,7 @@ cst_sts_list cmu_us_kal_sts = {
   10,
   8000,
   -4.281214,
-  8.198351,
-  0.000000,
-  1 
+  8.198351
 };
 
 static const cst_diphone_entry cmu_us_kal_index[] = { 

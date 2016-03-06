@@ -31,7 +31,7 @@
 ##                                                                       ##
 ###########################################################################
 ##                                                                       ##
-##    C Speech Tools library: basic functionality for speech objects     ##
+##    C Speech Tools library: basic functionality for system access      ##
 ##                                                                       ##
 ###########################################################################
 TOP=../..
@@ -40,11 +40,12 @@ BUILD_DIRS =
 ALL_DIRS= 
 H = 
 include $(TOP)/config/config
-SRCS = cst_alloc.c cst_error.c cst_string.c \
+SRCS = cst_alloc.c cst_error.c cst_string.c cst_wchar.c \
        cst_tokenstream.c cst_val.c cst_features.c \
        cst_endian.c cst_socket.c cst_val_const.c \
        cst_val_user.c cst_args.c 
-OBJS := $(SRCS:.c=.o) $(MMAPTYPE:%=cst_mmap_%.o) \
+OBJS := $(SRCS:.c=.o) \
+        $(MMAPTYPE:%=cst_mmap_%.o) \
         $(STDIOTYPE:%=cst_file_%.o)
 FILES = Makefile $(H) $(SRCS) \
 	cst_mmap_posix.c cst_mmap_win32.c cst_mmap_none.c \

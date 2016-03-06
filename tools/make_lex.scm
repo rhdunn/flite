@@ -96,7 +96,7 @@ For C to compile."
     (format ofde "};\n")
     (format ofde "\n")
 
-    (format ofde "const unsigned char * const %s_lex_phones_huff_table[%d] = \n" 
+    (format ofde "const char * const %s_lex_phones_huff_table[%d] = \n" 
 	    name 257)
     (format ofde "{\n")
     (format ofde "    NULL, /* reserved */\n")
@@ -105,7 +105,7 @@ For C to compile."
     (format ofde "};\n")
     (format ofde "\n")
 
-    (format ofde "const unsigned char * const %s_lex_entries_huff_table[%d] = \n" 
+    (format ofde "const char * const %s_lex_entries_huff_table[%d] = \n" 
 	    name 257)
     (format ofde "{\n")
     (format ofde "    NULL, /* reserved */\n")
@@ -145,7 +145,7 @@ Return number as three digit octal"
 
 (define (l2C_dump_entries ifd ofdsd ofddrc ofdi)
   "(l2C_dump_entries ifd ofde)
-We dump the entrie and prunciation in simple strings to ofdsd which
+We dump the entries and prunciation in simple strings to ofdsd which
 is used for compression later, and also dump the entries to ofddrc
 with their index to ofdi in the format they will be used in.  For
 compressions sake we dump the prunciations in reverse (sharing the
@@ -157,8 +157,8 @@ get the prunciation."
 	(entry_count 0)
 	(pos)
 	(pcount 0))
-    (if (not (string-equal "MNCL" (readfp ifd)))
-	(error "L2C: input file is not a compiled lexicon\n"))
+;    (if (not (string-equal "MNCL" (readfp ifd)))
+;	(error "L2C: input file is not a compiled lexicon\n"))
     (set! pcount (+ 1 pcount)) ;; the initial 0
     (while (not (equal? (set! entry (readfp ifd)) (eof-val)))
      (if (not (car (cdr entry)))
@@ -173,7 +173,13 @@ get the prunciation."
 	 (begin
 	   ;; Lexical entry
 	   (set! entry_count (+ 1 entry_count))
-	   (set! simple_entry (format nil "%s%s" pos (car entry)))
+           (if (consp (car entry))
+               (set! simple_entry 
+                     (format nil 
+                             "%s%s" 
+                             pos 
+                             (apply string-append (car entry))))
+               (set! simple_entry (format nil "%s%s" pos (car entry))))
 	   (set! phone_list (l2C_phonetize (car (cdr (cdr entry)))))
 
 	   ;; To the data.c file
@@ -290,6 +296,66 @@ to build a more efficent representation of the pronunciations."
       (format ofd " -> W 1.0)\n"))
     (format ofd "  ))\n")
     ))
+
+(define (remove_predictable_entries infile outfile ltsfile)
+  "(remove_predictable_entries infile outfile ltsfile)
+Check each entry in infile against the lts rules.  Output those entries that
+are predicable and not homographs."
+  (let ((fd (fopen infile "r"))
+        (ofd (fopen outfile "w"))
+        (entry)
+        (wordcount 0)
+        (correctwords 0))
+    ;; Use a new lexicon and not get confused with any installed ont
+    (lex.create "g0006")
+    (lex.set.compile.file infile)
+    (lex.set.phoneset "radio")
+    (lex.set.lts.method 'cmu_lts_function)
+    (lex.select "g0006")
+    (load ltsfile)
+    (set! cmu_lts_rules lex_lts_rules)
+
+    (while (not (equal? (set! entry (readfp fd)) (eof-val)))
+           (if (consp entry)
+               (let ((lts (cmu_lts_function (car entry) (car (cdr entry))))
+                     (lexentries (lex.lookup_all (car entry))))
+                 (if (or (> (length lexentries) 1)
+                         (not (equal? (nth 2 entry) (nth 2 lts))))
+                     (begin
+                       (format ofd "( \"%s\" %l (" (car entry) (cadr entry))
+                       (mapcar
+                        (lambda (syl)
+                          (mapcar
+                           (lambda (seg)
+                             (cond
+                              ((string-matches seg "[aeiouAEIOU@].*")
+                               (format ofd "%s " (string-append seg (cadr syl))))
+                              (t
+                               (format ofd "%s " seg))))
+                           (car syl)))
+                        (car (cddr entry)))
+                       (format ofd "))\n"))
+                     (set! correctwords (+ 1 correctwords)))
+                 (set! wordcount (+ 1 wordcount))
+                 )
+           )
+           )
+    (format t "From %d words %d correct %d exceptions\n"
+            wordcount correctwords (- wordcount correctwords))
+    )
+)  
+
+(define (utf8entries infile outfile)
+  (let (ifd ofd entry)
+    (set! ifd (fopen infile "r"))
+    (set! ofd (fopen outfile "w"))
+    (while (not (equal? (set! entry (readfp ifd)) (eof-val)))
+      (mapcar
+       (lambda (l) (format ofd "%s " l))
+       (utf8explode entry))
+      (format ofd "\n"))
+    (fclose ifd)
+    (fclose ifd)))
 
 (provide 'make_lex)
 

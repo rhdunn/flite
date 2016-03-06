@@ -11,17 +11,6 @@ the actual voice itself).
 
 Other contributions are:
 
-David Huggins-Daines (dhd@cepstral.com) 
-   much of the clunits code, porting to multiple platforms, substantial
-   code tidy up and configure/autoconf guidance.
-Cepstral, LLC (http://cepstral.com)
-   For supporting DHD to spend time on flite and passing back the important
-   fixes and enhancements including SAPI support
-Willie Walker <william.walker@sun.com> and the rest of the Sun Speech Group
-   lots of low level bugs (and fixes).
-Portuguese Foundation for Science and Technology (FCT) Praxis XXI program
-   The SAPI interface provided by Cepstral, LLC was partially funded by
-   the above program.
 Henry Spencer
    For the regex code
 University of Edinburgh
@@ -36,16 +25,42 @@ Carnegie Mellon University
    The included lexicon is derived from CMULEX and the letter to sound
    rules are constructed using the Lenzo and Black techniques for
    building LTS decision graphs.
+Nagoya Institute of Technology
+   The mlsa code derives from HTS (following a long chain)
+Tomoki Toda
+   The mlsa and mlpg support came view Tomoki's support for voice convertion
+   in FestVox which in turn (some of which) comes from NITECH's HTS.
+Marcela Charfuelan (DFKI)
+   For the mixed-excitation techniques.  These origianlly came from NITECH
+   but we understood the technqiues from Marcela's Open Mary Java code and
+   implemented them in our optimized version of MLSA.
+David Huggins-Daines (dhd@cepstral.com) 
+   much of the clunits code, porting to multiple platforms, substantial
+   code tidy up and configure/autoconf guidance.
+Cepstral, LLC (http://cepstral.com)
+   For supporting DHD to spend time on flite and passing back the important
+   early fixes and enhancements including SAPI support (funded by FCT)
+Willie Walker <william.walker@sun.com> and the rest of the Sun Speech Group
+   lots of low level bugs (and fixes).
+Portuguese Foundation for Science and Technology (FCT) Praxis XXI program
+   The SAPI interface provided by Cepstral, LLC was partially funded by
+   the above program.
 Craig Reese: IDA/Supercomputing Research Center
 Joe Campbell: Department of Defense
    who wrote the ulaw conversion routines in src/speech/cst_wave_utils.c
 Mario Lang:
    causing the support of shared libraries to happen
 Eric House (fixin@peak.org)
-   who provided examples of how to so 68K Call Backs for system functions
+   who provided examples of how to do 68K Call Backs for system functions
 Greg Parker gparker@sealiesoftware.com
    peal, the binding glue and shared library foo for getting the arm 
    version doing something reasonable under PalmOS
+Lukas Loehrer <loehrerl@gmx.net> Feb 2006
+   alsa support (default if available)
+Brian Langner
+   redid the Visual Studio support
+
+
 
 
 

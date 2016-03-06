@@ -51,12 +51,12 @@
 typedef struct cst_clunit_struct {
     unsigned short type, phone;
     int start, end;
-    unsigned short prev, next;
+    int prev, next;
 } cst_clunit;
 
 typedef struct cst_clunit_type_struct {
     const char *name;
-    unsigned short start, count;
+    int start, count;
 } cst_clunit_type;
 
 typedef struct cst_clunit_db_struct {
@@ -64,13 +64,13 @@ typedef struct cst_clunit_db_struct {
     const cst_clunit_type *types;
     const cst_cart * const *trees; 
     const cst_clunit *units;
-    unsigned short num_types, num_units;
+    int num_types, num_units;
 
     /* These may be set up at runtime (in file-mapped databases) */
     cst_sts_list *sts, *mcep;
 
     /* These are pre-scaled by 65536 to accomodate fixed-point machines */
-    int *join_weights;
+    const int *join_weights;
 
     /* Misc. important parameters */
     int optimal_coupling;

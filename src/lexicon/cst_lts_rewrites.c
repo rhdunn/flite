@@ -145,6 +145,7 @@ static const cst_val *find_rewrite_rule(const cst_val *LC,
 	    return val_car(i);
     }
 
+#if 0
     fprintf(stderr,"LTS_REWRITES: unable to find a matching rules for:\n");
     fprintf(stderr,"CL: ");
     val_print(stderr,LC);
@@ -152,6 +153,7 @@ static const cst_val *find_rewrite_rule(const cst_val *LC,
     fprintf(stderr,"RC: ");
     val_print(stderr,RC);
     fprintf(stderr,"\n");
+#endif
 
     return NULL;
 }

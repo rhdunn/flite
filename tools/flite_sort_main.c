@@ -62,7 +62,7 @@ int main(int argc, char **argv)
     int s,i;
     const cst_val **ll;
 
-    ts = ts_open("-",NULL,NULL,NULL,NULL);
+    ts = ts_open("-",NULL,"()","","");
 
     f = NULL;
     s = 0;

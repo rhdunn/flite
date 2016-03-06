@@ -48,6 +48,10 @@
 #include "cst_file.h"
 #include "cst_audio.h"
 
+#ifndef CST_NO_SOCKETS
+
+#include <unistd.h>
+
 static int play_wave_from_socket(snd_header *header,int audiostream)
 {
     /* Read audio from stream and play it to audio device, converting */
@@ -168,3 +172,5 @@ int auserver(int port)
 {
     return cst_socket_server("audio",port,auserver_process_client);
 }
+
+#endif

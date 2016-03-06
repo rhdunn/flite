@@ -3,6 +3,34 @@
 This file documents the changes made to the flite project in order to comply
 with clause 2 of the project's [BSD license](COPYING).
 
+## [1.4-2]
+
+  * Fix a typo in README.md.
+  * Build fixes to the `testsuite` from [1.3-2](#1.3-2), [1.1-2](#1.1-2) and
+    [1.0-2](#1.0-2).
+
+## [1.4-1]
+
+  * Build improvements from [1.0-1](#1.0-1).
+
+## [1.4]
+
+Upstream version 1.4:
+
+  * Crude multi-voice selection support (may change).
+  * 4 basic voices are included 3 clustergen (awb, rms and slt) plus
+    the kal diphone database.
+  * CMULEX now uses maximum onset for syllabification.
+  * ALSA support.
+  * Clustergen support (including mlpg with mixed excitation),
+    but is still slow on limited processors.
+  * Windows support with Visual Studio (specifically for the Olympus
+    Spoken Dialog System).
+  * WinCE support is redone with cegcc/mingw32ce with example
+    example TTS app: Fluwm: Flite on Windows Mobile.
+  * Speed-ups in feature interpretation limiting calls to alloc.
+  * Speed-ups (and fixes) for converting clunits festvox voices.
+
 ## [1.3-3]
 
   * Backport the fix for checking if `FLITEDIR` is not defined in `make_cmulex`
@@ -23,6 +51,7 @@ with clause 2 of the project's [BSD license](COPYING).
 ## [1.3-1]
 
   * Restore ALSA support, preserving the backported ALSA fixes from [1.1-1](#1.1-1).
+  * Build improvements from [1.0-1](#1.0-1).
 
 ## [1.3]
 
@@ -30,9 +59,9 @@ Upstream version 1.3:
 
   * Fixes to lpc residual extraction to give better quality output
   * An updated lexicon (`festlex_CMU` from festival-2.0) and better
-    compression its about 30% of the previous size, with about 
+    compression its about 30% of the previous size, with about
     the same accuracy.
-  * Fairly substantial code movements to better support PalmOS and 
+  * Fairly substantial code movements to better support PalmOS and
     multi-platform cross compilation builds.
   * A PalmOS 5.0 port with an small example talking app ("flop").
   * Runs under `ix86_64` linux.
@@ -44,12 +73,13 @@ Upstream version 1.3:
 ## [1.2-1]
 
   * Backport the build fix for `tools/find_sts_main.c` from flite 1.3.
+  * Build improvements from [1.0-1](#1.0-1).
 
 ## [1.2]
 
 Upstream version 1.2:
 
-  * A build process for diphone and clunit/ldom voices.
+  * A build process for diphone and clunits/ldom voices.
   * FestVox voices can be converted (sometimes) automatically.
   * Various bug fixes.
   * Initial support for Mac OS X (not talking to audio device yet)

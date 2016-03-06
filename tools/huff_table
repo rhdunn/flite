@@ -62,16 +62,27 @@ export LANG
 ## 0 is reserved, 1 is reserved too
 ALPHABET_SIZE=254
 
+# if [ $1 = "xentries" ]
+# then 
+#    infile=$2
+#    outfile=$3
+#    # Normalize the string to be compressed
+#    cat $infile | awk '{print $1}' |
+#    tr "A-Z" "a-z" |
+#    awk '{for (i=1; i<=length($1); i++)
+#             printf("%s ",substr($1,i,1));
+#          printf("\n");}' >huff.tmp.corpus
+# fi
+
 if [ $1 = "entries" ]
 then 
+   # actually works for non-utf8 entries too
    infile=$2
    outfile=$3
    # Normalize the string to be compressed
    cat $infile | awk '{print $1}' |
-   tr "A-Z" "a-z" |
-   awk '{for (i=1; i<=length($1); i++)
-            printf("%s ",substr($1,i,1));
-         printf("\n");}' >huff.tmp.corpus
+   cat >huff.entries.corpus
+   $ESTDIR/../festival/bin/festival -b $FLITEDIR/tools/make_lex.scm '(utf8entries "huff.entries.corpus" "huff.tmp.corpus")' 
 fi
 
 if [ $1 = "phones" ]

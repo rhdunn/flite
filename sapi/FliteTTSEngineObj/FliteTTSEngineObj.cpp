@@ -110,8 +110,8 @@ CFliteTTSEngineObj::GetOutputFormat(const GUID * pTargetFormatId,
 int
 CFliteTTSEngineObj::phoneme_len(cst_item *s)
 {
-	return (short) (item_feat_float(s, "end")
-			- ffeature_float(s, "p.end") * 1000);
+    return (short) ((item_feat_float(s, "end")
+                     - ffeature_float(s, "p.end")) * 1000);
 }
 
 int

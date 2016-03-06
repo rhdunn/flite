@@ -51,6 +51,9 @@ flite.html: flite.texi
 	@ if [ ! -d html ] ; \
           then mkdir -p html ; fi
 	(cd html; texi2html -number -split_chapter ../flite.texi)
+	@ if [ -d html/flite ] ; \
+	  then mv html/flite/*.html html ; \
+               rmdir html/flite; fi
 	@ for i in html/*.html ; \
 	  do \
 	    sed 's/<BODY>/<BODY bgcolor="#ffffff">/' $$i >ttt.html; \

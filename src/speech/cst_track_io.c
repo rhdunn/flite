@@ -120,7 +120,6 @@ static int load_frame_ascii(cst_track *t, int i, cst_tokenstream *ts)
 	t->frames[i][j] = cst_atof(ts_get(ts));
     if ((i+1 < t->num_frames) && (ts_eof(ts)))
     {
-	ts_close(ts);
 	return -1;
     }
     return 0;
@@ -132,28 +131,25 @@ static int load_frame_binary(cst_track *t, int i, cst_tokenstream *ts, int swap)
     int j;
 
     if (cst_fread(ts->fd, &val, sizeof(float), 1) != 1)
-	goto eof;
+	return -1;
     if (swap)
         swapfloat(&val);
     t->times[i] = val;
 
     /* Ignore the 'breaks' field */
     if (cst_fread(ts->fd, &val, sizeof(float), 1) != 1)
-	goto eof;
+	return -1;
 
     for (j=0; j < t->num_channels; j++)
     {
 	if (cst_fread(ts->fd, &val, sizeof(float), 1) != 1)
-	    goto eof;
+	    return -1;
 	if (swap)
 	    swapfloat(&val);
 	t->frames[i][j] = val;
     }
 
     return 0;
-eof:
-    ts_close(ts);
-    return -1;
 }
 
 int cst_track_load_est(cst_track *t, const char *filename)
@@ -237,6 +233,7 @@ int cst_track_load_est(cst_track *t, const char *filename)
 	    rv = load_frame_binary(t, i, ts, swap);
 	if (rv < 0)
 	{
+            ts_close(ts);
 	    cst_errmsg("cst_track_load: EOF in data \"%s\"\n",
 		       filename);
 	    return rv;

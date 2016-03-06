@@ -71,6 +71,7 @@ cst_utterance *default_tokenization(cst_utterance *u);
 cst_utterance *default_textanalysis(cst_utterance *u);
 cst_val *default_tokentowords(cst_item *i);
 cst_utterance *default_phrasing(cst_utterance *u);
+cst_utterance *default_pos_tagger(cst_utterance *u);
 cst_utterance *default_lexical_insertion(cst_utterance *u);
 cst_utterance *default_pause_insertion(cst_utterance *u);
 

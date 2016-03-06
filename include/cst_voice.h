@@ -47,6 +47,8 @@
 #include "cst_relation.h"
 
 struct cst_voice_struct {
+    const char *name;
+
     cst_features *features;
     cst_features *ffunctions;
 
@@ -61,5 +63,7 @@ typedef struct cst_voice_struct cst_voice;
 /* Constructor functions */
 cst_voice *new_voice();
 void delete_voice(cst_voice *u);
+
+CST_VAL_USER_TYPE_DCLS(voice,cst_voice)
 
 #endif

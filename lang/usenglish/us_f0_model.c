@@ -158,6 +158,9 @@ cst_utterance *us_f0_model(cst_utterance *u)
     float start, mid, end, lend;
     float seg_end;
 
+    if (feat_present(u->features,"no_f0_target_model"))
+        return u;
+
     targ_rel = utt_relation_create(u,"Target");
     mean = get_param_float(u->features,"int_f0_target_mean", 100.0);
     mean *= get_param_float(u->features,"f0_shift", 1.0);

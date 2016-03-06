@@ -2,7 +2,7 @@
 /*                                                                       */
 /*                  Language Technologies Institute                      */
 /*                     Carnegie Mellon University                        */
-/*                       Copyright (c) 1999-2000                         */
+/*                       Copyright (c) 1999-2007                         */
 /*                        All Rights Reserved.                           */
 /*                                                                       */
 /*  Permission is hereby granted, free of charge, to use and distribute  */
@@ -77,21 +77,36 @@ static const void *internal_ff(const cst_item *item,
 			       const char *featpath,int type)
 {
     const char *tk, *relation;
-    cst_tokenstream *ts;
     cst_utterance *utt;
     const cst_item *pitem;
     void *void_v;
     const cst_val *ff;
     cst_ffunction ffunc;
+    char tokenstring[200]; /* we don't seem to have featpaths longer than 72 */
+    char *tokens[100];
+    int i,j;
 
-    /* using strcpsn would be faster */
-    ts = ts_open_string(featpath,":.","","","");
-
-    for (tk = ts_get(ts), pitem=item;
+    /* This used to use cst_tokenstream but that was too slow */
+    for (i=0; i<199 && featpath[i]; i++)
+        tokenstring[i] = featpath[i];
+    tokenstring[i]='\0';
+    tokens[0] = tokenstring;
+    for (i=0,j=1; tokenstring[i]; i++)
+    {
+        if (strchr(":.",tokenstring[i]))
+        {
+            tokenstring[i] = '\0';
+            tokens[j] = &tokenstring[i+1];
+            j++;
+        }
+    }
+    tokens[j] = NULL;
+    j=0;
+    for (tk = tokens[j], pitem=item;
 	 pitem && 
-	     (((type == 0) && !ts_eof(ts)) ||
-	      ((type == 1) && !cst_streq(tk,"")));
-	 tk = ts_get(ts))
+	     (((type == 0) && tokens[j+1]) ||
+	      ((type == 1) && tk));
+	 j++, tk = tokens[j])
     {
 	if (cst_streq(tk,"n"))
 	    pitem = item_next(pitem);
@@ -121,7 +136,8 @@ static const void *internal_ff(const cst_item *item,
 	else if (cst_streq(tk,"R"))
 	{
 	    /* A relation move */
-	    relation = ts_get(ts);
+            j++;
+	    relation = tokens[j];
 	    pitem = item_as(pitem,relation);
 	}
 	else
@@ -146,12 +162,23 @@ static const void *internal_ff(const cst_item *item,
 	    void_v = (void *)(*ffunc)(pitem);
 	}
 	if (void_v == NULL)
+        {
+#if 0
+            if (pitem)
+                printf("awb_debug didn't find %s in %s\n",tk,
+                       get_param_string(pitem->contents->features,"name","noname"));
+            else
+            {
+                if (cst_streq("gpos",tk))
+                    printf("awb_debug2\n");
+                printf("awb_debug didn't find %s %s\n",tk,featpath);
+            }
+#endif
 	    void_v = (void *)&ffeature_default_val;
+        }
     }
     else
 	void_v = (void *)pitem;
-
-    ts_close(ts);
 
     return void_v;
 }

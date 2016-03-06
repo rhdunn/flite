@@ -42,6 +42,11 @@
 #include "us_text.h"
 #include "us_ffeatures.h"
 
+static const char * const us_english_punctuation = "\"'`.,:;!?(){}[]";
+static const char * const us_english_prepunctuation = "\"'`({[";
+static const char * const us_english_singlecharsymbols = "";
+static const char * const us_english_whitespace = " \t\n\r";
+
 void usenglish_init(cst_voice *v)
 {
     us_text_init();
@@ -63,6 +68,9 @@ void usenglish_init(cst_voice *v)
 
     feat_set(v->features,"tokentowords_func",itemfunc_val(&us_tokentowords));
 
+    /* very simple POS tagger */
+    feat_set(v->features,"pos_tagger_cart",cart_val(&us_pos_cart));
+
     /* Phrasing */
     feat_set(v->features,"phrasing_cart",cart_val(&us_phrasing_cart));
 
@@ -76,9 +84,6 @@ void usenglish_init(cst_voice *v)
 
     /* f0 model */
     feat_set(v->features,"f0_model_func",uttfunc_val(&us_f0_model));
-
-    /* Post lexical rules */
-    feat_set(v->features,"postlex_func",uttfunc_val(&us_postlex));
 
     us_ff_register(v->ffunctions);
 }

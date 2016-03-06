@@ -31,18 +31,20 @@
 ##                                                                       ##
 ###########################################################################
 ##                                                                       ##
-##  Waveform synthesis                                                   ##
+##  Waveform synthesis (diphone and clunits)                             ##
 ##                                                                       ##
 ###########################################################################
 TOP=../..
 DIRNAME=src/wavesynth
 BUILD_DIRS = 
 ALL_DIRS=
-SRCS = cst_units.c cst_sigpr.c cst_clunits.c cst_diphone.c \
-       cst_sigprFP.c cst_sts.c cst_reflpc.c
+H = 
+SRCS = cst_units.c cst_clunits.c cst_diphone.c \
+       cst_sigpr.c cst_sts.c cst_reflpc.c
 OBJS = $(SRCS:.c=.o)
 LIBNAME = flite
-FILES = Makefile $(SRCS)
+EXTRAS = 
+FILES = Makefile $(SRCS) $(H) $(EXTRAS)
 
 ALL = 
 
