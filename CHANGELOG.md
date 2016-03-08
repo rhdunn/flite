@@ -9,6 +9,7 @@ with clause 2 of the project's [BSD license](COPYING).
   * Allow specifying a custom location for the `festival` application in `make_cmulex`.
   * Fix the flite directory location in `make_cmulex`.
   * Fix lexicon pruning.
+  * Export `LANG`, `LC_ALL` and `FLITEDIR` in `make_cmulex`.
 
 ## [1.4-2]
 
