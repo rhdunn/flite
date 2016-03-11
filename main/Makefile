@@ -39,7 +39,7 @@ DIRNAME=main
 BUILD_DIRS = 
 ALL_DIRS= 
 SRCS = flite_main.c flite_time_main.c t2p_main.c compile_regexes.c
-OBJS = $(SRCS:.c=.o) flite_voice_list.o
+OBJS = $(SRCS:.c=.o) flite_voice_list.o 
 FILES = Makefile $(SRCS)
 LOCAL_INCLUDES = 
 
@@ -72,7 +72,8 @@ flite_time_LIBS_deps = $(flite_time_LIBS:%=$(LIBDIR)/lib%.a)
 LOCAL_CLEAN = $(BINDIR)/flite$(EXEEXT) $(BINDIR)/flite_time$(EXEEXT) \
               $(BINDIR)/t2p$(EXEEXT) \
               $(SHAREDARLIBS) $(SHAREDLIBS) $(VERSIONSHAREDLIBS) \
-              $(flite_LIBS_deps) $(VOICES:%=$(BINDIR)/flite_%)
+              $(flite_LIBS_deps) $(VOICES:%=$(BINDIR)/flite_%) \
+              flite_voice_list.c
 
 ifdef SHFLAGS
 flite_LIBS_flags += -Wl,-rpath $(LIBDIR) 
@@ -94,7 +95,6 @@ $(BINDIR)/flite_time$(EXEEXT): flite_time_main.o $(flite_time_LIBS_deps)
 
 $(BINDIR)/t2p$(EXEEXT): t2p_main.o $(flite_LIBS_deps)
 	$(CC) $(CFLAGS) -o $@ t2p_main.o $(flite_LIBS_flags) $(LDFLAGS)
-
 
 $(BINDIR)/compile_regexes$(EXEEXT): compile_regexes.o $(FLITELIBS)
 	$(CC) $(CFLAGS) -o $@ compile_regexes.o $(FLITELIBFLAGS) $(LDFLAGS)

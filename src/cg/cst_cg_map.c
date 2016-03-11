@@ -2,7 +2,7 @@
 /*                                                                       */
 /*                  Language Technologies Institute                      */
 /*                     Carnegie Mellon University                        */
-/*                         Copyright (c) 2010                            */
+/*                      Copyright (c) 2010-2011                          */
 /*                        All Rights Reserved.                           */
 /*                                                                       */
 /*  Permission is hereby granted, free of charge, to use and distribute  */
@@ -40,363 +40,323 @@
 #include "cst_string.h"
 #include "cst_cg_map.h"
 
-#define handle_error(msg) \
-  do { perror(msg); return(-1); } while (0)
+char *cg_voice_header_string = "CMU_FLITE_CG_VOXDATA-v1.5.4";
 
-int mapreader_init(int fd)
+int cst_cg_read_header(cst_file fd)
 {
-  if (fstat(fd, &voice_file_size) == -1)
-    handle_error("fstat");
+    char header[200];
+    int n, endianness;
 
-  voice_mapped_addr = mmap(NULL, voice_file_size.st_size, (PROT_READ | PROT_WRITE),MAP_PRIVATE, fd, 0);
-  if (voice_mapped_addr == MAP_FAILED)
+    n = cst_fread(fd,header,sizeof(char),cst_strlen(cg_voice_header_string)+1);
+
+    if (n < cst_strlen(cg_voice_header_string)+1)
+        return -1;
+
+    if (!cst_streq(header,cg_voice_header_string))
+        return -1;
+
+    cst_fread(fd,&endianness,sizeof(int),1); /* for byte order check */
+    if (endianness != cst_endian_loc)
+        return -1;                           /* dumped with other byte order */
+  
+    return 0;
+}
+
+char *cst_read_string(cst_file fd)
+{
+    int numbytes;
+
+    return (char *)cst_read_padded(fd,&numbytes);
+}
+
+cst_cg_db *cst_cg_load_db(cst_file fd)
+{
+    cst_cg_db* db = cst_alloc(cst_cg_db,1);
+
+    db->freeable = 1;  /* somebody can free this if they want */
+
+    db->name = cst_read_string(fd);
+    db->types = (const char**)cst_read_db_types(fd);
+
+    db->num_types = cst_read_int(fd);
+    db->sample_rate = cst_read_int(fd);
+    db->f0_mean = cst_read_float(fd);
+    db->f0_stddev = cst_read_float(fd);
+
+    db->f0_trees = (const cst_cart**) cst_read_tree_array(fd);
+    db->param_trees0 = (const cst_cart**) cst_read_tree_array(fd);
+    db->param_trees1 = (const cst_cart**) cst_read_tree_array(fd);
+    db->param_trees2 = (const cst_cart**) cst_read_tree_array(fd);
+
+    db->spamf0 = cst_read_int(fd);
+    if (db->spamf0)
     {
-      voice_mapped_addr = NULL;
-      handle_error("mmap");
+        db->spamf0_accent_tree = cst_read_tree(fd);
+        db->spamf0_phrase_tree = cst_read_tree(fd);
     }
 
-  
-  current_sought_addr = voice_mapped_addr;
+    db->num_channels0 = cst_read_int(fd);
+    db->num_frames0 = cst_read_int(fd);
+    db->model_vectors0 = 
+        (const unsigned short * const *)cst_read_2d_array(fd);
+    db->num_channels1 = cst_read_int(fd);
+    db->num_frames1 = cst_read_int(fd);
+    db->model_vectors1 = 
+        (const unsigned short * const *)cst_read_2d_array(fd);
+    db->num_channels2 = cst_read_int(fd);
+    db->num_frames2 = cst_read_int(fd);
+    db->model_vectors2 = 
+        (const unsigned short * const *)cst_read_2d_array(fd);
 
-  if( strcmp((char*)current_sought_addr,"CMU_FLITE_CG_VOXDATA-v1.001"))
-    return -1;
-  
-  current_sought_addr += 28;
-
-  return 0;
-
-}
-
-void mapreader_finish()
-{
-  if(voice_mapped_addr!=NULL)
+    if (db->spamf0)
     {
-      munmap((void*)voice_mapped_addr, voice_file_size.st_size);
+        db->num_channels_spamf0_accent = cst_read_int(fd);
+        db->num_frames_spamf0_accent = cst_read_int(fd);
+        db->spamf0_accent_vectors = 
+            (const float * const *)cst_read_2d_array(fd);
     }
-}
 
-char* padded_read_string()
-{
-  char* s;
-  int numbytes;
-  
-  if(voice_mapped_addr == NULL) return NULL;
-  
-  numbytes = *((int*)current_sought_addr);
-  //printf("reading %d bytes\n",numbytes);
-  current_sought_addr += sizeof(int);
-  
-  s = (char*)current_sought_addr;
+    db->model_min = cst_read_array(fd);
+    db->model_range = cst_read_array(fd);
 
-  current_sought_addr+=numbytes;
-  
-  return s;
-}
+    db->frame_advance = cst_read_float(fd);
 
-cst_cg_db* mapreader_load_db()
-{
-  if(voice_mapped_addr == NULL) return NULL;
+    db->dur_stats = (const dur_stat * const *)cst_read_dur_stats(fd);
+    db->dur_cart = (const cst_cart *)cst_read_tree(fd);
 
-  cst_cg_db* db = malloc(sizeof(cst_cg_db));
+    db->phone_states = 
+        (const char * const * const *)cst_read_phone_states(fd);
 
-  int numbytes = *((int*)current_sought_addr);
-  current_sought_addr += sizeof(int);
+    db->do_mlpg = cst_read_int(fd);
+    db->dynwin = cst_read_array(fd);
+    db->dynwinsize = cst_read_int(fd);
 
-  memcpy((void*)db, (void*)current_sought_addr, sizeof(cst_cg_db));
-  current_sought_addr += sizeof(cst_cg_db);
+    db->mlsa_alpha = cst_read_float(fd);
+    db->mlsa_beta = cst_read_float(fd);
 
+    db->multimodel = cst_read_int(fd);
+    db->mixed_excitation = cst_read_int(fd);
 
-  db->name = padded_read_string();
+    db->ME_num = cst_read_int(fd);
+    db->ME_order = cst_read_int(fd);
+    db->me_h = (const double * const *)cst_read_2d_array(fd);
+    
+    db->spamf0 = cst_read_int(fd); /* yes, twice, its above too */
+    db->gain = cst_read_float(fd);
 
-  //printf("Reading types...\n");
-  db->types = (const char**)mapreader_read_types();
-
- //printf("Reading f0 trees...\n");
-  db->f0_trees = (const cst_cart**) mapreader_read_tree_array();
-  //printf("Reading param trees...\n");
-  db->param_trees0 = (const cst_cart**) mapreader_read_tree_array();
-
-  
-  db->model_vectors0 = mapreader_read_2d_array();
-  
-  db->model_min = mapreader_read_array();
-  db->model_range = mapreader_read_array();
-
-  db->dur_stats = mapreader_read_dur_stats();
-  db->dur_cart = mapreader_read_tree();
-
-  db->phone_states = mapreader_read_phone_states();
-
-  db->dynwin = mapreader_read_array();
-  db->me_h = mapreader_read_2d_array();
-
-  //printf("Value of range 4 = %1.4f\n",db->model_range[4]);
-  //printf("Value of model vector 1 = %u\n",db->model_vectors0[10][0]);
-  //printf("Value of ds 120: %s %1.4f %1.4f\n",db->dur_stats[120]->phone,db->dur_stats[120]->mean, db->dur_stats[120]->stddev);
-  //printf("Value of ps 2 3: %s\n",db->phone_states[2][3]);
-  //printf("me_h 2 3: %1.4f\n", db->me_h[2][3]);
-  return db;
+    return db;
   
 }
 
-void mapreader_free_db(cst_cg_db* db)
+void cst_cg_free_db(cst_file fd, cst_cg_db *db)
 {
-  free(db);
+    /* Only gets called when this isn't populated : I think */ 
+    cst_free(db);
 }
 
-void* mapreader_read_padded(int* numbytes)
+void *cst_read_padded(cst_file fd, int *numbytes)
 {
-  void* ret;
-  *numbytes = *((int*)current_sought_addr);
-  current_sought_addr += sizeof(int);
-  ret = current_sought_addr;
-  current_sought_addr += *numbytes;
-  return ret;
+    void* ret;
+    int n; 
+
+    *numbytes = cst_read_int(fd);
+    ret = (void *)cst_alloc(char,*numbytes);
+    n = cst_fread(fd,ret,sizeof(char),*numbytes);
+    return ret;
 }
 
-
-char** mapreader_read_types()
+char **cst_read_db_types(cst_file fd)
 {
-  char** types;
-  int numtypes;
-  int i;
+    char** types;
+    int numtypes;
+    int i;
 
-  //printf("mapreader read types\n");
-  if(voice_mapped_addr == NULL) return NULL;
+    numtypes = cst_read_int(fd);
+    types = cst_alloc(char*,numtypes+1);
   
-  numtypes = *((int*)current_sought_addr);
-  current_sought_addr += sizeof(int);
-
-  //printf("Number of types: %d\n",numtypes);
-  types = current_sought_addr; //malloc((1+numtypes) * sizeof(char*));
-  current_sought_addr += (numtypes+1)*sizeof(char*);
-  
-  for(i=0;i<numtypes;i++)
+    for(i=0;i<numtypes;i++)
     {
-      types[i] = padded_read_string();
+        types[i] = cst_read_string(fd);
     }
-  types[i] = 0;
+    types[i] = 0;
   
-  return types;
+    return types;
 }
 
-cst_cart_node* mapreader_read_tree_node()
-{
-  int temp;
-  cst_cart_node* node;
-  cst_val** nodeval;
+cst_cart_node* cst_read_tree_nodes(cst_file fd)
+{   
+    cst_cart_node* nodes;
+    int temp;
+    int i, num_nodes;
+    short vtype;
+    char *str;
 
-  void** nodeatom;
+    num_nodes = cst_read_int(fd);
+    nodes = cst_alloc(cst_cart_node,num_nodes+1);
 
-  node = mapreader_read_padded(&temp);
-  nodeval = &(node->val);
-  *nodeval = mapreader_read_padded(&temp);
-  nodeatom = &(node->val->c.a.v.vval);
-  if(node->val->c.a.type == CST_VAL_TYPE_STRING)
+    for (i=0; i<num_nodes; i++)
     {
-      *nodeatom = mapreader_read_padded(&temp);
-      //printf("read node for string: %s\n",node->val->c.a.v.vval);
+        cst_fread(fd,&nodes[i].feat,sizeof(char),1);
+        cst_fread(fd,&nodes[i].op,sizeof(char),1);
+        cst_fread(fd,&nodes[i].no_node,sizeof(short),1);
+        cst_fread(fd,&vtype,sizeof(short),1);
+        if (vtype == CST_VAL_TYPE_STRING)
+        {
+            str = cst_read_padded(fd,&temp);
+            nodes[i].val = string_val(str);
+            cst_free(str);
+        }
+        else if (vtype == CST_VAL_TYPE_INT)
+            nodes[i].val = int_val(cst_read_int(fd));
+        else if (vtype == CST_VAL_TYPE_FLOAT)
+            nodes[i].val = float_val(cst_read_float(fd));
+        else
+            nodes[i].val = int_val(cst_read_int(fd));
     }
-  return node;
+    nodes[i].val = NULL;
+
+    return nodes;
 }
 
-cst_cart_node* mapreader_read_tree_nodes()
+char** cst_read_tree_feats(cst_file fd)
 {
-  cst_cart_node* nodes,*node;
-  int temp;
-  int i;
-  cst_val** nodeval;
-  void** nodeatom;
+    char** feats;
+    int numfeats;
+    int i;
 
+    numfeats = cst_read_int(fd);
+    feats = cst_alloc(char *,numfeats+1);
 
-  nodes = mapreader_read_padded(&temp);
-  //printf("%d\n",temp);
+    for(i=0;i<numfeats;i++)
+        feats[i] = cst_read_string(fd);
+    feats[i] = 0;
+  
+    return feats;
+}
 
-  // now read node data
-  i=0;
-  while(nodes[i].val!=0)
+cst_cart* cst_read_tree(cst_file fd)
+{
+    cst_cart* tree;
+
+    tree = cst_alloc(cst_cart,1);
+    tree->rule_table = cst_read_tree_nodes(fd);  
+    tree->feat_table = (const char * const *)cst_read_tree_feats(fd);
+
+    return tree;
+}
+
+cst_cart** cst_read_tree_array(cst_file fd)
+{
+    cst_cart** trees = NULL;
+    int numtrees;
+    int i;
+
+    numtrees = cst_read_int(fd);
+    
+    if (numtrees > 0)
     {
-      node = &(nodes[i]);
-      nodeval = &(node->val);
-      *nodeval = mapreader_read_padded(&temp);
-      nodeatom = &(node->val->c.a.v.vval);
+        trees = cst_alloc(cst_cart *,numtrees+1);
 
-      if(node->val->c.a.type == CST_VAL_TYPE_STRING)
+        for(i=0;i<numtrees;i++)
+            trees[i] = cst_read_tree(fd);
+        trees[i] = 0;
+    }
+
+    return trees; 
+}
+
+void* cst_read_array(cst_file fd)
+{
+    int temp;
+    void* ret;
+    ret = cst_read_padded(fd,&temp);
+    return ret;
+}
+
+void** cst_read_2d_array(cst_file fd)
+{
+    int numrows;
+    int i;
+    void** arrayrows = NULL;
+
+    numrows = cst_read_int(fd);
+
+    if (numrows > 0)
+    {
+        arrayrows = cst_alloc(void *,numrows);
+
+        for(i=0;i<numrows;i++)
+            arrayrows[i] = cst_read_array(fd);
+    }
+
+    return arrayrows; 
+}
+
+dur_stat** cst_read_dur_stats(cst_file fd)
+{
+    int numstats;
+    int i,temp;
+    dur_stat** ds;
+
+    numstats = cst_read_int(fd);
+    ds = cst_alloc(dur_stat *,(1+numstats));
+
+    /* load structuer values */
+    for(i=0;i<numstats;i++)
+    {
+        ds[i] = cst_alloc(dur_stat,1);
+        ds[i]->mean = cst_read_float(fd);
+        ds[i]->stddev = cst_read_float(fd);
+        ds[i]->phone = cst_read_padded(fd,&temp);
+    }
+    ds[i] = NULL;
+
+    return ds;
+}
+
+char*** cst_read_phone_states(cst_file fd)
+{
+    int i,j,count1,count2,temp;
+    char*** ps;
+
+    count1 = cst_read_int(fd);
+    ps = cst_alloc(char **,count1+1);
+    for(i=0;i<count1;i++)
+    {
+        count2 = cst_read_int(fd);
+        ps[i] = cst_alloc(char *,count2+1);
+        for(j=0;j<count2;j++)
 	{
-	  *nodeatom = mapreader_read_padded(&temp);
-	  //printf("read node for string: %s\n",node->val->c.a.v.vval);
+            ps[i][j]=cst_read_padded(fd,&temp);
 	}
-      i++;
-      
+        ps[i][j] = 0;
     }
+    ps[i] = 0;
 
-  return nodes;
+    return ps;
 }
 
-char** mapreader_read_tree_feats()
+void cst_read_voice_feature(cst_file fd,char** fname, char** fval)
 {
-  char** feats;
-  int numfeats;
-  int i;
-
-  //printf("mapreader read feats\n");
-  if(voice_mapped_addr == NULL) return NULL;
-  
-  numfeats = *((int*)current_sought_addr);
-  current_sought_addr += sizeof(int);
-
-  //printf("Number of feats: %d\n",numfeats);
-  feats = current_sought_addr; 
-  current_sought_addr += (numfeats+1)*sizeof(char*);
-
-  for(i=0;i<numfeats;i++)
-    {
-      feats[i] = padded_read_string();
-    }
-  feats[i] = 0;
-  
-  return feats;
+    int temp;
+    *fname = cst_read_padded(fd,&temp);
+    *fval = cst_read_padded(fd,&temp);
 }
 
-cst_cart* mapreader_read_tree()
+int cst_read_int(cst_file fd)
 {
-  cst_cart* tree;
-  cst_cart_node** n;
-  char *** s;
-  int temp;
+    int val;
+    int n;
 
-  tree = mapreader_read_padded(&temp);
-  n = &(tree->rule_table);
-  s = &(tree->feat_table);
-
-  *n = mapreader_read_tree_nodes(&temp);
-  *s = mapreader_read_tree_feats(&temp);
-  return tree;
+    n = cst_fread(fd,&val,sizeof(int),1);
+    return val;
 }
 
-cst_cart** mapreader_read_tree_array()
+float cst_read_float(cst_file fd)
 {
-  cst_cart** trees;
-  int numtrees;
-  int i;
+    float val;
+    int n;
 
-  if(voice_mapped_addr == NULL) return NULL;
-
-  numtrees = *((int*)current_sought_addr);
-  current_sought_addr += sizeof(int*);
-
-  //printf("Number of trees: %d\n",numtrees);
-  trees = current_sought_addr; 
-  current_sought_addr += (numtrees+1)*sizeof(cst_cart*);
-
-  for(i=0;i<numtrees;i++)
-    {
-      //printf("tree %d\n",i);
-      trees[i] = mapreader_read_tree();
-    }
-  trees[i] = 0;
-
-  return trees; 
-}
-
-void* mapreader_read_array()
-{
-  int temp;
-  void* ret;
-  ret = mapreader_read_padded(&temp);
-  
-  //printf("Reading array of %d bytes with first position %d\n",temp, ret);
-  return ret;
-}
-
-void** mapreader_read_2d_array()
-{
-  int numrows;
-  int i;
-  
-  void** arrayrows;
-  
-  numrows = *((int*)current_sought_addr);
-  current_sought_addr += sizeof(int*);
-
-  //printf("%d rows\n",numrows);
-
-  arrayrows = current_sought_addr;
-  current_sought_addr += sizeof(void*) * numrows;
-
-  for(i=0;i<numrows;i++)
-    arrayrows[i] = mapreader_read_array();
-
-  return arrayrows; 
-  
-}
-
-dur_stat** mapreader_read_dur_stats()
-{
-  int numstats;
-  int i,temp;
-  dur_stat** ds;
-
-  numstats = *((int*)current_sought_addr);
-  current_sought_addr += sizeof(int*);
-
-  //printf("%d durstats\n",numstats);
-  
-  ds = current_sought_addr;
-
-
-  current_sought_addr+= (1+numstats)*sizeof(dur_stat*);
-  // load structuer values
-  for(i=0;i<numstats;i++)
-    ds[i] = mapreader_read_padded(&temp);
-  ds[i] = NULL;
-
-  // load string resources
-  for(i=0;i<numstats;i++)
-    ds[i]->phone = mapreader_read_padded(&temp);
-
-  return ds;
-}
-
-char*** mapreader_read_phone_states()
-{
-  int i,j,count1,count2,temp;
-  char*** ps;
-
-  count1 = *((int*)current_sought_addr);
-  current_sought_addr += sizeof(int*);
-
-  ps = mapreader_read_padded(&temp);
-  //printf("count1: %d\n",count1);
-  for(i=0;i<count1;i++)
-    {
-      count2 = *((int*)current_sought_addr);
-      current_sought_addr += sizeof(int*);
-      ps[i] = mapreader_read_padded(&temp);
-      //printf("   count2: %d\n",count2);
-      for(j=0;j<count2;j++)
-	{
-	  ps[i][j]=mapreader_read_padded(&temp);
-	  //printf("     %s\n",ps[i][j]);
-	}
-      ps[i][j] = 0;
-    }
-  ps[i] = 0;
-
-  return ps;
-}
-
-void mapreader_read_voice_feature(char** fname, char** fval)
-{
-  int temp;
-  *fname = mapreader_read_padded(&temp);
-  *fval = mapreader_read_padded(&temp);
-}
-
-int mapreader_read_int()
-{
-  int val;
-  val = *((int*)current_sought_addr);
-  current_sought_addr += sizeof(int*);
-  return val;
+    n = cst_fread(fd,&val,sizeof(float),1);
+    return val;
 }

@@ -38,9 +38,10 @@ David Huggins-Daines (dhd@cepstral.com)
    much of the clunits code, porting to multiple platforms, substantial
    code tidy up and configure/autoconf guidance.
 Cepstral, LLC (http://cepstral.com)
-   For supporting DHD to spend time on flite and passing back the important
-   early fixes and enhancements including SAPI support (funded by 
-   Portuguese FCT)
+   For supporting DHD to spend time (in 2001) on flite and passing
+   back the important early fixes and enhancements including SAPI
+   support (funded by Portuguese FCT to produce an open source
+   synthesis solution).
 Willie Walker <william.walker@sun.com> and the rest of the Sun Speech Group
    lots of low level bugs (and fixes).
 Portuguese Foundation for Science and Technology (FCT) Praxis XXI program
@@ -63,12 +64,8 @@ Udhyakumar N
 Brian Langner
    redid the Visual Studio support
 Alok Parlikar
-   Android support
+   Android support, and cg voice dumping (and loading)
+Gopala Anumanchipalli
+   spanf0 support
 Sun Microsystems
    g72x code
-
-
-
-
-
-

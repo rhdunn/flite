@@ -226,8 +226,8 @@ So you've eagerly downloaded flite, compiled it and run it, now you
 are disappointed that is doesn't sound wonderful, sure its fast and
 small but what you really hoped for was the dulcit tones of a deep
 baritone voice that would make you desperately hang on every phrase it
-sang.  But instead you get an 8Khz diphone voice that sounds like it
-came from the last millenium.
+mellifluously produces.  But instead you get an 8Khz diphone voice that
+sounds like it came from the last millenium.
 
 Well, first, you are right, it is an 8KHz diphone voice from the last
 millenium, and that was actually deliberate.  As we developed flite we
@@ -236,7 +236,7 @@ that very same voice in Festival.  Flite is an *engine*.  We want to
 be able take voices built with the FestVox process and compile them
 for flite, the result should be exactly the same quality (though of
 course trading the size for quality in flite is also an option).  The
-included voice is just an sample voice that was used in the testing
+included voice is just a sample voice that was used in the testing
 process.  We have better voices in Festival and are working on the
 coversion process to make it both more automatic and more robust and
 tunable, but we haven't done that yet, so in this first beta release.
@@ -252,7 +252,7 @@ the next version.
 The flite project is released under a [4-clause BSD license](COPYING) with
 the following copyright:
 
-    Copyright Carnegie Mellon University 1999-2011
+    Copyright Carnegie Mellon University 1999-2012
     All rights reserved
 
 The changes to the project are described in the [CHANGELOG.md](CHANGELOG.md)

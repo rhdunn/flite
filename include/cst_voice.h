@@ -64,7 +64,7 @@ typedef struct cst_voice_struct cst_voice;
 /* Hold pointers to language and lexicon init function */
 struct cst_lang_struct {
     const char *lang;
-    void *(*lang_init)(cst_voice *vox);
+    void (*lang_init)(cst_voice *vox);
     cst_lexicon *(*lex_init)();
 };
 typedef struct cst_lang_struct cst_lang;

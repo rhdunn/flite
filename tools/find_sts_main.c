@@ -376,7 +376,7 @@ void compare_waves(cst_wave *a, cst_wave *b)
 void save_sts(cst_sts *sts, cst_track *lpc, cst_wave *sig, const char *fn)
 {
     FILE *fd;
-    int i,j,m;
+    int i,j;
 
     if ((fd=fopen(fn,"w"))== NULL)
     {
@@ -387,7 +387,7 @@ void save_sts(cst_sts *sts, cst_track *lpc, cst_wave *sig, const char *fn)
     fprintf(fd,"( %d %d %d %f %f)\n", lpc->num_frames, 
 	    lpc->num_channels-1, sig->sample_rate,
 	    lpc_min, lpc_range);
-    for (m=i=0; i<lpc->num_frames; i++)
+    for (i=0; i<lpc->num_frames; i++)
     {
 	fprintf(fd,"( %f (",lpc->times[i]);
 	for (j=1; j < lpc->num_channels; j++)
@@ -433,22 +433,19 @@ int main(int argc, char **argv)
     cst_wave *sig, *sig2;
     cst_sts *sts;
     cst_features *args;
-    cst_val *files;
 
     args = new_features();
-    files =
-        cst_args(argv,argc,
-                 "usage: find_sts OPTIONS\n"
-                 "Find sts from lpc and waveform\n"
-		 "-codec <string>    ulaw (default), g721, g721vuv, vuv\n"
-		 "-vuv <string>      v/uv track (for some codecs)\n"
-		 "-lpcmin <float>    minimum LPC value\n"
-		 "-lpcrange <float>  range of LPC values\n"
-		 "-lpc <string>      LPC track file\n"
-		 "-wave <string>     WAVE file\n"
-		 "-o <string>        STS output file\n",
-                 args);
-    
+    cst_args(argv,argc,
+             "usage: find_sts OPTIONS\n"
+             "Find sts from lpc and waveform\n"
+             "-codec <string>    ulaw (default), g721, g721vuv, vuv\n"
+             "-vuv <string>      v/uv track (for some codecs)\n"
+             "-lpcmin <float>    minimum LPC value\n"
+             "-lpcrange <float>  range of LPC values\n"
+             "-lpc <string>      LPC track file\n"
+             "-wave <string>     WAVE file\n"
+             "-o <string>        STS output file\n",
+             args);
 
     lpc_min = get_param_float(args,"-lpcmin",-10.0);
     lpc_range = get_param_float(args,"-lpcrange",20.0);
