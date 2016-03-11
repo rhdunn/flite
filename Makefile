@@ -2,7 +2,7 @@
 ##                                                                       ##
 ##                  Language Technologies Institute                      ##
 ##                     Carnegie Mellon University                        ##
-##                      Copyright (c) 1999-2009                          ##
+##                      Copyright (c) 1999-2011                          ##
 ##                        All Rights Reserved.                           ##
 ##                                                                       ##
 ##  Permission is hereby granted, free of charge, to use and distribute  ##
@@ -37,8 +37,8 @@
 ##       Authors:  Alan W Black (awb@cs.cmu.edu)                         ##
 ##                 Kevin A. Lenzo (lenzo@cs.cmu.edu)                     ##
 ##                 and others see ACKNOWLEDGEMENTS                       ##
-##          Date:  March 2010                                            ##
-##       Version:  1.4.1 current                                         ##
+##          Date:  Jan 2011                                              ##
+##       Version:  1.5 release                                           ##
 ##                                                                       ## 
 ###########################################################################
 TOP=.

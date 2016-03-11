@@ -47,7 +47,7 @@
 (defvar mcep_max 4.540220)
 
 (defvar page_size 500) ;; number of frames per page
-(set! page_size 1000000) ;; 1^6 means we do mmap
+;(set! page_size 1000000) ;; 1^6 means we do mmap
 
 (define (clunits_convert name clcatfnfileordered clcatfnunitordered 
 			 cltreesfn festvoxdir odir)

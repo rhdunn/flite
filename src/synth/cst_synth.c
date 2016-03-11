@@ -455,7 +455,7 @@ cst_utterance *default_lexical_insertion(cst_utterance *u)
     const cst_val *lex_addenda = NULL;
     const cst_val *p, *wp = NULL;
     char *phone_name;
-    char *stress = "0";
+    const char *stress = "0";
     const char *pos;
     cst_val *phones;
     cst_item *ssword, *sssyl, *segitem, *sylitem, *seg_in_syl;
@@ -485,7 +485,24 @@ cst_utterance *default_lexical_insertion(cst_utterance *u)
            tokens with explicit pronunciation (or that it will
            propagate such to words, then we can remove the path here) */
 	if (item_feat_present(item_parent(item_as(word, "Token")), "phones"))
-	    phones = (cst_val *) item_feat(item_parent(item_as(word, "Token")), "phones");
+        {
+            const cst_val *vpn;
+            vpn = item_feat(item_parent(item_as(word, "Token")), "phones");
+            if (cst_val_consp(vpn))
+            {   /* for SAPI ?? */
+                /* awb oct11: this seems wrong -- */
+                /* not sure SAPI still (ever) works Oct11 */
+                phones = (cst_val *) vpn;  
+            }
+            else
+            {
+                if (cst_streq(val_string(vpn),
+                              ffeature_string(word,"p.R:Token.parent.phones")))
+                    phones = NULL; /* Already given these phones */
+                else
+                    phones = val_readlist_string(val_string(vpn));
+            }
+        }
 	else
 	{
             wp = val_assoc_string(item_feat_string(word, "name"),lex_addenda);
@@ -533,7 +550,10 @@ cst_utterance *default_lexical_insertion(cst_utterance *u)
 	}
 	if (!item_feat_present(item_parent(item_as(word, "Token")), "phones")
             && ! wp)
+        {
 	    delete_val(phones);
+            phones = NULL;
+        }
     }
 
     return u;

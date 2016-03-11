@@ -563,7 +563,7 @@ void add_residual_vuv(int targ_size, unsigned char *targ_residual,
     {
         /* Put in to the unpacked -- with no unpacking */
         /* The cast is because unit_residual is const, and can't be deleted */
-        unit_residual_unpacked = (void *)unit_residual;
+        unit_residual_unpacked = (unsigned char *)(void *)unit_residual;
     }
      
     if (uunit_size < targ_size)
