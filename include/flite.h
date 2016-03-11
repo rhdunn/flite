@@ -134,6 +134,9 @@ int flite_add_voice(cst_voice *voice);
 int flite_add_lang(const char *langname,
                    void (*lang_init)(cst_voice *vox),
                    cst_lexicon *(*lex_init)());
+/* These are init functions for generic grapheme based voices */
+void utf8_grapheme_lang_init(cst_voice *v);
+cst_lexicon *utf8_grapheme_lex_init(void);
 
 #ifdef __cplusplus
 }  /* extern "C" */

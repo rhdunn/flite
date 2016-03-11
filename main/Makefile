@@ -84,11 +84,16 @@ endif
 
 .NOTPARALLEL: $(ALL)
 
-$(BINDIR)/flite$(EXEEXT): flite_main.o $(flite_LIBS_deps)
+flite_lang_list: 
+	rm -f flite_lang_list.c
+	$(TOP)/tools/make_lang_list $(LANGS) $(LEXES)
+	$(MAKE) flite_lang_list.o
+
+$(BINDIR)/flite$(EXEEXT): flite_main.o flite_lang_list $(flite_LIBS_deps)
 	$(TOP)/tools/make_voice_list $(VOICES)
 	rm -f flite_voice_list.o
 	$(MAKE) flite_voice_list.o
-	$(CC) $(CFLAGS) -o $@ flite_main.o flite_voice_list.o $(flite_LIBS_flags) $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $@ flite_main.o flite_voice_list.o flite_lang_list.o $(flite_LIBS_flags) $(LDFLAGS)
 
 $(BINDIR)/flite_time$(EXEEXT): flite_time_main.o $(flite_time_LIBS_deps)
 	$(CC) $(CFLAGS) -o $@ flite_time_main.o $(flite_time_LIBS_flags) $(FLITELIBFLAGS) $(LDFLAGS) 
@@ -105,11 +110,11 @@ each:
 	   $(MAKE) VOICE=$$i $(BINDIR)/flite_$$i ; \
 	done
 
-$(BINDIR)/flite_${VOICE}: flite_main.o $(flite_LIBS_deps)
+$(BINDIR)/flite_${VOICE}: flite_main.o flite_lang_list $(flite_LIBS_deps)
 	$(TOP)/tools/make_voice_list $(VOICE)
 	rm -f flite_voice_list.o
 	$(MAKE) flite_voice_list.o
-	$(CC) $(CFLAGS) -o $@ flite_main.o flite_voice_list.o $(flite_LIBS_flags) $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $@ flite_main.o flite_voice_list.o flite_lang_list.o $(flite_LIBS_flags) $(LDFLAGS)
 
 install:
 #       The basic binaries

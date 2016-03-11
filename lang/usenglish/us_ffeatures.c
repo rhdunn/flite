@@ -161,32 +161,32 @@ static const cst_val *token_pos_guess(const cst_item *token)
 
 const cst_val *content_words_in(const cst_item *p)
 {
-	const cst_item *s;
-	int i=0;
-	p=item_as(p,"Word");
-	s=item_as(path_to_item(p,"R:SylStructure.R:Phrase.parent.daughter1"),"Word");
-	for (;!item_equal(p,s);s=item_next(s))
-	{
-		if (!strcmp(ffeature_string(s,"gpos"),"content"))
-		{i++;}
-	}
-//	if(!strcmp(ffeature_string(p,"gpos"), "content")){i++;}
-	return val_string_n(i);
+    const cst_item *s;
+    int i=0;
+    p=item_as(p,"Word");
+    s=item_as(path_to_item(p,"R:SylStructure.R:Phrase.parent.daughter1"),"Word");
+    for (;s && !item_equal(p,s);s=item_next(s))
+    {
+        if (!strcmp(ffeature_string(s,"gpos"),"content"))
+        {i++;}
+    }
+    //	if(!strcmp(ffeature_string(p,"gpos"), "content")){i++;}
+    return val_string_n(i);
 }
 
 const cst_val *content_words_out(const cst_item *p)
 {
-        const cst_item *s;
-        int i=0;
-        p=item_as(p,"Word");
-        s=item_as(path_to_item(p,"R:SylStructure.R:Phrase.parent.daughtern"),"Word");
-        for (;!item_equal(p,s);p=item_next(p))
-        {
-                if (!strcmp(ffeature_string(p,"gpos"),"content"))
-                {i++;}
-        }
-        if(!strcmp(ffeature_string(s,"gpos"), "content")){i++;}
-        return val_string_n(i);
+    const cst_item *s;
+    int i=0;
+    p=item_as(p,"Word");
+    s=item_as(path_to_item(p,"R:SylStructure.R:Phrase.parent.daughtern"),"Word");
+    for (;s && !item_equal(p,s);p=item_next(p))
+    {
+        if (!strcmp(ffeature_string(p,"gpos"),"content"))
+        {i++;}
+    }
+    if(!strcmp(ffeature_string(s,"gpos"), "content")){i++;}
+    return val_string_n(i);
 }
 
 const cst_val *cg_content_words_in_phrase(const cst_item *p)
