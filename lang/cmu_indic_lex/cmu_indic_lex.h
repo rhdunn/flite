@@ -2,7 +2,7 @@
 /*                                                                       */
 /*                  Language Technologies Institute                      */
 /*                     Carnegie Mellon University                        */
-/*                        Copyright (c) 2005                             */
+/*                         Copyright (c) 2013                            */
 /*                        All Rights Reserved.                           */
 /*                                                                       */
 /*  Permission is hereby granted, free of charge, to use and distribute  */
@@ -30,39 +30,41 @@
 /*  THIS SOFTWARE.                                                       */
 /*                                                                       */
 /*************************************************************************/
-/*             Author:  Alan W Black (awb@cs.cmu.edu)                    */
-/*               Date:  February 2005                                    */
+/*  indic Lexicon public functions                                    */
 /*************************************************************************/
-/*                                                                       */
-/*  Implements setjmp/longjmp, which of course can't be done by calling  */
-/*  back to m68k land as that has different registers                    */
-/*                                                                       */
-/*  From a message from Wolfgang Spraul pno list                         */
-/*************************************************************************/
-#include <PalmOS.h>
-#include <string.h>
-#include "PceNativeCall.h" 
-#include "CoreTraps.h" 
-#include "cst_error.h"
-#include "pocore.h"
 
-int setjmp(register jmp_buf env)
-{
-    asm("stmia a1,{v1-v8,sp,lr};"
-	"mov a1,#0;" /* return 0 */
-	"bx lr;");
-    return 0;
-}
+#ifndef _cmu_indic_lex_h_
+#define _cmu_indic_lex_h_
 
-void longjmp(register jmp_buf env, register int value)
-{
-    asm("ldmia a1,{v1-v8,sp,lr};"
-	"movs a1,a2;"  /* return value as setjmp() result code */
-	"moveq a1,#1;" /* return 1 instead of 0 */
-	"bx lr;");
-    return;
-}
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+  
+#include "cst_lexicon.h"
+  cst_lexicon *cmu_indic_lex_init(void);
 
+  enum cmu_indic_char_type {
+    IND_INDEPENDENT_VOWEL,
+    IND_CONSONANT,
+    IND_VOWEL,
+    IND_ANUSWAAR,
+    IND_VISARGA,
+    IND_NUKTA,
+    IND_AVAGRAHA,
+    IND_HALANT,
+    IND_DIGIT,
+    IND_PUNC,
+    IND_IGNORE
+  };
 
+  struct cmu_indic_char {
+    enum cmu_indic_char_type type;
+    char phoneme[12];
+  } indic_char ;
 
+#ifdef __cplusplus
+} /* extern "C" */
+#endif /* __cplusplus */
+
+#endif
 

@@ -246,9 +246,15 @@ const cst_val *syl_vowel(const cst_item *p)
 	ls=item_as(path_to_item(p,"R:SylStructure.daughtern"),"Segment");
 	for(;s && !item_equal(s,ls);s=item_next(s))
 	{
-		if (cst_streq("+",val_string(ph_vc(s)))){ return string_val(item_name(s));}
+            if (cst_streq("+",val_string(ph_vc(s))))
+            { 
+                return string_val(item_name(s));
+            }
 	}
-	if (cst_streq("+",val_string(ph_vc(s)))){ return string_val(item_name(s));}
+	if (cst_streq("+",val_string(ph_vc(s))))
+        { 
+            return string_val(item_name(s));
+        }
 	return (cst_val *) NULL;
 }
 
@@ -563,7 +569,7 @@ static const cst_val *ssyl_in(const cst_item *syl)
 	 p && (!item_equal(p,fs)) && (c < CST_CONST_INT_MAX);
 	 p=item_prev(p))
     {
-	if (cst_streq("1",item_feat_string(p,"stress")))
+	if (cst_streq("1",ffeature_string(p,"stress")))
 	    c++;
     }
     
@@ -584,7 +590,7 @@ static const cst_val *ssyl_out(const cst_item *syl)
 	 p && (c < CST_CONST_INT_MAX); 
 	 p=item_next(p))
     {
-	if (cst_streq("1",item_feat_string(p,"stress")))
+	if (cst_streq("1",ffeature_string(p,"stress")))
 	    c++;
 	if (item_equal(p,fs))
 	    break;

@@ -41,6 +41,7 @@ testsuite/lex_test
 testsuite/lpc_resynth
 testsuite/lpc_test
 testsuite/lpc_test2
+testsuite/multi_thread
 testsuite/nums_test
 testsuite/play_client
 testsuite/play_server

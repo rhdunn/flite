@@ -199,22 +199,17 @@ Convert a festvox clunits (processed) voice into a C file."
 
    (if cg:mixed_excitation
        (begin
-         (set! memf me_mix_filters)
+         ;; Uses filters in festvox/mef.track (from Jan 2013)
          (set! n 0)
          (while (< n 5)
             (format ofd "const double %s_me_filter_%d[] = {\n" name n)
             (set! o 0)
-            (while (< o 47)
-               (format ofd "%f, " (car memf))
-               (set! memf (cdr memf))
+            (while (< o 46)
+               (format ofd "%f, " (track.get me_filter_track n o))
                (set! o (+ o 1)))
-            (format ofd "%f\n};\n" (car memf))
-            (set! memf (cdr memf))
+            (format ofd "%f\n};\n" (track.get me_filter_track n o))
             (set! n (+ n 1))
          )
-         (if memf
-             (format t "Error still %d values left in me_filter\n"
-                     (length memf)))
          (format ofd "const double * const %s_me_h[] = {\n" name)
          (format ofd "   %s_me_filter_0,\n" name)
          (format ofd "   %s_me_filter_1,\n" name)
@@ -228,7 +223,9 @@ Convert a festvox clunits (processed) voice into a C file."
    (format ofd "  \"%s\",\n" name)
    (format ofd "  %s_types,\n" name)
    (format ofd "  %s_num_types,\n" name)
-   (format ofd "  16000,\n") ;; sample rate
+   (if (boundp 'framerate)
+       (format ofd "  %d,\n" framerate) ;; sample rate
+       (format ofd "  16000,\n"))       ;; sample rate
 
    (format ofd "  %f,%f,\n" F0MEAN F0STD) 
 
@@ -319,7 +316,7 @@ Convert a festvox clunits (processed) voice into a C file."
    (format ofd "  %s_dynwinsize,\n" name)
 
    (format ofd "  %f, /* mlsa_alpha */\n" mlsa_alpha_param)
-   (format ofd "  %f, /* mlsa_beta */\n" mlsa_beta_param)
+   (format ofd "  %f, /* mlsa_beta */\n" 0.4)
 
    (if cg:multimodel
        (format ofd "  1, /* cg:multimodel */\n")
@@ -625,6 +622,24 @@ Output cg selection carts into odir/name_carts.c"
       (string-before x ":")
       "sc"
       (string-after x ":"))))
+   ((string-matches x ".*=.*")
+    (intern
+     (string-append
+      (string-before x "=")
+      "eq"
+      (string-after x "="))))
+   ((string-matches x ".*>.*")
+    (intern
+     (string-append
+      (string-before x ">")
+      "gt"
+      (string-after x ">"))))
+   ((string-matches x ".*}.*")
+    (intern
+     (string-append
+      (string-before x "}")
+      "rb"
+      (string-after x "}"))))
    ((string-matches x ".*~.*")
     (intern
      (string-append

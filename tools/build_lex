@@ -38,14 +38,14 @@
 ##                                                                       ##
 ###########################################################################
 
-if [ "x$FLITEDIR" == "x" ]
+if [ "x$FLITEDIR" = "x" ]
 then
    FLITEDIR=`pwd`/../..
 fi
 
 ## Change these two lines
-LEXNAME=l2f_pt
-LEXFILE=l2fdict.1.13 
+LEXNAME=cmu_iq
+LEXFILE=cmu_iq_lex.out
 
 if [ $# = 0 ]
 then

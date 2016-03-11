@@ -120,9 +120,11 @@ static cst_wave *synthesis_body(const cst_track *params, /* f0 + mcep */
     int stream_mark;
     int rc = CST_AUDIO_STREAM_CONT;
     int num_mcep;
-    double ffs = 16000;
+    double ffs = fs;
 
     num_mcep = params->num_channels-1;
+    /* For SPEED_HACK we could reduce num_mcep, and it will run faster */
+    /* num_mcep -= 10; */
     framel = (int)(0.5 + (framem * ffs / 1000.0)); /* 80 for 16KHz */
     init_vocoder(ffs, framel, num_mcep, &vs, cg_db);
 
@@ -132,8 +134,6 @@ static cst_wave *synthesis_body(const cst_track *params, /* f0 + mcep */
     /* synthesize waveforms by MLSA filter */
     wave = new_wave();
     cst_wave_resize(wave,params->num_frames * framel,1);
-    /* It is (weirdly) possible that fs and ffs are different */
-    /* But only for weird speech hack created 8KHz voices */
     wave->sample_rate = fs; 
 
     mcep = cst_alloc(double,num_mcep+1);

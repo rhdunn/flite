@@ -2,7 +2,7 @@
 /*                                                                       */
 /*                  Language Technologies Institute                      */
 /*                     Carnegie Mellon University                        */
-/*                        Copyright (c) 2004                             */
+/*                         Copyright (c) 2013                            */
 /*                        All Rights Reserved.                           */
 /*                                                                       */
 /*  Permission is hereby granted, free of charge, to use and distribute  */
@@ -30,20 +30,77 @@
 /*  THIS SOFTWARE.                                                       */
 /*                                                                       */
 /*************************************************************************/
-/*             Author:  Alan W Black (awb@cs.cmu.edu)                    */
-/*               Date:  December 2004                                    */
-/*************************************************************************/
 /*                                                                       */
-/*  PalmOS Callbacks to System Functions                                 */
+/*  LANGNAME language support                                            */
 /*                                                                       */
 /*************************************************************************/
-#include <PalmOS.h>
-#include <string.h>
-#include "PceNativeCall.h" 
-#include "CoreTraps.h" 
-#include "pocore.h"
+#include "flite.h"
+#include "cst_val.h"
+#include "cst_voice.h"
+#include "cst_lexicon.h"
+#include "cst_ffeatures.h"
+#include "cmu_LANGNAME_lang.h"
 
-float atof(const char *f)
+static cst_val *cmu_LANGNAME_tokentowords(cst_item *token, const char *name)
 {
-    return 0.0;
+    /* Return list of words that expand token/name */
+    cst_val *r;
+
+    /* printf("token_name %s name %s\n",item_name(token),name); */
+
+    if (item_feat_present(token,"phones"))
+	return cons_val(string_val(name),NULL);
+
+#if 0
+    if (item_feat_present(token,"nsw"))
+	nsw = item_feat_string(token,"nsw");
+
+    utt = item_utt(token);
+    lex = val_lexicon(feat_val(utt->features,"lexicon"));
+#endif
+
+    if (cst_strlen(name) > 0)
+        r = cons_val(string_val(name),0);
+    else
+        r = NULL;
+    
+    return r;
+}
+
+void cmu_LANGNAME_lang_init(cst_voice *v)
+{
+    /* Set LANGNAME language stuff */
+    feat_set_string(v->features,"language","cmu_LANGNAME_lang");
+
+    /* utterance break function */
+    feat_set(v->features,"utt_break",breakfunc_val(&default_utt_break));
+
+    /* Phoneset -- need to get this from voice */
+    feat_set(v->features,"phoneset",phoneset_val(&cmu_LANGNAME_phoneset));
+    feat_set_string(v->features,"silence",cmu_LANGNAME_phoneset.silence);
+
+    /* Get information from voice and add to lexicon */
+
+    /* Text analyser -- whitespace defaults */
+    feat_set_string(v->features,"text_whitespace",
+                    cst_ts_default_whitespacesymbols);
+    feat_set_string(v->features,"text_postpunctuation",
+                    cst_ts_default_prepunctuationsymbols);
+    feat_set_string(v->features,"text_prepunctuation",
+                    cst_ts_default_postpunctuationsymbols);
+    feat_set_string(v->features,"text_singlecharsymbols",
+                    cst_ts_default_singlecharsymbols);
+
+    /* Tokenization tokenization function */
+    feat_set(v->features,"tokentowords_func",itemfunc_val(&cmu_LANGNAME_tokentowords));
+      /* Pos tagger (gpos)/induced pos */
+    /* Phrasing */
+    /*    feat_set(v->features,"phrasing_cart",cart_val(&cmu_LANGNAME_phrasing_cart)); */
+    /* Intonation, Duration and F0 -- part of cg */
+    feat_set_string(v->features,"no_intonation_accent_model","1");
+
+    /* Default ffunctions (required) */
+    basic_ff_register(v->ffunctions);
+
+    return;
 }

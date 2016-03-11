@@ -3,6 +3,28 @@
 This file documents the changes made to the flite project in order to comply
 with clause 2 of the project's [BSD license](COPYING).
 
+## [1.9.0-2]
+
+  * Fix compilation with gcc >= 5.0 and -o0.
+  * Fix the calls to `lex_lookup` in the testsuite. Based on a patch by
+    Åke Forslund <ake.forslund@gmail.com>.
+  * Fix building `testsuite/multi_thread`. Based on a patch by Åke Forslund
+    <ake.forslund@gmail.com>.
+  * Build fixes to the `testsuite` from [1.3-2](#1.3-2), [1.1-2](#1.1-2) and
+    [1.0-2](#1.0-2).
+
+## [1.9.0-1]
+
+  * Build improvements from [1.0-1](#1.0-1).
+
+## [1.9.0]
+
+Upstream version 1.9.0:
+
+  * Indic language support.
+  * Supports diffrent sample rates/mgc order to tune for speed.
+  * Removed PalmOS support from distribution.
+
 ## [1.5.6-3]
 
   * Build fixes for `make_cmulex` from [1.3-3](#1.3-3) and [1.4-3](#1.4-3).
@@ -21,7 +43,7 @@ with clause 2 of the project's [BSD license](COPYING).
 Upstream version 1.5.6:
 
   * SSML support.
-  * Generalized tokenstreams.
+  * Generalized tokenstreams (used in Bard Storyteller).
   * Simple-Pulseaudio support.
 
 ## [1.5.4-3]

@@ -475,7 +475,34 @@ int val_dec_refcount(const cst_val *b)
     }
 }
 
+static inline int utf8_sequence_length(char c0)
+{
+    // Get the expected length of UTF8 sequence given its most
+    // significant byte
+    return (( 0xE5000000 >> (( c0 >> 3 ) & 0x1E )) & 3 ) + 1;
+}
+
 cst_val *cst_utf8_explode(const cst_string *utf8string)
+{
+  // Return a list of utf8 characters as strings
+  cst_val *chars=NULL;
+  
+  const unsigned char *str = (const unsigned char*)utf8string;
+  char utf8char[5];
+  char c0;
+  int charlength;
+
+  while ((c0 = *str))
+  {
+    charlength = utf8_sequence_length(c0);
+    snprintf(utf8char, charlength + 1, "%s", str);
+    chars = cons_val(string_val(utf8char),chars);
+    str += charlength;
+  }
+  return val_reverse(chars);
+}
+
+cst_val *cst_utf8_explode_old(const cst_string *utf8string)
 {
     /* return a list of utf-8 characters as strings */
     const unsigned char *xxx = (const unsigned char *)utf8string;
@@ -507,7 +534,134 @@ cst_val *cst_utf8_explode(const cst_string *utf8string)
         chars = cons_val(string_val(utf8char),chars);
     }
     return val_reverse(chars);
+}
 
+static int utf8_ord(const char *utf8_seq) {
+  unsigned int len;
+  int ord;
+
+  unsigned char c0, c1, c2, c3;  // Potential bytes in the UTF8 symbol
+  c0 = utf8_seq[0];
+  len = utf8_sequence_length(c0);
+
+  // Make sure the string sequence we received matches with the
+  // expected length, and that the expected length is nonzero.
+  if ( (len == 0) ||
+       (len != strlen(utf8_seq))) {
+    return -1;
+  }
+
+  if (len == 1) {
+    // ASCII sequence.
+    return c0;
+  }
+
+  c1 = utf8_seq[1];
+  if (len == 2) {
+    ord = ((c0 & 0x1F) << 6) | (c1 & 0x3F);
+    if (ord < 0x80)
+      return -1;
+    return ord;
+  }
+
+  c2 = utf8_seq[2];
+  if (len == 3) {
+    if ((c2 & 0xC0) != 0x80)
+      return -1;
+    ord = ((c0 & 0x0F) << 12) | ((c1 & 0x3F) << 6) | (c2 & 0x3F);
+    if (ord < 0x800 ||
+        (ord >= 0xD800 && ord <= 0xDFFF))
+      return -1;
+    return ord;
+  }
+
+  c3 = utf8_seq[3];
+  if (len == 4) {
+    if ((c3 & 0xC0) != 0x80)
+      return -1;
+    ord =
+        ((c0 & 0x7) << 18) | ((c1 & 0x3F) << 12) |
+        ((c2 & 0x3F) << 6) | (c3 & 0x3F);
+    if (ord < 0x10000 || ord > 0x10FFFF)
+      return -1;
+    return ord;
+  }
+
+  return -1;
+}
+
+cst_val *cst_utf8_ord(const cst_val *utf8_char) {
+  const char *ch=(const char *)val_string(utf8_char);
+  return int_val(utf8_ord(ch));
+}
+
+static int utf8_chr(int ord, char* utf8char) {
+  unsigned int utf8len;
+  int i = 0;
+
+  if (ord < 0x80) {
+    utf8len = 1;
+  } else if (ord < 0x800) {
+    utf8len = 2;
+  } else if (ord <= 0xFFFF) {
+    utf8len = 3;
+  } else if (ord <= 0x200000) {
+    utf8len = 4;
+  } else {
+    // Replace invalid character with FFFD
+    utf8len = 2;
+    ord = 0xFFFD;
+  }
+
+  i = utf8len;  // Index into utf8char
+  utf8char[i--] = 0;
+
+  switch (utf8len) {
+    // These fallthrough deliberately
+    case 6:
+      utf8char[i--] = (ord | 0x80) & 0xBF;
+      ord >>= 6;
+    case 5:
+      utf8char[i--] = (ord | 0x80) & 0xBF;
+      ord >>= 6;
+    case 4:
+      utf8char[i--] = (ord | 0x80) & 0xBF;
+      ord >>= 6;
+    case 3:
+      utf8char[i--] = (ord | 0x80) & 0xBF;
+      ord >>= 6;
+    case 2:
+      utf8char[i--] = (ord | 0x80) & 0xBF;
+      ord >>= 6;
+    case 1:
+      switch (utf8len) {
+        case 0:
+        case 1:
+          utf8char[i--] = ord;
+          break;
+        case 2:
+          utf8char[i--] = ord | 0xC0;
+          break;
+        case 3:
+          utf8char[i--] = ord | 0xE0;
+          break;
+        case 4:
+          utf8char[i--] = ord | 0xF0;
+      }
+  }
+  return utf8len;
+}
+
+cst_val *cst_utf8_chr(const cst_val *ord) {
+  char ch[5];
+  int utf8len;
+
+  utf8len = utf8_chr(val_int(ord),ch);
+  if (utf8len == 0) {
+    return 0;
+  }
+
+  return string_val(ch);
 }
 
 int val_stringp(const cst_val *v)

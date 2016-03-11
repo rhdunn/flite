@@ -210,7 +210,7 @@ static cst_utterance *clunits_select(cst_utterance *utt)
 /* This is used to add incremental target weighting to candidates */
 /* It has been tuned but as the candidates are not actually ordered */
 /* doing this is meaningless -- but *is* better */
-int clunits_target_weight = 70;
+#define clunits_target_weight 70
 
 static cst_vit_cand *cl_cand(cst_item *i,cst_viterbi *vd)
 {
@@ -226,7 +226,6 @@ static cst_vit_cand *cl_cand(cst_item *i,cst_viterbi *vd)
     clunit_db = val_clunit_db(feat_val(vd->f,"clunit_db"));
     unit_type = item_feat_string(i,"clunit_name");
 
-    /*    printf("awb_debug get_tree %s\n",unit_type); */
     /* get tree */
     clist = cart_interpret(i,clunit_get_tree(clunit_db,unit_type));
 
@@ -520,7 +519,7 @@ static int frame_distanceb(const cst_clunit_db *cludb,
     return r;
 }
 
-static int clunit_get_unit_type_index(cst_clunit_db *cludb, const char *name)
+int clunit_get_unit_type_index(cst_clunit_db *cludb, const char *name)
 {
     int start,end,mid,c;
 
@@ -540,7 +539,6 @@ static int clunit_get_unit_type_index(cst_clunit_db *cludb, const char *name)
 	    start = mid + 1;
     }
 
-    cst_errmsg("clunits: unit type \"%s\" not found\n",name);
     return -1;
 }
 
