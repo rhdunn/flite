@@ -2,7 +2,7 @@
 /*                                                                       */
 /*                  Language Technologies Institute                      */
 /*                     Carnegie Mellon University                        */
-/*                         Copyright (c) 2010                            */
+/*                         Copyright (c) 2014                            */
 /*                        All Rights Reserved.                           */
 /*                                                                       */
 /*  Permission is hereby granted, free of charge, to use and distribute  */
@@ -30,47 +30,79 @@
 /*  THIS SOFTWARE.                                                       */
 /*                                                                       */
 /*************************************************************************/
-/*             Author:  Alok Parlikar (aup@cs.cmu.edu)                   */
-/*               Date:  April 2010                                       */
+/*             Author:  Alan W Black (awb@cs.cmu.edu)                    */
+/*               Date:  November 2014                                     */
 /*************************************************************************/
 /*                                                                       */
-/*  A clustergen generic voice, that can load from a file                */
+/*  For setting and viewing features in a .flitevox clustergen file      */
 /*                                                                       */
 /*************************************************************************/
-#ifndef __CST_CG_MAP_H
-#define __CST_CG_MAP_H
 
-#include "cst_file.h"
-#include "cst_cg.h"
-#include "cst_cart.h"
-#include "cst_val.h"
-#include "cst_synth.h"
+#include <stdio.h>
+#include <string.h>
+#include <sys/time.h>
+#include <unistd.h>
 
-int cst_cg_read_header(cst_file fd);
+#include "cst_args.h"
+#include "flite.h"
 
-cst_cg_db *cst_cg_load_db(cst_voice *vox,cst_file fd);
-void cst_cg_free_db(cst_file fd,cst_cg_db*);
+void *flite_set_lang_list(void);
 
-char *cst_read_string(cst_file fd);
-void* cst_read_padded(cst_file fd, int*nb); 
-char** cst_read_db_types(cst_file fd);
+int main(int argc, char **argv)
+{
+    cst_features *args=new_features();
+    cst_voice *v;
+    const char *voice_name, *feat;
 
-cst_cart_node* cst_read_tree_nodes(cst_file fd);
-char** cst_read_tree_feats(cst_file fd);
-cst_cart* cst_read_tree(cst_file fd);
-cst_cart** cst_read_tree_array(cst_file fd);
+    (void)cst_args(argv,argc,
+                 "usage: flitevox_info [OPTIONS]\n"
+                 "-voice <string> Pathname to flitevox file\n"
+                 "-set <string>  Set given feature name\n"
+                 "-get <string>  Get given feature name\n"
+                 "-val <string>  Value to set\n"
+                 "-info          Output general info on voice\n"
+                 "set/get features in a flitevox voice.",
+                 args);
 
-void* cst_read_array(cst_file fd);
-void** cst_read_2d_array(cst_file fd);
+    flite_init();
+    flite_set_lang_list();
 
-dur_stat** cst_read_dur_stats(cst_file fd);
+    if (!feat_present(args,"-voice"))
+    {
+	fprintf(stderr,"no voice specified\n");
+	exit(-1);
+    }
+    voice_name = feat_string(args,"-voice");
+    v = flite_voice_load(voice_name);
+    if (v == NULL)
+    {
+	fprintf(stderr,"can't load voice %s\n",voice_name);
+	exit(-1);
+    }
 
-char*** cst_read_phone_states(cst_file fd);
+    if (feat_present(args,"-info"))
+    {
+        cst_feat_print(stdout,v->features);
+    } else if (feat_present(args,"-set"))
+    {
+        feat = get_param_string(args,"-set","feat");
+        if (!feat_present(args,"-val"))
+        {
+            fprintf(stderr,"no feat val given for %s\n",feat);
+            exit(-1);
+        }
+        /* set the feature */
+        feat_set_string(v->features,feat,feat_string(args,"-val"));
 
-void cst_read_voice_feature(cst_file fd,char** fname, char** fval);
-int cst_read_int(cst_file fd);
-float cst_read_float(cst_file fd);
+        /* save the voice back out again */
+        flite_voice_dump(v,voice_name);
+    }
+    else if (feat_present(args,"-get"))
+    {
+        feat = get_param_string(args,"-get","feat");
+        printf("%s \"%s\"\n",feat,feat_string(v->features,feat));
+    }
 
-extern const char * const cg_voice_header_string;
+    return 0;
 
-#endif
+}

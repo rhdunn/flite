@@ -38,7 +38,8 @@ TOP=..
 DIRNAME=main
 BUILD_DIRS = 
 ALL_DIRS= 
-SRCS = flite_main.c flite_time_main.c t2p_main.c compile_regexes.c
+SRCS = flite_main.c flite_time_main.c t2p_main.c compile_regexes.c \
+       flitevox_info_main.c
 OBJS = $(SRCS:.c=.o) flite_voice_list.o 
 FILES = Makefile $(SRCS)
 LOCAL_INCLUDES = 
@@ -46,6 +47,7 @@ LOCAL_INCLUDES =
 ALL = shared_libs \
       $(BINDIR)/flite$(EXEEXT) \
       $(BINDIR)/t2p$(EXEEXT) $(BINDIR)/compile_regexes$(EXEEXT) \
+      $(BINDIR)/flitevox_info$(EXEEXT) \
       flite_voice_list.c each $(EXTRABINS)
 
 VOICES=$(VOXES)
@@ -94,6 +96,12 @@ $(BINDIR)/flite$(EXEEXT): flite_main.o flite_lang_list $(flite_LIBS_deps)
 	rm -f flite_voice_list.o
 	$(MAKE) flite_voice_list.o
 	$(CC) $(CFLAGS) -o $@ flite_main.o flite_voice_list.o flite_lang_list.o $(flite_LIBS_flags) $(LDFLAGS)
+
+$(BINDIR)/flitevox_info$(EXEEXT): flitevox_info_main.o flite_lang_list $(flite_LIBS_deps)
+	$(TOP)/tools/make_voice_list $(VOICES)
+	rm -f flite_voice_list.o
+	$(MAKE) flite_voice_list.o
+	$(CC) $(CFLAGS) -o $@ flitevox_info_main.o flite_voice_list.o flite_lang_list.o $(flite_LIBS_flags) $(LDFLAGS)
 
 $(BINDIR)/flite_time$(EXEEXT): flite_time_main.o $(flite_time_LIBS_deps)
 	$(CC) $(CFLAGS) -o $@ flite_time_main.o $(flite_time_LIBS_flags) $(FLITELIBFLAGS) $(LDFLAGS) 

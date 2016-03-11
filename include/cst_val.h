@@ -157,6 +157,8 @@ cst_string *cst_implode(const cst_val *string_list);
 cst_val *cst_utf8_ord(const cst_val *utf8_char);
 cst_val *cst_utf8_chr(const cst_val *ord);
 
+int cst_utf8_ord_string(const char *utf8_char);
+
 /* make sure you know what you are doing before you call these */
 int val_dec_refcount(const cst_val *b);
 cst_val *val_inc_refcount(const cst_val *b);

@@ -69,9 +69,10 @@ char *cst_read_string(cst_file fd)
     return (char *)cst_read_padded(fd,&numbytes);
 }
 
-cst_cg_db *cst_cg_load_db(cst_file fd)
+cst_cg_db *cst_cg_load_db(cst_voice *vox,cst_file fd)
 {
     cst_cg_db* db = cst_alloc(cst_cg_db,1);
+    int i;
 
     db->freeable = 1;  /* somebody can free this if they want */
 
@@ -84,9 +85,11 @@ cst_cg_db *cst_cg_load_db(cst_file fd)
     db->f0_stddev = cst_read_float(fd);
 
     db->f0_trees = (const cst_cart**) cst_read_tree_array(fd);
-    db->param_trees0 = (const cst_cart**) cst_read_tree_array(fd);
-    db->param_trees1 = (const cst_cart**) cst_read_tree_array(fd);
-    db->param_trees2 = (const cst_cart**) cst_read_tree_array(fd);
+
+    db->num_param_models = get_param_int(vox->features,"num_param_models",3);
+    db->param_trees = cst_alloc(const cst_cart **,db->num_param_models);
+    for (i=0; i<db->num_param_models; i++)
+        db->param_trees[i] = (const cst_cart **) cst_read_tree_array(fd);
 
     db->spamf0 = cst_read_int(fd);
     if (db->spamf0)
@@ -95,18 +98,26 @@ cst_cg_db *cst_cg_load_db(cst_file fd)
         db->spamf0_phrase_tree = cst_read_tree(fd);
     }
 
-    db->num_channels0 = cst_read_int(fd);
-    db->num_frames0 = cst_read_int(fd);
-    db->model_vectors0 = 
-        (const unsigned short * const *)cst_read_2d_array(fd);
-    db->num_channels1 = cst_read_int(fd);
-    db->num_frames1 = cst_read_int(fd);
-    db->model_vectors1 = 
-        (const unsigned short * const *)cst_read_2d_array(fd);
-    db->num_channels2 = cst_read_int(fd);
-    db->num_frames2 = cst_read_int(fd);
-    db->model_vectors2 = 
-        (const unsigned short * const *)cst_read_2d_array(fd);
+    db->num_channels = cst_alloc(int,db->num_param_models);
+    db->num_frames = cst_alloc(int,db->num_param_models);
+    db->model_vectors = cst_alloc(const unsigned short **,db->num_param_models);
+    for (i=0; i<db->num_param_models; i++)
+    {
+        db->num_channels[i] = cst_read_int(fd);
+        db->num_frames[i] = cst_read_int(fd);
+        db->model_vectors[i] =
+            (const unsigned short **)cst_read_2d_array(fd);
+    }
+    /* In voices that were built before, they might have NULLs as the */
+    /* the vectors ratehr than a real model, so adjust the num_param_models */
+    /* accordingly -- this wont cause a leak as there is no alloc'd memory */
+    /* in the later unset vectors */
+    for (i=0; i<db->num_param_models; i++)
+    {
+        if (db->model_vectors[i] == NULL)
+            break;
+    }
+    db->num_param_models = i;
 
     if (db->spamf0)
     {
@@ -121,8 +132,15 @@ cst_cg_db *cst_cg_load_db(cst_file fd)
 
     db->frame_advance = cst_read_float(fd);
 
-    db->dur_stats = (const dur_stat * const *)cst_read_dur_stats(fd);
-    db->dur_cart = (const cst_cart *)cst_read_tree(fd);
+    db->num_dur_models = get_param_int(vox->features,"num_dur_models",1);
+    db->dur_stats = cst_alloc(const dur_stat **,db->num_dur_models);
+    db->dur_cart = cst_alloc(const cst_cart *,db->num_dur_models);
+
+    for (i=0; i<db->num_dur_models; i++)
+    {
+        db->dur_stats[i] = (const dur_stat **)cst_read_dur_stats(fd);
+        db->dur_cart[i] = (const cst_cart *)cst_read_tree(fd);
+    }
 
     db->phone_states = 
         (const char * const * const *)cst_read_phone_states(fd);
@@ -162,6 +180,11 @@ void *cst_read_padded(cst_file fd, int *numbytes)
     *numbytes = cst_read_int(fd);
     ret = (void *)cst_alloc(char,*numbytes);
     n = cst_fread(fd,ret,sizeof(char),*numbytes);
+    if (n != (*numbytes))
+    {
+        cst_free(ret);
+        return NULL;
+    }
     return ret;
 }
 
@@ -349,6 +372,8 @@ int cst_read_int(cst_file fd)
     int n;
 
     n = cst_fread(fd,&val,sizeof(int),1);
+    if (n != 1)
+        return 0;
     return val;
 }
 
@@ -358,5 +383,7 @@ float cst_read_float(cst_file fd)
     int n;
 
     n = cst_fread(fd,&val,sizeof(float),1);
+    if (n != 1)
+        return 0;
     return val;
 }

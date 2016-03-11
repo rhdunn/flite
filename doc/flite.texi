@@ -11,9 +11,9 @@
 @c world example, but many others too.  I happily acknowledge their
 @c aid in producing this document -- awb
 
-@set EDITION 1.9
-@set VERSION 1.9
-@set UPDATED 15th July 2014
+@set EDITION 2.0
+@set VERSION 2.0
+@set UPDATED 18th November 2014
 
 @ifinfo
 This file documents @code{Flite}, a small, fast run-time speech
@@ -264,6 +264,9 @@ time with
 
 @section Window CE Support
 
+@emph{NOTE: as Windows CE is somewhat rare now, we do not guarantee this
+still works.}
+
 Flite has been successfully compiled by a number of different groups
 under Windows CE.  The system should compile under Embedded Visual
 Studio but we not have the full details.
@@ -320,6 +323,9 @@ as if those were the sizes of parameters that were used to the train
 the voice. 
 
 @section PalmOS Support
+
+@emph{NOTE: as PalmOS is somewhat rare now, we do not guarantee this
+still works.}
 
 Support for PalmOS was removed from 1.9, I no longer have any working
 PalmOS devices.  But this section remains for people who do, but they
@@ -718,6 +724,10 @@ applications.  Included with the distribution is a small example
 executable that allows synthesis of strings of text and text files
 from the command line.
 
+You may want to look at Bard @file{http://festvox.org/bard/}, an ebook
+reader with a tight coupling to flite as a synthesizer.  This is the
+most elaborate use of the Flite API within our suite of programs.
+
 @section flite binary
 
 The example flite binary may be suitable for very simple applications.
@@ -784,12 +794,12 @@ The argument to the @code{-voice} option may be pathname to a dumped
 (Clustergen) voice.  This may be a Unix pathname or a URL (only protocols @file{http} and @file{file} are supported.  For example
 @example
 flite -voice file://cmu_us_awb.flitevox -f doc/alice -o alice.wav
-flite -voice http://cmufestvox,org/voices/cmu_us_ksp.flitevox -f doc/alice -o alice.wav
+flite -voice http://festvox.org/voices/cmu_us_ksp.flitevox -f doc/alice -o alice.wav
 @end example
 Voices will be loaded once and added to @code{flite_voice_list}.
 Although these voices are often small (a few megabytes) there will
-still be some time required to read them in.  The voices are not
-mapped, they are read into newly created structures.
+still be some time required to read them in the first time.  The
+voices are not mapped, they are read into newly created structures.
 
 This loading function is currently only supported for Clustergen
 voices.
@@ -1160,7 +1170,7 @@ probably solutions to this but we have not yet investigated them.  This
 limitation doesn't seem to be an issue with the diphone voices as they
 are typically much smaller than unit selection voices.
 
-@section Statistical Voice Building
+@section Statistical Voice Building (Clustergen)
 
 The process of building from a clustergen (cg) voice is also
 supported.  It is assumed the environment variable @code{FLITEDIR} is
@@ -1229,6 +1239,89 @@ are basic tools in the @file{flite/tools/} directory that include Scheme
 code to convert various Scheme structures to C include CART tree
 conversion and Lisp list conversion.  The other major source of help
 here is the existing language examples in @file{flite/lang/usenglish/}.
+
+Adding new language support is far from automatic, but there are core
+scripts for setting up new Flite support for languages and lexicons.  There
+are also scripts for converting (Festival) phoneset definitions to C
+and converting Festival lexicons to LTS rules and compressed lexicons
+in C.
+
+But beyond that you are sort of on your own.  The largest gap here is
+text normalization.  We do not yet have a standardize model for text
+normalization with well definied models for which we could write
+conversion scripts.  
+
+However here is a step by step attempt to show you what to do when
+building support for a new language/lexicon.
+
+Suppose we need to create support for Pashto, and already have a 
+festival voice running, and want it now to run in flite.  Converting
+the voice itself (unitselction or clustergen) is fairly robust, but
+you will also need C libraries for @file{cmu_pashto_lang} and 
+@file{cmu_pasho_lex}.  The first stage is to create the basic
+temple files for these.  In the core @file{flite/} source directory 
+type
+@example
+   ./tools/make_new_lang_lex pashto
+@end example
+This will create language and lex template files in
+@file{lang/cmu_pashto_lang/'} and @file{cmu_pashto_lex}.
+
+Then in firectory @file{lang/cmu_pashto_lang/} type
+@example
+    festival $FLITEDIR/tools/make_phoneset.scm
+    ...
+    festival> (phonesettoC "cmu_pashto" (car (load "PATHTO/cmu_pashto_transtac_phoneset.scm" t)) "pau" ".")
+@end example
+This will create @file{cmu_pashto_lang_phoneset.[ch]}.  You must the add these
+explicitly to the @file{Makefile}.
+
+Then in @file{lang/cmu_pashto_lex/} you have to build the C version of
+the lexicon and letter to sound rules.  The core script is in
+@file{flite/tools/build_lex}.
+@example
+    mkdir lex
+    cd lex
+    cp -p $FLITEDIR/tooks/build_lex .
+@end example
+Edit build_lex to give it the name of your lexicon name, and compiled
+lexicon from your voice.
+@example
+LEXNAME=cmu_pashto
+LEXFILE=lexicon.out
+@end example
+You should (I think) remove the first line ``MNCL'' from your
+@file{lexicon.out} file, note this @emph{must} be the compiled lexicon
+not the list of entries you compiled from as it expects the ordering, and
+the syllabification.
+@example
+    ./build_lex setup
+@end example
+Build the letter to sound rules (probably again)
+@example
+    ./build_lex lts
+@end example
+Convert the compiled letter to sound rules to C.  This converts the
+decision trees to decision graphs and runs WFST minimization of them
+to get a more efficient set of structures.  This puts the generated C
+files in @file{c/}.
+@example
+    ./build_lex lts2c
+@end example
+Now convert the lexical entries themselves
+@example
+    ./build_lex lex
+@end example
+Again the generate C files will be put in @file{c/}.
+
+Now we generated a Huffman codes compressed lexicon to reduce the 
+lexicon size, merging frequent letter sequences and phone sequences.
+@example
+    ./build_lex compresslex
+@end example
+The copy the @file{.c} and @file{.h} files to @file{lang/cmu_pashto_lex/}
+[something about compressed and non-compressed???]
+
 
 @chapter Porting to new platforms
 

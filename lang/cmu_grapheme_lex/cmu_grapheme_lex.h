@@ -2,7 +2,7 @@
 /*                                                                       */
 /*                  Language Technologies Institute                      */
 /*                     Carnegie Mellon University                        */
-/*                         Copyright (c) 2010                            */
+/*                         Copyright (c) 2013                            */
 /*                        All Rights Reserved.                           */
 /*                                                                       */
 /*  Permission is hereby granted, free of charge, to use and distribute  */
@@ -30,47 +30,25 @@
 /*  THIS SOFTWARE.                                                       */
 /*                                                                       */
 /*************************************************************************/
-/*             Author:  Alok Parlikar (aup@cs.cmu.edu)                   */
-/*               Date:  April 2010                                       */
+/*  grapheme Lexicon public functions                                    */
 /*************************************************************************/
-/*                                                                       */
-/*  A clustergen generic voice, that can load from a file                */
-/*                                                                       */
-/*************************************************************************/
-#ifndef __CST_CG_MAP_H
-#define __CST_CG_MAP_H
 
-#include "cst_file.h"
-#include "cst_cg.h"
-#include "cst_cart.h"
-#include "cst_val.h"
-#include "cst_synth.h"
+#ifndef _cmu_grapheme_lex_h_
+#define _cmu_grapheme_lex_h_
 
-int cst_cg_read_header(cst_file fd);
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
-cst_cg_db *cst_cg_load_db(cst_voice *vox,cst_file fd);
-void cst_cg_free_db(cst_file fd,cst_cg_db*);
+#include "cst_lexicon.h"
+cst_lexicon *cmu_grapheme_lex_init(void);
 
-char *cst_read_string(cst_file fd);
-void* cst_read_padded(cst_file fd, int*nb); 
-char** cst_read_db_types(cst_file fd);
+extern const int num_unicode_sampa_mapping;
+extern const char * const unicode_sampa_mapping[16663][5];
 
-cst_cart_node* cst_read_tree_nodes(cst_file fd);
-char** cst_read_tree_feats(cst_file fd);
-cst_cart* cst_read_tree(cst_file fd);
-cst_cart** cst_read_tree_array(cst_file fd);
-
-void* cst_read_array(cst_file fd);
-void** cst_read_2d_array(cst_file fd);
-
-dur_stat** cst_read_dur_stats(cst_file fd);
-
-char*** cst_read_phone_states(cst_file fd);
-
-void cst_read_voice_feature(cst_file fd,char** fname, char** fval);
-int cst_read_int(cst_file fd);
-float cst_read_float(cst_file fd);
-
-extern const char * const cg_voice_header_string;
+#ifdef __cplusplus
+} /* extern "C" */
+#endif /* __cplusplus */
 
 #endif
+

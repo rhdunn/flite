@@ -3,6 +3,8 @@
 - [Compilation](#compilation)
 - [Usage](#usage)
 - [Voice Quality](#voice-quality)
+- [Bard Storyteller](#bard-storyteller)
+- [Android](#android)
 - [License](#license)
 
 ----------
@@ -44,7 +46,7 @@ and not portable enough.
   text segment (i.e. they may be put in ROM).  As they are linked in
   at compile time, there is virtually no startup delay.
 * Although the synthesized output is not exactly the same as the same
-  voice in Festival they are effectively equivalent.  That is flite
+  voice in Festival they are effectively equivalent.  That is, flite
   doesn't sound better or worse than the equivalent voice in festival,
   just faster, smaller and scalable.
 * For standard diphone voices, maximum run time memory
@@ -91,13 +93,16 @@ Supported platforms:
 
 * Various Intel Linux systems (and iPaq Linux), under various versions
   of GCC (2.7.2 to 4.x)
+* Mac OS X
+* Various Android devices
 * FreeBSD 3.x and 4.x
 * Solaris 5.7, and Solaris 9
-* Initial support for Mac OS X
-* Windows 2000/XP under Cygwin 1.3.5 and later
-* Support for WinCE (2.11 and 3.0) WM (5.x plus) is included
+* Windows 2000/XP and later under Cygwin 1.3.5 and later
 * Successfully compiles and runs under 64Bit Linux architectures
 * OSF1 V4.0 (gives an unimportant warning about sizes when compiled `cst_val.c`)
+
+Previously we supported PalmOS and Windows CE but these seem to be rare
+nowadays so they are no longer actively supported.
 
 Other similar platforms should just work, we have also cross compiled
 on a Linux machine for StrongARM.  However note that new byte order
@@ -205,7 +210,7 @@ Some typical examples are:
 
   *  `./bin/flite -lv`
 
-     List the voices available in this build.
+     List the voices linked directly in this build.
 
   *  `./bin/flite -voice rms -f doc/alice`
 
@@ -219,10 +224,23 @@ Some typical examples are:
 
      Speak with the US female slt voice.
 
+  *  `./bin/flite -voice http://www.festvox.org/flite/packed/flite-2.0/voices/cmu_us_ksp.flitevox -f doc/alice`
+
+     Speak with KSP voice, download on the fly from festvox.org.
+
+  *  `./bin/flite -voice voices/cmu_us_ahw.flitevox -f doc/alice`
+
+     Speak with AHW voice loaded from the local file.
+
+Voice names are identified as loadable files if the name includes a
+`/` (slash) otherwise they are treated as internal names.  So if you
+want to load voices from the current directory you need to prefix them
+with `./`.
+
 # Voice Quality
 
 So you've eagerly downloaded flite, compiled it and run it, now you
-are disappointed that is doesn't sound wonderful, sure its fast and
+are disappointed that it doesn't sound wonderful, sure its fast and
 small but what you really hoped for was the dulcit tones of a deep
 baritone voice that would make you desperately hang on every phrase it
 mellifluously produces.  But instead you get an 8Khz diphone voice that
@@ -236,7 +254,9 @@ be able take voices built with the FestVox process and compile them
 for flite, the result should be exactly the same quality (though of
 course trading the size for quality in flite is also an option).  The
 included voice is just a sample voice that was used in the testing
-process.  We have better voices in Festival and are working on the
+process.
+
+We have better voices in Festival and are working on the
 coversion process to make it both more automatic and more robust and
 tunable, but we haven't done that yet, so in this first beta release.
 This old poor sounding voice is all we have, sorry, we'll provide you
@@ -246,7 +266,30 @@ built new voices efficiently and robustly as soon as we can.  Though
 in the mean time, a few higher quality voices will be released with
 the next version.
 
-# License
+We expect that often voices will be loaded from external files, and we
+have now set up a voice repository on
+`http://www.festvox.org/flite/packed/flite-2.0/voices/*.flitevox`.
+You can download the .flitevox files to you machine so you don't need a
+network connect everytime you need to load a voice.
+
+We are now actively adding to this list of available voices in English
+and other languages.
+
+## Bard Storyteller
+
+[Bard](http://festvox.org/bard/) is a companion app that read ebooks, both
+displaying them and actually reading them to you using flite.  Bard supports
+a wide range of fonts, and flite voices, and books in text, html and
+epub format.  Bard is used as a evaluation of flites capabilities
+and an example of a serious application using flite.
+
+## Android
+
+The Android port is now in the
+[Flite-TTS-Engine-for-Android](https://github.com/happyalu/Flite-TTS-Engine-for-Android)
+project.
+
+## License
 
 The flite project is released under a [4-clause BSD license](COPYING) with
 the following copyright:
