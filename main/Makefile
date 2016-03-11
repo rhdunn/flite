@@ -81,6 +81,8 @@ else
 shared_libs: nothing
 endif
 
+.NOTPARALLEL: $(ALL)
+
 $(BINDIR)/flite$(EXEEXT): flite_main.o $(flite_LIBS_deps)
 	$(TOP)/tools/make_voice_list $(VOICES)
 	rm -f flite_voice_list.o
@@ -111,15 +113,15 @@ $(BINDIR)/flite_${VOICE}: flite_main.o $(flite_LIBS_deps)
 
 install:
 #       The basic binaries
-	@ $(INSTALL) -m 755 $(BINDIR)/flite $(INSTALLBINDIR)
+	@ $(INSTALL) -m 755 $(BINDIR)/flite $(DESTDIR)$(INSTALLBINDIR)
 	@ for i in $(VOICES) ; \
 	do \
-	   $(INSTALL) $(BINDIR)/flite_$$i $(INSTALLBINDIR); \
+	   $(INSTALL) $(BINDIR)/flite_$$i $(DESTDIR)$(INSTALLBINDIR); \
 	done
-	$(INSTALL) -m 755 $(BINDIR)/flite_time $(INSTALLBINDIR)
+	$(INSTALL) -m 755 $(BINDIR)/flite_time $(DESTDIR)$(INSTALLBINDIR)
 #       The libraries: static and shared (if built)
-	cp -pd $(flite_LIBS_deps) $(INSTALLLIBDIR)
+	cp -pd $(flite_LIBS_deps) $(DESTDIR)$(INSTALLLIBDIR)
 ifdef SHFLAGS
-	cp -pd $(SHAREDLIBS) $(VERSIONSHAREDLIBS) $(INSTALLLIBDIR)
+	cp -pd $(SHAREDLIBS) $(VERSIONSHAREDLIBS) $(DESTDIR)$(INSTALLLIBDIR)
 endif
 

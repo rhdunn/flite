@@ -31,11 +31,13 @@ bin/
 testsuite/asciiS2U
 testsuite/asciiU2S
 testsuite/bin2ascii
+testsuite/by_word
 testsuite/combine_waves
 testsuite/compare_wave
 testsuite/hrg_test
 testsuite/lex_lookup
 testsuite/lex_test
+testsuite/lpc_resynth
 testsuite/lpc_test
 testsuite/lpc_test2
 testsuite/nums_test
@@ -46,6 +48,7 @@ testsuite/play_wave
 testsuite/record_in_noise
 testsuite/record_wave
 testsuite/regex_test
+testsuite/rfc
 testsuite/token_test
 testsuite/utt_test
 

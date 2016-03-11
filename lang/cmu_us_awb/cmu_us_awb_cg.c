@@ -430,6 +430,6 @@ const cst_cg_db cmu_us_awb_cg_db = {
   1, /* cg:mixed_excitation */
   5,48, /* filter sizes */
   cmu_us_awb_me_h,
-  2.0 /* gain */
+  1.5 /* gain */
 
 };

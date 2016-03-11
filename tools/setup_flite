@@ -149,6 +149,7 @@ else
 fi
 
 cp -p $FLITEDIR/main/flite_main.c flite/flite_main.c
+cp -p $FLITEDIR/tools/cg_dump_voxdata.c flite/cg_dump_voxdata.c
 
 echo "#define VOXNAME" $FV_VOICENAME >flite/voxdefs.h
 echo "#define REGISTER_VOX register_"$FV_VOICENAME >>flite/voxdefs.h

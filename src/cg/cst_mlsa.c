@@ -62,8 +62,16 @@
 #include "cst_wave.h"
 #include "cst_audio.h"
 
+#ifdef ANDROID
+#define SPEED_HACK_2
+/* This is basically the speed hack (see below) for windows CE,
+   but doesn't do anything to the sampling rate.
+*/
+#endif
+
 #ifdef UNDER_CE
 #define SPEED_HACK
+#define SPEED_HACK_2
 /* This is one of those other things you shouldn't do, but it makes
    CG voices in flowm fast enough on my phone */
 #define double float
@@ -103,7 +111,7 @@ cst_wave *mlsa_resynthesis(const cst_track *params,
 static cst_wave *synthesis_body(const cst_track *params, /* f0 + mcep */
                                 const cst_track *str,
                                 double fs,	/* sampling frequency (Hz) */
-                                double framem,	/* FFT length */
+                                double framem,	/* frame size */
                                 cst_cg_db *cg_db,
                                 cst_audio_streaming_info *asi)
 {
@@ -138,7 +146,7 @@ static cst_wave *synthesis_body(const cst_track *params, /* f0 + mcep */
     mcep = cst_alloc(double,num_mcep+1);
 
     for (t = 0, stream_mark = pos = 0; 
-         (rc == CST_AUDIO_STREAM_CONT) && (t < params->num_frames); 
+         (rc == CST_AUDIO_STREAM_CONT) && (t < params->num_frames);
          t++) 
     {
         f0 = (double)params->frames[t][0];
@@ -146,11 +154,14 @@ static cst_wave *synthesis_body(const cst_track *params, /* f0 + mcep */
             mcep[i-1] = params->frames[t][i];
         mcep[i-1] = 0;
 
-        vocoder(f0, mcep, str, t, num_mcep, cg_db, &vs, wave, &pos);
+        if (str)
+            vocoder(f0, mcep, str->frames[t], num_mcep, cg_db, &vs, wave, &pos);
+        else
+            vocoder(f0, mcep, NULL, num_mcep, cg_db, &vs, wave, &pos);
 
         if (asi && (pos-stream_mark > asi->min_buffsize))
         {
-            rc=(*asi->asc)(wave,stream_mark,pos-stream_mark,0,asi->userdata);
+            rc=(*asi->asc)(wave,stream_mark,pos-stream_mark,0,asi);
             stream_mark = pos;
         }
     }
@@ -158,7 +169,7 @@ static cst_wave *synthesis_body(const cst_track *params, /* f0 + mcep */
 
     if (asi && (rc == CST_AUDIO_STREAM_CONT))
     {   /* drain the last part of the waveform */
-        (*asi->asc)(wave,stream_mark,pos-stream_mark,1,asi->userdata);
+        (*asi->asc)(wave,stream_mark,pos-stream_mark,1,asi);
     }
 
     /* memory free */
@@ -168,6 +179,69 @@ static cst_wave *synthesis_body(const cst_track *params, /* f0 + mcep */
     return wave;
 }
 
+#if 0
+static cst_wave *rt_synthesis_body(cst_frame_read_func *istream,
+                                   double fs,	/* sampling frequency (Hz) */
+                                   double framem,	/* FFT length */
+                                   cst_audio_streaming_info *asi)
+{
+    long t, pos;
+    int framel, i;
+    double f0;
+    VocoderSetup vs;
+    cst_wave *wave = 0;
+    double *mcep;
+    int stream_mark;
+    int rc = CST_AUDIO_STREAM_CONT;
+    int num_mcep;
+
+    num_mcep = params->num_channels-1;
+    framel = (int)(framem * fs / 1000.0);
+    init_vocoder(fs, framel, num_mcep, &vs, cg_db);
+
+    if (str != NULL)
+        vs.gauss = MFALSE;
+
+    /* synthesize waveforms by MLSA filter */
+    wave = new_wave();
+    cst_wave_resize(wave,params->num_frames * (framel + 2),1);
+    wave->sample_rate = fs; 
+
+    mcep = cst_alloc(double,num_mcep+1);
+
+    for (t = 0, stream_mark = pos = 0; 
+         (rc == CST_AUDIO_STREAM_CONT) && (t < params->num_frames);
+         t++) 
+    {
+        frame = istream();
+        f0 = (double)frame[0];
+        for (i=1; i<num_mcep+1; i++)
+            mcep[i-1] = frames[i];
+        mcep[i-1] = 0;
+
+        vocoder(f0, mcep, str, t, num_mcep, cg_db, &vs, wave, &pos);
+
+        if (asi && (pos-stream_mark > asi->min_buffsize))
+        {
+            rc=(*asi->asc)(wave,stream_mark,pos-stream_mark,0,asi);
+            stream_mark = pos;
+        }
+    }
+    wave->num_samples = pos;
+
+    if (asi && (rc == CST_AUDIO_STREAM_CONT))
+    {   /* drain the last part of the waveform */
+        (*asi->asc)(wave,stream_mark,pos-stream_mark,1,asi);
+    }
+
+    /* memory free */
+    cst_free(mcep);
+    free_vocoder(&vs);
+
+    return wave;
+}
+#endif
+
 static void init_vocoder(double fs, int framel, int m, 
                          VocoderSetup *vs, cst_cg_db *cg_db)
 {
@@ -175,7 +249,7 @@ static void init_vocoder(double fs, int framel, int m,
     vs->fprd = framel;
     vs->iprd = 1;
     vs->seed = 1;
-#ifdef SPEED_HACK
+#ifdef SPEED_HACK_2
     /* This makes it about 25% faster and sounds basically the same */
     vs->pd   = 4;
 #else
@@ -230,7 +304,7 @@ static double plus_or_minus_one()
 }
 
 static void vocoder(double p, double *mc, 
-                    const cst_track *str, int t,
+                    const float *str,
                     int m, cst_cg_db *cg_db,
                     VocoderSetup *vs, cst_wave *wav, long *pos)
 {
@@ -239,7 +313,7 @@ static void vocoder(double p, double *mc,
     double xpulse, xnoise;
     double fxpulse, fxnoise;
     float gain=1.0;
-    
+
     if (cg_db->gain != 0.0)
         gain = cg_db->gain;
    
@@ -251,8 +325,8 @@ static void vocoder(double p, double *mc,
             vs->hpulse[i] = vs->hnoise[i] = 0.0;
             for (j=0; j<vs->ME_num; j++)
             {
-                vs->hpulse[i] += str->frames[t][j] * vs->h[j][i];
-                vs->hnoise[i] += (1 - str->frames[t][j]) * vs->h[j][i];
+                vs->hpulse[i] += str[j] * vs->h[j][i];
+                vs->hnoise[i] += (1 - str[j]) * vs->h[j][i];
             }
         }
     }
@@ -358,7 +432,6 @@ static void vocoder(double p, double *mc,
 #else
 	x *= exp(vs->c[0])*gain;
 #endif
-
 	x = mlsadf(x, vs->c, m, cg_db->mlsa_alpha, vs->pd, vs->d1, vs);
 
         wav->samples[*pos] = (short)x;

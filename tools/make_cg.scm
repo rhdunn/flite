@@ -270,11 +270,12 @@ Convert a festvox clunits (processed) voice into a C file."
        (begin
          (format ofd "  1, /* cg:mixed_excitation */\n")
          (format ofd "  5,48, /* filter sizes */\n")
-         (format ofd "  %s_me_h \n" name))
+         (format ofd "  %s_me_h, \n" name))
        (begin
          (format ofd "  0, /* cg:mixed_excitation */\n")
          (format ofd "  0,0, /* cg:mixed_excitation */\n")
-         (format ofd "  NULL \n")))
+         (format ofd "  NULL, \n")))
+   (format ofd "  1.5 /* gain */\n")
    (format ofd "};\n")
 
    (fclose ofd)
@@ -400,16 +401,21 @@ Convert a festvox clunits (processed) voice into a C file."
        (set! i (+ 1 i)))
     (format mfd "};\n\n")
 
+    (if cg:mixed_excitation
+	(begin
+	  (set! num_channels_additive_constant 14)
+	  ))
+    
     (if (> cg_reduced_order 0)
-        (format cofd "#define %s_%s_num_channels %d\n" 
-                name type (+ 4 (* 4 cg_reduced_order)))
-        (format cofd "#define %s_%s_num_channels %d\n" name type num_channels))
-
+	(format cofd "#define %s_%s_num_channels %d\n"
+		name type (+ num_channels_additive_constant (* 4 cg_reduced_order)))
+	(format cofd "#define %s_%s_num_channels %d\n" name type num_channels))
+    
     (format cofd "#define %s_%s_num_frames %d\n" name type num_frames)
-
+  
     (fclose mfd)
 
-))
+    ))
 
 (define (mcepcoeff_norm c min range)
   (* (/ (- c min) range) 65535))
@@ -422,27 +428,51 @@ Ouput this frame."
     (set! min_range mcep_min_range)
     (set! real_order (/ (- nc 4) 4))
     (set! new_min_range nil)
-      
-    (while (< i nc)
-       (if (or (eq cg_reduced_order 0)
-               (< i (* 2 (+ 1 cg_reduced_order))) ;; static and static_stddev
-               (and (> i (- (/ nc 2) 1))  ;; deltas and delta_stddev
-                    (< i (+ (/ nc 2) (* 2 cg_reduced_order))))
-               (> i (- nc 3)))
-           (begin
-            ; (format t "i is %d %d\n" i (+ (/ nc 2) (* 2 cg_reduced_order)))
-             (format ofd " %d," 
-                     (mcepcoeff_norm 
-                      (track.get track f i)
-                      (caar min_range)
-                      (cadr (car min_range))))
-             (set! new_min_range (cons (car min_range) new_min_range))
-             ))
-       (set! min_range (cdr min_range))
-       (set! i (+ 1 i)))
-    (format ofd " };\n")
+    
+    (if cg:mixed_excitation
+	(begin
+	  
+	  (while (< i nc)
+		 (if (or (eq cg_reduced_order 0)
+			 (< i (* 2 (+ 1 cg_reduced_order))) ;; static and static_stddev
+			 (and (> i (- (/ (- nc 10) 2) 1))  ;; deltas and delta_stddev
+			      (< i (+ (/ (- nc 10) 2) (* 2 cg_reduced_order))))
+			 (> i (- nc 13)))
+		     (begin
+					; (format t "i is %d %d\n" i (+ (/ nc 2) (* 2 cg_reduced_order)))
+		       (format ofd " %d," 
+			       (mcepcoeff_norm 
+				(track.get track f i)
+				(caar min_range)
+				(cadr (car min_range))))
+		       (set! new_min_range (cons (car min_range) new_min_range))
+		       ))
+		 (set! min_range (cdr min_range))
+		 (set! i (+ 1 i)))
+	  (format ofd " };\n")
+	  )
+	(begin
+	  (while (< i nc)
+                 (if (or (eq cg_reduced_order 0)
+                         (< i (* 2 (+ 1 cg_reduced_order))) ;; static and static_stddev
+                         (and (> i (- (/ nc 2) 1))  ;; deltas and delta_stddev
+                              (< i (+ (/ nc 2) (* 2 cg_reduced_order))))
+                         (> i (- nc 3)))
+                     (begin
+                                        ; (format t "i is %d %d\n" i (+ (/ nc 2) (* 2 cg_reduced_order)))
+                       (format ofd " %d,"
+                               (mcepcoeff_norm
+                                (track.get track f i)
+                                (caar min_range)
+                                (cadr (car min_range))))
+                       (set! new_min_range (cons (car min_range) new_min_range))
+                       ))
+                 (set! min_range (cdr min_range))
+                 (set! i (+ 1 i)))
+          (format ofd " };\n")
+          ))
     )
-)
+  )
 
 (define (carttoC_extract_spectral_frame ofdh tree)
   "(carttoC_extract_spectral_frame tree)
@@ -515,4 +545,3 @@ Output cg selection carts into odir/name_carts.c"
    (t x)))
 
 (provide 'make_cg)
-
