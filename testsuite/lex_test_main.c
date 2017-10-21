@@ -43,12 +43,12 @@
 extern cst_lexicon cmu_lex;
 void cmu_lex_init();
 
-static void lookup_and_print(cst_lexicon *l,const char *word,const char *feats)
+static void lookup_and_print(cst_lexicon *l,const char *word,const char *pos)
 {
     cst_val *p;
 
-    printf("Lookup: %s %s\n",word,feats);
-    p = lex_lookup(l,word,feats);
+    printf("Lookup: %s %s\n",word,pos);
+    p = lex_lookup(l,word,pos,NULL);
     val_print(stdout,p);
     printf("\n");
     delete_val(p);

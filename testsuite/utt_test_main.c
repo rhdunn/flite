@@ -87,12 +87,11 @@ int main(int argc, char **argv)
 static int WordSylSeg(cst_utterance *u)
 {
     cst_item *word;
-    cst_relation *sylstructure,*seg,*syl;
+    cst_relation *sylstructure,*seg;
     cst_val *phones;
     const cst_val *p;
     cst_item *ssword,*segitem;
     
-    syl = utt_relation_create(u,"Syllable");
     sylstructure = utt_relation_create(u,"SylStructure");
     seg = utt_relation_create(u,"Segment");
     
@@ -101,7 +100,7 @@ static int WordSylSeg(cst_utterance *u)
     {
 	printf("word: %s\n",item_feat_string(word,"name"));
 	ssword = relation_append(sylstructure,word);
-	phones = lex_lookup((cst_lexicon *)&cmu_lex,item_feat_string(word,"name"),0);
+	phones = lex_lookup((cst_lexicon *)&cmu_lex,item_feat_string(word,"name"),NULL,NULL);
 	for (p=phones; p; p=val_cdr(p))
 	{
 	    segitem = relation_append(seg,NULL);
@@ -122,7 +121,11 @@ static int bbb_relation_load(cst_relation *r,const char *filename)
     cst_item *item;
     cst_tokenstream *fd;
 
-    fd = ts_open(filename);
+    fd = ts_open(filename,
+                 cst_ts_default_whitespacesymbols,
+                 cst_ts_default_singlecharsymbols,
+                 cst_ts_default_prepunctuationsymbols,
+                 cst_ts_default_postpunctuationsymbols);
     if (fd == 0)
 	return 0;
 

@@ -266,12 +266,16 @@ static void get_token_sub_part(cst_tokenstream *ts,
     (*buffer)[p] = '\0';
 }
 
-inline int ts_utf8_sequence_length(char c0)
-{
-    // Get the expected length of UTF8 sequence given its most
-    // significant byte
-    return (( 0xE5000000 >> (( c0 >> 3 ) & 0x1E )) & 3 ) + 1;
-}
+ #ifdef _WIN32
+ __inline int ts_utf8_sequence_length(char c0)
+ #else
+ int ts_utf8_sequence_length(char c0)
+ #endif
+ {
+    /* Get the expected length of UTF8 sequence given its most */
+    /* significant byte */
+     return (( 0xE5000000 >> (( c0 >> 3 ) & 0x1E )) & 3 ) + 1;
+ }
 
 /* Can't afford dynamically generate this char class so have separated func */
 /* so do the core token part -- this goes while not givenlass (while the    */

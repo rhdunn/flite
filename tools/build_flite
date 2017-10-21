@@ -3,7 +3,7 @@
 ##                                                                       ##
 ##                  Language Technologies Institute                      ##
 ##                     Carnegie Mellon University                        ##
-##                      Copyright (c) 2002-2009                          ##
+##                      Copyright (c) 2002-2017                          ##
 ##                        All Rights Reserved.                           ##
 ##                                                                       ##
 ##  Permission is hereby granted, free of charge, to use and distribute  ##
@@ -381,6 +381,13 @@ then
                    "'$FV_VOICENAME'"
                    "."
                    "flite/")'
+
+   if [ "$FV_LANG_TYPE" = "grapheme" ]
+   then
+      echo cg_convert: converting phoneset table
+      $FESTIVAL -b $FLITEDIR/tools/make_phoneset.scm \
+      '(phonesettoC "'${FV_INST}_${FV_LANG}'" (car (load "festvox/'${FV_VOICENAME}'_phoneset.scm" t)) "pau" "flite")'
+   fi
 
    echo "flite_build cg complete.  You can compile the generated voice by"
    echo "   cd flite; make"

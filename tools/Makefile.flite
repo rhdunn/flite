@@ -2,7 +2,7 @@
 ##                                                                       ##
 ##                  Language Technologies Institute                      ##
 ##                     Carnegie Mellon University                        ##
-##                      Copyright (c) 2000-2008                          ##
+##                      Copyright (c) 2000-2015                          ##
 ##                        All Rights Reserved.                           ##
 ##                                                                       ##
 ##  Permission is hereby granted, free of charge, to use and distribute  ##
@@ -57,10 +57,10 @@ else
 ifeq ($(VOICETYPE),cg)
 ## Clustergen
 CSRCS += $(VOICENAME)_cg.c
-CSRCS += $(VOICENAME)_cg_f0_trees.c 
 CSRCS += $(VOICENAME)_cg_phonestate.c
 # Identify which .c param files are used single or multi-rfs
 include paramfiles.mak
+CSRCS += $(shell ls $(VOICENAME)_cg_*_f0_trees.c)
 CSRCS += $(shell ls $(VOICENAME)_cg_*_mcep_trees.c)
 CSRCS += $(shell ls $(VOICENAME)_cg_*_params.c)
 CSRCS += $(shell ls $(VOICENAME)_cg_*_durmodel.c)
@@ -117,4 +117,12 @@ flite_lang_list.c:
 # Dump cg voice as single file
 voicedump : flite_$(VOICENAME)
 	./flite_$(VOICENAME) -voicedump $(VOICENAME).flitevox
+
+# Add and voice specific feats
+add_feats :
+	$(FLITEDIR)/bin/add_flite_feats $(VOICENAME).flitevox ../etc/flite_feats
+
+# Run front end tests
+flitecheck:
+	$(FLITEDIR)/bin/run_flitecheck $(VOICENAME).flitevox
 

@@ -46,7 +46,11 @@ int main(int argc, char **argv)
     cst_tokenstream *fd;
     const char *token;
 
-    fd = ts_open("data.one");
+    fd = ts_open("data.one",
+                 cst_ts_default_whitespacesymbols,
+                 cst_ts_default_singlecharsymbols,
+                 cst_ts_default_prepunctuationsymbols,
+                 cst_ts_default_postpunctuationsymbols);
 
     while (!ts_eof(fd))
     {

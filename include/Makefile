@@ -79,7 +79,7 @@ H = cst_alloc.h  \
         cst_wchar.h \
 	flite.h
 
-FILES = Makefile $(H)
+FILES = Makefile $(H) flite_version.h
 INSTALL_HEADERS = $(H)
 
 ALL = flite_version.h

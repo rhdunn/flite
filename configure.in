@@ -37,7 +37,7 @@ AC_PROG_CC
 AC_PROG_RANLIB
 AC_PROG_INSTALL
 AC_CHECK_TOOL(AR, ar)
-AC_C_BIGENDIAN
+AC_C_BIGENDIAN(ENDIANDEFS=-DWORDS_BIGENDIAN=1,,)
 
 if test "x$GCC" = "xyes"; then
 	CFLAGS="$CFLAGS -Wall"
@@ -223,6 +223,7 @@ AC_SUBST(DLLWRAP)
 AC_SUBST(NM)
 AC_SUBST(LEXDEFS)
 AC_SUBST(VOXDEFS)
+AC_SUBST(ENDIANDEFS)
 
 case "$host_cpu" in
      i386|i486|i586|i686)
@@ -378,14 +379,8 @@ AC_CHECK_HEADER(machine/soundcard.h,
 AC_CHECK_HEADER(sys/audioio.h,
               [AUDIODRIVER="sun"
                AUDIODEFS=-DCST_AUDIO_SUNOS])
-# Seems the alsa code I have breaks on earlier versions
-# I'm not sure what the threshold version is, but made this depend on
-# the one I know -- you can still specific --with-audio=alsa
-AC_TRY_COMPILE([#include <alsa/version.h>],
-               [int j=
-                #if SND_LIB_SUBMINOR >= 11
-                3;
-                #endif],
+# We're going to make alsa the default now, if supported 
+AC_CHECK_HEADER(alsa/asoundlib.h,
               [AUDIODRIVER="alsa"
 	       AUDIODEFS=-DCST_AUDIO_ALSA
                AUDIOLIBS=-lasound])

@@ -2,7 +2,7 @@
 ;;;                                                                     ;;;
 ;;;                  Language Technologies Institute                    ;;;
 ;;;                     Carnegie Mellon University                      ;;;
-;;;                      Copyright (c) 2007-2014                        ;;;
+;;;                      Copyright (c) 2007-2017                        ;;;
 ;;;                        All Rights Reserved.                         ;;;
 ;;;                                                                     ;;;
 ;;; Permission is hereby granted, free of charge, to use and distribute ;;;
@@ -35,7 +35,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;                                                                     ;;;
 ;;; Convert a clustergen voice to flite                                 ;;;
-;;; (Oct 2014) support for random forests                                ;;;
+;;; (Oct 2014) support for random forests                               ;;;
+;;; (Jun 2017) support for quantized params                             ;;;
 ;;;                                                                     ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -44,12 +45,14 @@
 ;; It does the right thing with statics and dynamics and stddev
 (defvar cg:relevant_params nil) ;; a list of param ranges to dump
 (defvar cg_reduced_order 0)
+(defvar cg:quantized_params t) ;; 8 bit quantized table 
 (if (> cg_reduced_order 0) ;; just to remind me
     (format t "\n***** CG: note reducing order to %d *****\n\n" 
             cg_reduced_order))
 (defvar F0MEAN 0.0)
 (defvar F0STD 1.0)
 (defvar num_channels_additive_constant 4)
+(defvar new_min_range nil)
 
 (define (cg_convert name festvoxdir odir)
   "(cg_convert name clcatfn clcatfnordered cltreesfn festvoxdir odir)
@@ -57,6 +60,11 @@ Convert a festvox clunits (processed) voice into a C file."
 
    (load (format nil "%s/festvox/%s_cg.scm" festvoxdir name))
    (eval (list (intern (format nil "voice_%s_cg" name))))
+
+  (if cg:quantized_params
+      (if cg:rfs_models
+          (system (format nil "$FLITEDIR/tools/quantize_params quantize_rf_models"))
+          (system (format nil "$FLITEDIR/tools/quantize_params find_segments_quant festival/trees/%s_mcep.params" name))))
 
    (set! ofd (fopen (path-append odir (string-append name "_cg.c")) "w"))
    (format ofd "/*****************************************************/\n")
@@ -69,12 +77,29 @@ Convert a festvox clunits (processed) voice into a C file."
 
    (format t "cg_convert: converting F0 trees\n")
    ;; F0 trees
-   (set! val_table nil) ;; different val number over the two sets of carts
-   (cg_convert_carts 
-    (load (format nil "festival/trees/%s_f0.tree" name) t)
-    "f0" name odir)
-   (format ofd "\n")
-   (format ofd "extern const cst_cart * const %s_f0_carts[];\n" name )
+   (if (and cg:rfs_models (probe_file "rf_models/mlistf0"))
+       (set! f0ms (load "rf_models/mlistf0" t))
+       (set! f0ms (list '01)))
+
+   (if (and cg:rfs_models (probe_file "rf_models/mlistf0"))
+       (begin ;; Random Forest F0 Models
+         (format t "cg_convert: converting rf F0 trees\n")
+         (mapcar
+          (lambda (f0m)
+            (format t "cg_convert:    converting model_%02d f0 params\n" f0m)
+            (set! val_table nil)
+            (cg_convert_carts 
+             (load (format nil "rf_models/trees_%02d/%s_f0.tree" f0m name) t)
+             (format nil "%02d_f0" f0m) name odir)
+            (format ofd "extern const cst_cart * const %s_%02d_f0_carts[];\n" name f0m))
+          f0ms))
+       (begin ;; No-random Forest F0 Models (just one model)
+         (set! val_table nil) ;; different val number over the two sets of carts
+         (cg_convert_carts 
+          (load (format nil "festival/trees/%s_f0.tree" name) t)
+          "01_f0" name odir)
+         (format ofd "\n")
+         (format ofd "extern const cst_cart * const %s_01_f0_carts[];\n" name )))
 
    (if cg:spamf0
 	(begin
@@ -109,12 +134,18 @@ Convert a festvox clunits (processed) voice into a C file."
             (format ofd "extern const cst_cart * const %s_%02d_mcep_carts[];\n" name pm)
 
             ;; spectral params
-            (format t "cg_convert:   converting model_%02d spectral params\n" pm)
-            (cg_convert_params
-             (format nil "rf_models/trees_%02d/%s_mcep.params" pm name)
-             (format nil "festival/trees/%s_min_range.scm" name)
-             name (format nil "%02d" pm) odir ofd)
-         (format ofd "extern const unsigned short * const %s_%02d_model_vectors[];\n" name pm ))
+            (if cg:quantized_params
+                  ;; Quantized params use 8 bit indexs -- you
+                  ;; must externally create quantized params first
+                  (cg_convert_params_quantized
+                   (format nil "rf_models/trees_%02d/%s_mcep.params.q_params" pm name)
+                   (format nil "rf_models/trees_%02d/%s_mcep.params.q_table" pm name)
+                   name (format nil "%02d" pm) odir ofd)
+                  (cg_convert_params
+                   (format nil "rf_models/trees_%02d/%s_mcep.params" pm name)
+                   (format nil "festival/trees/%s_min_range.scm" name)
+                   name (format nil "%02d" pm) odir ofd))
+            (format ofd "extern const unsigned short * const %s_%02d_model_vectors[];\n" name pm ))
           pms))
        (begin ;; Non-random forest spectral models (one model)
          (format t "cg_convert: converting single spectral trees\n")
@@ -128,22 +159,34 @@ Convert a festvox clunits (processed) voice into a C file."
          (format ofd "\n")
          (format ofd "extern const cst_cart * const %s_01_mcep_carts[];\n" name )
          ;; spectral params
-         (format t "cg_convert:    converting model_01 spectral params\n")
-         (cg_convert_params
-          (format nil "festival/trees/%s_mcep.params" name)
-          (format nil "festival/trees/%s_min_range.scm" name)
-          name "01" odir ofd)
+         (if cg:quantized_params
+               (cg_convert_params_quantized
+                (format nil "festival/trees/%s_mcep.params.q_params" name)
+                (format nil "festival/trees/%s_mcep.params.q_table" name)
+                name "01" odir ofd)
+               (cg_convert_params
+                (format nil "festival/trees/%s_mcep.params" name)
+                (format nil "festival/trees/%s_min_range.scm" name)
+                name "01" odir ofd))
          (format ofd "extern const unsigned short * const %s_01_model_vectors[];\n" name )
          ))
 
+   (format ofd "#define %s_num_f0_models %d\n" name (length f0ms))
+   (format ofd "const cst_cart **%s_f0_carts_table[] = {\n" name)
+   (mapcar
+    (lambda (f0m)
+      (format ofd "   (const cst_cart **)%s_%02d_f0_carts,\n" name f0m))
+    f0ms)
+   (format ofd "NULL};\n")
+
    (format ofd "#define %s_num_param_models %d\n" name (length pms))
-   (format ofd "const int %s_num_channels_table[] = {\n" name)
+   (format ofd "int %s_num_channels_table[] = {\n" name)
    (mapcar
     (lambda (pm)
       (format ofd "   %s_%02d_num_channels,\n" name pm))
     pms)
    (format ofd "0};\n")
-   (format ofd "const int %s_num_frames_table[] = {\n" name)
+   (format ofd "int %s_num_frames_table[] = {\n" name)
    (mapcar
     (lambda (pm)
       (format ofd "   %s_%02d_num_frames,\n" name pm))
@@ -152,13 +195,24 @@ Convert a festvox clunits (processed) voice into a C file."
    (format ofd "const unsigned short **%s_model_vectors_table[] = {\n" name)
    (mapcar
     (lambda (pm)
-      (format ofd "   %s_%02d_model_vectors,\n" name pm))
+      (format ofd "   (const unsigned short **)%s_%02d_model_vectors,\n" name pm))
     pms)
    (format ofd "NULL};\n")
+   (if cg:quantized_params
+       (begin
+         (format ofd "const float **%s_model_qtable[] = {\n" name)
+         (mapcar
+          (lambda (pm)
+            (format ofd "   (const float **)%s_%02d_qtable,\n" name pm))
+          pms)
+         (format ofd "NULL};\n"))
+       (begin
+         (format ofd "const float **%s_model_qtable[] = {NULL}; /* not used */ \n" name)
+         ))
    (format ofd "const cst_cart **%s_mcep_carts_table[] = {\n" name)
    (mapcar
     (lambda (pm)
-      (format ofd "   %s_%02d_mcep_carts,\n" name pm))
+      (format ofd "   (const cst_cart **)%s_%02d_mcep_carts,\n" name pm))
     pms)
    (format ofd "NULL};\n")
     
@@ -194,7 +248,7 @@ Convert a festvox clunits (processed) voice into a C file."
    (format ofd "const dur_stat **%s_dur_stats_table[] = {\n" name)
    (mapcar
     (lambda (dm)
-      (format ofd "   %s_cg_%02d_dur_stats,\n" name dm))
+      (format ofd "   (const dur_stat **)%s_cg_%02d_dur_stats,\n" name dm))
     dms)
    (format ofd "NULL};\n")
    (format ofd "const cst_cart *%s_dur_cart_table[] = {\n" name)
@@ -235,7 +289,7 @@ Convert a festvox clunits (processed) voice into a C file."
     (reverse new_min_range))
    (format ofd "};\n")
 
-   (format ofd "const float %s_dynwin[] = { -0.5, 0.0, 0.5 };\n" name)
+   (format ofd "float %s_dynwin[] = { -0.5, 0.0, 0.5 };\n" name)
    (format ofd "#define %s_dynwinsize 3\n" name)
 
    (if cg:mixed_excitation
@@ -270,7 +324,8 @@ Convert a festvox clunits (processed) voice into a C file."
 
    (format ofd "  %f,%f,\n" F0MEAN F0STD) 
 
-   (format ofd "  %s_f0_carts,\n" name)
+   (format ofd "  %s_num_f0_models,\n" name)
+   (format ofd "  %s_f0_carts_table,\n" name)
    (format ofd "  %s_num_param_models,\n" name)
    (format ofd "  %s_mcep_carts_table,\n" name)
    (if cg:spamf0
@@ -302,6 +357,20 @@ Convert a festvox clunits (processed) voice into a C file."
        )
    (format ofd "  %s_model_min,\n" name)
    (format ofd "  %s_model_range,\n" name)
+
+   (cond
+    ((not cg:quantized_params)
+     ;; Simple 2 values per short
+     (format ofd "  NULL, /* no quantization table(s) */\n")
+     (format ofd "  CST_CG_MODEL_SHAPE_BASE_MINRANGE,\n")
+     )
+    ((eq 41 cg_model_num_channels)
+     (format ofd "  %s_model_qtable,\n" name)
+     (format ofd "  CST_CG_MODEL_SHAPE_QUANTIZED_PARAMS_41,\n"))
+    (t
+     (format ofd "  %s_model_qtable,\n" name)
+     (format ofd "  CST_CG_MODEL_SHAPE_QUANTIZED_PARAMS,\n")))
+
    (format ofd "  %f, /* frame_advance */\n" cg:frame_shift)
 
    (format ofd "  %s_num_dur_models,\n" name)
@@ -323,7 +392,7 @@ Convert a festvox clunits (processed) voice into a C file."
    (if cg:mixed_excitation
        (begin
          (format ofd "  1, /* cg:mixed_excitation */\n")
-         (format ofd "  5,48, /* filter sizes */\n")
+         (format ofd "  5,47, /* filter sizes */\n")
          (format ofd "  %s_me_h, \n" name))
        (begin
          (format ofd "  0, /* cg:mixed_excitation */\n")
@@ -437,6 +506,7 @@ Convert a festvox clunits (processed) voice into a C file."
 (define (cg_convert_params mcepfn mcepminrangefn name type odir cofd)
   (let ((param.track (track.load mcepfn))
         (i 0) (mfd))
+    (format t "cg_convert:    converting model_%s spectral params\n" type)
 
     (set! mfd (fopen (path-append odir (string-append name "_cg_" type "_params.c")) "w"))
     (format mfd "/*****************************************************/\n")
@@ -444,6 +514,8 @@ Convert a festvox clunits (processed) voice into a C file."
     (format mfd "/*****************************************************/\n")
     (set! num_channels (track.num_channels param.track))
     (set! num_frames (track.num_frames param.track))
+    (set! cg_model_num_channels num_channels)
+    (format mfd "/**  Size: %d */\n" cg_model_num_channels)
     ;; Output each frame
     (set! mcep_min_range (load mcepminrangefn t))
     (while (< i num_frames)
@@ -464,12 +536,86 @@ Convert a festvox clunits (processed) voice into a C file."
 	  ))
     
     (if (> cg_reduced_order 0)
-	(format cofd "#define %s_%s_num_channels %d\n"
-		name type (+ num_channels_additive_constant (* 4 cg_reduced_order)))
-	(format cofd "#define %s_%s_num_channels %d\n" name type num_channels))
+      (format cofd "#define %s_%s_num_channels %d\n"
+              name type (+ num_channels_additive_constant (* 4 cg_reduced_order)))
+      (format cofd "#define %s_%s_num_channels %d\n" name type num_channels))
     
     (format cofd "#define %s_%s_num_frames %d\n" name type num_frames)
   
+    (fclose mfd)
+
+    ))
+
+(define (cg_convert_params_quantized mcepfn mcepqtable name type odir cofd)
+  (let ((param.track (track.load mcepfn))
+        (qtable.track (track.load mcepqtable))
+        (i 0) (mfd))
+    (format t "cg_convert:    converting model_%s quantized spectral params\n" type)
+    (set! mfd (fopen (path-append odir (string-append name "_cg_" type "_params.c")) "w"))
+    (format mfd "/*****************************************************/\n")
+    (format mfd "/**  Autogenerated model_vectors (quantized) for %s    */\n" name)
+    (format mfd "/*****************************************************/\n")
+    ;; This will be half the actual number of channels
+    ;; as two vals are encoded per (16 bit) entry
+    (set! num_channels (track.num_channels param.track))
+    (set! num_frames (track.num_frames param.track))
+    (set! cg_model_num_channels num_channels)
+    (format mfd "/**  Size: %d channels */\n" cg_model_num_channels)
+    ;; Output each frame
+    (while (< i num_frames)
+           ;; output vals without normalization -- its already happened
+       (output_param_frame_asis name type param.track i mfd)      
+       (set! i (+ 1 i)))
+    (format mfd "\n\n")
+    ;; Output each frame
+    (format mfd "const unsigned short * const %s_%s_model_vectors[] = {\n" name type)
+    (set! i 0)
+    (while (< i num_frames)
+       (format mfd "   %s_%s_param_frame_%d,\n" name type i)
+       (set! i (+ 1 i)))
+    (format mfd "};\n\n")
+
+    (if cg:mixed_excitation
+	(begin
+	  (set! num_channels_additive_constant 14)
+	  ))
+
+    ;; LIE about num channels (put in model number of channels not
+    ;; num of channels in compressed/quantized track 
+    (format cofd "#define %s_%s_num_channels %d\n" name type
+            (cond
+             ((and cg:quantized_params (equal? 41 num_channels))
+              114) ;; naively assume this is the special compression
+             (cg:quantized_params
+              (* 2 num_channels))
+             (t
+              num_channels)))
+    
+    (format cofd "#define %s_%s_num_frames %d\n" name type num_frames)
+
+    ;; Dump the q_table too, that gives the lookup table to map values back
+    (set! num_channels (track.num_channels qtable.track))
+    (set! num_frames (track.num_frames qtable.track))
+    (set! i 0)
+    ;; Output each frame
+    (while (< i num_frames)
+       (format mfd "static const float %s_%s_qtable_frame_%d[] = { \n" name type i)
+       (set! j 0)
+       (while (< j num_channels)
+          (format mfd " %f," (track.get qtable.track i j))
+          (set! j (+ 1 j)))
+       (format mfd " };\n")
+       (set! i (+ 1 i)))
+    (format mfd "\n\n")
+    ;; Output each frame
+    (format mfd "const float * const %s_%s_qtable[] = {\n" name type)
+    (set! i 0)
+    (while (< i num_frames)
+       (format mfd "   %s_%s_qtable_frame_%d,\n" name type i)
+       (set! i (+ 1 i)))
+    (format mfd "};\n\n")
+    ;; add extern reference to the qtable to main file
+    (format cofd "extern const float * const %s_%s_qtable[];\n" name type)  
     (fclose mfd)
 
     ))
@@ -550,6 +696,20 @@ Ouput this frame."
           )))
     )
   )
+
+(define (output_param_frame_asis name type track f ofd)
+  "(output_param_frame_asis name track frame ofd)
+Ouput this frame."
+  ;; This is (maybe) hardcoded for rf3 builds which are statics, deltas, me.
+  ;; It assumes any fancy coding has externally been done so just dumps
+  ;; what is there asis.
+  (let ((i 0) (nc (track.num_channels track)))
+    (format ofd "static const unsigned short %s_%s_param_frame_%d[] = { \n" name type f)
+    (while (< i nc)
+       (format ofd " %d," (track.get track f i))
+       (set! i (+ 1 i)))
+    (format ofd " };\n")
+    ))
 
 (define (carttoC_extract_spectral_frame ofdh tree)
   "(carttoC_extract_spectral_frame tree)

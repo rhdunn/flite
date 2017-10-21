@@ -1,5 +1,5 @@
 LIBRARY	"fliteDll"
-EXPORTS 
+EXPORTS
 	flite_init
 	flite_voice_select
 	flite_file_to_speech
@@ -47,5 +47,3 @@ EXPORTS
 	audio_stream_chunk
 	audio_streaming_info_val
 	new_audio_streaming_info
-	
-	

@@ -57,7 +57,7 @@ cst_lexicon *cmu_lex_init(void);
 
 static void flite_version()
 {
-    printf("  Carnegie Mellon University, Copyright (c) 1999-2011, all rights reserved\n");
+    printf("  Carnegie Mellon University, Copyright (c) 1999-2016, all rights reserved\n");
     printf("  version: %s-%s-%s %s (http://cmuflite.org)\n",
 	   FLITE_PROJECT_PREFIX,
 	   FLITE_PROJECT_VERSION,
@@ -91,8 +91,8 @@ static void flite_usage()
 	   "  -ssml       Read input text/file in ssml mode\n"
 	   "  -b          Benchmark mode\n"
 	   "  -l          Loop endlessly\n"
-	   "  -voice NAME Use voice NAME (NAME can be filename or url too)\n"
-	   "  -voicedir NAME Directory contain voice data\n"
+	   "  -voice NAME Use voice NAME (NAME can be pathname/url to flitevox file)\n"
+	   "  -voicedir NAME Directory containing (clunit) voice data\n"
 	   "  -lv         List voices available\n"
 	   "  -add_lex FILENAME add lex addenda from FILENAME\n"
 	   "  -pw         Print words\n"
@@ -125,29 +125,34 @@ static cst_utterance *print_info(cst_utterance *u)
     cst_item *item;
     const char *relname;
     int printEndTime = 0;
+    int printStress = 0;
     
     relname = utt_feat_string(u,"print_info_relation");
-    if (!strcmp(relname, "SegmentEndTime"))
-      {
+    if (cst_streq(relname, "SegmentEndTime"))
+    {
         relname = "Segment";
         printEndTime = 1;
-      }
+    }
+    if (cst_streq(relname, "SegmentStress"))
+    {
+        relname = "Segment";
+        printStress = 1;
+    }
       
     for (item=relation_head(utt_relation(u,relname)); 
 	 item; 
 	 item=item_next(item))
     {
       if (!printEndTime)
-        printf("%s ",item_feat_string(item,"name"));
+        printf("%s",item_feat_string(item,"name"));
       else
-        printf("%s:%1.3f ",item_feat_string(item,"name"), item_feat_float(item,"end"));
-    
-#if 0
+        printf("%s:%1.3f",item_feat_string(item,"name"), item_feat_float(item,"end"));
+      if (printStress == 1)
+      {
         if (cst_streq("+",ffeature_string(item,"ph_vc")))
             printf("%s",ffeature_string(item,"R:SylStructure.parent.stress"));
-        printf(" ");
-#endif
-
+      }
+      printf(" ");
     }
     printf("\n");
 
@@ -291,6 +296,12 @@ int main(int argc, char **argv)
         // Added by AUP Mar 2013 for extracting durations (end-time) of segments
         // (useful in talking heads, etc.)
 	    feat_set_string(extra_feats,"print_info_relation","SegmentEndTime");
+	    feat_set(extra_feats,"post_synth_hook_func",
+		     uttfunc_val(&print_info));
+	}
+	else if (cst_streq(argv[i],"-psstress"))
+	{
+	    feat_set_string(extra_feats,"print_info_relation","SegmentStress");
 	    feat_set(extra_feats,"post_synth_hook_func",
 		     uttfunc_val(&print_info));
 	}

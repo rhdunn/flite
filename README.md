@@ -1,13 +1,12 @@
 
          Flite: a small run-time speech synthesis engine
-                      version 2.0.0-release
-          Copyright Carnegie Mellon University 1999-2014
+                      version 2.1-current
+          Copyright Carnegie Mellon University 1999-2017
                       All rights reserved
                       http://cmuflite.org
 
-
-Flite is a small fast run-time speech synthesis engine.  It is the
-latest addition to the suite of free software synthesis tools
+Flite is an open source small fast run-time text to speeh engine.  It
+is the latest addition to the suite of free software synthesis tools
 including University of Edinburgh's Festival Speech Synthesis System
 and Carnegie Mellon University's FestVox project, tools, scripts and
 documentation for building synthetic voices.  However, flite itself
@@ -76,8 +75,8 @@ Requirements:
 o A good C compiler, some of these files are quite large and some C
   compilers might choke on these, gcc is fine.  Sun CC 3.01 has been
   tested too.  Visual C++ 6.0 is known to fail on the large diphone
-  database files.  We recommend you use GCC under Cygwin or mingw32
-  instead.
+  database files.  We recommend you use GCC under bash for Windows,
+  Cygwin or mingw32 instead.
 o GNU Make
 o An audio device isn't required as flite can write its output to 
   a waveform file. 
@@ -87,12 +86,14 @@ Supported platforms:
 We have successfully compiled and run on 
 
 o Various Intel Linux systems (and iPaq Linux), under various versions
-  of GCC (2.7.2 to 4.x)
+  of GCC (2.7.2 to 6.x)
 o Mac OS X
 o Various Android devices
+o Various openwrt devices
 o FreeBSD 3.x and 4.x
 o Solaris 5.7, and Solaris 9
 o Windows 2000/XP and later under Cygwin 1.3.5 and later
+o Windows 10 with bash on ubuntu on Windows
 o Successfully compiles and runs under 64Bit Linux architectures
 o OSF1 V4.0 (gives an unimportant warning about sizes when compiled cst_val.c)
 
@@ -109,6 +110,19 @@ a new archiecture.
 News
 ----
 
+New in 2.1 (Oct 2017)
+    o Improved Indic front end support (thanks to Suresh Bazaj @ Hear2Read)
+    o 18 English Voices (various accents)
+    o 12 Indian Voices (Bengali, Gujarati, Hindi, Kannada, Marathi, Panjabi
+      Tamil and Telugu) usually with bilingual (with English) support
+    o Can do byteswap architectures [again] (ar9331 yun arduino, zsun etc)
+    o flitecheck front-end test suite
+    o grapheme based festvox builds give working flitevox voices
+    o SAPI support for CG voices (thanks to Alok Parlikar @ Cobalt Speech and
+      Language INC)
+    o gcc 6.x support
+    o .flitevox files (and models) 40% of previous size, but same quality
+
 New in 2.0.0 (Dec 2014)
     o Indic language support (Hindi, Tamil and Telugu)
     o SSML support
@@ -118,7 +132,7 @@ New in 2.0.0 (Dec 2014)
     o Supports diffrent sample rates/mgc order to tune for speed
     o Kal diphone 500K smaller
     o Fixed lots of API issues
-    o thread safe (again) after initialization
+    o thread safe (again) [after initialization]
     o Generalized tokenstreams (used in Bard Storyteller)
     o simple-Pulseaudio support
     o Improved Android support
@@ -178,12 +192,12 @@ In general
 Where tar is gnu tar (gtar), and make is gnu make (gmake).
 
 Configuration should be automatic, but maybe doesn't work in all cases
-especially if you have some new compiler.  You can explicitly set to
-compiler in config/config and add any options you see fit.   Configure
-tries to guess these but it might be able for cross compilation cases
-Interesting options there are
+especially if you have some new compiler.  You can explicitly set the
+compiler in config/config and add any options you see fit.  Configure
+tries to guess these but it might be unable to guess for cross
+compilation cases Interesting options there are
 
--DWORDS_BIGENDIAN=1  for bigendian machines (e.g. Sparc, M68x)
+-DWORDS_BIGENDIAN=1  for bigendian machines (e.g. Sparc, M68x, ar9331)
 -DNO_UNION_INITIALIZATION=1  For compilers without C 99 union inintialization
 -DCST_AUDIO_NONE     if you don't need/want audio support
 
@@ -197,13 +211,15 @@ Will use the languages and voices defined in config/transtac.lv
 Usage:
 ------
 
-The ./bin/flite voices contains all supported voices and you may
+The ./bin/flite binary contains all supported voices and you may
 choose between the voices with the -voice flag and list the supported
 voices with the -lw flag.  Note the kal (diphone) voice is a different
 technology from the others and is much less computationally expensive
 but more robotic.  For each voice additional binaries that contain
 only that voice are created in ./bin/flite_FULLVOICENAME,
-e.g. ./bin/flite_cmu_us_awb.
+e.g. ./bin/flite_cmu_us_awb.  You can also refer to external clustergen
+.flitevox voice via a pathname argument with -voice (note the pathname
+must contain at least one "/")
 
 If it compiles properly a binary will be put in bin/, note by
 default -g is on so it will be bigger than is actually required
@@ -266,8 +282,8 @@ under Unix you can call it
 ./bin/flite -voice slt -f doc/alice
     Speak with the US female slt voice
 
-./bin/flite -voice http://festvox.org/flite/voices/US/cmu_us_ksp.flitevox -f doc/alice
-    Speak with KSP voice, download on the fly from festvox.org
+./bin/flite -voice http://festvox.org/flite/voices/US/cmu_us_aew.flitevox -f doc/alice
+    Speak with AEW voice, download on the fly from festvox.org
 ./bin/flite -voice voices/cmu_us_ahw.flitevox -f doc/alice
     Speak with AHW voice loaded from the local file.
 
@@ -303,18 +319,15 @@ If you visit there with a browser you can hear the examples.  You can
 also download the .flitevox files to you machine so you don't need a
 network connect everytime you need to load a voice.
 
-We are now actively adding to this list of available voices in English
+We are now actively adding to this list of available voices in English (16)
 and other languages.
 
 Bard Storyteller:  http://festvox.org/bard/
 -------------------------------------------
 
-Bard is a companion app that read ebooks, both displaying them and
-actually reading them to you using flite.  Bard supports a wide
-range of fonts, and flite voices, and books in text, html and
-epub format.  Bard is used as a evaluation of flites capabilities
-and an example of a serious application using flite.
-
-
-
+Bard is a companion app that reads ebooks, both displaying them and
+actually reading them to you out loud using flite.  Bard supports a
+wide range of fonts, and flite voices, and books in text, html and
+epub format.  Bard is used as a evaluation of flite's capabilities and
+an example of a serious application using flite.
 

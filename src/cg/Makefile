@@ -2,7 +2,7 @@
 ##                                                                       ##
 ##                  Language Technologies Institute                      ##
 ##                     Carnegie Mellon University                        ##
-##                      Copyright (c) 2007-2008                          ##
+##                      Copyright (c) 2007-2017                          ##
 ##                        All Rights Reserved.                           ##
 ##                                                                       ##
 ##  Permission is hereby granted, free of charge, to use and distribute  ##

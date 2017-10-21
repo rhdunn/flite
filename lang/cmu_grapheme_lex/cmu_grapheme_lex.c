@@ -193,7 +193,7 @@ cst_lexicon *cmu_grapheme_lex_init(void)
         return &cmu_grapheme_lex;
 
     l = &cmu_grapheme_lex;
-    l->name = "cmu_grapheme_lex";
+    l->name = cst_strdup("cmu_grapheme_lex");
 
     l->lts_function = cmu_grapheme_lex_lts_function;
     l->syl_boundary = cmu_grapheme_syl_boundary;

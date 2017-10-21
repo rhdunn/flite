@@ -39,7 +39,8 @@ DIRNAME=main
 BUILD_DIRS = 
 ALL_DIRS= 
 SRCS = flite_main.c flite_time_main.c t2p_main.c compile_regexes.c \
-       flitevox_info_main.c
+       flitevox_info_main.c word_times_main.c
+#      world_main.c 
 OBJS = $(SRCS:.c=.o) flite_voice_list.o 
 FILES = Makefile $(SRCS)
 LOCAL_INCLUDES = 
@@ -103,11 +104,17 @@ $(BINDIR)/flitevox_info$(EXEEXT): flitevox_info_main.o flite_lang_list $(flite_L
 	$(MAKE) flite_voice_list.o
 	$(CC) $(CFLAGS) -o $@ flitevox_info_main.o flite_voice_list.o flite_lang_list.o $(flite_LIBS_flags) $(LDFLAGS)
 
+$(BINDIR)/world$(EXEEXT): world_main.c
+	$(CC) $(CFLAGS) -o $@ world_main.c -I../include -I../src/world $(flite_LIBS_flags) $(world_LIBS_flags) -lworld $(LDFLAGS)
+
 $(BINDIR)/flite_time$(EXEEXT): flite_time_main.o $(flite_time_LIBS_deps)
 	$(CC) $(CFLAGS) -o $@ flite_time_main.o $(flite_time_LIBS_flags) $(FLITELIBFLAGS) $(LDFLAGS) 
 
 $(BINDIR)/t2p$(EXEEXT): t2p_main.o $(flite_LIBS_deps)
 	$(CC) $(CFLAGS) -o $@ t2p_main.o $(flite_LIBS_flags) $(LDFLAGS)
+
+$(BINDIR)/word_times$(EXEEXT): word_times_main.o $(flite_LIBS_deps)
+	$(CC) $(CFLAGS) -o $@ word_times_main.o $(flite_LIBS_flags) $(LDFLAGS)
 
 $(BINDIR)/compile_regexes$(EXEEXT): compile_regexes.o $(FLITELIBS)
 	$(CC) $(CFLAGS) -o $@ compile_regexes.o $(FLITELIBFLAGS) $(LDFLAGS)

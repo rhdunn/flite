@@ -2,7 +2,7 @@
 ##                                                                       ##
 ##                  Language Technologies Institute                      ##
 ##                     Carnegie Mellon University                        ##
-##                      Copyright (c) 1999-2014                          ##
+##                      Copyright (c) 1999-2017                          ##
 ##                        All Rights Reserved.                           ##
 ##                                                                       ##
 ##  Permission is hereby granted, free of charge, to use and distribute  ##
@@ -37,8 +37,8 @@
 ##       Authors:  Alan W Black (awb@cs.cmu.edu)                         ##
 ##                 Kevin A. Lenzo (lenzo@cs.cmu.edu)                     ##
 ##                 and others see ACKNOWLEDGEMENTS                       ##
-##          Date:  December 2014                                         ##
-##       Version:  2.0.0 release                                         ##
+##          Date:  Oct 2017                                              ##
+##       Version:  2.1 current                                           ##
 ##                                                                       ## 
 ###########################################################################
 TOP=.
@@ -46,11 +46,12 @@ DIRNAME=
 BUILD_DIRS = include src lang doc
 ALL_DIRS=config $(BUILD_DIRS) testsuite \
          wince windows android \
-         tools main 
+         sapi tools main 
 CONFIG=configure configure.in config.sub config.guess \
        missing install-sh mkinstalldirs
-WINDOWS = Exports.def flite.sln fliteDll.vcproj
-FILES = Makefile README ACKNOWLEDGEMENTS COPYING $(CONFIG) $(WINDOWS)
+OLD_WINDOWS = Exports.def flite.sln fliteDll.vcproj
+WINDOWS = Exports.def flite.sln flite.v11.suo fliteDll.vcxproj fliteDll.vcxproj.filters
+FILES = Makefile README.md ACKNOWLEDGEMENTS COPYING $(CONFIG) $(WINDOWS)
 DIST_CLEAN = .time-stamp $(TOP)/build/ \
                 config.cache config.log config.status \
 		config/config config/system.mak FileList

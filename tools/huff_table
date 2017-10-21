@@ -218,7 +218,7 @@ awk 'BEGIN {tot=0;}
      }
      END { for (i in freq)
              printf("%f %s\n",freq[i]/tot,i);}' |
-sort -n |
+sort -g |
 awk '{printf("map[\"%s\"] = %d; unmap[%d] = \"%s\";\n",$2,NR,NR,$2)}' >huff.tmp.corpus.maptable
 
 maptable=`cat huff.tmp.corpus.maptable`
@@ -266,7 +266,7 @@ then
         }
         END { for (i in freq)
                 printf("%f %s\n",freq[i]/tot,i);}' |
-   sort -n |
+   sort -g |
    awk '{printf("   \"\\%s\" , /* %f */ \n",$2,$1);}' >$outfile
    mv huff.tmp.corpus.compressed huff.phones.compressed
 fi
@@ -283,7 +283,7 @@ then
         }
         END { for (i in freq)
                 printf("%f %s\n",freq[i]/tot,i);}' |
-   sort -n |
+   sort -g |
    awk '{printf("   \"%s\" , /* %f */ \n",$2,$1);}' >$outfile
    mv huff.tmp.corpus.compressed huff.entries.compressed
 fi

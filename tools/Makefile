@@ -45,9 +45,11 @@ TMPLTS = VOICE_ldom.c VOICE_clunits.c VOICE_diphone.c \
          Makefile.lex LANGNAME_lex.c LANGNAME_lex.h \
          Makefile.lang LANGNAME_lang.c LANGNAME_lang.h
 SCRIPTS = build_flite setup_flite huff_table flite_test \
+          flite_test_fv \
           make_voice_list wfst2c build_lex clunit_prune \
           a2byte.pl a2short.pl a2int.pl flite_rename_voice \
-          make_lang_list make_new_lang_lex
+          make_lang_list make_new_lang_lex flitechecks \
+          add_flite_feats run_flitecheck quantize_params 
 SCM=make_lex.scm make_lts.scm make_cart.scm play_sync.scm \
     make_phoneset.scm make_vallist.scm make_clunits.scm \
     make_didb.scm make_didb2.scm make_f0lr.scm make_lts_wfst.scm \

@@ -75,12 +75,13 @@ int cst_socket_close(int socket)
 #else
 #include <io.h>
 #include <WinSock2.h>
+#pragma comment(lib, "Ws2_32.lib")
 #endif
 #include "cst_socket.h"
 #include "cst_error.h"
 
 int cst_socket_open(const char *host, int port)
-{   
+{
     /* Return an FD to a remote server */
     struct sockaddr_in serv_addr;
     struct hostent *serverhost;
@@ -88,13 +89,13 @@ int cst_socket_open(const char *host, int port)
 
     fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
-    if (fd < 0)  
+    if (fd < 0)
     {
 	cst_errmsg("cst_socket: can't get socket\n");
 	return -1;
     }
     memset(&serv_addr, 0, sizeof(serv_addr));
-    if ((serv_addr.sin_addr.s_addr = inet_addr(host)) == -1)
+    if ((serv_addr.sin_addr.s_addr = inet_addr(host)) == INADDR_NONE)
     {
 	/* its a name rather than an ipnum */
 	serverhost = gethostbyname(host);
@@ -138,7 +139,7 @@ int cst_socket_server(const char *name, int port,
 	return -1;
     }
 
-    if (setsockopt(fd, SOL_SOCKET,SO_REUSEADDR,(char *)&one,sizeof(int)) < 0) 
+    if (setsockopt(fd, SOL_SOCKET,SO_REUSEADDR,(char *)&one,sizeof(int)) < 0)
     {
 	cst_errmsg("socket SO_REUSERADDR failed\n");
 	return -1;
@@ -154,7 +155,7 @@ int cst_socket_server(const char *name, int port,
 	cst_errmsg("socket: bind failed\n");
 	return -1;
     }
-    
+
     if (listen(fd, 5) != 0)
     {
 	cst_errmsg("socket: listen failed\n");
